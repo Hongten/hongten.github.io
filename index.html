@@ -5,7 +5,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Cities</title>
-	<link rel="stylesheet" type="text/css" href="css/demo.css" />
+  <link rel="stylesheet" type="text/css" href="css/demo.css" />
+  
 </head>
 <body>
 
@@ -169,6 +170,53 @@
     <script src="js/CSSPlugin.min.js"></script>
     <script src="js/TextPlugin.min.js"></script>
     <script src="js/demo.js"></script>
-	
+  
+
+    <!--Menu Begin-->
+    <link href="css/css.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript">
+        $(function() {
+          var timer = null;
+          $(".box").mouseenter(function() {
+              clearTimeout(timer);
+              var that = $(this);
+              timer = setTimeout(function() {
+                  that.find("a").each(function(index,ele){
+                      setTimeout(function(){
+                          $(ele).stop().animate({right:0},200);
+                      },50*index);
+                  })
+
+            },200)
+          }).mouseleave(function() {
+              if(timer) {
+                  clearTimeout(timer);
+              }
+              $(this).find("a").each(function(index,ele) {
+                  setTimeout(function(){
+                      $(ele).stop().animate({right:-110},200);
+                  },50*index);
+              })
+          })
+
+        })
+    </script>
+
+    <script type="text/javascript">
+      function stops(){
+        return false;
+      }
+      document.oncontextmenu=stops;
+    </script>
+
+    <div class="box">
+      <a href="https://hongten.github.io"><span>0</span>Home</a>
+      <a href="https://hongten.github.io"><span>1</span>Travel</a>
+      <a href="http://www.cnblogs.com/hongten/" target="_blank"><span>2</span>Blog</a>
+      <a href="https://github.com/hongten" target="_blank"><span>3</span>GitHub</a>
+    </div>
+    <!--Menu End-->
+
+
 </body>
 </html>
