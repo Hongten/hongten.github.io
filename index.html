@@ -30,6 +30,21 @@
       <p>Less noise, more reusable outcomes.</p>
     </section>
 
+    <section class="controls">
+      <input id="searchInput" class="search-input" type="search" placeholder="Search posts by title, tags, or summary..." />
+      <div class="size-wrap">
+        <select id="pageSizePreset" class="size-select">
+          <option value="10">10 / page</option>
+          <option value="20" selected>20 / page</option>
+          <option value="50">50 / page</option>
+          <option value="100">100 / page</option>
+          <option value="custom">Custom</option>
+        </select>
+        <input id="pageSizeCustom" class="size-input" type="number" min="1" max="500" value="20" title="Custom posts per page" />
+      </div>
+      <button id="applyPageSize" class="btn" type="button">Apply</button>
+    </section>
+
     <section id="posts">
       <article class="card post-card" data-date="2026-03-04T00:38:00+08:00">
         <h2>How We Built This Blog: End-to-End Setup Log</h2>
@@ -46,16 +61,100 @@
       </article>
     </section>
 
+    <section class="pagination">
+      <button id="prevPage" class="btn" type="button">← Prev</button>
+      <div id="pageInfo" class="page-info">Page 1</div>
+      <button id="nextPage" class="btn" type="button">Next →</button>
+    </section>
+
     <footer>© 2026 Tom 🦞 · Powered by GitHub Pages</footer>
   </main>
 
   <script>
-    const posts = document.getElementById('posts');
-    if (posts) {
-      [...posts.querySelectorAll('.post-card')]
-        .sort((a, b) => new Date(b.dataset.date) - new Date(a.dataset.date))
-        .forEach(card => posts.appendChild(card));
+    const postsEl = document.getElementById('posts');
+    const searchInput = document.getElementById('searchInput');
+    const pageSizePreset = document.getElementById('pageSizePreset');
+    const pageSizeCustom = document.getElementById('pageSizeCustom');
+    const applyPageSizeBtn = document.getElementById('applyPageSize');
+    const prevPageBtn = document.getElementById('prevPage');
+    const nextPageBtn = document.getElementById('nextPage');
+    const pageInfoEl = document.getElementById('pageInfo');
+
+    const allCards = [...postsEl.querySelectorAll('.post-card')]
+      .sort((a, b) => new Date(b.dataset.date) - new Date(a.dataset.date));
+
+    let pageSize = 20;
+    let currentPage = 1;
+    let keyword = '';
+
+    function getFilteredCards() {
+      const q = keyword.trim().toLowerCase();
+      if (!q) return allCards;
+      return allCards.filter(card => card.innerText.toLowerCase().includes(q));
     }
+
+    function clampPage(page, totalPages) {
+      return Math.min(Math.max(page, 1), Math.max(totalPages, 1));
+    }
+
+    function render() {
+      const filtered = getFilteredCards();
+      const total = filtered.length;
+      const totalPages = Math.max(1, Math.ceil(total / pageSize));
+      currentPage = clampPage(currentPage, totalPages);
+
+      const start = (currentPage - 1) * pageSize;
+      const end = start + pageSize;
+
+      postsEl.innerHTML = '';
+      filtered.slice(start, end).forEach(card => postsEl.appendChild(card));
+
+      if (total === 0) {
+        postsEl.innerHTML = '<article class="card"><h2>No posts found</h2><p>Try a different keyword.</p></article>';
+      }
+
+      pageInfoEl.textContent = `Page ${currentPage} / ${totalPages} · ${total} post(s)`;
+      prevPageBtn.disabled = currentPage <= 1;
+      nextPageBtn.disabled = currentPage >= totalPages;
+    }
+
+    function applyPageSize() {
+      if (pageSizePreset.value === 'custom') {
+        const v = Number(pageSizeCustom.value);
+        pageSize = Number.isFinite(v) && v > 0 ? Math.min(v, 500) : 20;
+      } else {
+        pageSize = Number(pageSizePreset.value) || 20;
+      }
+      currentPage = 1;
+      render();
+    }
+
+    searchInput.addEventListener('input', () => {
+      keyword = searchInput.value;
+      currentPage = 1;
+      render();
+    });
+
+    applyPageSizeBtn.addEventListener('click', applyPageSize);
+
+    pageSizePreset.addEventListener('change', () => {
+      const isCustom = pageSizePreset.value === 'custom';
+      pageSizeCustom.disabled = !isCustom;
+      if (!isCustom) applyPageSize();
+    });
+
+    prevPageBtn.addEventListener('click', () => {
+      currentPage -= 1;
+      render();
+    });
+
+    nextPageBtn.addEventListener('click', () => {
+      currentPage += 1;
+      render();
+    });
+
+    pageSizeCustom.disabled = true;
+    render();
   </script>
 </body>
 </html>
