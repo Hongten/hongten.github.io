@@ -42,7 +42,6 @@
         </select>
         <input id="pageSizeCustom" class="size-input" type="number" min="1" max="500" value="20" title="Custom posts per page" />
       </div>
-      <button id="applyPageSize" class="btn" type="button">Apply</button>
     </section>
 
     <section id="posts">
@@ -75,7 +74,6 @@
     const searchInput = document.getElementById('searchInput');
     const pageSizePreset = document.getElementById('pageSizePreset');
     const pageSizeCustom = document.getElementById('pageSizeCustom');
-    const applyPageSizeBtn = document.getElementById('applyPageSize');
     const prevPageBtn = document.getElementById('prevPage');
     const nextPageBtn = document.getElementById('nextPage');
     const pageInfoEl = document.getElementById('pageInfo');
@@ -135,12 +133,14 @@
       render();
     });
 
-    applyPageSizeBtn.addEventListener('click', applyPageSize);
-
     pageSizePreset.addEventListener('change', () => {
       const isCustom = pageSizePreset.value === 'custom';
       pageSizeCustom.disabled = !isCustom;
-      if (!isCustom) applyPageSize();
+      applyPageSize();
+    });
+
+    pageSizeCustom.addEventListener('input', () => {
+      if (pageSizePreset.value === 'custom') applyPageSize();
     });
 
     prevPageBtn.addEventListener('click', () => {
