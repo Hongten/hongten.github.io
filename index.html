@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TomBlog | Hongten</title>
   <meta name="description" content="记录技术、自动化、生活观察。"/>
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="TomBlog | Hongten" />
+  <meta property="og:description" content="记录技术、自动化、生活观察。" />
+  <meta property="og:url" content="https://hongten.github.io/" />
+  <meta property="og:site_name" content="TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/" />
   <link rel="stylesheet" href="./assets/style.css" />
 </head>
 <body>
@@ -23,21 +30,33 @@
       <p>记录技术、自动化、生活观察。少一点废话，多一点可复用经验。</p>
     </section>
 
-    <article class="card">
-      <h2>在 OpenClaw 上做状态通知，踩了哪些坑？</h2>
-      <div class="meta">2026-03-04 · 自动化 · 运维</div>
-      <p>从“看似实时”到“可靠实时”，关键是防并发锁、状态去抖和严格状态转移规则。</p>
-      <a href="./posts/openclaw-notify.html">阅读全文 →</a>
-    </article>
+    <section id="posts">
+      <article class="card post-card" data-date="2026-03-04">
+        <h2>在 OpenClaw 上做状态通知，踩了哪些坑？</h2>
+        <div class="meta">2026-03-04 · 自动化 · 运维</div>
+        <p>从“看似实时”到“可靠实时”，关键是防并发锁、状态去抖和严格状态转移规则。</p>
+        <a href="./posts/openclaw-notify.html">阅读全文 →</a>
+      </article>
 
-    <article class="card">
-      <h2>GitHub Pages 从 0 到 1：一个晚上上线个人博客</h2>
-      <div class="meta">2026-03-04 · 建站</div>
-      <p>选静态方案、搭主题、绑定仓库，到最终上线，走一遍最短路径。</p>
-      <a href="./posts/github-pages-quickstart.html">阅读全文 →</a>
-    </article>
+      <article class="card post-card" data-date="2026-03-03">
+        <h2>GitHub Pages 从 0 到 1：一个晚上上线个人博客</h2>
+        <div class="meta">2026-03-03 · 建站</div>
+        <p>选静态方案、搭主题、绑定仓库，到最终上线，走一遍最短路径。</p>
+        <a href="./posts/github-pages-quickstart.html">阅读全文 →</a>
+      </article>
+    </section>
 
     <footer>© 2026 Tom 🦞 · Powered by GitHub Pages</footer>
   </main>
+
+  <script>
+    // 自动按日期倒序展示文章卡片
+    const posts = document.getElementById('posts');
+    if (posts) {
+      [...posts.querySelectorAll('.post-card')]
+        .sort((a, b) => new Date(b.dataset.date) - new Date(a.dataset.date))
+        .forEach(card => posts.appendChild(card));
+    }
+  </script>
 </body>
 </html>
