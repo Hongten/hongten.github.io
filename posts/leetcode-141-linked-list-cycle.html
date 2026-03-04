@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 141: Linked List Cycle (Floyd Fast & Slow Pointers)</title>
+  <meta name="description" content="Interview-grade tutorial for LeetCode 141 with brute force vs Floyd cycle detection, pitfalls, and implementations in Java, Go, C++, Python, and JavaScript."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 141: Linked List Cycle (Floyd Fast & Slow Pointers)" />
+  <meta property="og:description" content="Detailed bilingual guide with key insight, step-by-step algorithm, complexity, pitfalls, and 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode-141-linked-list-cycle.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode-141-linked-list-cycle.html" />
+  <link rel="stylesheet" href="../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 141: Linked List Cycle (Floyd Fast & Slow Pointers)</h1>
+      <div class="meta">2026-03-04 · LeetCode · Linked List</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 141</span><span class="tag">Linked List</span><span class="tag">Two Pointers</span><span class="tag">Floyd</span>
+
+      <p>Today we solve <strong>LeetCode 141 - Linked List Cycle</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/linked-list-cycle/" target="_blank" rel="noopener">https://leetcode.com/problems/linked-list-cycle/</a></p>
+      <img class="post-image" src="../assets/img/leetcode-141-20260304.svg" alt="LeetCode 141 fast and slow pointers cycle detection diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given the head of a singly linked list, determine whether the list contains a cycle. A cycle exists if some node can be revisited by continuously following <code>next</code> pointers.</p>
+
+      <h3>Key Insight</h3>
+      <p>If you move one pointer by 1 step (<em>slow</em>) and another by 2 steps (<em>fast</em>), then:</p>
+      <p>- In an acyclic list, <code>fast</code> eventually reaches <code>null</code>.<br/>
+         - In a cyclic list, <code>fast</code> laps and meets <code>slow</code> inside the loop.</p>
+      <p>This is Floyd's Tortoise and Hare algorithm and needs constant extra space.</p>
+
+      <h3>Brute Force and Why Insufficient</h3>
+      <p>A straightforward approach is storing visited node references in a hash set. If a node appears again, there is a cycle. This works in <code>O(n)</code> time but costs <code>O(n)</code> extra memory. Interviewers often ask for the follow-up: solve it in <code>O(1)</code> extra space.</p>
+
+      <h3>Optimal Algorithm (Step-by-Step)</h3>
+      <p>1) Handle trivial case: if <code>head == null</code> or <code>head.next == null</code>, return <code>false</code>.<br/>
+         2) Set <code>slow = head</code>, <code>fast = head</code>.<br/>
+         3) While <code>fast != null</code> and <code>fast.next != null</code>:<br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;a) <code>slow = slow.next</code><br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;b) <code>fast = fast.next.next</code><br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;c) If <code>slow == fast</code>, return <code>true</code>.<br/>
+         4) Loop ended because <code>fast</code> hit null ⇒ return <code>false</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>. Each pointer moves through at most linear nodes before terminating or meeting.<br/>Space: <code>O(1)</code>. Only two pointers are used.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting null checks before <code>fast.next.next</code>, causing runtime errors.<br/>
+         - Comparing node values instead of node references (different nodes may have same value).<br/>
+         - Initializing pointers inconsistently and missing edge cases like single-node self-cycle.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">public class Solution {
+    public boolean hasCycle(ListNode head) {
+        if (head == null || head.next == null) return false;
+
+        ListNode slow = head;
+        ListNode fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) return true;
+        }
+        return false;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func hasCycle(head *ListNode) bool {
+    if head == nil || head.Next == nil {
+        return false
+    }
+
+    slow, fast := head, head
+    for fast != nil && fast.Next != nil {
+        slow = slow.Next
+        fast = fast.Next.Next
+        if slow == fast {
+            return true
+        }
+    }
+    return false
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        if (!head || !head->next) return false;
+
+        ListNode* slow = head;
+        ListNode* fast = head;
+
+        while (fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+            if (slow == fast) return true;
+        }
+        return false;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def hasCycle(self, head: Optional[ListNode]) -> bool:
+        if not head or not head.next:
+            return False
+
+        slow = head
+        fast = head
+
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            if slow is fast:
+                return True
+
+        return False</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var hasCycle = function(head) {
+  if (!head || !head.next) return false;
+
+  let slow = head;
+  let fast = head;
+
+  while (fast && fast.next) {
+    slow = slow.next;
+    fast = fast.next.next;
+    if (slow === fast) return true;
+  }
+
+  return false;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定单链表头节点 <code>head</code>，判断链表中是否存在环。若沿着 <code>next</code> 指针不断走会回到已访问过的节点，就说明有环。</p>
+
+      <h3>核心思路</h3>
+      <p>使用快慢指针：</p>
+      <p>- 慢指针每次走 1 步；<br/>
+         - 快指针每次走 2 步。</p>
+      <p>如果无环，快指针会先到达空指针；如果有环，快指针会在环内追上慢指针。这个方法就是 Floyd 判圈，额外空间是 <code>O(1)</code>。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>暴力思路是用哈希集合记录访问过的节点引用；再次遇到同一个节点就返回 <code>true</code>。时间复杂度是 <code>O(n)</code>，但空间复杂度也是 <code>O(n)</code>，不满足进阶要求。</p>
+
+      <h3>最优算法（步骤）</h3>
+      <p>1）若 <code>head == null</code> 或 <code>head.next == null</code>，直接返回 <code>false</code>。<br/>
+         2）初始化 <code>slow = head</code>、<code>fast = head</code>。<br/>
+         3）循环条件：<code>fast != null && fast.next != null</code>：<br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;a）<code>slow = slow.next</code><br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;b）<code>fast = fast.next.next</code><br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;c）若 <code>slow == fast</code>，返回 <code>true</code>。<br/>
+         4）循环结束说明快指针走到链表末尾，返回 <code>false</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 没做好空指针判断就访问 <code>fast.next.next</code>。<br/>
+         - 用节点值比较而不是节点引用比较。<br/>
+         - 忽略边界：空链表、单节点无环、单节点自环。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">public class Solution {
+    public boolean hasCycle(ListNode head) {
+        if (head == null || head.next == null) return false;
+
+        ListNode slow = head;
+        ListNode fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) return true;
+        }
+        return false;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func hasCycle(head *ListNode) bool {
+    if head == nil || head.Next == nil {
+        return false
+    }
+
+    slow, fast := head, head
+    for fast != nil && fast.Next != nil {
+        slow = slow.Next
+        fast = fast.Next.Next
+        if slow == fast {
+            return true
+        }
+    }
+    return false
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        if (!head || !head->next) return false;
+
+        ListNode* slow = head;
+        ListNode* fast = head;
+
+        while (fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+            if (slow == fast) return true;
+        }
+        return false;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def hasCycle(self, head: Optional[ListNode]) -> bool:
+        if not head or not head.next:
+            return False
+
+        slow = head
+        fast = head
+
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            if slow is fast:
+                return True
+
+        return False</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var hasCycle = function(head) {
+  if (!head || !head.next) return false;
+
+  let slow = head;
+  let fast = head;
+
+  while (fast && fast.next) {
+    slow = slow.next;
+    fast = fast.next.next;
+    if (slow === fast) return true;
+  }
+
+  return false;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../assets/code-tools.js"></script>
+</body>
+</html>
