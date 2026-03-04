@@ -16,7 +16,7 @@
     }
   }
 
-  function bindCopy(button, codeEl) {
+  function bindCopy(button, codeEl, label = 'Copy') {
     button.addEventListener('click', async () => {
       try {
         await copyText(codeEl.innerText);
@@ -25,7 +25,7 @@
         setTimeout(() => (button.textContent = old), 1200);
       } catch {
         button.textContent = 'Failed';
-        setTimeout(() => (button.textContent = 'Copy'), 1200);
+        setTimeout(() => (button.textContent = label), 1200);
       }
     });
   }
@@ -43,7 +43,7 @@
     btn.className = 'copy-btn';
     btn.type = 'button';
     btn.textContent = 'Copy';
-    bindCopy(btn, code);
+    bindCopy(btn, code, 'Copy');
     wrapper.appendChild(btn);
   });
 
@@ -54,7 +54,16 @@
 
     function activate(lang) {
       tabBtns.forEach((btn) => btn.classList.toggle('active', btn.dataset.tab === lang));
-      panes.forEach((pane) => pane.classList.toggle('active', pane.dataset.tab === lang));
+      panes.forEach((pane) => {
+        const isActive = pane.dataset.tab === lang;
+        pane.classList.toggle('active', isActive);
+        const copyBtn = pane.querySelector('.copy-btn');
+        if (copyBtn && isActive) {
+          const label = `Copy ${lang.charAt(0).toUpperCase()}${lang.slice(1)}`;
+          copyBtn.textContent = label;
+          copyBtn.dataset.defaultLabel = label;
+        }
+      });
     }
 
     tabBtns.forEach((btn) => {
@@ -68,8 +77,10 @@
         const btn = document.createElement('button');
         btn.className = 'copy-btn';
         btn.type = 'button';
-        btn.textContent = 'Copy';
-        bindCopy(btn, code);
+        const lang = pane.dataset.tab || 'code';
+        const label = `Copy ${lang.charAt(0).toUpperCase()}${lang.slice(1)}`;
+        btn.textContent = label;
+        bindCopy(btn, code, label);
         pane.appendChild(btn);
       }
     });
