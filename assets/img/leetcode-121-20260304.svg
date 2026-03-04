@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-label="LeetCode 121 one-pass min-price and max-profit diagram">
+  <defs>
+    <style>
+      .bg{fill:#0f1116}.box{fill:#171a22;stroke:#3a4154;stroke-width:2}.txt{fill:#e8ecf3;font-family:Arial,sans-serif}.muted{fill:#9aa4b2;font-family:Arial,sans-serif}.accent{fill:#67e8f9}.profit{fill:#34d399}.loss{fill:#fca5a5}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#9aa4b2"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1200" height="420" rx="16"/>
+
+  <text class="txt" x="40" y="52" font-size="30" font-weight="700">LeetCode 121 · Best Time to Buy and Sell Stock (One Pass)</text>
+  <text class="muted" x="40" y="84" font-size="20">Track the minimum price so far, and update the best profit at each day.</text>
+
+  <rect class="box" x="40" y="120" width="280" height="220" rx="14"/>
+  <text class="txt" x="65" y="165" font-size="24" font-weight="700">State</text>
+  <text class="accent" x="65" y="200" font-size="22">minPrice = +∞</text>
+  <text class="profit" x="65" y="235" font-size="22">maxProfit = 0</text>
+  <text class="muted" x="65" y="275" font-size="18">scan prices left → right</text>
+
+  <rect class="box" x="380" y="120" width="360" height="220" rx="14"/>
+  <text class="txt" x="405" y="165" font-size="24" font-weight="700">For each price p</text>
+  <text class="muted" x="405" y="205" font-size="20">1) minPrice = min(minPrice, p)</text>
+  <text class="muted" x="405" y="240" font-size="20">2) profitToday = p - minPrice</text>
+  <text class="muted" x="405" y="275" font-size="20">3) maxProfit = max(maxProfit, profitToday)</text>
+
+  <rect class="box" x="800" y="120" width="360" height="220" rx="14"/>
+  <text class="txt" x="825" y="165" font-size="24" font-weight="700">Example</text>
+  <text class="muted" x="825" y="200" font-size="20">prices = [7,1,5,3,6,4]</text>
+  <text class="accent" x="825" y="235" font-size="20">minPrice updates: 7 → 1</text>
+  <text class="profit" x="825" y="270" font-size="20">best profit: max(5-1, 6-1) = 5</text>
+  <text class="loss" x="825" y="305" font-size="20">if always falling, answer stays 0</text>
+
+  <line x1="320" y1="230" x2="370" y2="230" stroke="#9aa4b2" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="740" y1="230" x2="790" y2="230" stroke="#9aa4b2" stroke-width="3" marker-end="url(#arrow)"/>
+</svg>
