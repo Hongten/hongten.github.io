@@ -59,25 +59,75 @@
          - Returning negative profit when prices only decrease (answer must be <code>0</code>).<br/>
          - Resetting variables incorrectly when encountering a new minimum.</p>
 
-      <h3>Java Reference Implementation</h3>
-      <pre><code class="language-java">class Solution {
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane" data-tab="java"><pre><code class="language-java">class Solution {
     public int maxProfit(int[] prices) {
         int minPrice = Integer.MAX_VALUE;
         int maxProfit = 0;
 
         for (int price : prices) {
-            if (price &lt; minPrice) {
-                minPrice = price;
-            }
-            int profit = price - minPrice;
-            if (profit &gt; maxProfit) {
-                maxProfit = profit;
-            }
+            if (price &lt; minPrice) minPrice = price;
+            maxProfit = Math.max(maxProfit, price - minPrice);
         }
-
         return maxProfit;
     }
-}</code></pre>
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func maxProfit(prices []int) int {
+    minPrice := int(^uint(0) >> 1)
+    maxProfit := 0
+
+    for _, p := range prices {
+        if p &lt; minPrice {
+            minPrice = p
+        }
+        if p-minPrice &gt; maxProfit {
+            maxProfit = p - minPrice
+        }
+    }
+    return maxProfit
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int maxProfit(vector&lt;int&gt;& prices) {
+        int minPrice = INT_MAX;
+        int maxProfit = 0;
+        for (int p : prices) {
+            minPrice = min(minPrice, p);
+            maxProfit = max(maxProfit, p - minPrice);
+        }
+        return maxProfit;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def maxProfit(self, prices: List[int]) -&gt; int:
+        min_price = float('inf')
+        max_profit = 0
+
+        for p in prices:
+            min_price = min(min_price, p)
+            max_profit = max(max_profit, p - min_price)
+
+        return max_profit</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var maxProfit = function(prices) {
+  let minPrice = Number.MAX_SAFE_INTEGER;
+  let maxProfit = 0;
+
+  for (const p of prices) {
+    minPrice = Math.min(minPrice, p);
+    maxProfit = Math.max(maxProfit, p - minPrice);
+  }
+
+  return maxProfit;
+};</code></pre></div>
+      </div>
 
       <h2>中文</h2>
       <h3>题目概述</h3>
@@ -105,25 +155,75 @@
          - 在单调下降数组中返回负数（正确答案应为 <code>0</code>）。<br/>
          - 更新最小值与利润时机写反，导致结果偏小或错误。</p>
 
-      <h3>Java 参考实现</h3>
-      <pre><code class="language-java">class Solution {
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane" data-tab="java"><pre><code class="language-java">class Solution {
     public int maxProfit(int[] prices) {
         int minPrice = Integer.MAX_VALUE;
         int maxProfit = 0;
 
         for (int price : prices) {
-            if (price &lt; minPrice) {
-                minPrice = price;
-            }
-            int profit = price - minPrice;
-            if (profit &gt; maxProfit) {
-                maxProfit = profit;
-            }
+            if (price &lt; minPrice) minPrice = price;
+            maxProfit = Math.max(maxProfit, price - minPrice);
         }
-
         return maxProfit;
     }
-}</code></pre>
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func maxProfit(prices []int) int {
+    minPrice := int(^uint(0) >> 1)
+    maxProfit := 0
+
+    for _, p := range prices {
+        if p &lt; minPrice {
+            minPrice = p
+        }
+        if p-minPrice &gt; maxProfit {
+            maxProfit = p - minPrice
+        }
+    }
+    return maxProfit
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int maxProfit(vector&lt;int&gt;& prices) {
+        int minPrice = INT_MAX;
+        int maxProfit = 0;
+        for (int p : prices) {
+            minPrice = min(minPrice, p);
+            maxProfit = max(maxProfit, p - minPrice);
+        }
+        return maxProfit;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def maxProfit(self, prices: List[int]) -&gt; int:
+        min_price = float('inf')
+        max_profit = 0
+
+        for p in prices:
+            min_price = min(min_price, p)
+            max_profit = max(max_profit, p - min_price)
+
+        return max_profit</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var maxProfit = function(prices) {
+  let minPrice = Number.MAX_SAFE_INTEGER;
+  let maxProfit = 0;
+
+  for (const p of prices) {
+    minPrice = Math.min(minPrice, p);
+    maxProfit = Math.max(maxProfit, p - minPrice);
+  }
+
+  return maxProfit;
+};</code></pre></div>
+      </div>
     </article>
 
     <section class="card comments">

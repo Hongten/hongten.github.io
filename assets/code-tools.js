@@ -16,7 +16,23 @@
     }
   }
 
+  function bindCopy(button, codeEl) {
+    button.addEventListener('click', async () => {
+      try {
+        await copyText(codeEl.innerText);
+        const old = button.textContent;
+        button.textContent = 'Copied';
+        setTimeout(() => (button.textContent = old), 1200);
+      } catch {
+        button.textContent = 'Failed';
+        setTimeout(() => (button.textContent = 'Copy'), 1200);
+      }
+    });
+  }
+
+  // Plain pre>code blocks (legacy)
   document.querySelectorAll('pre > code').forEach((code) => {
+    if (code.closest('.tab-pane')) return;
     const pre = code.parentElement;
     const wrapper = document.createElement('div');
     wrapper.className = 'code-block';
@@ -27,19 +43,38 @@
     btn.className = 'copy-btn';
     btn.type = 'button';
     btn.textContent = 'Copy';
+    bindCopy(btn, code);
+    wrapper.appendChild(btn);
+  });
 
-    btn.addEventListener('click', async () => {
-      try {
-        await copyText(code.innerText);
-        const old = btn.textContent;
-        btn.textContent = 'Copied';
-        setTimeout(() => (btn.textContent = old), 1200);
-      } catch {
-        btn.textContent = 'Failed';
-        setTimeout(() => (btn.textContent = 'Copy'), 1200);
+  // Tabbed code blocks
+  document.querySelectorAll('.code-tabs').forEach((tabs) => {
+    const tabBtns = tabs.querySelectorAll('.tab-btn');
+    const panes = tabs.querySelectorAll('.tab-pane');
+
+    function activate(lang) {
+      tabBtns.forEach((btn) => btn.classList.toggle('active', btn.dataset.tab === lang));
+      panes.forEach((pane) => pane.classList.toggle('active', pane.dataset.tab === lang));
+    }
+
+    tabBtns.forEach((btn) => {
+      btn.addEventListener('click', () => activate(btn.dataset.tab));
+    });
+
+    panes.forEach((pane) => {
+      const code = pane.querySelector('code');
+      if (!code) return;
+      if (!pane.querySelector('.copy-btn')) {
+        const btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        btn.type = 'button';
+        btn.textContent = 'Copy';
+        bindCopy(btn, code);
+        pane.appendChild(btn);
       }
     });
 
-    wrapper.appendChild(btn);
+    const first = tabBtns[0]?.dataset.tab;
+    if (first) activate(first);
   });
 })();
