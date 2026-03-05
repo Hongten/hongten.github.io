@@ -39,6 +39,7 @@
 
       <p><strong>Source:</strong> <a href="https://leetcode.com/problems/trapping-rain-water/" target="_blank" rel="noopener">https://leetcode.com/problems/trapping-rain-water/</a></p>
       <p>Today we solve <strong>LeetCode 42 - Trapping Rain Water</strong>.</p>
+      <img class="post-image" src="../assets/img/leetcode-42-20260305.svg" alt="LeetCode 42 trapping rain water two pointers diagram" />
 
       <h2>English</h2>
       <p><strong>Idea:</strong> Water at index <code>i</code> is limited by <code>min(maxLeft, maxRight) - height[i]</code>. Use two pointers and maintain running left/right max in one pass.</p>
@@ -122,6 +123,82 @@ public:
       <h2>中文</h2>
       <p><strong>思路：</strong>第 i 列可接水量是 <code>min(左侧最高, 右侧最高) - 当前高度</code>。双指针从两端向中间收缩，动态维护左右最高值即可一趟算完。</p>
       <p><strong>复杂度：</strong>时间 O(n)，额外空间 O(1)。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int trap(int[] h) {
+        int l = 0, r = h.length - 1, lMax = 0, rMax = 0, ans = 0;
+        while (l &lt; r) {
+            if (h[l] &lt; h[r]) {
+                lMax = Math.max(lMax, h[l]);
+                ans += lMax - h[l++];
+            } else {
+                rMax = Math.max(rMax, h[r]);
+                ans += rMax - h[r--];
+            }
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func trap(h []int) int {
+    l, r := 0, len(h)-1
+    lMax, rMax, ans := 0, 0, 0
+    for l &lt; r {
+        if h[l] &lt; h[r] {
+            if h[l] &gt; lMax { lMax = h[l] }
+            ans += lMax - h[l]
+            l++
+        } else {
+            if h[r] &gt; rMax { rMax = h[r] }
+            ans += rMax - h[r]
+            r--
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int trap(vector&lt;int&gt;& h) {
+        int l=0,r=(int)h.size()-1,lm=0,rm=0,ans=0;
+        while(l&lt;r){
+            if(h[l]&lt;h[r]){ lm=max(lm,h[l]); ans+=lm-h[l++]; }
+            else { rm=max(rm,h[r]); ans+=rm-h[r--]; }
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def trap(self, h: List[int]) -&gt; int:
+        l, r = 0, len(h)-1
+        lmax = rmax = ans = 0
+        while l &lt; r:
+            if h[l] &lt; h[r]:
+                lmax = max(lmax, h[l])
+                ans += lmax - h[l]
+                l += 1
+            else:
+                rmax = max(rmax, h[r])
+                ans += rmax - h[r]
+                r -= 1
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var trap = function(h) {
+  let l = 0, r = h.length - 1, lMax = 0, rMax = 0, ans = 0;
+  while (l &lt; r) {
+    if (h[l] &lt; h[r]) {
+      lMax = Math.max(lMax, h[l]);
+      ans += lMax - h[l++];
+    } else {
+      rMax = Math.max(rMax, h[r]);
+      ans += rMax - h[r--];
+    }
+  }
+  return ans;
+};</code></pre></div>
+      </div>
     </article>
 
     <section class="card comments">
