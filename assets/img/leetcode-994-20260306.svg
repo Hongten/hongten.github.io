@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">LeetCode 994 Rotting Oranges BFS Diagram</title>
+  <desc id="desc">Grid propagation by minutes using multi-source BFS from rotten oranges.</desc>
+  <defs>
+    <style>
+      .bg { fill: #0b1020; }
+      .panel { fill: #121a33; stroke: #2a3a72; stroke-width: 2; }
+      .text { fill: #e8edff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+      .muted { fill: #9fb0e3; }
+      .fresh { fill: #f59e0b; }
+      .rotten { fill: #ef4444; }
+      .empty { fill: #26345f; }
+      .cell { stroke: #4b5f9e; stroke-width: 1.5; rx: 8; }
+      .arrow { stroke: #7dd3fc; stroke-width: 4; marker-end: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#7dd3fc"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1200" height="680"/>
+  <text class="text" x="60" y="70" font-size="42" font-weight="700">LeetCode 994 · Multi-Source BFS</text>
+  <text class="text muted" x="60" y="110" font-size="26">Each BFS level = 1 minute of rot spread</text>
+
+  <g transform="translate(70,160)">
+    <rect class="panel" x="0" y="0" width="300" height="420" rx="16"/>
+    <text class="text" x="24" y="44" font-size="26" font-weight="600">Minute 0</text>
+
+    <rect class="cell fresh" x="30" y="80" width="56" height="56"/>
+    <rect class="cell rotten" x="96" y="80" width="56" height="56"/>
+    <rect class="cell fresh" x="162" y="80" width="56" height="56"/>
+    <rect class="cell empty" x="228" y="80" width="56" height="56"/>
+
+    <rect class="cell fresh" x="30" y="146" width="56" height="56"/>
+    <rect class="cell fresh" x="96" y="146" width="56" height="56"/>
+    <rect class="cell empty" x="162" y="146" width="56" height="56"/>
+    <rect class="cell fresh" x="228" y="146" width="56" height="56"/>
+
+    <rect class="cell empty" x="30" y="212" width="56" height="56"/>
+    <rect class="cell fresh" x="96" y="212" width="56" height="56"/>
+    <rect class="cell fresh" x="162" y="212" width="56" height="56"/>
+    <rect class="cell fresh" x="228" y="212" width="56" height="56"/>
+
+    <text class="text muted" x="30" y="330" font-size="22">Queue starts with all initial rotten cells.</text>
+  </g>
+
+  <line class="arrow" x1="390" y1="360" x2="470" y2="360"/>
+
+  <g transform="translate(480,160)">
+    <rect class="panel" x="0" y="0" width="300" height="420" rx="16"/>
+    <text class="text" x="24" y="44" font-size="26" font-weight="600">Minute 1</text>
+
+    <rect class="cell rotten" x="30" y="80" width="56" height="56"/>
+    <rect class="cell rotten" x="96" y="80" width="56" height="56"/>
+    <rect class="cell rotten" x="162" y="80" width="56" height="56"/>
+    <rect class="cell empty" x="228" y="80" width="56" height="56"/>
+
+    <rect class="cell fresh" x="30" y="146" width="56" height="56"/>
+    <rect class="cell rotten" x="96" y="146" width="56" height="56"/>
+    <rect class="cell empty" x="162" y="146" width="56" height="56"/>
+    <rect class="cell fresh" x="228" y="146" width="56" height="56"/>
+
+    <rect class="cell empty" x="30" y="212" width="56" height="56"/>
+    <rect class="cell fresh" x="96" y="212" width="56" height="56"/>
+    <rect class="cell fresh" x="162" y="212" width="56" height="56"/>
+    <rect class="cell fresh" x="228" y="212" width="56" height="56"/>
+
+    <text class="text muted" x="30" y="330" font-size="22">All neighbors of current layer rot together.</text>
+  </g>
+
+  <line class="arrow" x1="800" y1="360" x2="880" y2="360"/>
+
+  <g transform="translate(890,160)">
+    <rect class="panel" x="0" y="0" width="240" height="420" rx="16"/>
+    <text class="text" x="24" y="44" font-size="26" font-weight="600">Finish</text>
+    <text class="text muted" x="24" y="92" font-size="22">If fresh == 0 → return minutes</text>
+    <text class="text muted" x="24" y="130" font-size="22">Else unreachable fresh exists</text>
+    <text class="text" x="24" y="200" font-size="32" font-weight="700">Answer = -1</text>
+    <text class="text muted" x="24" y="250" font-size="22">when blocked by empty cells.</text>
+
+    <circle cx="50" cy="330" r="16" class="fresh"/><text class="text" x="80" y="338" font-size="20">Fresh</text>
+    <circle cx="50" cy="370" r="16" class="rotten"/><text class="text" x="80" y="378" font-size="20">Rotten</text>
+    <circle cx="50" cy="410" r="16" class="empty"/><text class="text" x="80" y="418" font-size="20">Empty</text>
+  </g>
+</svg>
