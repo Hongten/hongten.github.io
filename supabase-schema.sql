@@ -25,14 +25,30 @@ for each row execute function public.set_updated_at();
 
 alter table public.reading_notes enable row level security;
 
--- Demo policy: anonymous read/write enabled (quick start for personal site).
--- If you later add auth, tighten these policies.
-drop policy if exists "notes_select_all" on public.reading_notes;
+-- 登录保护版本：读取公开，写入仅登录用户。
+alter table public.reading_notes add column if not exists user_id uuid references auth.users(id);
+alter table public.reading_notes alter column user_id set default auth.uid();
+
+-- 兼容旧策略
+ drop policy if exists "notes_select_all" on public.reading_notes;
+ drop policy if exists "notes_insert_all" on public.reading_notes;
+
 create policy "notes_select_all" on public.reading_notes
 for select
 using (true);
 
-drop policy if exists "notes_insert_all" on public.reading_notes;
-create policy "notes_insert_all" on public.reading_notes
+create policy "notes_insert_authenticated" on public.reading_notes
 for insert
-with check (true);
+to authenticated
+with check (auth.uid() = user_id);
+
+create policy "notes_update_owner" on public.reading_notes
+for update
+to authenticated
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
+
+create policy "notes_delete_owner" on public.reading_notes
+for delete
+to authenticated
+using (auth.uid() = user_id);

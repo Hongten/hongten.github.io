@@ -2,6 +2,7 @@
   const cfg = window.TOM_SUPABASE || {};
   const form = document.getElementById('noteForm');
   const formMsg = document.getElementById('formMsg');
+  const authMsg = document.getElementById('authMsg');
   const searchInput = document.getElementById('noteSearch');
   const refreshBtn = document.getElementById('refreshBtn');
   const timelineEl = document.getElementById('timeline');
@@ -9,8 +10,14 @@
   const titleInput = document.getElementById('noteTitle');
   const tagsInput = document.getElementById('noteTags');
   const contentInput = document.getElementById('noteContent');
+  const saveBtn = document.getElementById('saveBtn');
+
+  const authEmail = document.getElementById('authEmail');
+  const loginBtn = document.getElementById('loginBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
 
   let allNotes = [];
+  let currentUser = null;
 
   function fmtTime(v) {
     const d = new Date(v);
@@ -32,6 +39,11 @@
     formMsg.style.color = isError ? '#f87171' : '';
   }
 
+  function setAuthMsg(text, isError) {
+    authMsg.textContent = text || '';
+    authMsg.style.color = isError ? '#f87171' : '';
+  }
+
   function ensureClient() {
     if (!cfg.url || !cfg.anonKey) {
       throw new Error('请先在 assets/supabase-config.js 中填写 Supabase URL 和 anonKey。');
@@ -40,6 +52,21 @@
       throw new Error('Supabase SDK 加载失败。');
     }
     return window.supabase.createClient(cfg.url, cfg.anonKey);
+  }
+
+  function updateAuthUI() {
+    const loggedIn = !!currentUser;
+    titleInput.disabled = !loggedIn;
+    tagsInput.disabled = !loggedIn;
+    contentInput.disabled = !loggedIn;
+    saveBtn.disabled = !loggedIn;
+    logoutBtn.disabled = !loggedIn;
+
+    if (loggedIn) {
+      setAuthMsg(`已登录：${currentUser.email || currentUser.id}`);
+    } else {
+      setAuthMsg('未登录：请先用邮箱登录后再保存笔记。');
+    }
   }
 
   function groupByMonth(notes) {
@@ -103,6 +130,12 @@
 
   async function createNote(evt) {
     evt.preventDefault();
+
+    if (!currentUser) {
+      setMsg('请先登录后再保存。', true);
+      return;
+    }
+
     setMsg('保存中...');
 
     const title = titleInput.value.trim();
@@ -129,9 +162,55 @@
     }
   }
 
+  async function signInByEmail() {
+    const email = (authEmail.value || '').trim();
+    if (!email) {
+      setAuthMsg('请先输入邮箱。', true);
+      return;
+    }
+
+    try {
+      const client = ensureClient();
+      const { error } = await client.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: window.location.href.split('#')[0] }
+      });
+      if (error) throw error;
+      setAuthMsg('登录邮件已发送，请去邮箱点击链接完成登录。');
+    } catch (err) {
+      setAuthMsg(`发送失败：${err.message || String(err)}`, true);
+    }
+  }
+
+  async function signOut() {
+    try {
+      const client = ensureClient();
+      const { error } = await client.auth.signOut();
+      if (error) throw error;
+      setAuthMsg('已退出登录。');
+    } catch (err) {
+      setAuthMsg(`退出失败：${err.message || String(err)}`, true);
+    }
+  }
+
+  async function initAuth() {
+    const client = ensureClient();
+    const { data } = await client.auth.getUser();
+    currentUser = data && data.user ? data.user : null;
+    updateAuthUI();
+
+    client.auth.onAuthStateChange((_event, session) => {
+      currentUser = session && session.user ? session.user : null;
+      updateAuthUI();
+    });
+  }
+
   form.addEventListener('submit', createNote);
   searchInput.addEventListener('input', renderNotes);
   refreshBtn.addEventListener('click', loadNotes);
+  loginBtn.addEventListener('click', signInByEmail);
+  logoutBtn.addEventListener('click', signOut);
 
+  initAuth();
   loadNotes();
 })();
