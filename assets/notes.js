@@ -21,7 +21,7 @@
   function fmtTime(v) {
     const d = new Date(v);
     if (Number.isNaN(d.getTime())) return v || '-';
-    return d.toLocaleString('zh-CN', { hour12: false });
+    return d.toLocaleString('en-GB', { hour12: false });
   }
 
   function escapeHtml(s) {
@@ -40,10 +40,10 @@
 
   function ensureClient() {
     if (!cfg.url || !cfg.anonKey) {
-      throw new Error('请先在 assets/supabase-config.js 中填写 Supabase URL 和 anonKey。');
+      throw new Error('Please set Supabase URL and anonKey in assets/supabase-config.js first.');
     }
     if (!window.supabase || !window.supabase.createClient) {
-      throw new Error('Supabase SDK 加载失败。');
+      throw new Error('Supabase SDK failed to load.');
     }
     return window.supabase.createClient(cfg.url, cfg.anonKey);
   }
@@ -68,7 +68,7 @@
     const pageItems = filtered.slice(start, start + pageSize);
 
     if (!pageItems.length) {
-      timelineEl.innerHTML = '<article class="card"><h2>暂无笔记</h2><p>先写一条，或者换个关键词搜索。</p></article>';
+      timelineEl.innerHTML = '<article class="card"><h2>No notes yet</h2><p>Write one or try another keyword.</p></article>';
     } else {
       timelineEl.innerHTML = pageItems.map(n => {
         const content = n.content || '';
@@ -77,15 +77,15 @@
         const remainingText = hasMore ? content.slice(180) : '';
         return `
           <article class="card note-card">
-            <div class="meta">记录时间：${fmtTime(n.created_at)}${n.updated_at ? ` · 更新时间：${fmtTime(n.updated_at)}` : ''}</div>
+            <div class="meta">Created: ${fmtTime(n.created_at)}${n.updated_at ? ` · Updated: ${fmtTime(n.updated_at)}` : ''}</div>
             <p class="note-content note-preview">${escapeHtml(previewText).replaceAll('\n', '<br/>')}${hasMore ? '...' : ''}</p>
-            ${hasMore ? `<details class="note-details"><summary>展开剩余内容</summary><p class="note-content">${escapeHtml(remainingText).replaceAll('\n', '<br/>')}</p></details>` : ''}
+            ${hasMore ? `<details class="note-details"><summary>Show remaining content</summary><p class="note-content">${escapeHtml(remainingText).replaceAll('\n', '<br/>')}</p></details>` : ''}
           </article>
         `;
       }).join('');
     }
 
-    if (statsEl) statsEl.textContent = `共 ${total} 条记录`;
+    if (statsEl) statsEl.textContent = `Total ${total} notes`;
     if (pageInfoEl) pageInfoEl.textContent = `Page ${currentPage} / ${totalPages}`;
     if (prevPageBtn) prevPageBtn.disabled = currentPage <= 1;
     if (nextPageBtn) nextPageBtn.disabled = currentPage >= totalPages;
@@ -103,18 +103,18 @@
       allNotes = data || [];
       renderNotes();
     } catch (err) {
-      timelineEl.innerHTML = `<article class="card"><h2>加载失败</h2><p>${escapeHtml(err.message || String(err))}</p></article>`;
+      timelineEl.innerHTML = `<article class="card"><h2>Load failed</h2><p>${escapeHtml(err.message || String(err))}</p></article>`;
     }
   }
 
   async function createNote(evt) {
     evt.preventDefault();
-    setMsg('保存中...');
+    setMsg('Saving...');
 
     const content = contentInput.value.trim();
 
     if (!content) {
-      setMsg('内容不能为空。', true);
+      setMsg('Content cannot be empty.', true);
       return;
     }
 
@@ -125,11 +125,11 @@
       if (error) throw error;
 
       form.reset();
-      setMsg('已保存 ✅');
+      setMsg('Saved ✅');
       currentPage = 1;
       await loadNotes();
     } catch (err) {
-      setMsg(`保存失败：${err.message || String(err)}`, true);
+      setMsg(`Save failed: ${err.message || String(err)}`, true);
     }
   }
 
