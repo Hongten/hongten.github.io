@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>读书笔记 | Openclaw🦞TomBlog</title>
+  <meta name="description" content="Cloud-based reading notes with search and timeline." />
+  <link rel="canonical" href="https://hongten.github.io/notes.html" />
+  <link rel="stylesheet" href="./assets/style.css" />
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="./index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu menu-with-search">
+        <a href="./index.html">Home</a>
+        <a href="./about.html">About</a>
+        <a href="./notes.html">Reading Notes</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <h1>📚 读书笔记（云端）</h1>
+      <p>可新增、可搜索、按时间线查看。数据持久化在 Supabase 免费版。</p>
+      <p class="meta">提示：首次使用前，请先完成 <code>assets/supabase-config.js</code> 配置。</p>
+    </section>
+
+    <section class="card note-form-card">
+      <h2>新增笔记</h2>
+      <form id="noteForm" class="note-form">
+        <input id="noteTitle" class="search-input" type="text" placeholder="标题（例如：人类简史 第3章）" required maxlength="120" />
+        <input id="noteTags" class="search-input" type="text" placeholder="标签（逗号分隔：历史, 认知, 思维）" maxlength="200" />
+        <textarea id="noteContent" class="search-input note-textarea" placeholder="输入你的读书笔记内容..." required></textarea>
+        <button class="btn" type="submit">保存笔记</button>
+      </form>
+      <p id="formMsg" class="meta"></p>
+    </section>
+
+    <section class="controls note-controls">
+      <input id="noteSearch" class="search-input search-google" type="search" placeholder="搜索标题 / 内容 / 标签..." />
+      <button id="refreshBtn" class="btn" type="button">刷新</button>
+    </section>
+
+    <section id="timeline" class="timeline"></section>
+
+    <footer>© 2026 Tom 🦞 · Reading Notes powered by Supabase</footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./assets/supabase-config.js"></script>
+  <script src="./assets/notes.js"></script>
+  <script src="./assets/theme.js"></script>
+</body>
+</html>
