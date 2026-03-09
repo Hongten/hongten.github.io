@@ -37,10 +37,24 @@
 
     <section class="controls note-controls">
       <input id="noteSearch" class="search-input search-google" type="search" placeholder="搜索内容..." />
-      <button id="refreshBtn" class="btn" type="button">刷新</button>
+      <div class="size-wrap">
+        <select id="notePageSize" class="size-select">
+          <option value="10" selected>10 / page</option>
+          <option value="20">20 / page</option>
+          <option value="50">50 / page</option>
+        </select>
+        <button id="refreshBtn" class="btn" type="button">刷新</button>
+      </div>
     </section>
 
+    <p id="noteStats" class="meta"></p>
     <section id="timeline" class="timeline"></section>
+
+    <section class="pagination">
+      <button id="notePrevPage" class="btn" type="button">← Prev</button>
+      <div id="notePageInfo" class="page-info">Page 1</div>
+      <button id="noteNextPage" class="btn" type="button">Next →</button>
+    </section>
 
     <footer>© 2026 Tom 🦞 · Reading Notes powered by Supabase</footer>
   </main>

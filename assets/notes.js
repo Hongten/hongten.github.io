@@ -5,10 +5,18 @@
   const searchInput = document.getElementById('noteSearch');
   const refreshBtn = document.getElementById('refreshBtn');
   const timelineEl = document.getElementById('timeline');
+  const statsEl = document.getElementById('noteStats');
+
+  const pageSizeSelect = document.getElementById('notePageSize');
+  const prevPageBtn = document.getElementById('notePrevPage');
+  const nextPageBtn = document.getElementById('noteNextPage');
+  const pageInfoEl = document.getElementById('notePageInfo');
 
   const contentInput = document.getElementById('noteContent');
 
   let allNotes = [];
+  let currentPage = 1;
+  let pageSize = 10;
 
   function fmtTime(v) {
     const d = new Date(v);
@@ -40,42 +48,46 @@
     return window.supabase.createClient(cfg.url, cfg.anonKey);
   }
 
-  function groupByMonth(notes) {
-    const map = new Map();
-    notes.forEach(n => {
-      const d = new Date(n.created_at);
-      const key = Number.isNaN(d.getTime())
-        ? '未知时间'
-        : `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-      if (!map.has(key)) map.set(key, []);
-      map.get(key).push(n);
-    });
-    return [...map.entries()].sort((a, b) => b[0].localeCompare(a[0]));
+  function getFilteredNotes() {
+    const q = (searchInput.value || '').trim().toLowerCase();
+    if (!q) return allNotes;
+    return allNotes.filter(n => (n.content || '').toLowerCase().includes(q));
+  }
+
+  function clampPage(page, totalPages) {
+    return Math.min(Math.max(page, 1), Math.max(totalPages, 1));
   }
 
   function renderNotes() {
-    const q = (searchInput.value || '').trim().toLowerCase();
-    const filtered = !q
-      ? allNotes
-      : allNotes.filter(n => (n.content || '').toLowerCase().includes(q));
+    const filtered = getFilteredNotes();
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    currentPage = clampPage(currentPage, totalPages);
 
-    if (!filtered.length) {
+    const start = (currentPage - 1) * pageSize;
+    const pageItems = filtered.slice(start, start + pageSize);
+
+    if (!pageItems.length) {
       timelineEl.innerHTML = '<article class="card"><h2>暂无笔记</h2><p>先写一条，或者换个关键词搜索。</p></article>';
-      return;
-    }
-
-    const groups = groupByMonth(filtered);
-    timelineEl.innerHTML = groups.map(([month, items]) => `
-      <section class="timeline-group">
-        <h2 class="timeline-title">${month}</h2>
-        ${items.map(n => `
+    } else {
+      timelineEl.innerHTML = pageItems.map(n => {
+        const content = n.content || '';
+        const preview = content.length > 180 ? `${content.slice(0, 180)}...` : content;
+        const hasMore = content.length > 180;
+        return `
           <article class="card note-card">
             <div class="meta">记录时间：${fmtTime(n.created_at)}${n.updated_at ? ` · 更新时间：${fmtTime(n.updated_at)}` : ''}</div>
-            <p class="note-content">${escapeHtml(n.content || '').replaceAll('\n', '<br/>')}</p>
+            <p class="note-content note-preview">${escapeHtml(preview).replaceAll('\n', '<br/>')}</p>
+            ${hasMore ? `<details class="note-details"><summary>展开全文</summary><p class="note-content">${escapeHtml(content).replaceAll('\n', '<br/>')}</p></details>` : ''}
           </article>
-        `).join('')}
-      </section>
-    `).join('');
+        `;
+      }).join('');
+    }
+
+    if (statsEl) statsEl.textContent = `共 ${total} 条记录`;
+    if (pageInfoEl) pageInfoEl.textContent = `Page ${currentPage} / ${totalPages}`;
+    if (prevPageBtn) prevPageBtn.disabled = currentPage <= 1;
+    if (nextPageBtn) nextPageBtn.disabled = currentPage >= totalPages;
   }
 
   async function loadNotes() {
@@ -108,12 +120,12 @@
     try {
       const client = ensureClient();
       const table = cfg.table || 'reading_notes';
-      const payload = { content };
-      const { error } = await client.from(table).insert(payload);
+      const { error } = await client.from(table).insert({ content });
       if (error) throw error;
 
       form.reset();
       setMsg('已保存 ✅');
+      currentPage = 1;
       await loadNotes();
     } catch (err) {
       setMsg(`保存失败：${err.message || String(err)}`, true);
@@ -121,8 +133,31 @@
   }
 
   form.addEventListener('submit', createNote);
-  searchInput.addEventListener('input', renderNotes);
+  searchInput.addEventListener('input', () => {
+    currentPage = 1;
+    renderNotes();
+  });
   refreshBtn.addEventListener('click', loadNotes);
+
+  if (pageSizeSelect) {
+    pageSizeSelect.addEventListener('change', () => {
+      pageSize = Number(pageSizeSelect.value) || 10;
+      currentPage = 1;
+      renderNotes();
+    });
+  }
+  if (prevPageBtn) {
+    prevPageBtn.addEventListener('click', () => {
+      currentPage -= 1;
+      renderNotes();
+    });
+  }
+  if (nextPageBtn) {
+    nextPageBtn.addEventListener('click', () => {
+      currentPage += 1;
+      renderNotes();
+    });
+  }
 
   loadNotes();
 })();
