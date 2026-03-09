@@ -2,22 +2,13 @@
   const cfg = window.TOM_SUPABASE || {};
   const form = document.getElementById('noteForm');
   const formMsg = document.getElementById('formMsg');
-  const authMsg = document.getElementById('authMsg');
   const searchInput = document.getElementById('noteSearch');
   const refreshBtn = document.getElementById('refreshBtn');
   const timelineEl = document.getElementById('timeline');
 
-  const titleInput = document.getElementById('noteTitle');
-  const tagsInput = document.getElementById('noteTags');
   const contentInput = document.getElementById('noteContent');
-  const saveBtn = document.getElementById('saveBtn');
-
-  const authEmail = document.getElementById('authEmail');
-  const loginBtn = document.getElementById('loginBtn');
-  const logoutBtn = document.getElementById('logoutBtn');
 
   let allNotes = [];
-  let currentUser = null;
 
   function fmtTime(v) {
     const d = new Date(v);
@@ -39,11 +30,6 @@
     formMsg.style.color = isError ? '#f87171' : '';
   }
 
-  function setAuthMsg(text, isError) {
-    authMsg.textContent = text || '';
-    authMsg.style.color = isError ? '#f87171' : '';
-  }
-
   function ensureClient() {
     if (!cfg.url || !cfg.anonKey) {
       throw new Error('请先在 assets/supabase-config.js 中填写 Supabase URL 和 anonKey。');
@@ -52,21 +38,6 @@
       throw new Error('Supabase SDK 加载失败。');
     }
     return window.supabase.createClient(cfg.url, cfg.anonKey);
-  }
-
-  function updateAuthUI() {
-    const loggedIn = !!currentUser;
-    titleInput.disabled = !loggedIn;
-    tagsInput.disabled = !loggedIn;
-    contentInput.disabled = !loggedIn;
-    saveBtn.disabled = !loggedIn;
-    logoutBtn.disabled = !loggedIn;
-
-    if (loggedIn) {
-      setAuthMsg(`已登录：${currentUser.email || currentUser.id}`);
-    } else {
-      setAuthMsg('未登录：请先用邮箱登录后再保存笔记。');
-    }
   }
 
   function groupByMonth(notes) {
@@ -86,10 +57,7 @@
     const q = (searchInput.value || '').trim().toLowerCase();
     const filtered = !q
       ? allNotes
-      : allNotes.filter(n => {
-          const tags = Array.isArray(n.tags) ? n.tags.join(' ') : '';
-          return (`${n.title || ''} ${n.content || ''} ${tags}`).toLowerCase().includes(q);
-        });
+      : allNotes.filter(n => (n.content || '').toLowerCase().includes(q));
 
     if (!filtered.length) {
       timelineEl.innerHTML = '<article class="card"><h2>暂无笔记</h2><p>先写一条，或者换个关键词搜索。</p></article>';
@@ -102,9 +70,7 @@
         <h2 class="timeline-title">${month}</h2>
         ${items.map(n => `
           <article class="card note-card">
-            <h3>${escapeHtml(n.title || '无标题')}</h3>
-            <div class="meta">创建时间：${fmtTime(n.created_at)}${n.updated_at ? ` · 更新时间：${fmtTime(n.updated_at)}` : ''}</div>
-            ${Array.isArray(n.tags) && n.tags.length ? `<p class="note-tags">${n.tags.map(t => `<span class="tag">#${escapeHtml(t)}</span>`).join(' ')}</p>` : ''}
+            <div class="meta">记录时间：${fmtTime(n.created_at)}${n.updated_at ? ` · 更新时间：${fmtTime(n.updated_at)}` : ''}</div>
             <p class="note-content">${escapeHtml(n.content || '').replaceAll('\n', '<br/>')}</p>
           </article>
         `).join('')}
@@ -118,7 +84,7 @@
       const table = cfg.table || 'reading_notes';
       const { data, error } = await client
         .from(table)
-        .select('id,title,content,tags,created_at,updated_at')
+        .select('id,content,created_at,updated_at')
         .order('created_at', { ascending: false });
       if (error) throw error;
       allNotes = data || [];
@@ -130,27 +96,19 @@
 
   async function createNote(evt) {
     evt.preventDefault();
-
-    if (!currentUser) {
-      setMsg('请先登录后再保存。', true);
-      return;
-    }
-
     setMsg('保存中...');
 
-    const title = titleInput.value.trim();
     const content = contentInput.value.trim();
-    const tags = tagsInput.value.split(',').map(s => s.trim()).filter(Boolean);
 
-    if (!title || !content) {
-      setMsg('标题和内容不能为空。', true);
+    if (!content) {
+      setMsg('内容不能为空。', true);
       return;
     }
 
     try {
       const client = ensureClient();
       const table = cfg.table || 'reading_notes';
-      const payload = { title, content, tags };
+      const payload = { content };
       const { error } = await client.from(table).insert(payload);
       if (error) throw error;
 
@@ -162,56 +120,9 @@
     }
   }
 
-  async function signInByEmail() {
-    const email = (authEmail.value || '').trim();
-    if (!email) {
-      setAuthMsg('请先输入邮箱。', true);
-      return;
-    }
-
-    try {
-      const client = ensureClient();
-      const redirectTo = cfg.redirectTo || `${window.location.origin}/notes.html`;
-      const { error } = await client.auth.signInWithOtp({
-        email,
-        options: { emailRedirectTo: redirectTo }
-      });
-      if (error) throw error;
-      setAuthMsg('登录邮件已发送，请去邮箱点击链接完成登录。');
-    } catch (err) {
-      setAuthMsg(`发送失败：${err.message || String(err)}`, true);
-    }
-  }
-
-  async function signOut() {
-    try {
-      const client = ensureClient();
-      const { error } = await client.auth.signOut();
-      if (error) throw error;
-      setAuthMsg('已退出登录。');
-    } catch (err) {
-      setAuthMsg(`退出失败：${err.message || String(err)}`, true);
-    }
-  }
-
-  async function initAuth() {
-    const client = ensureClient();
-    const { data } = await client.auth.getUser();
-    currentUser = data && data.user ? data.user : null;
-    updateAuthUI();
-
-    client.auth.onAuthStateChange((_event, session) => {
-      currentUser = session && session.user ? session.user : null;
-      updateAuthUI();
-    });
-  }
-
   form.addEventListener('submit', createNote);
   searchInput.addEventListener('input', renderNotes);
   refreshBtn.addEventListener('click', loadNotes);
-  loginBtn.addEventListener('click', signInByEmail);
-  logoutBtn.addEventListener('click', signOut);
 
-  initAuth();
   loadNotes();
 })();
