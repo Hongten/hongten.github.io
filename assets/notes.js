@@ -72,13 +72,14 @@
     } else {
       timelineEl.innerHTML = pageItems.map(n => {
         const content = n.content || '';
-        const preview = content.length > 180 ? `${content.slice(0, 180)}...` : content;
         const hasMore = content.length > 180;
+        const previewText = hasMore ? content.slice(0, 180) : content;
+        const remainingText = hasMore ? content.slice(180) : '';
         return `
           <article class="card note-card">
             <div class="meta">记录时间：${fmtTime(n.created_at)}${n.updated_at ? ` · 更新时间：${fmtTime(n.updated_at)}` : ''}</div>
-            <p class="note-content note-preview">${escapeHtml(preview).replaceAll('\n', '<br/>')}</p>
-            ${hasMore ? `<details class="note-details"><summary>展开全文</summary><p class="note-content">${escapeHtml(content).replaceAll('\n', '<br/>')}</p></details>` : ''}
+            <p class="note-content note-preview">${escapeHtml(previewText).replaceAll('\n', '<br/>')}${hasMore ? '...' : ''}</p>
+            ${hasMore ? `<details class="note-details"><summary>展开剩余内容</summary><p class="note-content">${escapeHtml(remainingText).replaceAll('\n', '<br/>')}</p></details>` : ''}
           </article>
         `;
       }).join('');
