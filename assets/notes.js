@@ -171,9 +171,10 @@
 
     try {
       const client = ensureClient();
+      const redirectTo = cfg.redirectTo || `${window.location.origin}/notes.html`;
       const { error } = await client.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: window.location.href.split('#')[0] }
+        options: { emailRedirectTo: redirectTo }
       });
       if (error) throw error;
       setAuthMsg('登录邮件已发送，请去邮箱点击链接完成登录。');
