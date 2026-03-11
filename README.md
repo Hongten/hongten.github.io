@@ -42,3 +42,25 @@ python3 -m http.server 8080
 ```
 
 Then open `http://127.0.0.1:8080`.
+
+## One-Command LeetCode Post Scaffold
+
+Use the fixed skeleton generator to create a fully aligned post (page + cover image + index card):
+
+```bash
+python3 scripts/gen_leetcode_post.py \
+  --id 20 \
+  --title "Valid Parentheses" \
+  --topic "Stack" \
+  --tag1 "String" \
+  --tag2 "Stack" \
+  --source-url "https://leetcode.com/problems/valid-parentheses/" \
+  --summary-en "Bilingual interview-grade walkthrough of LeetCode 20: stack matching intuition, correctness checks, pitfalls, and 5-language code tabs."
+```
+
+Generated files:
+- `posts/leetcode-<id>-<slug>.html`
+- `assets/img/leetcode-<id>-<yyyymmdd>.svg`
+- plus automatic prepend card in `index.html`
+
+Template source: `templates/leetcode-post.html.tpl`
