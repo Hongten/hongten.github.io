@@ -64,3 +64,18 @@ Generated files:
 - plus automatic prepend card in `index.html`
 
 Template source: `templates/leetcode-post.html.tpl`
+
+## One-Command Generate + Publish
+
+If you want true one-shot daily publishing (generate page + update index + commit + push):
+
+```bash
+scripts/publish_daily.sh \
+  --id 155 \
+  --title "Min Stack" \
+  --topic "Stack" \
+  --tag1 "Stack" \
+  --tag2 "Design" \
+  --source-url "https://leetcode.com/problems/min-stack/" \
+  --summary-en "Bilingual interview-grade walkthrough of LeetCode 155: design decisions, constant-time operations, pitfalls, and 5-language code tabs."
+```
