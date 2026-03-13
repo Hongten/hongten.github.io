@@ -22,7 +22,17 @@ def escape_code(code: str) -> str:
     return html.escape(code, quote=False)
 
 
+def collect_existing_leetcode_ids() -> set[int]:
+    ids = set()
+    for p in POSTS.rglob("leetcode-*.html"):
+        m = re.match(r"leetcode-(\d+)-", p.stem)
+        if m:
+            ids.add(int(m.group(1)))
+    return ids
+
+
 def build_svg(path: Path, post_title: str, topic: str):
+    path.parent.mkdir(parents=True, exist_ok=True)
     svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="{html.escape(post_title)} diagram">
   <defs>
     <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
@@ -54,12 +64,17 @@ def main():
     parser.add_argument("--summary-zh", default="双语面试级讲解：包含基线思路、最优解、常见陷阱与 5 语言代码标签页。")
     args = parser.parse_args()
 
-    lc_id = str(args.id).strip()
+    lc_id = int(str(args.id).strip())
     problem_name = args.title.strip()
     slug = f"leetcode-{lc_id}-{slugify(problem_name)}"
     post_file = f"{slug}.html"
 
+    existing_ids = collect_existing_leetcode_ids()
+    if lc_id in existing_ids:
+        raise SystemExit(f"LeetCode {lc_id} already exists. Abort to prevent duplicates.")
+
     now = dt.datetime.now(dt.timezone(dt.timedelta(hours=8)))
+    year = now.strftime("%Y")
     date_str = now.strftime("%Y-%m-%d")
     iso_str = now.strftime("%Y-%m-%dT%H:%M:%S+08:00")
 
@@ -67,7 +82,7 @@ def main():
     post_title = f"LeetCode {lc_id}: {problem_name}"
     full_post_title = f"{post_title} ({args.topic})"
 
-    image_file = f"leetcode-{lc_id}-{date_str.replace('-', '')}.svg"
+    image_rel = f"leetcode/{year}/leetcode-{lc_id}-{date_str.replace('-', '')}.svg"
 
     template = TEMPLATE.read_text(encoding="utf-8")
 
@@ -77,12 +92,12 @@ def main():
         "OG_DESCRIPTION": "Detailed English + 中文 guide with insight, algorithm steps, complexity, pitfalls, and code tabs.",
         "POST_FILE": post_file,
         "META_LINE": f"{date_str} · LeetCode · {args.topic}",
-        "LC_ID": lc_id,
+        "LC_ID": str(lc_id),
         "TAG_1": args.tag1,
         "TAG_2": args.tag2,
         "PROBLEM_NAME": problem_name,
         "SOURCE_URL": source_url,
-        "IMAGE_FILE": image_file,
+        "IMAGE_FILE": image_rel,
         "IMAGE_ALT": f"LeetCode {lc_id} {problem_name} diagram",
         "EN_PROBLEM_SUMMARY": f"Given problem LeetCode {lc_id} - {problem_name}, return the required output under problem constraints.",
         "EN_KEY_INSIGHT": "Identify the invariant first, then choose data structure / traversal strategy that enforces it with minimal overhead.",
@@ -112,7 +127,7 @@ def main():
         raise SystemExit(f"Post already exists: {post_path}")
 
     post_path.write_text(content, encoding="utf-8")
-    build_svg(IMAGES / image_file, full_post_title, args.topic)
+    build_svg(IMAGES / image_rel, full_post_title, args.topic)
 
     index_content = INDEX.read_text(encoding="utf-8")
     marker = '<section id="posts">\n'
@@ -131,7 +146,7 @@ def main():
     INDEX.write_text(index_content.replace(marker, marker + card, 1), encoding="utf-8")
 
     print(f"Generated: posts/{post_file}")
-    print(f"Generated: assets/img/{image_file}")
+    print(f"Generated: assets/img/{image_rel}")
     print("Updated: index.html")
 
 

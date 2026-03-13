@@ -66,8 +66,9 @@ if [[ -z "$LC_ID" || -z "$TITLE" ]]; then
 fi
 
 python3 scripts/gen_leetcode_post.py "${GEN_ARGS[@]}"
+python3 scripts/build_posts_index.py
 
-git add index.html posts/ assets/img/
+git add index.html posts/ assets/img/ data/posts.json
 
 if git diff --cached --quiet; then
   echo "No changes to commit."
