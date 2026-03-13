@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">LeetCode 146 LRU Cache Diagram</title>
+  <desc id="desc">Hash map points to doubly linked list nodes, showing MRU at head and LRU eviction at tail.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1020" />
+      <stop offset="100%" stop-color="#1d3557" />
+    </linearGradient>
+    <style>
+      .title { font: 700 44px 'Segoe UI', Arial, sans-serif; fill: #f8fbff; }
+      .sub { font: 500 24px 'Segoe UI', Arial, sans-serif; fill: #c8d6f0; }
+      .label { font: 600 24px 'Segoe UI', Arial, sans-serif; fill: #0b1020; }
+      .key { font: 700 22px 'Segoe UI', Arial, sans-serif; fill: #f8fbff; }
+      .hint { font: 600 20px 'Segoe UI', Arial, sans-serif; fill: #ffd166; }
+      .small { font: 500 18px 'Segoe UI', Arial, sans-serif; fill: #e8f1ff; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)" rx="24" />
+
+  <text x="60" y="90" class="title">LeetCode 146 · LRU Cache</text>
+  <text x="60" y="130" class="sub">Hash Map + Doubly Linked List · O(1) get / put</text>
+
+  <rect x="70" y="180" width="290" height="330" rx="18" fill="#7bdff2" />
+  <text x="98" y="225" class="label">Hash Map</text>
+  <text x="98" y="275" class="small">1 → nodeA</text>
+  <text x="98" y="315" class="small">2 → nodeB</text>
+  <text x="98" y="355" class="small">3 → nodeC</text>
+  <text x="98" y="395" class="small">4 → nodeD</text>
+
+  <rect x="430" y="250" width="150" height="120" rx="14" fill="#80ed99" />
+  <text x="468" y="300" class="key">[4,40]</text>
+  <text x="470" y="332" class="small">MRU</text>
+
+  <rect x="620" y="250" width="150" height="120" rx="14" fill="#80ed99" />
+  <text x="658" y="300" class="key">[2,20]</text>
+
+  <rect x="810" y="250" width="150" height="120" rx="14" fill="#80ed99" />
+  <text x="848" y="300" class="key">[1,10]</text>
+  <text x="850" y="332" class="small">LRU</text>
+
+  <path d="M360 300 L430 300" stroke="#f8fbff" stroke-width="4" marker-end="url(#arrow)" />
+  <path d="M580 285 L620 285" stroke="#f8fbff" stroke-width="4" marker-end="url(#arrow)" />
+  <path d="M770 285 L810 285" stroke="#f8fbff" stroke-width="4" marker-end="url(#arrow)" />
+  <path d="M770 335 L810 335" stroke="#f8fbff" stroke-width="4" marker-end="url(#arrow)" />
+  <path d="M580 335 L620 335" stroke="#f8fbff" stroke-width="4" marker-end="url(#arrow)" />
+
+  <text x="430" y="210" class="hint">head (most recent)</text>
+  <text x="805" y="210" class="hint">tail (evict here)</text>
+
+  <text x="70" y="565" class="small">Rule: access/update → move node to head; capacity overflow → remove tail.prev</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L6,3 z" fill="#f8fbff" />
+    </marker>
+  </defs>
+</svg>
