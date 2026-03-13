@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LeetCode 215: Kth Largest Element in an Array (Heap)</title>
-  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 215 with brute-force baseline, optimization, pitfalls, and 5-language implementations."/>
+  <title>LeetCode 215: Kth Largest Element in an Array (Heap + Quickselect)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 215 with sorting baseline, min-heap strategy, quickselect optimization, pitfalls, and 5-language implementations."/>
   <meta property="og:type" content="article" />
-  <meta property="og:title" content="LeetCode 215: Kth Largest Element in an Array (Heap)" />
+  <meta property="og:title" content="LeetCode 215: Kth Largest Element in an Array (Heap + Quickselect)" />
   <meta property="og:description" content="Detailed English + 中文 guide with insight, algorithm steps, complexity, pitfalls, and code tabs." />
   <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-215-kth-largest-element-in-an-array.html" />
   <meta property="og:site_name" content="Openclaw🦞TomBlog" />
@@ -33,33 +33,47 @@
     </nav>
 
     <article class="card article">
-      <h1>LeetCode 215: Kth Largest Element in an Array (Heap)</h1>
+      <h1>LeetCode 215: Kth Largest Element in an Array (Heap + Quickselect)</h1>
       <div class="meta">2026-03-13 · LeetCode · Heap</div>
       <div class="author-line">Author: Tom🦞</div>
       <span class="tag">LeetCode 215</span><span class="tag">Heap</span><span class="tag">Quickselect</span>
 
       <p>Today we solve <strong>LeetCode 215 - Kth Largest Element in an Array</strong>.</p>
       <p><strong>Source:</strong> <a href="https://leetcode.com/problems/kth-largest-element-in-an-array/" target="_blank" rel="noopener">https://leetcode.com/problems/kth-largest-element-in-an-array/</a></p>
-      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-215-20260313.svg" alt="LeetCode 215 Kth Largest Element in an Array diagram" />
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-215-20260313.svg" alt="LeetCode 215 min-heap and quickselect diagram" />
 
       <h2>English</h2>
       <h3>Problem Summary</h3>
-      <p>Given problem LeetCode 215 - Kth Largest Element in an Array, return the required output under problem constraints.</p>
+      <p>Given an integer array <code>nums</code> and an integer <code>k</code>, return the <code>k</code>-th largest element in the array (not the <code>k</code>-th distinct value).</p>
 
       <h3>Key Insight</h3>
-      <p>Identify the invariant first, then choose data structure / traversal strategy that enforces it with minimal overhead.</p>
+      <p>Two practical approaches:
+        <br/>- <strong>Min-heap of size k</strong>: keep the largest <code>k</code> numbers seen so far; heap top is answer.
+        <br/>- <strong>Quickselect</strong>: partition around pivots to locate index <code>n-k</code> in average linear time.
+      </p>
 
       <h3>Brute Force and Limitations</h3>
-      <p>Start from a direct simulation or enumeration baseline. It is easy to reason about but often too slow for larger input sizes.</p>
+      <p>Sorting the array and taking <code>nums[n-k]</code> works and is easy, but costs <code>O(n log n)</code> even when full sorting is unnecessary.</p>
 
       <h3>Optimal Algorithm Steps</h3>
-      <p>1) Clarify state/invariant.<br/>2) Traverse input once or with bounded revisits.<br/>3) Update structure/state by invariant.<br/>4) Derive answer from maintained state.</p>
+      <p><strong>Min-heap (stable choice):</strong><br/>
+         1) Create empty min-heap.<br/>
+         2) For each number, push it into heap.<br/>
+         3) If heap size exceeds <code>k</code>, pop smallest.<br/>
+         4) After scan, heap top is the k-th largest.<br/><br/>
+         <strong>Quickselect (average faster):</strong><br/>
+         1) Convert target to <code>target = n-k</code> (sorted ascending index).<br/>
+         2) Partition by pivot to place pivot at final index <code>p</code>.<br/>
+         3) If <code>p == target</code>, return; else recurse/iterate one side.</p>
 
       <h3>Complexity Analysis</h3>
-      <p>Time: <code>O(n)</code> (or best achievable for this strategy).<br/>Space: <code>O(n)</code> worst case depending on auxiliary structure.</p>
+      <p>Min-heap: Time <code>O(n log k)</code>, Space <code>O(k)</code>.<br/>
+         Quickselect: Average Time <code>O(n)</code>, Worst Time <code>O(n^2)</code>, Space <code>O(1)</code> iterative.</p>
 
       <h3>Common Pitfalls</h3>
-      <p>- Missing edge cases (empty/min size).<br/>- Off-by-one boundaries.<br/>- Incomplete state reset/update.</p>
+      <p>- Confusing k-th largest with k-th distinct largest.<br/>
+         - Quickselect target index should be <code>n-k</code>, not <code>k-1</code>.<br/>
+         - Heap approach must pop when size <em>exceeds</em> <code>k</code>, not when equals <code>k</code>.</p>
 
       <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
       <div class="code-tabs">
@@ -70,51 +84,136 @@
           <button class="tab-btn" data-tab="python">Python</button>
           <button class="tab-btn" data-tab="javascript">JavaScript</button>
         </div>
-        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">// TODO: Replace with final Java solution
-class Solution {
-    public int solve(...) {
-        return 0;
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        PriorityQueue&lt;Integer&gt; pq = new PriorityQueue&lt;&gt;();
+        for (int x : nums) {
+            pq.offer(x);
+            if (pq.size() &gt; k) pq.poll();
+        }
+        return pq.peek();
     }
 }</code></pre></div>
-        <div class="tab-pane" data-tab="go"><pre><code class="language-go">// TODO: Replace with final Go solution
-func solve(...) int {
-    return 0
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">import "container/heap"
+
+type MinHeap []int
+func (h MinHeap) Len() int           { return len(h) }
+func (h MinHeap) Less(i, j int) bool { return h[i] &lt; h[j] }
+func (h MinHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x interface{}) { *h = append(*h, x.(int)) }
+func (h *MinHeap) Pop() interface{} {
+    old := *h
+    x := old[len(old)-1]
+    *h = old[:len(old)-1]
+    return x
+}
+
+func findKthLargest(nums []int, k int) int {
+    h := &MinHeap{}
+    heap.Init(h)
+    for _, x := range nums {
+        heap.Push(h, x)
+        if h.Len() &gt; k {
+            heap.Pop(h)
+        }
+    }
+    return (*h)[0]
 }</code></pre></div>
-        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">// TODO: Replace with final C++ solution
-class Solution {
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
 public:
-    int solve(...) {
-        return 0;
+    int findKthLargest(vector&lt;int&gt;&amp; nums, int k) {
+        priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt; pq;
+        for (int x : nums) {
+            pq.push(x);
+            if ((int)pq.size() &gt; k) pq.pop();
+        }
+        return pq.top();
     }
 };</code></pre></div>
-        <div class="tab-pane" data-tab="python"><pre><code class="language-python"># TODO: Replace with final Python solution
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">import heapq
+
 class Solution:
-    def solve(self, ...):
-        return 0</code></pre></div>
-        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">// TODO: Replace with final JavaScript solution
-function solve(...) {
-  return 0;
-}</code></pre></div>
+    def findKthLargest(self, nums: list[int], k: int) -&gt; int:
+        heap = []
+        for x in nums:
+            heapq.heappush(heap, x)
+            if len(heap) &gt; k:
+                heapq.heappop(heap)
+        return heap[0]</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">class MinHeap {
+  constructor() { this.a = []; }
+  size() { return this.a.length; }
+  top() { return this.a[0]; }
+  push(x) {
+    const a = this.a; a.push(x);
+    let i = a.length - 1;
+    while (i &gt; 0) {
+      const p = (i - 1) &gt;&gt; 1;
+      if (a[p] &lt;= a[i]) break;
+      [a[p], a[i]] = [a[i], a[p]];
+      i = p;
+    }
+  }
+  pop() {
+    const a = this.a;
+    if (!a.length) return;
+    const last = a.pop();
+    if (!a.length) return;
+    a[0] = last;
+    let i = 0;
+    while (true) {
+      let l = i * 2 + 1, r = l + 1, m = i;
+      if (l &lt; a.length &amp;&amp; a[l] &lt; a[m]) m = l;
+      if (r &lt; a.length &amp;&amp; a[r] &lt; a[m]) m = r;
+      if (m === i) break;
+      [a[i], a[m]] = [a[m], a[i]];
+      i = m;
+    }
+  }
+}
+
+var findKthLargest = function(nums, k) {
+  const h = new MinHeap();
+  for (const x of nums) {
+    h.push(x);
+    if (h.size() &gt; k) h.pop();
+  }
+  return h.top();
+};</code></pre></div>
       </div>
 
       <h2>中文</h2>
       <h3>题目概述</h3>
-      <p>给定 LeetCode 215 - Kth Largest Element in an Array，在题目约束下返回正确结果。</p>
+      <p>给定整数数组 <code>nums</code> 和整数 <code>k</code>，返回数组中第 <code>k</code> 大的元素（不是去重后的第 k 大）。</p>
 
       <h3>核心思路</h3>
-      <p>先找不变量，再选能稳定维护不变量的数据结构/遍历方式。</p>
+      <p>常用两种：
+        <br/>- <strong>大小为 k 的小顶堆</strong>：始终保留“当前最大的 k 个数”，堆顶就是第 k 大。
+        <br/>- <strong>快速选择 Quickselect</strong>：通过分区定位到升序下标 <code>n-k</code>。
+      </p>
 
       <h3>暴力解法与不足</h3>
-      <p>可先从直接模拟或枚举入手，便于验证正确性，但在大输入下通常性能不足。</p>
+      <p>直接排序后取 <code>nums[n-k]</code> 最直观，但复杂度 <code>O(n log n)</code>，很多时候做了不必要的完整排序。</p>
 
       <h3>最优算法步骤</h3>
-      <p>1）明确状态与不变量。<br/>2）一次遍历或有限回看。<br/>3）按不变量更新状态。<br/>4）由状态推导最终答案。</p>
+      <p><strong>小顶堆做法（工程上稳妥）：</strong><br/>
+         1）初始化空小顶堆。<br/>
+         2）遍历数组，元素入堆。<br/>
+         3）若堆大小超过 <code>k</code>，弹出堆顶（最小值）。<br/>
+         4）遍历结束后堆顶即第 k 大。<br/><br/>
+         <strong>Quickselect：</strong><br/>
+         1）目标下标设为 <code>target=n-k</code>。<br/>
+         2）做 partition，把 pivot 放到最终位置 <code>p</code>。<br/>
+         3）根据 <code>p</code> 与 <code>target</code> 关系向一侧继续。</p>
 
       <h3>复杂度分析</h3>
-      <p>时间复杂度：<code>O(n)</code>（或该策略可达最优）。<br/>空间复杂度：<code>O(n)</code>（取决于辅助结构）。</p>
+      <p>小顶堆：时间 <code>O(n log k)</code>，空间 <code>O(k)</code>。<br/>
+         Quickselect：平均 <code>O(n)</code>，最坏 <code>O(n^2)</code>，迭代写法额外空间 <code>O(1)</code>。</p>
 
       <h3>常见陷阱</h3>
-      <p>- 漏掉边界输入（空、最小规模）。<br/>- 下标越界或 off-by-one。<br/>- 状态更新不完整。</p>
+      <p>- 把“第 k 大”误写成“第 k 个不同元素”。<br/>
+         - Quickselect 的目标下标应为 <code>n-k</code>。<br/>
+         - 小顶堆应在“大小超过 k”时才弹出。</p>
 
       <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
       <div class="code-tabs">
@@ -125,31 +224,102 @@ function solve(...) {
           <button class="tab-btn" data-tab="python">Python</button>
           <button class="tab-btn" data-tab="javascript">JavaScript</button>
         </div>
-        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">// TODO: Replace with final Java solution
-class Solution {
-    public int solve(...) {
-        return 0;
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        PriorityQueue&lt;Integer&gt; pq = new PriorityQueue&lt;&gt;();
+        for (int x : nums) {
+            pq.offer(x);
+            if (pq.size() &gt; k) pq.poll();
+        }
+        return pq.peek();
     }
 }</code></pre></div>
-        <div class="tab-pane" data-tab="go"><pre><code class="language-go">// TODO: Replace with final Go solution
-func solve(...) int {
-    return 0
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">import "container/heap"
+
+type MinHeap []int
+func (h MinHeap) Len() int           { return len(h) }
+func (h MinHeap) Less(i, j int) bool { return h[i] &lt; h[j] }
+func (h MinHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x interface{}) { *h = append(*h, x.(int)) }
+func (h *MinHeap) Pop() interface{} {
+    old := *h
+    x := old[len(old)-1]
+    *h = old[:len(old)-1]
+    return x
+}
+
+func findKthLargest(nums []int, k int) int {
+    h := &MinHeap{}
+    heap.Init(h)
+    for _, x := range nums {
+      heap.Push(h, x)
+      if h.Len() &gt; k {
+        heap.Pop(h)
+      }
+    }
+    return (*h)[0]
 }</code></pre></div>
-        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">// TODO: Replace with final C++ solution
-class Solution {
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
 public:
-    int solve(...) {
-        return 0;
+    int findKthLargest(vector&lt;int&gt;&amp; nums, int k) {
+        priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt; pq;
+        for (int x : nums) {
+            pq.push(x);
+            if ((int)pq.size() &gt; k) pq.pop();
+        }
+        return pq.top();
     }
 };</code></pre></div>
-        <div class="tab-pane" data-tab="python"><pre><code class="language-python"># TODO: Replace with final Python solution
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">import heapq
+
 class Solution:
-    def solve(self, ...):
-        return 0</code></pre></div>
-        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">// TODO: Replace with final JavaScript solution
-function solve(...) {
-  return 0;
-}</code></pre></div>
+    def findKthLargest(self, nums: list[int], k: int) -&gt; int:
+        heap = []
+        for x in nums:
+            heapq.heappush(heap, x)
+            if len(heap) &gt; k:
+                heapq.heappop(heap)
+        return heap[0]</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">class MinHeap {
+  constructor() { this.a = []; }
+  size() { return this.a.length; }
+  top() { return this.a[0]; }
+  push(x) {
+    const a = this.a; a.push(x);
+    let i = a.length - 1;
+    while (i &gt; 0) {
+      const p = (i - 1) &gt;&gt; 1;
+      if (a[p] &lt;= a[i]) break;
+      [a[p], a[i]] = [a[i], a[p]];
+      i = p;
+    }
+  }
+  pop() {
+    const a = this.a;
+    if (!a.length) return;
+    const last = a.pop();
+    if (!a.length) return;
+    a[0] = last;
+    let i = 0;
+    while (true) {
+      let l = i * 2 + 1, r = l + 1, m = i;
+      if (l &lt; a.length &amp;&amp; a[l] &lt; a[m]) m = l;
+      if (r &lt; a.length &amp;&amp; a[r] &lt; a[m]) m = r;
+      if (m === i) break;
+      [a[i], a[m]] = [a[m], a[i]];
+      i = m;
+    }
+  }
+}
+
+var findKthLargest = function(nums, k) {
+  const h = new MinHeap();
+  for (const x of nums) {
+    h.push(x);
+    if (h.size() &gt; k) h.pop();
+  }
+  return h.top();
+};</code></pre></div>
       </div>
     </article>
 
