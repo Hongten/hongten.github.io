@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 236 Lowest Common Ancestor diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0b1220"/>
+      <stop offset="100%" stop-color="#111b34"/>
+    </linearGradient>
+    <style>
+      .title { font: 700 44px 'Segoe UI', Arial, sans-serif; fill: #e8f0ff; }
+      .sub { font: 500 26px 'Segoe UI', Arial, sans-serif; fill: #b8c7e6; }
+      .node { fill: #1c2b4a; stroke: #6ea8fe; stroke-width: 3; }
+      .nodeTxt { font: 700 24px 'Segoe UI', Arial, sans-serif; fill: #eaf2ff; text-anchor: middle; dominant-baseline: middle; }
+      .edge { stroke: #8fb7ff; stroke-width: 3; }
+      .hl { fill: #2d5b2f; stroke: #7de28a; }
+      .target { fill: #4d2a5e; stroke: #d8a6ff; }
+      .legend { font: 600 20px 'Segoe UI', Arial, sans-serif; fill: #d9e6ff; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <text x="70" y="80" class="title">LeetCode 236 · Lowest Common Ancestor</text>
+  <text x="70" y="120" class="sub">Postorder DFS: left + right both hit =&gt; current node is LCA</text>
+
+  <line class="edge" x1="600" y1="210" x2="450" y2="300"/>
+  <line class="edge" x1="600" y1="210" x2="750" y2="300"/>
+  <line class="edge" x1="450" y1="300" x2="360" y2="390"/>
+  <line class="edge" x1="450" y1="300" x2="540" y2="390"/>
+  <line class="edge" x1="750" y1="300" x2="690" y2="390"/>
+  <line class="edge" x1="750" y1="300" x2="840" y2="390"/>
+
+  <circle class="node hl" cx="600" cy="210" r="42"/>
+  <text class="nodeTxt" x="600" y="210">3</text>
+
+  <circle class="node" cx="450" cy="300" r="42"/>
+  <text class="nodeTxt" x="450" y="300">5</text>
+  <circle class="node" cx="750" cy="300" r="42"/>
+  <text class="nodeTxt" x="750" y="300">1</text>
+
+  <circle class="node target" cx="360" cy="390" r="38"/>
+  <text class="nodeTxt" x="360" y="390">6</text>
+  <circle class="node" cx="540" cy="390" r="38"/>
+  <text class="nodeTxt" x="540" y="390">2</text>
+  <circle class="node" cx="690" cy="390" r="38"/>
+  <text class="nodeTxt" x="690" y="390">0</text>
+  <circle class="node target" cx="840" cy="390" r="38"/>
+  <text class="nodeTxt" x="840" y="390">8</text>
+
+  <text x="70" y="530" class="legend">Targets: p = 6, q = 8 · LCA = 3</text>
+  <text x="70" y="565" class="legend">Rule: if current subtree returns one target from left and one from right, current node is answer.</text>
+</svg>
