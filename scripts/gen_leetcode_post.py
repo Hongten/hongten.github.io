@@ -75,6 +75,7 @@ def main():
 
     now = dt.datetime.now(dt.timezone(dt.timedelta(hours=8)))
     year = now.strftime("%Y")
+    month = now.strftime("%m")
     date_str = now.strftime("%Y-%m-%d")
     iso_str = now.strftime("%Y-%m-%dT%H:%M:%S+08:00")
 
@@ -82,7 +83,8 @@ def main():
     post_title = f"LeetCode {lc_id}: {problem_name}"
     full_post_title = f"{post_title} ({args.topic})"
 
-    image_rel = f"leetcode/{year}/leetcode-{lc_id}-{date_str.replace('-', '')}.svg"
+    post_rel = f"leetcode/{year}/{month}/{post_file}"
+    image_rel = f"leetcode/{year}/{month}/leetcode-{lc_id}-{date_str.replace('-', '')}.svg"
 
     template = TEMPLATE.read_text(encoding="utf-8")
 
@@ -90,7 +92,7 @@ def main():
         "POST_TITLE": full_post_title,
         "META_DESCRIPTION": f"Interview-grade bilingual tutorial for LeetCode {lc_id} with brute-force baseline, optimization, pitfalls, and 5-language implementations.",
         "OG_DESCRIPTION": "Detailed English + 中文 guide with insight, algorithm steps, complexity, pitfalls, and code tabs.",
-        "POST_FILE": post_file,
+        "POST_FILE": post_rel,
         "META_LINE": f"{date_str} · LeetCode · {args.topic}",
         "LC_ID": str(lc_id),
         "TAG_1": args.tag1,
@@ -122,10 +124,11 @@ def main():
     for k, v in replacements.items():
         content = content.replace("{{" + k + "}}", v)
 
-    post_path = POSTS / post_file
+    post_path = POSTS / post_rel
     if post_path.exists():
         raise SystemExit(f"Post already exists: {post_path}")
 
+    post_path.parent.mkdir(parents=True, exist_ok=True)
     post_path.write_text(content, encoding="utf-8")
     build_svg(IMAGES / image_rel, full_post_title, args.topic)
 
@@ -135,17 +138,17 @@ def main():
         raise SystemExit("Cannot find posts section marker in index.html")
 
     card = f'''      <article class="card post-card" data-date="{iso_str}">
-        <h2><a href="./posts/{post_file}">{full_post_title}</a></h2>
+        <h2><a href="./posts/{post_rel}">{full_post_title}</a></h2>
         <div class="meta">{date_str} · LeetCode · {args.topic}</div>
         <p>{args.summary_en}</p>
-        <a href="./posts/{post_file}">Read more →</a>
+        <a href="./posts/{post_rel}">Read more →</a>
       </article>
 
 '''
 
     INDEX.write_text(index_content.replace(marker, marker + card, 1), encoding="utf-8")
 
-    print(f"Generated: posts/{post_file}")
+    print(f"Generated: posts/{post_rel}")
     print(f"Generated: assets/img/{image_rel}")
     print("Updated: index.html")
 

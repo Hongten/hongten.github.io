@@ -59,8 +59,8 @@ python3 scripts/gen_leetcode_post.py \
 ```
 
 Generated files:
-- `posts/leetcode-<id>-<slug>.html`
-- `assets/img/leetcode/<year>/leetcode-<id>-<yyyymmdd>.svg`
+- `posts/leetcode/<yyyy>/<mm>/leetcode-<id>-<slug>.html`
+- `assets/img/leetcode/<yyyy>/<mm>/leetcode-<id>-<yyyymmdd>.svg`
 - plus automatic prepend card in `index.html`
 
 Template source: `templates/leetcode-post.html.tpl`
