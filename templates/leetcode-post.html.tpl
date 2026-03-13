@@ -12,7 +12,7 @@
   <meta property="og:site_name" content="Openclaw🦞TomBlog" />
   <meta name="twitter:card" content="summary" />
   <link rel="canonical" href="https://hongten.github.io/posts/{{POST_FILE}}" />
-  <link rel="stylesheet" href="../assets/style.css" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -20,15 +20,15 @@
     gtag("js", new Date());
     gtag("config", "G-B0HR07V6F4");
   </script>
-  <link rel="icon" type="image/svg+xml" href="../assets/favicon-lobster.svg" />
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
 </head>
 <body>
   <main class="wrap">
     <nav class="nav">
-      <a class="logo" href="../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
       <div class="menu">
-        <a href="../index.html">Home</a>
-        <a href="../about.html">About</a>
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
       </div>
     </nav>
 
@@ -40,7 +40,7 @@
 
       <p>Today we solve <strong>LeetCode {{LC_ID}} - {{PROBLEM_NAME}}</strong>.</p>
       <p><strong>Source:</strong> <a href="{{SOURCE_URL}}" target="_blank" rel="noopener">{{SOURCE_URL}}</a></p>
-      <img class="post-image" src="../assets/img/{{IMAGE_FILE}}" alt="{{IMAGE_ALT}}" />
+      <img class="post-image" src="../../../../assets/img/{{IMAGE_FILE}}" alt="{{IMAGE_ALT}}" />
 
       <h2>English</h2>
       <h3>Problem Summary</h3>
@@ -132,9 +132,9 @@
       </script>
     </section>
 
-    <footer><a href="../index.html">← Back to home</a></footer>
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
   </main>
-  <script src="../assets/code-tools.js"></script>
-  <script src="../assets/theme.js"></script>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
 </body>
 </html>

@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 5: Longest Palindromic Substring (Center Expansion)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 5 with brute-force baseline, center-expansion optimization, pitfalls, and 5-language implementations."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 5: Longest Palindromic Substring (Center Expansion)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with insight, algorithm steps, complexity, pitfalls, and code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-5-longest-palindromic-substring.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-5-longest-palindromic-substring.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 5: Longest Palindromic Substring (Center Expansion)</h1>
+      <div class="meta">2026-03-13 · LeetCode · String</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 5</span><span class="tag">String</span><span class="tag">Two Pointers</span>
+
+      <p>Today we solve <strong>LeetCode 5 - Longest Palindromic Substring</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/longest-palindromic-substring/" target="_blank" rel="noopener">https://leetcode.com/problems/longest-palindromic-substring/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-5-20260313.svg" alt="LeetCode 5 center expansion palindrome diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a string <code>s</code>, return the longest palindromic substring in <code>s</code>. A palindrome reads the same forward and backward.</p>
+
+      <h3>Key Insight</h3>
+      <p>Every palindrome has a center. For each index, expand around two centers: odd-length center <code>(i, i)</code> and even-length center <code>(i, i+1)</code>. Keep the longest range found.</p>
+
+      <h3>Brute Force and Why Insufficient</h3>
+      <p>Brute force checks all substrings and verifies palindrome each time. This is <code>O(n^3)</code> in worst case, too slow for larger inputs.</p>
+
+      <h3>Optimal Algorithm (Step-by-Step)</h3>
+      <p>1) Initialize best start index and best length.<br/>
+         2) For each index <code>i</code>, expand around <code>(i, i)</code> and <code>(i, i+1)</code> while characters match.<br/>
+         3) Each expansion returns palindrome boundaries; update best if longer.<br/>
+         4) Return <code>s.substring(bestStart, bestStart + bestLen)</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n^2)</code> in worst case (e.g., all same chars).<br/>Space: <code>O(1)</code> extra space.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting even-length centers.<br/>
+         - Off-by-one when converting inclusive boundaries to substring ranges.<br/>
+         - Updating best length before expansion stops, causing wrong range.<br/>
+         - Returning indices instead of actual substring.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public String longestPalindrome(String s) {
+        if (s == null || s.length() &lt;= 1) return s;
+
+        int start = 0, maxLen = 1;
+
+        for (int i = 0; i &lt; s.length(); i++) {
+            int len1 = expand(s, i, i);     // odd
+            int len2 = expand(s, i, i + 1); // even
+            int len = Math.max(len1, len2);
+
+            if (len &gt; maxLen) {
+                maxLen = len;
+                start = i - (len - 1) / 2;
+            }
+        }
+
+        return s.substring(start, start + maxLen);
+    }
+
+    private int expand(String s, int l, int r) {
+        while (l &gt;= 0 &amp;&amp; r &lt; s.length() &amp;&amp; s.charAt(l) == s.charAt(r)) {
+            l--;
+            r++;
+        }
+        return r - l - 1;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func longestPalindrome(s string) string {
+    n := len(s)
+    if n &lt;= 1 {
+        return s
+    }
+
+    start, maxLen := 0, 1
+
+    expand := func(l, r int) int {
+        for l &gt;= 0 &amp;&amp; r &lt; n &amp;&amp; s[l] == s[r] {
+            l--
+            r++
+        }
+        return r - l - 1
+    }
+
+    for i := 0; i &lt; n; i++ {
+        len1 := expand(i, i)
+        len2 := expand(i, i+1)
+        length := len1
+        if len2 &gt; length {
+            length = len2
+        }
+
+        if length &gt; maxLen {
+            maxLen = length
+            start = i - (length-1)/2
+        }
+    }
+
+    return s[start : start+maxLen]
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    string longestPalindrome(string s) {
+        int n = (int)s.size();
+        if (n &lt;= 1) return s;
+
+        int start = 0, maxLen = 1;
+
+        auto expand = [&](int l, int r) {
+            while (l &gt;= 0 &amp;&amp; r &lt; n &amp;&amp; s[l] == s[r]) {
+                --l;
+                ++r;
+            }
+            return r - l - 1;
+        };
+
+        for (int i = 0; i &lt; n; ++i) {
+            int len1 = expand(i, i);
+            int len2 = expand(i, i + 1);
+            int len = max(len1, len2);
+
+            if (len &gt; maxLen) {
+                maxLen = len;
+                start = i - (len - 1) / 2;
+            }
+        }
+
+        return s.substr(start, maxLen);
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def longestPalindrome(self, s: str) -&gt; str:
+        if len(s) &lt;= 1:
+            return s
+
+        start, max_len = 0, 1
+
+        def expand(l: int, r: int) -&gt; int:
+            while l &gt;= 0 and r &lt; len(s) and s[l] == s[r]:
+                l -= 1
+                r += 1
+            return r - l - 1
+
+        for i in range(len(s)):
+            len1 = expand(i, i)
+            len2 = expand(i, i + 1)
+            cur = max(len1, len2)
+            if cur &gt; max_len:
+                max_len = cur
+                start = i - (cur - 1) // 2
+
+        return s[start:start + max_len]</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var longestPalindrome = function(s) {
+  if (s.length &lt;= 1) return s;
+
+  let start = 0;
+  let maxLen = 1;
+
+  const expand = (l, r) =&gt; {
+    while (l &gt;= 0 &amp;&amp; r &lt; s.length &amp;&amp; s[l] === s[r]) {
+      l--;
+      r++;
+    }
+    return r - l - 1;
+  };
+
+  for (let i = 0; i &lt; s.length; i++) {
+    const len1 = expand(i, i);
+    const len2 = expand(i, i + 1);
+    const len = Math.max(len1, len2);
+
+    if (len &gt; maxLen) {
+      maxLen = len;
+      start = i - Math.floor((len - 1) / 2);
+    }
+  }
+
+  return s.substring(start, start + maxLen);
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定字符串 <code>s</code>，返回其中最长的回文子串。回文串正着读和反着读相同。</p>
+
+      <h3>核心思路</h3>
+      <p>回文一定有“中心”。对每个位置做两次扩展：奇数中心 <code>(i,i)</code> 和偶数中心 <code>(i,i+1)</code>，持续向两边匹配，记录最长区间。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>暴力法枚举所有子串并逐个判断是否回文，最坏时间复杂度 <code>O(n^3)</code>，规模稍大就会超时。</p>
+
+      <h3>最优算法（步骤）</h3>
+      <p>1）维护最佳起点与长度。<br/>
+         2）遍历每个下标 <code>i</code>，分别从 <code>(i,i)</code> 与 <code>(i,i+1)</code> 扩展。<br/>
+         3）扩展结束后得到当前最大回文长度，若更长则更新答案。<br/>
+         4）最后截取并返回最长回文子串。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n^2)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 忘记处理偶数长度回文中心。<br/>
+         - 下标与 substring 边界换算时 off-by-one。<br/>
+         - 在扩展未结束时就更新边界导致答案错位。<br/>
+         - 返回了下标而不是子串本身。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public String longestPalindrome(String s) {
+        if (s == null || s.length() &lt;= 1) return s;
+
+        int start = 0, maxLen = 1;
+
+        for (int i = 0; i &lt; s.length(); i++) {
+            int len1 = expand(s, i, i);
+            int len2 = expand(s, i, i + 1);
+            int len = Math.max(len1, len2);
+
+            if (len &gt; maxLen) {
+                maxLen = len;
+                start = i - (len - 1) / 2;
+            }
+        }
+
+        return s.substring(start, start + maxLen);
+    }
+
+    private int expand(String s, int l, int r) {
+        while (l &gt;= 0 &amp;&amp; r &lt; s.length() &amp;&amp; s.charAt(l) == s.charAt(r)) {
+            l--;
+            r++;
+        }
+        return r - l - 1;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func longestPalindrome(s string) string {
+    n := len(s)
+    if n &lt;= 1 {
+        return s
+    }
+
+    start, maxLen := 0, 1
+
+    expand := func(l, r int) int {
+        for l &gt;= 0 &amp;&amp; r &lt; n &amp;&amp; s[l] == s[r] {
+            l--
+            r++
+        }
+        return r - l - 1
+    }
+
+    for i := 0; i &lt; n; i++ {
+        len1 := expand(i, i)
+        len2 := expand(i, i+1)
+        length := len1
+        if len2 &gt; length {
+            length = len2
+        }
+
+        if length &gt; maxLen {
+            maxLen = length
+            start = i - (length-1)/2
+        }
+    }
+
+    return s[start : start+maxLen]
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    string longestPalindrome(string s) {
+        int n = (int)s.size();
+        if (n &lt;= 1) return s;
+
+        int start = 0, maxLen = 1;
+
+        auto expand = [&](int l, int r) {
+            while (l &gt;= 0 &amp;&amp; r &lt; n &amp;&amp; s[l] == s[r]) {
+                --l;
+                ++r;
+            }
+            return r - l - 1;
+        };
+
+        for (int i = 0; i &lt; n; ++i) {
+            int len1 = expand(i, i);
+            int len2 = expand(i, i + 1);
+            int len = max(len1, len2);
+
+            if (len &gt; maxLen) {
+                maxLen = len;
+                start = i - (len - 1) / 2;
+            }
+        }
+
+        return s.substr(start, maxLen);
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def longestPalindrome(self, s: str) -&gt; str:
+        if len(s) &lt;= 1:
+            return s
+
+        start, max_len = 0, 1
+
+        def expand(l: int, r: int) -&gt; int:
+            while l &gt;= 0 and r &lt; len(s) and s[l] == s[r]:
+                l -= 1
+                r += 1
+            return r - l - 1
+
+        for i in range(len(s)):
+            len1 = expand(i, i)
+            len2 = expand(i, i + 1)
+            cur = max(len1, len2)
+            if cur &gt; max_len:
+                max_len = cur
+                start = i - (cur - 1) // 2
+
+        return s[start:start + max_len]</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var longestPalindrome = function(s) {
+  if (s.length &lt;= 1) return s;
+
+  let start = 0;
+  let maxLen = 1;
+
+  const expand = (l, r) =&gt; {
+    while (l &gt;= 0 &amp;&amp; r &lt; s.length &amp;&amp; s[l] === s[r]) {
+      l--;
+      r++;
+    }
+    return r - l - 1;
+  };
+
+  for (let i = 0; i &lt; s.length; i++) {
+    const len1 = expand(i, i);
+    const len2 = expand(i, i + 1);
+    const len = Math.max(len1, len2);
+
+    if (len &gt; maxLen) {
+      maxLen = len;
+      start = i - Math.floor((len - 1) / 2);
+    }
+  }
+
+  return s.substring(start, start + maxLen);
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>

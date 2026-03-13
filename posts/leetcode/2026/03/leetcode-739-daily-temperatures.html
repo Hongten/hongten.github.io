@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 739: Daily Temperatures (Monotonic Stack)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 739 with brute force baseline, monotonic stack optimization, pitfalls, and 5-language implementations."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 739: Daily Temperatures (Monotonic Stack)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with insight, algorithm steps, complexity, pitfalls, and code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-739-daily-temperatures.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-739-daily-temperatures.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 739: Daily Temperatures (Monotonic Stack)</h1>
+      <div class="meta">2026-03-06 · LeetCode · Stack</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 739</span><span class="tag">Array</span><span class="tag">Monotonic Stack</span><span class="tag">Interview</span>
+
+      <p>Today we solve <strong>LeetCode 739 - Daily Temperatures</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/daily-temperatures/" target="_blank" rel="noopener">https://leetcode.com/problems/daily-temperatures/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-739-20260306.svg" alt="LeetCode 739 monotonic stack diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given an array <code>temperatures</code>, return an array <code>answer</code> where <code>answer[i]</code> is the number of days to wait after day <code>i</code> to get a warmer temperature. If no future day is warmer, <code>answer[i] = 0</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>Use a <strong>monotonic decreasing stack</strong> of indices. The stack stores unresolved days whose next warmer day has not been found yet. When the current temperature is higher than the stack top's temperature, we can resolve those indices immediately.</p>
+
+      <h3>Brute Force and Why Insufficient</h3>
+      <p>For each day <code>i</code>, scan forward until finding the first day <code>j</code> with <code>temperatures[j] &gt; temperatures[i]</code>. This is simple but can degrade to <code>O(n^2)</code> in decreasing sequences.</p>
+
+      <h3>Optimal Algorithm (Step-by-Step)</h3>
+      <p>1) Create <code>answer</code> initialized with zeros and an empty stack of indices.<br/>
+         2) Iterate <code>i</code> from left to right.<br/>
+         3) While stack is not empty and <code>temperatures[i] &gt; temperatures[stack.top]</code>:<br/>
+         &nbsp;&nbsp;• Pop <code>prev</code> from stack.<br/>
+         &nbsp;&nbsp;• Set <code>answer[prev] = i - prev</code>.<br/>
+         4) Push current index <code>i</code> onto stack.<br/>
+         5) Remaining indices in stack have no warmer future day, so they stay 0.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>, because each index is pushed and popped at most once.<br/>Space: <code>O(n)</code> for the stack in the worst case.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Storing temperatures instead of indices, then losing distance information.<br/>
+         - Using <code>&gt;=</code> in the while condition; equal temperatures are not warmer.<br/>
+         - Forgetting to initialize answer with zeros.<br/>
+         - Accidentally pushing before popping, which breaks the invariant.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        int n = temperatures.length;
+        int[] answer = new int[n];
+        Deque&lt;Integer&gt; stack = new ArrayDeque&lt;&gt;(); // indices
+
+        for (int i = 0; i &lt; n; i++) {
+            while (!stack.isEmpty() &amp;&amp; temperatures[i] &gt; temperatures[stack.peek()]) {
+                int prev = stack.pop();
+                answer[prev] = i - prev;
+            }
+            stack.push(i);
+        }
+
+        return answer;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func dailyTemperatures(temperatures []int) []int {
+    n := len(temperatures)
+    answer := make([]int, n)
+    stack := []int{} // indices
+
+    for i := 0; i &lt; n; i++ {
+        for len(stack) &gt; 0 &amp;&amp; temperatures[i] &gt; temperatures[stack[len(stack)-1]] {
+            prev := stack[len(stack)-1]
+            stack = stack[:len(stack)-1]
+            answer[prev] = i - prev
+        }
+        stack = append(stack, i)
+    }
+
+    return answer
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; dailyTemperatures(vector&lt;int&gt;&amp; temperatures) {
+        int n = (int)temperatures.size();
+        vector&lt;int&gt; answer(n, 0);
+        stack&lt;int&gt; st; // indices
+
+        for (int i = 0; i &lt; n; ++i) {
+            while (!st.empty() &amp;&amp; temperatures[i] &gt; temperatures[st.top()]) {
+                int prev = st.top();
+                st.pop();
+                answer[prev] = i - prev;
+            }
+            st.push(i);
+        }
+
+        return answer;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">from typing import List
+
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -&gt; List[int]:
+        n = len(temperatures)
+        answer = [0] * n
+        stack = []  # indices
+
+        for i, t in enumerate(temperatures):
+            while stack and t &gt; temperatures[stack[-1]]:
+                prev = stack.pop()
+                answer[prev] = i - prev
+            stack.append(i)
+
+        return answer</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var dailyTemperatures = function(temperatures) {
+  const n = temperatures.length;
+  const answer = new Array(n).fill(0);
+  const stack = []; // indices
+
+  for (let i = 0; i &lt; n; i++) {
+    while (stack.length &gt; 0 &amp;&amp; temperatures[i] &gt; temperatures[stack[stack.length - 1]]) {
+      const prev = stack.pop();
+      answer[prev] = i - prev;
+    }
+    stack.push(i);
+  }
+
+  return answer;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定数组 <code>temperatures</code>，返回数组 <code>answer</code>。其中 <code>answer[i]</code> 表示第 <code>i</code> 天后还要等几天才能遇到更高温度；如果之后都不会升温，则为 <code>0</code>。</p>
+
+      <h3>核心思路</h3>
+      <p>维护一个<strong>单调递减栈</strong>（存下标，不存温度值）。栈里是“还没找到下一次更高温度”的天数。当前温度更高时，就可以批量结算被它“击败”的栈顶下标。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>对每个 <code>i</code> 向右线性扫描，找第一个更高温度位置 <code>j</code>，令 <code>answer[i]=j-i</code>。在单调下降数组中会退化为 <code>O(n^2)</code>，效率不够好。</p>
+
+      <h3>最优算法（步骤）</h3>
+      <p>1）初始化结果数组为全 0，准备空栈（存下标）。<br/>
+         2）从左到右遍历每个下标 <code>i</code>。<br/>
+         3）当栈不空且 <code>temperatures[i] &gt; temperatures[stack.top]</code> 时：<br/>
+         &nbsp;&nbsp;• 弹出 <code>prev</code>。<br/>
+         &nbsp;&nbsp;• 计算 <code>answer[prev] = i - prev</code>。<br/>
+         4）把当前下标 <code>i</code> 入栈。<br/>
+         5）遍历结束后，栈中剩余位置没有更高温度，保持 0 即可。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>，每个下标最多入栈一次、出栈一次。<br/>空间复杂度：<code>O(n)</code>（最坏情况下栈大小接近 n）。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 栈里存温度不存下标，导致无法计算天数差。<br/>
+         - while 条件写成 <code>&gt;=</code>，把“相等温度”误判为升温。<br/>
+         - 忘记结果数组初值应为 0。<br/>
+         - 先入栈再弹栈，破坏单调栈不变量。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        int n = temperatures.length;
+        int[] answer = new int[n];
+        Deque&lt;Integer&gt; stack = new ArrayDeque&lt;&gt;(); // indices
+
+        for (int i = 0; i &lt; n; i++) {
+            while (!stack.isEmpty() &amp;&amp; temperatures[i] &gt; temperatures[stack.peek()]) {
+                int prev = stack.pop();
+                answer[prev] = i - prev;
+            }
+            stack.push(i);
+        }
+
+        return answer;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func dailyTemperatures(temperatures []int) []int {
+    n := len(temperatures)
+    answer := make([]int, n)
+    stack := []int{} // indices
+
+    for i := 0; i &lt; n; i++ {
+        for len(stack) &gt; 0 &amp;&amp; temperatures[i] &gt; temperatures[stack[len(stack)-1]] {
+            prev := stack[len(stack)-1]
+            stack = stack[:len(stack)-1]
+            answer[prev] = i - prev
+        }
+        stack = append(stack, i)
+    }
+
+    return answer
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; dailyTemperatures(vector&lt;int&gt;&amp; temperatures) {
+        int n = (int)temperatures.size();
+        vector&lt;int&gt; answer(n, 0);
+        stack&lt;int&gt; st; // indices
+
+        for (int i = 0; i &lt; n; ++i) {
+            while (!st.empty() &amp;&amp; temperatures[i] &gt; temperatures[st.top()]) {
+                int prev = st.top();
+                st.pop();
+                answer[prev] = i - prev;
+            }
+            st.push(i);
+        }
+
+        return answer;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">from typing import List
+
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -&gt; List[int]:
+        n = len(temperatures)
+        answer = [0] * n
+        stack = []  # indices
+
+        for i, t in enumerate(temperatures):
+            while stack and t &gt; temperatures[stack[-1]]:
+                prev = stack.pop()
+                answer[prev] = i - prev
+            stack.append(i)
+
+        return answer</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var dailyTemperatures = function(temperatures) {
+  const n = temperatures.length;
+  const answer = new Array(n).fill(0);
+  const stack = []; // indices
+
+  for (let i = 0; i &lt; n; i++) {
+    while (stack.length &gt; 0 &amp;&amp; temperatures[i] &gt; temperatures[stack[stack.length - 1]]) {
+      const prev = stack.pop();
+      answer[prev] = i - prev;
+    }
+    stack.push(i);
+  }
+
+  return answer;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
