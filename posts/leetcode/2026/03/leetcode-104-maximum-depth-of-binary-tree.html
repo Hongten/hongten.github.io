@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LeetCode 104: Maximum Depth of Binary Tree (Tree)</title>
-  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 104 with brute-force baseline, optimization, pitfalls, and 5-language implementations."/>
+  <title>LeetCode 104: Maximum Depth of Binary Tree (DFS / BFS)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 104 with DFS recursion and BFS level traversal, pitfalls, and 5-language implementations."/>
   <meta property="og:type" content="article" />
-  <meta property="og:title" content="LeetCode 104: Maximum Depth of Binary Tree (Tree)" />
-  <meta property="og:description" content="Detailed English + 中文 guide with insight, algorithm steps, complexity, pitfalls, and code tabs." />
+  <meta property="og:title" content="LeetCode 104: Maximum Depth of Binary Tree (DFS / BFS)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with key recurrence, algorithm steps, complexity, pitfalls, and code tabs." />
   <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-104-maximum-depth-of-binary-tree.html" />
   <meta property="og:site_name" content="Openclaw🦞TomBlog" />
   <meta name="twitter:card" content="summary" />
@@ -33,33 +33,46 @@
     </nav>
 
     <article class="card article">
-      <h1>LeetCode 104: Maximum Depth of Binary Tree (Tree)</h1>
+      <h1>LeetCode 104: Maximum Depth of Binary Tree (DFS / BFS)</h1>
       <div class="meta">2026-03-13 · LeetCode · Tree</div>
       <div class="author-line">Author: Tom🦞</div>
-      <span class="tag">LeetCode 104</span><span class="tag">Tree</span><span class="tag">DFS</span>
+      <span class="tag">LeetCode 104</span><span class="tag">Tree</span><span class="tag">DFS</span><span class="tag">BFS</span>
 
       <p>Today we solve <strong>LeetCode 104 - Maximum Depth of Binary Tree</strong>.</p>
       <p><strong>Source:</strong> <a href="https://leetcode.com/problems/maximum-depth-of-binary-tree/" target="_blank" rel="noopener">https://leetcode.com/problems/maximum-depth-of-binary-tree/</a></p>
-      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-104-20260313.svg" alt="LeetCode 104 Maximum Depth of Binary Tree diagram" />
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-104-20260313.svg" alt="LeetCode 104 maximum depth DFS recursion diagram" />
 
       <h2>English</h2>
       <h3>Problem Summary</h3>
-      <p>Given problem LeetCode 104 - Maximum Depth of Binary Tree, return the required output under problem constraints.</p>
+      <p>Given the root of a binary tree, return its maximum depth. The depth is the number of nodes along the longest path from root down to a leaf.</p>
 
       <h3>Key Insight</h3>
-      <p>Identify the invariant first, then choose data structure / traversal strategy that enforces it with minimal overhead.</p>
+      <p>The depth of a node depends only on depths of its children:
+      <br/><code>depth(node) = 1 + max(depth(node.left), depth(node.right))</code>.
+      <br/>So recursion naturally matches the tree structure.</p>
 
       <h3>Brute Force and Limitations</h3>
-      <p>Start from a direct simulation or enumeration baseline. It is easy to reason about but often too slow for larger input sizes.</p>
+      <p>You can enumerate all root-to-leaf paths and compute each path length, then take maximum. This is conceptually valid but unnecessary compared with direct DFS/BFS solutions.</p>
 
       <h3>Optimal Algorithm Steps</h3>
-      <p>1) Clarify state/invariant.<br/>2) Traverse input once or with bounded revisits.<br/>3) Update structure/state by invariant.<br/>4) Derive answer from maintained state.</p>
+      <p><strong>DFS recursion:</strong><br/>
+         1) If node is null, depth is 0.<br/>
+         2) Recursively compute left and right subtree depth.<br/>
+         3) Return <code>1 + max(left, right)</code>.<br/><br/>
+         <strong>BFS level order:</strong><br/>
+         1) Push root into queue.<br/>
+         2) Process one level at a time by queue size.<br/>
+         3) Each processed level increments depth by 1.</p>
 
       <h3>Complexity Analysis</h3>
-      <p>Time: <code>O(n)</code> (or best achievable for this strategy).<br/>Space: <code>O(n)</code> worst case depending on auxiliary structure.</p>
+      <p>Both DFS and BFS run in <code>O(n)</code> time.
+      <br/>DFS space is <code>O(h)</code> recursion stack (h = tree height).
+      <br/>BFS space is <code>O(w)</code> queue size (w = max width).</p>
 
       <h3>Common Pitfalls</h3>
-      <p>- Missing edge cases (empty/min size).<br/>- Off-by-one boundaries.<br/>- Incomplete state reset/update.</p>
+      <p>- Off-by-one: depth counts nodes, not edges.<br/>
+         - Returning 1 for null node (should be 0).<br/>
+         - BFS implementation forgetting to increase depth per level.</p>
 
       <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
       <div class="code-tabs">
@@ -70,51 +83,123 @@
           <button class="tab-btn" data-tab="python">Python</button>
           <button class="tab-btn" data-tab="javascript">JavaScript</button>
         </div>
-        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">// TODO: Replace with final Java solution
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
 class Solution {
-    public int solve(...) {
-        return 0;
+    public int maxDepth(TreeNode root) {
+        if (root == null) return 0;
+        int left = maxDepth(root.left);
+        int right = maxDepth(root.right);
+        return 1 + Math.max(left, right);
     }
 }</code></pre></div>
-        <div class="tab-pane" data-tab="go"><pre><code class="language-go">// TODO: Replace with final Go solution
-func solve(...) int {
-    return 0
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func maxDepth(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+    left := maxDepth(root.Left)
+    right := maxDepth(root.Right)
+    if left &gt; right {
+        return left + 1
+    }
+    return right + 1
 }</code></pre></div>
-        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">// TODO: Replace with final C++ solution
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right)
+ *         : val(x), left(left), right(right) {}
+ * };
+ */
 class Solution {
 public:
-    int solve(...) {
-        return 0;
+    int maxDepth(TreeNode* root) {
+        if (!root) return 0;
+        return 1 + max(maxDepth(root->left), maxDepth(root->right));
     }
 };</code></pre></div>
-        <div class="tab-pane" data-tab="python"><pre><code class="language-python"># TODO: Replace with final Python solution
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
 class Solution:
-    def solve(self, ...):
-        return 0</code></pre></div>
-        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">// TODO: Replace with final JavaScript solution
-function solve(...) {
-  return 0;
-}</code></pre></div>
+    def maxDepth(self, root) -> int:
+        if not root:
+            return 0
+        return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *   this.val = (val===undefined ? 0 : val)
+ *   this.left = (left===undefined ? null : left)
+ *   this.right = (right===undefined ? null : right)
+ * }
+ */
+var maxDepth = function(root) {
+  if (!root) return 0;
+  return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
+};</code></pre></div>
       </div>
 
       <h2>中文</h2>
       <h3>题目概述</h3>
-      <p>给定 LeetCode 104 - Maximum Depth of Binary Tree，在题目约束下返回正确结果。</p>
+      <p>给定二叉树根节点，返回其最大深度。最大深度是从根节点到最远叶子节点路径上的节点数。</p>
 
       <h3>核心思路</h3>
-      <p>先找不变量，再选能稳定维护不变量的数据结构/遍历方式。</p>
+      <p>一个节点的深度只取决于左右子树深度：
+      <br/><code>depth(node) = 1 + max(depth(left), depth(right))</code>。
+      <br/>这使得递归 DFS 非常自然。</p>
 
       <h3>暴力解法与不足</h3>
-      <p>可先从直接模拟或枚举入手，便于验证正确性，但在大输入下通常性能不足。</p>
+      <p>可枚举所有根到叶路径，逐条计算长度再取最大值。思路可行，但实现复杂度和开销都不如 DFS/BFS 直接求解。</p>
 
       <h3>最优算法步骤</h3>
-      <p>1）明确状态与不变量。<br/>2）一次遍历或有限回看。<br/>3）按不变量更新状态。<br/>4）由状态推导最终答案。</p>
+      <p><strong>DFS 递归：</strong><br/>
+         1）空节点返回 0。<br/>
+         2）递归计算左右子树深度。<br/>
+         3）返回 <code>1 + max(left, right)</code>。<br/><br/>
+         <strong>BFS 层序：</strong><br/>
+         1）根节点入队。<br/>
+         2）按当前层节点数逐层处理。<br/>
+         3）每处理完一层，深度 +1。</p>
 
       <h3>复杂度分析</h3>
-      <p>时间复杂度：<code>O(n)</code>（或该策略可达最优）。<br/>空间复杂度：<code>O(n)</code>（取决于辅助结构）。</p>
+      <p>DFS 与 BFS 时间复杂度均为 <code>O(n)</code>。
+      <br/>DFS 额外空间 <code>O(h)</code>（递归栈，高度 h）。
+      <br/>BFS 额外空间 <code>O(w)</code>（队列最大宽度 w）。</p>
 
       <h3>常见陷阱</h3>
-      <p>- 漏掉边界输入（空、最小规模）。<br/>- 下标越界或 off-by-one。<br/>- 状态更新不完整。</p>
+      <p>- 把深度当成边数而不是节点数。<br/>
+         - 空节点返回值写成 1（应为 0）。<br/>
+         - BFS 忘记按“层”累加深度。</p>
 
       <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
       <div class="code-tabs">
@@ -125,31 +210,90 @@ function solve(...) {
           <button class="tab-btn" data-tab="python">Python</button>
           <button class="tab-btn" data-tab="javascript">JavaScript</button>
         </div>
-        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">// TODO: Replace with final Java solution
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
 class Solution {
-    public int solve(...) {
-        return 0;
+    public int maxDepth(TreeNode root) {
+        if (root == null) return 0;
+        int left = maxDepth(root.left);
+        int right = maxDepth(root.right);
+        return 1 + Math.max(left, right);
     }
 }</code></pre></div>
-        <div class="tab-pane" data-tab="go"><pre><code class="language-go">// TODO: Replace with final Go solution
-func solve(...) int {
-    return 0
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func maxDepth(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+    left := maxDepth(root.Left)
+    right := maxDepth(root.Right)
+    if left &gt; right {
+        return left + 1
+    }
+    return right + 1
 }</code></pre></div>
-        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">// TODO: Replace with final C++ solution
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right)
+ *         : val(x), left(left), right(right) {}
+ * };
+ */
 class Solution {
 public:
-    int solve(...) {
-        return 0;
+    int maxDepth(TreeNode* root) {
+        if (!root) return 0;
+        return 1 + max(maxDepth(root->left), maxDepth(root->right));
     }
 };</code></pre></div>
-        <div class="tab-pane" data-tab="python"><pre><code class="language-python"># TODO: Replace with final Python solution
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python"># Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
 class Solution:
-    def solve(self, ...):
-        return 0</code></pre></div>
-        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">// TODO: Replace with final JavaScript solution
-function solve(...) {
-  return 0;
-}</code></pre></div>
+    def maxDepth(self, root) -> int:
+        if not root:
+            return 0
+        return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *   this.val = (val===undefined ? 0 : val)
+ *   this.left = (left===undefined ? null : left)
+ *   this.right = (right===undefined ? null : right)
+ * }
+ */
+var maxDepth = function(root) {
+  if (!root) return 0;
+  return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
+};</code></pre></div>
       </div>
     </article>
 
