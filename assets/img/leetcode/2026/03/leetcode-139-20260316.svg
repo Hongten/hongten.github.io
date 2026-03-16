@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-label="LeetCode 139 Word Break DP diagram">
+  <defs>
+    <style>
+      .bg { fill: #0b1020; }
+      .panel { fill: #121a31; stroke: #2e3b67; stroke-width: 2; }
+      .title { fill: #eaf0ff; font: 700 42px 'Segoe UI', Arial, sans-serif; }
+      .sub { fill: #b7c4f3; font: 500 22px 'Segoe UI', Arial, sans-serif; }
+      .label { fill: #dbe6ff; font: 600 24px 'Segoe UI', Arial, sans-serif; }
+      .mono { fill: #8ee3ff; font: 600 26px 'Consolas', 'Courier New', monospace; }
+      .ok { fill: #153d2e; stroke: #39d98a; stroke-width: 2; }
+      .okText { fill: #7af0b2; font: 700 22px 'Segoe UI', Arial, sans-serif; }
+      .bad { fill: #3a1a1a; stroke: #ff6b6b; stroke-width: 2; }
+      .badText { fill: #ff9a9a; font: 700 22px 'Segoe UI', Arial, sans-serif; }
+      .line { stroke: #6f86c9; stroke-width: 3; marker-end: url(#arr); }
+    </style>
+    <marker id="arr" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
+      <polygon points="0,0 12,4 0,8" fill="#6f86c9"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1200" height="680"/>
+  <text class="title" x="50" y="70">LeetCode 139 · Word Break</text>
+  <text class="sub" x="50" y="108">DP state: dp[i] = whether s[0..i) can be segmented</text>
+
+  <rect class="panel" x="50" y="145" width="1100" height="470" rx="18"/>
+
+  <text class="label" x="90" y="205">Example:</text>
+  <text class="mono" x="210" y="205">s = "leetcode", dict = {"leet", "code", "lee"}</text>
+
+  <text class="label" x="90" y="265">Indices:</text>
+  <text class="mono" x="210" y="265">0   1   2   3   4   5   6   7   8</text>
+  <text class="mono" x="210" y="305">l   e   e   t   c   o   d   e   ·</text>
+
+  <rect class="ok" x="210" y="345" width="130" height="56" rx="10"/>
+  <text class="okText" x="235" y="380">dp[0]=T</text>
+
+  <line class="line" x1="340" y1="373" x2="500" y2="373"/>
+
+  <rect class="ok" x="500" y="345" width="170" height="56" rx="10"/>
+  <text class="okText" x="522" y="380">"leet" ⇒ dp[4]=T</text>
+
+  <line class="line" x1="670" y1="373" x2="860" y2="373"/>
+
+  <rect class="ok" x="860" y="345" width="210" height="56" rx="10"/>
+  <text class="okText" x="885" y="380">"code" ⇒ dp[8]=T</text>
+
+  <rect class="bad" x="210" y="445" width="420" height="56" rx="10"/>
+  <text class="badText" x="230" y="480">If no split j makes dp[j] &amp;&amp; s[j..i) in dict → dp[i]=F</text>
+
+  <text class="sub" x="90" y="560">Transition: for each i, scan j in [0, i). If dp[j] is true and substring(j, i) exists in dict, set dp[i]=true.</text>
+</svg>
