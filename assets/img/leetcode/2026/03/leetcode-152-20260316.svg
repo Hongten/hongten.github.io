@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 152 max/min state transition diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="48" y="84" fill="#e5e7eb" font-size="42" font-family="Inter,Arial,sans-serif" font-weight="700">LeetCode 152 · Maximum Product Subarray</text>
+  <text x="48" y="124" fill="#93c5fd" font-size="24" font-family="Inter,Arial,sans-serif">Track both maxEnd and minEnd to handle negative-number flips</text>
+
+  <rect x="48" y="170" width="1104" height="400" rx="18" fill="#1f2937" stroke="#374151"/>
+
+  <text x="90" y="230" fill="#fef3c7" font-size="26" font-family="JetBrains Mono,Consolas,monospace">Example: nums = [2, 3, -2, 4, -1]</text>
+  <text x="90" y="280" fill="#86efac" font-size="24" font-family="JetBrains Mono,Consolas,monospace">x=2   => maxEnd=2   minEnd=2   ans=2</text>
+  <text x="90" y="320" fill="#86efac" font-size="24" font-family="JetBrains Mono,Consolas,monospace">x=3   => maxEnd=6   minEnd=3   ans=6</text>
+  <text x="90" y="360" fill="#fca5a5" font-size="24" font-family="JetBrains Mono,Consolas,monospace">x=-2  => swap; maxEnd=-2 minEnd=-12 ans=6</text>
+  <text x="90" y="400" fill="#86efac" font-size="24" font-family="JetBrains Mono,Consolas,monospace">x=4   => maxEnd=4   minEnd=-48 ans=6</text>
+  <text x="90" y="440" fill="#86efac" font-size="24" font-family="JetBrains Mono,Consolas,monospace">x=-1  => swap; maxEnd=48 minEnd=-4  ans=48</text>
+
+  <line x1="720" y1="256" x2="1090" y2="256" stroke="#60a5fa" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="720" y1="420" x2="1090" y2="420" stroke="#f472b6" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#e5e7eb"/>
+    </marker>
+  </defs>
+
+  <text x="760" y="248" fill="#60a5fa" font-size="20" font-family="Inter,Arial,sans-serif">maxEnd = max(x, maxEnd * x)</text>
+  <text x="760" y="412" fill="#f472b6" font-size="20" font-family="Inter,Arial,sans-serif">minEnd = min(x, minEnd * x)</text>
+  <text x="760" y="500" fill="#e5e7eb" font-size="22" font-family="Inter,Arial,sans-serif">if x &lt; 0 → swap(maxEnd, minEnd)</text>
+
+  <text x="48" y="604" fill="#9ca3af" font-size="20" font-family="Inter,Arial,sans-serif">Author: Tom🦞 · EN first / 中文 second · Java default code tab</text>
+</svg>
