@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 169 Boyer-Moore voting diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="90" fill="#e2e8f0" font-family="Arial, sans-serif" font-size="44" font-weight="700">LeetCode 169 · Boyer-Moore Voting</text>
+  <text x="60" y="135" fill="#94a3b8" font-family="Arial, sans-serif" font-size="28">Pair cancellation keeps the majority candidate alive</text>
+
+  <rect x="60" y="180" width="1080" height="380" rx="20" fill="#0b1220" stroke="#334155" stroke-width="2"/>
+
+  <text x="90" y="235" fill="#cbd5e1" font-family="Consolas, monospace" font-size="28">nums = [2, 2, 1, 1, 1, 2, 2]</text>
+
+  <g font-family="Consolas, monospace" font-size="24" fill="#e2e8f0">
+    <text x="90" y="290">step 1: x=2  → candidate=2, count=1</text>
+    <text x="90" y="330">step 2: x=2  → same, count=2</text>
+    <text x="90" y="370">step 3: x=1  → cancel, count=1</text>
+    <text x="90" y="410">step 4: x=1  → cancel, count=0</text>
+    <text x="90" y="450">step 5: x=1  → candidate=1, count=1</text>
+    <text x="90" y="490">step 6: x=2  → cancel, count=0</text>
+    <text x="90" y="530">step 7: x=2  → candidate=2, count=1  ✅ majority</text>
+  </g>
+
+  <text x="760" y="300" fill="#22d3ee" font-family="Arial, sans-serif" font-size="24" font-weight="700">Cancellation Rule</text>
+  <text x="760" y="340" fill="#bae6fd" font-family="Arial, sans-serif" font-size="22">same value: +1 vote</text>
+  <text x="760" y="375" fill="#bae6fd" font-family="Arial, sans-serif" font-size="22">different value: -1 vote</text>
+  <text x="760" y="410" fill="#bae6fd" font-family="Arial, sans-serif" font-size="22">count==0: replace candidate</text>
+</svg>
