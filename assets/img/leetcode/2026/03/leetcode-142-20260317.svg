@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#93c5fd"/>
+    </marker>
+    <style>
+      .bg { fill:#0b1220; }
+      .title { fill:#e2e8f0; font:700 38px 'Segoe UI',Arial,sans-serif; }
+      .subtitle { fill:#93c5fd; font:500 24px 'Segoe UI',Arial,sans-serif; }
+      .node { fill:#1e293b; stroke:#60a5fa; stroke-width:3; rx:14; }
+      .text { fill:#f8fafc; font:600 26px 'Segoe UI',Arial,sans-serif; text-anchor:middle; dominant-baseline:middle; }
+      .label { fill:#fbbf24; font:600 22px 'Segoe UI',Arial,sans-serif; }
+      .path { stroke:#93c5fd; stroke-width:4; fill:none; marker-end:url(#arrow); }
+      .meet { fill:#dc2626; }
+      .entry { fill:#16a34a; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1200" height="680"/>
+  <text x="60" y="70" class="title">LeetCode 142 · Linked List Cycle II</text>
+  <text x="60" y="108" class="subtitle">Floyd Fast/Slow meet, then reset one pointer to head</text>
+
+  <rect class="node" x="120" y="230" width="120" height="70"/>
+  <text class="text" x="180" y="265">head</text>
+
+  <rect class="node entry" x="300" y="230" width="120" height="70"/>
+  <text class="text" x="360" y="265">entry</text>
+
+  <rect class="node" x="500" y="230" width="120" height="70"/>
+  <text class="text" x="560" y="265">x1</text>
+
+  <rect class="node meet" x="700" y="230" width="120" height="70"/>
+  <text class="text" x="760" y="265">meet</text>
+
+  <rect class="node" x="700" y="390" width="120" height="70"/>
+  <text class="text" x="760" y="425">x2</text>
+
+  <rect class="node" x="500" y="390" width="120" height="70"/>
+  <text class="text" x="560" y="425">x3</text>
+
+  <path class="path" d="M240 265 L300 265"/>
+  <path class="path" d="M420 265 L500 265"/>
+  <path class="path" d="M620 265 L700 265"/>
+  <path class="path" d="M820 265 C900 265 900 425 820 425"/>
+  <path class="path" d="M700 425 L620 425"/>
+  <path class="path" d="M500 425 C380 425 320 360 360 300"/>
+
+  <text x="100" y="540" class="label">1) slow/fast meet inside cycle</text>
+  <text x="100" y="575" class="label">2) p1=head, p2=meet</text>
+  <text x="100" y="610" class="label">3) move both one step ⇒ meet at entry</text>
+</svg>
