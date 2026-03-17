@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 8 atoi parsing flow">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .t{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#e2e8f0}
+      .h{font-size:44px;font-weight:700}
+      .s{font-size:24px;fill:#cbd5e1}
+      .b{fill:#111827;stroke:#38bdf8;stroke-width:2}
+      .l{stroke:#38bdf8;stroke-width:3;marker-end:url(#arrow)}
+      .k{font-size:20px}
+      .v{fill:#22c55e;font-weight:700}
+      .w{fill:#f59e0b;font-weight:700}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#38bdf8"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="90" class="t h">LeetCode 8: String to Integer (atoi)</text>
+  <text x="60" y="130" class="t s">Stateful Parsing + Overflow Clamp</text>
+
+  <rect x="60" y="190" width="200" height="90" rx="14" class="b"/>
+  <text x="85" y="245" class="t k">Skip Spaces</text>
+
+  <rect x="300" y="190" width="220" height="90" rx="14" class="b"/>
+  <text x="338" y="245" class="t k">Read +/- Sign</text>
+
+  <rect x="560" y="190" width="240" height="90" rx="14" class="b"/>
+  <text x="598" y="245" class="t k">Parse Digits</text>
+
+  <rect x="840" y="190" width="290" height="90" rx="14" class="b"/>
+  <text x="866" y="245" class="t k">Overflow Check Before Add</text>
+
+  <line x1="260" y1="235" x2="300" y2="235" class="l"/>
+  <line x1="520" y1="235" x2="560" y2="235" class="l"/>
+  <line x1="800" y1="235" x2="840" y2="235" class="l"/>
+
+  <rect x="120" y="360" width="440" height="180" rx="14" class="b"/>
+  <text x="150" y="405" class="t k">If overflow:</text>
+  <text x="150" y="445" class="t k">sign = +1 → <tspan class="w">INT_MAX (2147483647)</tspan></text>
+  <text x="150" y="485" class="t k">sign = -1 → <tspan class="w">INT_MIN (-2147483648)</tspan></text>
+
+  <rect x="640" y="360" width="440" height="180" rx="14" class="b"/>
+  <text x="670" y="405" class="t k">Else continue:</text>
+  <text x="670" y="445" class="t k">ans = ans * 10 + digit</text>
+  <text x="670" y="485" class="t k">Return <tspan class="v">sign * ans</tspan> at end</text>
+</svg>
