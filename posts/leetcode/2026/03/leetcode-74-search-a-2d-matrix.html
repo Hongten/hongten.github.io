@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 74: Search a 2D Matrix (Flattened Binary Search)</title>
+  <meta name="description" content="Bilingual interview-grade tutorial for LeetCode 74 with matrix order insight, index mapping, pitfalls, and 5-language implementations."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 74: Search a 2D Matrix (Flattened Binary Search)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with algorithm, complexity, pitfalls, and full code tabs in both sections." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-74-search-a-2d-matrix.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-74-search-a-2d-matrix.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 74: Search a 2D Matrix (Flattened Binary Search)</h1>
+      <div class="meta">2026-03-17 · LeetCode · Binary Search</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 74</span><span class="tag">Binary Search</span><span class="tag">Matrix</span><span class="tag">Interview</span>
+
+      <p>Today we solve <strong>LeetCode 74 - Search a 2D Matrix</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/search-a-2d-matrix/" target="_blank" rel="noopener">https://leetcode.com/problems/search-a-2d-matrix/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-74-20260317.svg" alt="LeetCode 74 flattened index to matrix coordinate mapping diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>You are given an <code>m x n</code> matrix where each row is sorted in ascending order, and the first element of each row is larger than the last element of the previous row. Determine whether a target exists in the matrix.</p>
+
+      <h3>Key Insight</h3>
+      <p>The whole matrix behaves like one globally sorted array of length <code>m*n</code>. We can binary search on this virtual array and map an index <code>mid</code> back to matrix coordinates by:</p>
+      <p><code>row = mid / n</code>, <code>col = mid % n</code>.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>Brute force scans every cell in <code>O(m*n)</code>. It works but misses the sorted structure, so it is slower than necessary.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Let <code>left = 0</code>, <code>right = m*n - 1</code>.<br/>
+         2) While <code>left &lt;= right</code>, compute <code>mid</code>.<br/>
+         3) Map <code>mid</code> to <code>(row, col)</code> and read <code>value = matrix[row][col]</code>.<br/>
+         4) If <code>value == target</code>, return <code>true</code>.<br/>
+         5) If <code>value &lt; target</code>, move left to <code>mid + 1</code>; else move right to <code>mid - 1</code>.<br/>
+         6) If loop ends, return <code>false</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(log(m*n))</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting empty-matrix guard.<br/>
+         - Wrong index mapping (<code>row = mid / n</code>, <code>col = mid % n</code>).<br/>
+         - Using <code>left &lt; right</code> with unsuitable updates and skipping final candidate.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return false;
+        }
+
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int left = 0, right = m * n - 1;
+
+        while (left &lt;= right) {
+            int mid = left + (right - left) / 2;
+            int row = mid / n;
+            int col = mid % n;
+            int value = matrix[row][col];
+
+            if (value == target) return true;
+            if (value &lt; target) left = mid + 1;
+            else right = mid - 1;
+        }
+
+        return false;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func searchMatrix(matrix [][]int, target int) bool {
+    if len(matrix) == 0 || len(matrix[0]) == 0 {
+        return false
+    }
+
+    m, n := len(matrix), len(matrix[0])
+    left, right := 0, m*n-1
+
+    for left &lt;= right {
+        mid := left + (right-left)/2
+        row, col := mid/n, mid%n
+        value := matrix[row][col]
+
+        if value == target {
+            return true
+        }
+        if value &lt; target {
+            left = mid + 1
+        } else {
+            right = mid - 1
+        }
+    }
+
+    return false
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool searchMatrix(vector&lt;vector&lt;int&gt;&gt;&amp; matrix, int target) {
+        if (matrix.empty() || matrix[0].empty()) return false;
+
+        int m = matrix.size();
+        int n = matrix[0].size();
+        int left = 0, right = m * n - 1;
+
+        while (left &lt;= right) {
+            int mid = left + (right - left) / 2;
+            int row = mid / n;
+            int col = mid % n;
+            int value = matrix[row][col];
+
+            if (value == target) return true;
+            if (value &lt; target) left = mid + 1;
+            else right = mid - 1;
+        }
+
+        return false;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">from typing import List
+
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -&gt; bool:
+        if not matrix or not matrix[0]:
+            return False
+
+        m, n = len(matrix), len(matrix[0])
+        left, right = 0, m * n - 1
+
+        while left &lt;= right:
+            mid = left + (right - left) // 2
+            row, col = divmod(mid, n)
+            value = matrix[row][col]
+
+            if value == target:
+                return True
+            if value &lt; target:
+                left = mid + 1
+            else:
+                right = mid - 1
+
+        return False</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var searchMatrix = function(matrix, target) {
+  if (!matrix.length || !matrix[0].length) return false;
+
+  const m = matrix.length;
+  const n = matrix[0].length;
+  let left = 0;
+  let right = m * n - 1;
+
+  while (left &lt;= right) {
+    const mid = left + Math.floor((right - left) / 2);
+    const row = Math.floor(mid / n);
+    const col = mid % n;
+    const value = matrix[row][col];
+
+    if (value === target) return true;
+    if (value &lt; target) left = mid + 1;
+    else right = mid - 1;
+  }
+
+  return false;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定一个 <code>m x n</code> 矩阵：每行递增，且每一行的首元素都大于上一行的末元素。判断目标值 <code>target</code> 是否存在于矩阵中。</p>
+
+      <h3>核心思路</h3>
+      <p>把整个矩阵看成一个长度为 <code>m*n</code> 的有序一维数组，然后进行二分查找。通过下标映射回二维坐标：</p>
+      <p><code>row = mid / n</code>，<code>col = mid % n</code>。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>暴力法逐个元素扫描，时间复杂度 <code>O(m*n)</code>。虽然可行，但没有利用“整体有序”的结构特性。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）初始化 <code>left = 0</code>，<code>right = m*n - 1</code>。<br/>
+         2）循环中取 <code>mid</code>。<br/>
+         3）计算二维位置 <code>(row, col)</code> 并读取当前值。<br/>
+         4）若等于 <code>target</code>，返回 <code>true</code>。<br/>
+         5）若当前值小于目标，左边界右移；否则右边界左移。<br/>
+         6）循环结束仍未命中则返回 <code>false</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(log(m*n))</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 忘记处理空矩阵/空行。<br/>
+         - 下标映射公式写错导致越界或读错元素。<br/>
+         - 二分边界更新不严谨，漏掉最后一个候选值。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return false;
+        }
+
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int left = 0, right = m * n - 1;
+
+        while (left &lt;= right) {
+            int mid = left + (right - left) / 2;
+            int row = mid / n;
+            int col = mid % n;
+            int value = matrix[row][col];
+
+            if (value == target) return true;
+            if (value &lt; target) left = mid + 1;
+            else right = mid - 1;
+        }
+
+        return false;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func searchMatrix(matrix [][]int, target int) bool {
+    if len(matrix) == 0 || len(matrix[0]) == 0 {
+        return false
+    }
+
+    m, n := len(matrix), len(matrix[0])
+    left, right := 0, m*n-1
+
+    for left &lt;= right {
+        mid := left + (right-left)/2
+        row, col := mid/n, mid%n
+        value := matrix[row][col]
+
+        if value == target {
+            return true
+        }
+        if value &lt; target {
+            left = mid + 1
+        } else {
+            right = mid - 1
+        }
+    }
+
+    return false
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool searchMatrix(vector&lt;vector&lt;int&gt;&gt;&amp; matrix, int target) {
+        if (matrix.empty() || matrix[0].empty()) return false;
+
+        int m = matrix.size();
+        int n = matrix[0].size();
+        int left = 0, right = m * n - 1;
+
+        while (left &lt;= right) {
+            int mid = left + (right - left) / 2;
+            int row = mid / n;
+            int col = mid % n;
+            int value = matrix[row][col];
+
+            if (value == target) return true;
+            if (value &lt; target) left = mid + 1;
+            else right = mid - 1;
+        }
+
+        return false;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">from typing import List
+
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -&gt; bool:
+        if not matrix or not matrix[0]:
+            return False
+
+        m, n = len(matrix), len(matrix[0])
+        left, right = 0, m * n - 1
+
+        while left &lt;= right:
+            mid = left + (right - left) // 2
+            row, col = divmod(mid, n)
+            value = matrix[row][col]
+
+            if value == target:
+                return True
+            if value &lt; target:
+                left = mid + 1
+            else:
+                right = mid - 1
+
+        return False</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var searchMatrix = function(matrix, target) {
+  if (!matrix.length || !matrix[0].length) return false;
+
+  const m = matrix.length;
+  const n = matrix[0].length;
+  let left = 0;
+  let right = m * n - 1;
+
+  while (left &lt;= right) {
+    const mid = left + Math.floor((right - left) / 2);
+    const row = Math.floor(mid / n);
+    const col = mid % n;
+    const value = matrix[row][col];
+
+    if (value === target) return true;
+    if (value &lt; target) left = mid + 1;
+    else right = mid - 1;
+  }
+
+  return false;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
