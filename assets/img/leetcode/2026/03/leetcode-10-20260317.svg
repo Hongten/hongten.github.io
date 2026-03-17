@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">LeetCode 10 DP Transition Diagram</title>
+  <desc id="desc">Dynamic programming table showing transitions for dot and star in regular expression matching.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .t{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#e2e8f0}
+      .h{font-size:44px;font-weight:700}
+      .s{font-size:26px;fill:#93c5fd}
+      .c{font-size:24px}
+      .b{fill:#111827;stroke:#334155;stroke-width:2}
+      .on{fill:#1d4ed8;stroke:#60a5fa}
+      .ok{fill:#065f46;stroke:#34d399}
+      .ln{stroke:#94a3b8;stroke-width:3;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8" />
+    </marker>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <text x="60" y="90" class="t h">LeetCode 10 · Regular Expression Matching</text>
+  <text x="60" y="130" class="t s">DP state: dp[i][j] = s[0..i) matches p[0..j)</text>
+
+  <rect x="70" y="180" width="300" height="90" rx="14" class="b"/>
+  <text x="95" y="225" class="t c">char / '.' match</text>
+  <text x="95" y="255" class="t c">dp[i][j] = dp[i-1][j-1]</text>
+
+  <rect x="450" y="180" width="320" height="120" rx="14" class="on"/>
+  <text x="475" y="225" class="t c">p[j-1] == '*'</text>
+  <text x="475" y="255" class="t c">zero-use: dp[i][j-2]</text>
+  <text x="475" y="285" class="t c">repeat: dp[i-1][j]</text>
+
+  <rect x="850" y="180" width="280" height="90" rx="14" class="ok"/>
+  <text x="875" y="225" class="t c">final answer</text>
+  <text x="875" y="255" class="t c">dp[m][n]</text>
+
+  <line x1="370" y1="225" x2="450" y2="225" class="ln"/>
+  <line x1="770" y1="225" x2="850" y2="225" class="ln"/>
+
+  <rect x="70" y="350" width="1060" height="210" rx="14" fill="#0b1220" stroke="#334155"/>
+  <text x="95" y="398" class="t c">Initialization for empty string:</text>
+  <text x="95" y="438" class="t c">dp[0][0] = true, and when pattern has '*' pairs:</text>
+  <text x="95" y="478" class="t c">dp[0][j] = dp[0][j-2]  (e.g. a*, a*b*, a*b*c*)</text>
+  <text x="95" y="528" class="t c">Key pitfall: this is full-string matching, not substring matching.</text>
+</svg>
