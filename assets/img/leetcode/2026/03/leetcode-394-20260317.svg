@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 394 decode string stack diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1220"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="48" y="88" fill="#e5e7eb" font-size="44" font-family="Inter,Arial,sans-serif" font-weight="700">LeetCode 394 · Decode String</text>
+  <text x="48" y="132" fill="#93c5fd" font-size="26" font-family="Inter,Arial,sans-serif">Stack-based nested expansion: push on '[' , pop on ']'</text>
+
+  <rect x="48" y="180" width="480" height="380" rx="18" fill="#1f2937" stroke="#334155"/>
+  <text x="76" y="226" fill="#fde68a" font-size="28" font-family="Inter,Arial,sans-serif">Input: 3[a2[c]]</text>
+  <text x="76" y="274" fill="#e2e8f0" font-size="24" font-family="monospace">read '3'  → num = 3</text>
+  <text x="76" y="312" fill="#e2e8f0" font-size="24" font-family="monospace">read '['  → push("", 3)</text>
+  <text x="76" y="350" fill="#e2e8f0" font-size="24" font-family="monospace">read 'a'  → curr = "a"</text>
+  <text x="76" y="388" fill="#e2e8f0" font-size="24" font-family="monospace">read '2'  → num = 2</text>
+  <text x="76" y="426" fill="#e2e8f0" font-size="24" font-family="monospace">read '['  → push("a", 2)</text>
+  <text x="76" y="464" fill="#e2e8f0" font-size="24" font-family="monospace">read 'c'  → curr = "c"</text>
+  <text x="76" y="502" fill="#86efac" font-size="24" font-family="monospace">read ']'  → curr = "a" + "c"*2 = "acc"</text>
+  <text x="76" y="540" fill="#86efac" font-size="24" font-family="monospace">read ']'  → curr = "" + "acc"*3 = "accaccacc"</text>
+
+  <rect x="570" y="180" width="582" height="380" rx="18" fill="#111827" stroke="#334155"/>
+  <text x="600" y="226" fill="#fca5a5" font-size="28" font-family="Inter,Arial,sans-serif">Stack Snapshots</text>
+  <text x="600" y="278" fill="#e5e7eb" font-size="24" font-family="monospace">Top → (prefix="a", repeat=2)</text>
+  <text x="600" y="314" fill="#e5e7eb" font-size="24" font-family="monospace">       (prefix="", repeat=3)</text>
+  <line x1="600" y1="336" x2="1112" y2="336" stroke="#374151"/>
+  <text x="600" y="382" fill="#c4b5fd" font-size="24" font-family="monospace">On ']': pop once and expand current chunk</text>
+  <text x="600" y="418" fill="#c4b5fd" font-size="24" font-family="monospace">current = previous + current.repeat(k)</text>
+  <text x="600" y="472" fill="#93c5fd" font-size="30" font-family="Inter,Arial,sans-serif" font-weight="700">Output: accaccacc</text>
+  <text x="600" y="524" fill="#86efac" font-size="24" font-family="Inter,Arial,sans-serif">Author: Tom🦞</text>
+</svg>
