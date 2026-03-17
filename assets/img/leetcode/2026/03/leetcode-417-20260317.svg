@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 417 reverse water flow diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    <marker id="arrP" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#60a5fa"/>
+    </marker>
+    <marker id="arrA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="50" y="70" fill="#e5e7eb" font-size="42" font-family="Inter,Arial,sans-serif" font-weight="700">LeetCode 417 · Reverse Multi-Source Reachability</text>
+  <text x="50" y="110" fill="#9ca3af" font-size="24" font-family="Inter,Arial,sans-serif">Start from Pacific and Atlantic borders, move to higher/equal cells, then intersect visited sets.</text>
+
+  <rect x="120" y="170" width="560" height="360" rx="16" fill="#1f2937" stroke="#374151"/>
+  <g font-family="Inter,Arial,sans-serif" font-size="22" fill="#d1d5db" text-anchor="middle">
+    <rect x="170" y="220" width="90" height="70" fill="#334155"/><text x="215" y="262">1</text>
+    <rect x="270" y="220" width="90" height="70" fill="#475569"/><text x="315" y="262">2</text>
+    <rect x="370" y="220" width="90" height="70" fill="#64748b"/><text x="415" y="262">2</text>
+    <rect x="470" y="220" width="90" height="70" fill="#334155"/><text x="515" y="262">3</text>
+
+    <rect x="170" y="300" width="90" height="70" fill="#475569"/><text x="215" y="342">3</text>
+    <rect x="270" y="300" width="90" height="70" fill="#64748b"/><text x="315" y="342">2</text>
+    <rect x="370" y="300" width="90" height="70" fill="#334155"/><text x="415" y="342">3</text>
+    <rect x="470" y="300" width="90" height="70" fill="#1e293b"/><text x="515" y="342">4</text>
+
+    <rect x="170" y="380" width="90" height="70" fill="#64748b"/><text x="215" y="422">2</text>
+    <rect x="270" y="380" width="90" height="70" fill="#334155"/><text x="315" y="422">4</text>
+    <rect x="370" y="380" width="90" height="70" fill="#1e293b"/><text x="415" y="422">5</text>
+    <rect x="470" y="380" width="90" height="70" fill="#0f172a"/><text x="515" y="422">3</text>
+  </g>
+
+  <text x="125" y="560" fill="#60a5fa" font-size="24" font-family="Inter,Arial,sans-serif">Pacific borders: top + left</text>
+  <text x="430" y="560" fill="#f59e0b" font-size="24" font-family="Inter,Arial,sans-serif">Atlantic borders: bottom + right</text>
+
+  <line x1="215" y1="185" x2="315" y2="185" stroke="#60a5fa" stroke-width="4" marker-end="url(#arrP)"/>
+  <line x1="215" y1="185" x2="215" y2="220" stroke="#60a5fa" stroke-width="4" marker-end="url(#arrP)"/>
+  <line x1="560" y1="460" x2="610" y2="510" stroke="#f59e0b" stroke-width="4" marker-end="url(#arrA)"/>
+
+  <rect x="740" y="180" width="360" height="330" rx="16" fill="#111827" stroke="#374151"/>
+  <text x="770" y="230" fill="#93c5fd" font-size="26" font-family="Inter,Arial,sans-serif">Reverse rule:</text>
+  <text x="770" y="268" fill="#e5e7eb" font-size="23" font-family="Inter,Arial,sans-serif">Can move from (r,c) to (nr,nc)</text>
+  <text x="770" y="302" fill="#e5e7eb" font-size="23" font-family="Inter,Arial,sans-serif">iff height[nr][nc] ≥ height[r][c]</text>
+  <text x="770" y="352" fill="#86efac" font-size="23" font-family="Inter,Arial,sans-serif">answer = PacificReach ∩ AtlanticReach</text>
+  <text x="770" y="410" fill="#9ca3af" font-size="21" font-family="Inter,Arial,sans-serif">Each ocean DFS/BFS visits each cell once</text>
+  <text x="770" y="442" fill="#9ca3af" font-size="21" font-family="Inter,Arial,sans-serif">Time O(mn), Space O(mn)</text>
+</svg>
