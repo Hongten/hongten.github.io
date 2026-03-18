@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 91: Decode Ways (1D Dynamic Programming)</title>
+  <meta name="description" content="Bilingual interview-grade tutorial for LeetCode 91 with DP state transition, zero-handling rules, pitfalls, and 5-language code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 91: Decode Ways (1D Dynamic Programming)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with DP transitions, validity checks for one/two-digit decoding, complexity, and full code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-91-decode-ways.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-91-decode-ways.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 91: Decode Ways (1D Dynamic Programming)</h1>
+      <div class="meta">2026-03-18 · LeetCode · Dynamic Programming</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 91</span><span class="tag">Dynamic Programming</span><span class="tag">String</span>
+
+      <p>Today we solve <strong>LeetCode 91 - Decode Ways</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/decode-ways/" target="_blank" rel="noopener">https://leetcode.com/problems/decode-ways/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-91-20260318.svg" alt="LeetCode 91 DP transition diagram for one-digit and two-digit decodings" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a numeric string <code>s</code>, count how many ways it can be decoded where <code>'1' -&gt; 'A'</code>, ..., <code>'26' -&gt; 'Z'</code>. A <code>'0'</code> cannot be decoded alone.</p>
+
+      <h3>Key Insight</h3>
+      <p>Let <code>dp[i]</code> be the number of ways to decode the prefix <code>s[0..i-1]</code>. At each position, we can transition from one-digit decoding and/or two-digit decoding if valid.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>Naive DFS tries all split choices and revisits the same suffix many times, causing exponential complexity. DP removes repeated subproblems.</p>
+
+      <h3>Optimal Algorithm Steps (1D DP)</h3>
+      <p>1) If first char is <code>'0'</code>, return 0.<br/>
+         2) Initialize <code>dp[0] = 1</code>, <code>dp[1] = 1</code>.<br/>
+         3) For each <code>i</code> from 2 to <code>n</code>:<br/>
+         &nbsp;&nbsp;- If <code>s[i-1]</code> is not <code>'0'</code>, add <code>dp[i-1]</code>.<br/>
+         &nbsp;&nbsp;- If <code>s[i-2..i-1]</code> forms a number in <code>[10, 26]</code>, add <code>dp[i-2]</code>.<br/>
+         4) Return <code>dp[n]</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(n)</code> (can be optimized to <code>O(1)</code>).</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Treating <code>0</code> as a valid single-digit decode.<br/>
+         - Accepting invalid two-digit numbers like <code>06</code>.<br/>
+         - Missing boundary cases such as <code>"10"</code>, <code>"100"</code>, <code>"230"</code>.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int numDecodings(String s) {
+        int n = s.length();
+        if (n == 0 || s.charAt(0) == '0') return 0;
+
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+
+        for (int i = 2; i <= n; i++) {
+            char c1 = s.charAt(i - 1);
+            if (c1 != '0') dp[i] += dp[i - 1];
+
+            int two = (s.charAt(i - 2) - '0') * 10 + (s.charAt(i - 1) - '0');
+            if (two >= 10 && two <= 26) dp[i] += dp[i - 2];
+        }
+
+        return dp[n];
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func numDecodings(s string) int {
+    n := len(s)
+    if n == 0 || s[0] == '0' {
+        return 0
+    }
+
+    dp := make([]int, n+1)
+    dp[0], dp[1] = 1, 1
+
+    for i := 2; i <= n; i++ {
+        if s[i-1] != '0' {
+            dp[i] += dp[i-1]
+        }
+        two := int(s[i-2]-'0')*10 + int(s[i-1]-'0')
+        if two >= 10 && two <= 26 {
+            dp[i] += dp[i-2]
+        }
+    }
+
+    return dp[n]
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int numDecodings(string s) {
+        int n = s.size();
+        if (n == 0 || s[0] == '0') return 0;
+
+        vector&lt;int&gt; dp(n + 1, 0);
+        dp[0] = 1;
+        dp[1] = 1;
+
+        for (int i = 2; i &lt;= n; ++i) {
+            if (s[i - 1] != '0') dp[i] += dp[i - 1];
+            int two = (s[i - 2] - '0') * 10 + (s[i - 1] - '0');
+            if (two &gt;= 10 && two &lt;= 26) dp[i] += dp[i - 2];
+        }
+
+        return dp[n];
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def numDecodings(self, s: str) -&gt; int:
+        n = len(s)
+        if n == 0 or s[0] == '0':
+            return 0
+
+        dp = [0] * (n + 1)
+        dp[0] = 1
+        dp[1] = 1
+
+        for i in range(2, n + 1):
+            if s[i - 1] != '0':
+                dp[i] += dp[i - 1]
+
+            two = int(s[i - 2:i])
+            if 10 &lt;= two &lt;= 26:
+                dp[i] += dp[i - 2]
+
+        return dp[n]</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var numDecodings = function(s) {
+  const n = s.length;
+  if (n === 0 || s[0] === '0') return 0;
+
+  const dp = new Array(n + 1).fill(0);
+  dp[0] = 1;
+  dp[1] = 1;
+
+  for (let i = 2; i <= n; i++) {
+    if (s[i - 1] !== '0') dp[i] += dp[i - 1];
+
+    const two = Number(s.slice(i - 2, i));
+    if (two >= 10 && two <= 26) dp[i] += dp[i - 2];
+  }
+
+  return dp[n];
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定一个只包含数字的字符串 <code>s</code>，请计算它有多少种解码方式，其中 <code>'1' -&gt; 'A'</code>，...，<code>'26' -&gt; 'Z'</code>。注意 <code>'0'</code> 不能单独解码。</p>
+
+      <h3>核心思路</h3>
+      <p>定义 <code>dp[i]</code> 为前缀 <code>s[0..i-1]</code> 的解码方案数。每一步都尝试两类转移：
+      单字符转移（当前字符非 0）和双字符转移（当前两位在 10~26）。</p>
+
+      <h3>基线解法与不足</h3>
+      <p>暴力 DFS 会不断重复计算相同后缀，时间复杂度呈指数增长。用 DP 记录前缀结果后，每个位置只计算一次。</p>
+
+      <h3>最优算法步骤（1D DP）</h3>
+      <p>1）若首字符是 <code>'0'</code>，直接返回 0。<br/>
+         2）初始化 <code>dp[0] = 1</code>，<code>dp[1] = 1</code>。<br/>
+         3）从 <code>i = 2</code> 遍历到 <code>n</code>：<br/>
+         &nbsp;&nbsp;- 若 <code>s[i-1] != '0'</code>，则 <code>dp[i] += dp[i-1]</code>。<br/>
+         &nbsp;&nbsp;- 若两位数 <code>s[i-2..i-1]</code> 在 <code>[10,26]</code>，则 <code>dp[i] += dp[i-2]</code>。<br/>
+         4）返回 <code>dp[n]</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(n)</code>（可进一步优化到 <code>O(1)</code>）。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 把 <code>0</code> 当成可单独解码字符。<br/>
+         - 把 <code>06</code> 这种前导零两位数误判为合法。<br/>
+         - 忽略 <code>"10"</code>、<code>"100"</code>、<code>"230"</code> 等边界输入。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int numDecodings(String s) {
+        int n = s.length();
+        if (n == 0 || s.charAt(0) == '0') return 0;
+
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+
+        for (int i = 2; i <= n; i++) {
+            char c1 = s.charAt(i - 1);
+            if (c1 != '0') dp[i] += dp[i - 1];
+
+            int two = (s.charAt(i - 2) - '0') * 10 + (s.charAt(i - 1) - '0');
+            if (two >= 10 && two <= 26) dp[i] += dp[i - 2];
+        }
+
+        return dp[n];
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func numDecodings(s string) int {
+    n := len(s)
+    if n == 0 || s[0] == '0' {
+        return 0
+    }
+
+    dp := make([]int, n+1)
+    dp[0], dp[1] = 1, 1
+
+    for i := 2; i <= n; i++ {
+        if s[i-1] != '0' {
+            dp[i] += dp[i-1]
+        }
+        two := int(s[i-2]-'0')*10 + int(s[i-1]-'0')
+        if two >= 10 && two <= 26 {
+            dp[i] += dp[i-2]
+        }
+    }
+
+    return dp[n]
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int numDecodings(string s) {
+        int n = s.size();
+        if (n == 0 || s[0] == '0') return 0;
+
+        vector&lt;int&gt; dp(n + 1, 0);
+        dp[0] = 1;
+        dp[1] = 1;
+
+        for (int i = 2; i &lt;= n; ++i) {
+            if (s[i - 1] != '0') dp[i] += dp[i - 1];
+            int two = (s[i - 2] - '0') * 10 + (s[i - 1] - '0');
+            if (two &gt;= 10 && two &lt;= 26) dp[i] += dp[i - 2];
+        }
+
+        return dp[n];
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def numDecodings(self, s: str) -&gt; int:
+        n = len(s)
+        if n == 0 or s[0] == '0':
+            return 0
+
+        dp = [0] * (n + 1)
+        dp[0] = 1
+        dp[1] = 1
+
+        for i in range(2, n + 1):
+            if s[i - 1] != '0':
+                dp[i] += dp[i - 1]
+
+            two = int(s[i - 2:i])
+            if 10 &lt;= two &lt;= 26:
+                dp[i] += dp[i - 2]
+
+        return dp[n]</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var numDecodings = function(s) {
+  const n = s.length;
+  if (n === 0 || s[0] === '0') return 0;
+
+  const dp = new Array(n + 1).fill(0);
+  dp[0] = 1;
+  dp[1] = 1;
+
+  for (let i = 2; i <= n; i++) {
+    if (s[i - 1] !== '0') dp[i] += dp[i - 1];
+
+    const two = Number(s.slice(i - 2, i));
+    if (two >= 10 && two <= 26) dp[i] += dp[i - 2];
+  }
+
+  return dp[n];
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
