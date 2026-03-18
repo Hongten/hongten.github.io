@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">LeetCode 106 Inorder + Postorder Reconstruction</title>
+  <desc id="desc">Diagram showing root from postorder end, split position in inorder, and recursive right-then-left construction.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .t{font-family:Arial,Helvetica,sans-serif;fill:#e2e8f0}
+      .m{font-size:30px;font-weight:700}
+      .s{font-size:22px}
+      .b{fill:#334155;stroke:#94a3b8;stroke-width:2;rx:12}
+      .a{stroke:#22d3ee;stroke-width:4;marker-end:url(#arrow)}
+      .r{fill:#0ea5e9}
+      .y{fill:#f59e0b}
+      .g{fill:#10b981}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#22d3ee"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <text x="50" y="70" class="t m">LeetCode 106 · Inorder + Postorder Reconstruction</text>
+  <text x="50" y="108" class="t s">Root = postorder[postIdx], split by inorder index, build right subtree first.</text>
+
+  <rect x="50" y="150" width="510" height="120" class="b"/>
+  <text x="75" y="190" class="t s">Inorder: [9, 3, 15, 20, 7]</text>
+  <circle cx="262" cy="225" r="20" class="y"/>
+  <text x="255" y="232" class="t" font-size="18">3</text>
+  <text x="75" y="255" class="t" font-size="18">left [9] | root 3 | right [15,20,7]</text>
+
+  <rect x="640" y="150" width="510" height="120" class="b"/>
+  <text x="665" y="190" class="t s">Postorder: [9, 15, 7, 20, 3]</text>
+  <circle cx="1090" cy="225" r="20" class="r"/>
+  <text x="1083" y="232" class="t" font-size="18">3</text>
+  <text x="665" y="255" class="t" font-size="18">take from end as current root</text>
+
+  <line x1="560" y1="225" x2="640" y2="225" class="a"/>
+
+  <rect x="120" y="350" width="300" height="170" class="b"/>
+  <text x="145" y="390" class="t s">Build Right First</text>
+  <text x="145" y="425" class="t" font-size="18">postorder reverse:</text>
+  <text x="145" y="450" class="t" font-size="18">root → right → left</text>
+  <text x="145" y="485" class="t" font-size="18">so recurse right before left</text>
+
+  <rect x="470" y="330" width="260" height="220" class="b"/>
+  <circle cx="600" cy="375" r="24" class="g"/><text x="593" y="382" class="t" font-size="18">3</text>
+  <circle cx="540" cy="455" r="24" class="g"/><text x="533" y="462" class="t" font-size="18">9</text>
+  <circle cx="660" cy="455" r="24" class="g"/><text x="646" y="462" class="t" font-size="18">20</text>
+  <circle cx="620" cy="520" r="20" class="g"/><text x="610" y="527" class="t" font-size="16">15</text>
+  <circle cx="700" cy="520" r="20" class="g"/><text x="692" y="527" class="t" font-size="16">7</text>
+  <line x1="587" y1="395" x2="550" y2="433" stroke="#94a3b8" stroke-width="3"/>
+  <line x1="613" y1="395" x2="650" y2="433" stroke="#94a3b8" stroke-width="3"/>
+  <line x1="650" y1="472" x2="628" y2="502" stroke="#94a3b8" stroke-width="3"/>
+  <line x1="670" y1="472" x2="692" y2="502" stroke="#94a3b8" stroke-width="3"/>
+
+  <rect x="780" y="350" width="330" height="170" class="b"/>
+  <text x="805" y="390" class="t s">Complexity</text>
+  <text x="805" y="428" class="t" font-size="20">Time: O(n)</text>
+  <text x="805" y="458" class="t" font-size="20">Space: O(n)</text>
+  <text x="805" y="494" class="t" font-size="18">(index map + recursion stack)</text>
+</svg>
