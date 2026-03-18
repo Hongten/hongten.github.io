@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 71: Simplify Path (Canonical Stack Normalization)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 71 with canonical UNIX path normalization, stack operations, pitfalls, and 5-language implementations."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 71: Simplify Path (Canonical Stack Normalization)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with algorithm steps, complexity, pitfalls, and code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-71-simplify-path.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-71-simplify-path.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 71: Simplify Path (Canonical Stack Normalization)</h1>
+      <div class="meta">2026-03-18 · LeetCode · Stack / String</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 71</span><span class="tag">Stack</span><span class="tag">String</span><span class="tag">Simulation</span>
+
+      <p>Today we solve <strong>LeetCode 71 - Simplify Path</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/simplify-path/" target="_blank" rel="noopener">https://leetcode.com/problems/simplify-path/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-71-20260318.svg" alt="LeetCode 71 canonical path normalization with stack push and pop" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given an absolute UNIX path, return its canonical form. Rules: single slash separators, no trailing slash (except root), <code>.</code> means current directory, and <code>..</code> moves to parent when possible.</p>
+
+      <h3>Key Insight</h3>
+      <p>Process each path token once and maintain a stack of valid directory names. Regular token => push, <code>..</code> => pop if available, empty token / <code>.</code> => ignore.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>Repeatedly replacing <code>//</code>, <code>/./</code>, or scanning backward for each <code>..</code> can become messy and error-prone. A stack gives a direct simulation of directory navigation with clean boundaries.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Split by <code>/</code>.<br/>
+         2) Skip empty tokens and <code>.</code>.<br/>
+         3) If token is <code>..</code>, pop stack when non-empty.<br/>
+         4) Otherwise push directory token.<br/>
+         5) Join stack with <code>/</code> and prepend leading slash; if empty, return <code>/</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(n)</code> in the worst case for stack storage.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Treating multiple slashes as different levels.<br/>
+         - Popping below root for excessive <code>..</code>.<br/>
+         - Forgetting root case when stack is empty.<br/>
+         - Accidentally preserving trailing slash.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">import java.util.ArrayDeque;
+import java.util.Deque;
+
+class Solution {
+    public String simplifyPath(String path) {
+        Deque&lt;String&gt; stack = new ArrayDeque&lt;&gt;();
+        String[] parts = path.split("/");
+
+        for (String part : parts) {
+            if (part.isEmpty() || part.equals(".")) {
+                continue;
+            }
+            if (part.equals("..")) {
+                if (!stack.isEmpty()) stack.removeLast();
+            } else {
+                stack.addLast(part);
+            }
+        }
+
+        if (stack.isEmpty()) return "/";
+        StringBuilder sb = new StringBuilder();
+        for (String dir : stack) {
+            sb.append('/').append(dir);
+        }
+        return sb.toString();
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">import "strings"
+
+func simplifyPath(path string) string {
+    parts := strings.Split(path, "/")
+    stack := make([]string, 0, len(parts))
+
+    for _, p := range parts {
+        if p == "" || p == "." {
+            continue
+        }
+        if p == ".." {
+            if len(stack) &gt; 0 {
+                stack = stack[:len(stack)-1]
+            }
+        } else {
+            stack = append(stack, p)
+        }
+    }
+
+    if len(stack) == 0 {
+        return "/"
+    }
+    return "/" + strings.Join(stack, "/")
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    string simplifyPath(string path) {
+        vector&lt;string&gt; st;
+        string token;
+        stringstream ss(path);
+
+        while (getline(ss, token, '/')) {
+            if (token.empty() || token == ".") continue;
+            if (token == "..") {
+                if (!st.empty()) st.pop_back();
+            } else {
+                st.push_back(token);
+            }
+        }
+
+        if (st.empty()) return "/";
+        string ans;
+        for (const string&amp; dir : st) {
+            ans += "/" + dir;
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def simplifyPath(self, path: str) -&gt; str:
+        stack = []
+
+        for token in path.split('/'):
+            if token == '' or token == '.':
+                continue
+            if token == '..':
+                if stack:
+                    stack.pop()
+            else:
+                stack.append(token)
+
+        return '/' + '/'.join(stack) if stack else '/'</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var simplifyPath = function(path) {
+  const stack = [];
+
+  for (const token of path.split('/')) {
+    if (token === '' || token === '.') continue;
+    if (token === '..') {
+      if (stack.length &gt; 0) stack.pop();
+    } else {
+      stack.push(token);
+    }
+  }
+
+  return stack.length === 0 ? '/' : '/' + stack.join('/');
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给你一个绝对路径，要求转换成 UNIX 规范路径：目录之间仅保留一个斜杠、末尾不带斜杠（根目录除外）、<code>.</code> 表示当前目录、<code>..</code> 表示返回上一级目录。</p>
+
+      <h3>核心思路</h3>
+      <p>把路径按 <code>/</code> 切分后顺序处理，用栈维护“当前有效目录链”。普通目录入栈，<code>..</code> 出栈（若非空），空串和 <code>.</code> 直接忽略。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>若靠字符串反复替换或在每次遇到 <code>..</code> 时向前回扫，边界会非常多（连续斜杠、根目录、结尾斜杠），实现容易混乱。栈模拟目录跳转更稳。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）按 <code>/</code> 分割路径。<br/>
+         2）跳过空 token 与 <code>.</code>。<br/>
+         3）遇到 <code>..</code> 且栈非空时弹栈。<br/>
+         4）其余 token 入栈。<br/>
+         5）最终用 <code>/</code> 拼接栈内容并加前导斜杠；若栈空返回 <code>/</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(n)</code>（最坏情况下栈保存全部目录名）。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 把连续斜杠误当成多层目录。<br/>
+         - <code>..</code> 过多时错误地越过根目录。<br/>
+         - 栈空时没正确返回根路径 <code>/</code>。<br/>
+         - 结果末尾残留多余斜杠。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">import java.util.ArrayDeque;
+import java.util.Deque;
+
+class Solution {
+    public String simplifyPath(String path) {
+        Deque&lt;String&gt; stack = new ArrayDeque&lt;&gt;();
+        String[] parts = path.split("/");
+
+        for (String part : parts) {
+            if (part.isEmpty() || part.equals(".")) {
+                continue;
+            }
+            if (part.equals("..")) {
+                if (!stack.isEmpty()) stack.removeLast();
+            } else {
+                stack.addLast(part);
+            }
+        }
+
+        if (stack.isEmpty()) return "/";
+        StringBuilder sb = new StringBuilder();
+        for (String dir : stack) {
+            sb.append('/').append(dir);
+        }
+        return sb.toString();
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">import "strings"
+
+func simplifyPath(path string) string {
+    parts := strings.Split(path, "/")
+    stack := make([]string, 0, len(parts))
+
+    for _, p := range parts {
+        if p == "" || p == "." {
+            continue
+        }
+        if p == ".." {
+            if len(stack) &gt; 0 {
+                stack = stack[:len(stack)-1]
+            }
+        } else {
+            stack = append(stack, p)
+        }
+    }
+
+    if len(stack) == 0 {
+        return "/"
+    }
+    return "/" + strings.Join(stack, "/")
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    string simplifyPath(string path) {
+        vector&lt;string&gt; st;
+        string token;
+        stringstream ss(path);
+
+        while (getline(ss, token, '/')) {
+            if (token.empty() || token == ".") continue;
+            if (token == "..") {
+                if (!st.empty()) st.pop_back();
+            } else {
+                st.push_back(token);
+            }
+        }
+
+        if (st.empty()) return "/";
+        string ans;
+        for (const string&amp; dir : st) {
+            ans += "/" + dir;
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def simplifyPath(self, path: str) -&gt; str:
+        stack = []
+
+        for token in path.split('/'):
+            if token == '' or token == '.':
+                continue
+            if token == '..':
+                if stack:
+                    stack.pop()
+            else:
+                stack.append(token)
+
+        return '/' + '/'.join(stack) if stack else '/'</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var simplifyPath = function(path) {
+  const stack = [];
+
+  for (const token of path.split('/')) {
+    if (token === '' || token === '.') continue;
+    if (token === '..') {
+      if (stack.length &gt; 0) stack.pop();
+    } else {
+      stack.push(token);
+    }
+  }
+
+  return stack.length === 0 ? '/' : '/' + stack.join('/');
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
