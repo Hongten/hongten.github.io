@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 89: Gray Code (Reflect-and-Prefix Construction)</title>
+  <meta name="description" content="Bilingual interview-grade tutorial for LeetCode 89 with reflect-and-prefix Gray code generation, XOR adjacency proof, pitfalls, and 5-language code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 89: Gray Code (Reflect-and-Prefix Construction)" />
+  <meta property="og:description" content="Detailed English + 中文 guide for Gray code sequence construction with full Java/Go/C++/Python/JavaScript tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-89-gray-code.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-89-gray-code.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 89: Gray Code (Reflect-and-Prefix Construction)</h1>
+      <div class="meta">2026-03-18 · LeetCode · Bit Manipulation</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 89</span><span class="tag">Bit Manipulation</span><span class="tag">Sequence Construction</span>
+
+      <p>Today we solve <strong>LeetCode 89 - Gray Code</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/gray-code/" target="_blank" rel="noopener">https://leetcode.com/problems/gray-code/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-89-20260318.svg" alt="LeetCode 89 gray code reflect and prefix diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given an integer <code>n</code>, generate a Gray code sequence of length <code>2^n</code> where adjacent values differ by exactly one bit, and the first value is <code>0</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>Use the <strong>reflect-and-prefix</strong> rule. Start from <code>[0]</code>. For bit position <code>i</code>, traverse the current list in reverse and append each value with bit <code>i</code> set. This keeps one-bit adjacency across old/new boundaries.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>Brute force backtracking can try all permutations of <code>0..2^n-1</code> and enforce one-bit adjacency using XOR bit-count checks. It works for small <code>n</code> but is combinatorial and unnecessary.</p>
+
+      <h3>Optimal Algorithm Steps (Reflect and Prefix)</h3>
+      <p>1) Initialize result with <code>[0]</code>.<br/>
+         2) For each bit <code>i</code> from <code>0</code> to <code>n-1</code>:<br/>
+         3) Let <code>add = 1 &lt;&lt; i</code>.<br/>
+         4) Iterate existing result in reverse order, append <code>result[j] | add</code>.<br/>
+         5) Return result after finishing all bits.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(2^n)</code>.<br/>Space: <code>O(2^n)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Iterating forward instead of reverse breaks one-bit adjacency.<br/>
+         - Using <code>+</code> with wrong bit mask calculation; prefer <code>|</code> or guaranteed distinct bit addition.<br/>
+         - Returning fewer than <code>2^n</code> elements.<br/>
+         - Forgetting edge case <code>n = 0</code> (answer is <code>[0]</code>).</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public List&lt;Integer&gt; grayCode(int n) {
+        List&lt;Integer&gt; res = new ArrayList&lt;&gt;();
+        res.add(0);
+
+        for (int i = 0; i &lt; n; i++) {
+            int add = 1 &lt;&lt; i;
+            for (int j = res.size() - 1; j &gt;= 0; j--) {
+                res.add(res.get(j) | add);
+            }
+        }
+
+        return res;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func grayCode(n int) []int {
+    res := []int{0}
+
+    for i := 0; i &lt; n; i++ {
+        add := 1 &lt;&lt; i
+        for j := len(res) - 1; j &gt;= 0; j-- {
+            res = append(res, res[j]|add)
+        }
+    }
+
+    return res
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; grayCode(int n) {
+        vector&lt;int&gt; res{0};
+
+        for (int i = 0; i &lt; n; ++i) {
+            int add = 1 &lt;&lt; i;
+            for (int j = (int)res.size() - 1; j &gt;= 0; --j) {
+                res.push_back(res[j] | add);
+            }
+        }
+
+        return res;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def grayCode(self, n: int) -&gt; List[int]:
+        res = [0]
+
+        for i in range(n):
+            add = 1 &lt;&lt; i
+            for x in reversed(res):
+                res.append(x | add)
+
+        return res</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {number} n
+ * @return {number[]}
+ */
+var grayCode = function(n) {
+  const res = [0];
+
+  for (let i = 0; i &lt; n; i++) {
+    const add = 1 &lt;&lt; i;
+    for (let j = res.length - 1; j &gt;= 0; j--) {
+      res.push(res[j] | add);
+    }
+  }
+
+  return res;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定整数 <code>n</code>，生成长度为 <code>2^n</code> 的格雷码序列，要求相邻两个数二进制表示恰好只有 1 位不同，并且首元素为 <code>0</code>。</p>
+
+      <h3>核心思路</h3>
+      <p>使用<strong>镜像反射 + 前缀加位</strong>。从 <code>[0]</code> 开始，每一轮处理第 <code>i</code> 位时，逆序遍历当前序列，并给每个值加上该位（<code>1 &lt;&lt; i</code>），再追加到末尾。</p>
+
+      <h3>基线解法与不足</h3>
+      <p>基线方案可用回溯枚举全排列，并用异或后“只含一位 1”判断相邻合法性。虽然可行，但复杂度接近阶乘级，远超题目需要。</p>
+
+      <h3>最优算法步骤（镜像反射构造）</h3>
+      <p>1）初始化 <code>res = [0]</code>。<br/>
+         2）对每一位 <code>i = 0..n-1</code>：<br/>
+         3）计算 <code>add = 1 &lt;&lt; i</code>。<br/>
+         4）逆序遍历当前 <code>res</code>，追加 <code>res[j] | add</code>。<br/>
+         5）全部处理完后返回 <code>res</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(2^n)</code>。<br/>空间复杂度：<code>O(2^n)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 误用正序追加，会破坏相邻一位差的性质。<br/>
+         - 位运算掩码写错（例如移位位数错误）。<br/>
+         - 返回元素个数不足 <code>2^n</code>。<br/>
+         - 忽略 <code>n=0</code> 的边界（结果应为 <code>[0]</code>）。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public List&lt;Integer&gt; grayCode(int n) {
+        List&lt;Integer&gt; res = new ArrayList&lt;&gt;();
+        res.add(0);
+
+        for (int i = 0; i &lt; n; i++) {
+            int add = 1 &lt;&lt; i;
+            for (int j = res.size() - 1; j &gt;= 0; j--) {
+                res.add(res.get(j) | add);
+            }
+        }
+
+        return res;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func grayCode(n int) []int {
+    res := []int{0}
+
+    for i := 0; i &lt; n; i++ {
+        add := 1 &lt;&lt; i
+        for j := len(res) - 1; j &gt;= 0; j-- {
+            res = append(res, res[j]|add)
+        }
+    }
+
+    return res
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; grayCode(int n) {
+        vector&lt;int&gt; res{0};
+
+        for (int i = 0; i &lt; n; ++i) {
+            int add = 1 &lt;&lt; i;
+            for (int j = (int)res.size() - 1; j &gt;= 0; --j) {
+                res.push_back(res[j] | add);
+            }
+        }
+
+        return res;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def grayCode(self, n: int) -&gt; List[int]:
+        res = [0]
+
+        for i in range(n):
+            add = 1 &lt;&lt; i
+            for x in reversed(res):
+                res.append(x | add)
+
+        return res</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {number} n
+ * @return {number[]}
+ */
+var grayCode = function(n) {
+  const res = [0];
+
+  for (let i = 0; i &lt; n; i++) {
+    const add = 1 &lt;&lt; i;
+    for (let j = res.length - 1; j &gt;= 0; j--) {
+      res.push(res[j] | add);
+    }
+  }
+
+  return res;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
