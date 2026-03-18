@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 115 Distinct Subsequences DP diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1020"/>
+      <stop offset="100%" stop-color="#1d2a52"/>
+    </linearGradient>
+    <style>
+      .t{font-family:Arial,Helvetica,sans-serif;fill:#eaf0ff}
+      .m{font-size:36px;font-weight:700}
+      .s{font-size:22px;fill:#b9c8ff}
+      .b{fill:#111a33;stroke:#5f7cff;stroke-width:2}
+      .k{font-size:20px}
+      .a{stroke:#79e2a7;stroke-width:3;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#79e2a7"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="90" class="t m">LeetCode 115 · Distinct Subsequences</text>
+  <text x="60" y="130" class="t s">dp[i][j] = dp[i-1][j] + (s[i-1]==t[j-1] ? dp[i-1][j-1] : 0)</text>
+
+  <rect x="60" y="190" width="320" height="120" rx="14" class="b"/>
+  <text x="85" y="235" class="t k">Skip current s[i-1]</text>
+  <text x="85" y="270" class="t k">dp[i-1][j]</text>
+
+  <rect x="450" y="190" width="320" height="120" rx="14" class="b"/>
+  <text x="475" y="235" class="t k">Use current char (if match)</text>
+  <text x="475" y="270" class="t k">dp[i-1][j-1]</text>
+
+  <rect x="840" y="190" width="300" height="120" rx="14" class="b"/>
+  <text x="865" y="235" class="t k">Combine to current cell</text>
+  <text x="865" y="270" class="t k">dp[i][j]</text>
+
+  <line x1="380" y1="250" x2="450" y2="250" class="a"/>
+  <line x1="770" y1="250" x2="840" y2="250" class="a"/>
+
+  <text x="60" y="390" class="t s">Base cases:</text>
+  <text x="60" y="430" class="t k">• dp[i][0] = 1  (empty t can always be formed)</text>
+  <text x="60" y="465" class="t k">• dp[0][j] = 0  (non-empty t cannot be formed from empty s)</text>
+  <text x="60" y="530" class="t s">Answer: dp[m][n]</text>
+</svg>
