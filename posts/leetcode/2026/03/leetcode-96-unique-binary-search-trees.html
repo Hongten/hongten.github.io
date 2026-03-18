@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 96: Unique Binary Search Trees (Catalan DP)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 96 using Catalan dynamic programming, recurrence derivation, pitfalls, and 5-language code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 96: Unique Binary Search Trees (Catalan DP)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with recurrence insight, algorithm steps, complexity, pitfalls, and code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-96-unique-binary-search-trees.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-96-unique-binary-search-trees.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 96: Unique Binary Search Trees (Catalan DP)</h1>
+      <div class="meta">2026-03-18 · LeetCode · Dynamic Programming</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 96</span><span class="tag">Dynamic Programming</span><span class="tag">Catalan Number</span>
+
+      <p>Today we solve <strong>LeetCode 96 - Unique Binary Search Trees</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/unique-binary-search-trees/" target="_blank" rel="noopener">https://leetcode.com/problems/unique-binary-search-trees/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-96-20260318.svg" alt="LeetCode 96 Catalan DP split-by-root diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given an integer <code>n</code>, count how many structurally unique BSTs can be formed using values <code>1..n</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>Pick each value <code>root</code> as the root once. Then left subtree uses <code>root-1</code> nodes, right subtree uses <code>n-root</code> nodes. Their combinations multiply.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>Brute force would recursively generate all tree structures, which grows explosively and does a lot of repeated counting.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Let <code>dp[i]</code> be number of unique BSTs with <code>i</code> nodes.<br/>
+         2) Base: <code>dp[0] = 1</code> (empty tree), <code>dp[1] = 1</code>.<br/>
+         3) For each <code>nodes = 2..n</code>, enumerate <code>root = 1..nodes</code>.<br/>
+         4) Add <code>dp[root-1] * dp[nodes-root]</code> to <code>dp[nodes]</code>.<br/>
+         5) Answer is <code>dp[n]</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n^2)</code>.<br/>Space: <code>O(n)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting <code>dp[0] = 1</code>, which breaks multiplicative counting.<br/>
+         - Using wrong right-size index: must be <code>nodes-root</code>.<br/>
+         - Mixing node count with value range boundaries.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int numTrees(int n) {
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+
+        for (int nodes = 2; nodes &lt;= n; nodes++) {
+            int ways = 0;
+            for (int root = 1; root &lt;= nodes; root++) {
+                ways += dp[root - 1] * dp[nodes - root];
+            }
+            dp[nodes] = ways;
+        }
+
+        return dp[n];
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func numTrees(n int) int {
+    dp := make([]int, n+1)
+    dp[0] = 1
+    if n &gt;= 1 {
+        dp[1] = 1
+    }
+
+    for nodes := 2; nodes &lt;= n; nodes++ {
+        ways := 0
+        for root := 1; root &lt;= nodes; root++ {
+            ways += dp[root-1] * dp[nodes-root]
+        }
+        dp[nodes] = ways
+    }
+
+    return dp[n]
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int numTrees(int n) {
+        vector&lt;int&gt; dp(n + 1, 0);
+        dp[0] = 1;
+        if (n &gt;= 1) dp[1] = 1;
+
+        for (int nodes = 2; nodes &lt;= n; ++nodes) {
+            int ways = 0;
+            for (int root = 1; root &lt;= nodes; ++root) {
+                ways += dp[root - 1] * dp[nodes - root];
+            }
+            dp[nodes] = ways;
+        }
+
+        return dp[n];
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def numTrees(self, n: int) -&gt; int:
+        dp = [0] * (n + 1)
+        dp[0] = 1
+        if n &gt;= 1:
+            dp[1] = 1
+
+        for nodes in range(2, n + 1):
+            ways = 0
+            for root in range(1, nodes + 1):
+                ways += dp[root - 1] * dp[nodes - root]
+            dp[nodes] = ways
+
+        return dp[n]</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var numTrees = function(n) {
+  const dp = new Array(n + 1).fill(0);
+  dp[0] = 1;
+  if (n &gt;= 1) dp[1] = 1;
+
+  for (let nodes = 2; nodes &lt;= n; nodes++) {
+    let ways = 0;
+    for (let root = 1; root &lt;= nodes; root++) {
+      ways += dp[root - 1] * dp[nodes - root];
+    }
+    dp[nodes] = ways;
+  }
+
+  return dp[n];
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定整数 <code>n</code>，使用值 <code>1..n</code> 作为节点，问一共有多少种<strong>结构不同</strong>的二叉搜索树。</p>
+
+      <h3>核心思路</h3>
+      <p>枚举每个值作为根节点。若根为 <code>root</code>，左子树有 <code>root-1</code> 个节点，右子树有 <code>n-root</code> 个节点。左右组合数量相乘，再对所有根求和。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>暴力可以递归生成所有树结构，但状态重复非常多，随着 <code>n</code> 增大，开销会迅速失控。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）定义 <code>dp[i]</code> 表示 <code>i</code> 个节点能形成的不同 BST 数量。<br/>
+         2）初始化：<code>dp[0] = 1</code>（空树算一种），<code>dp[1] = 1</code>。<br/>
+         3）遍历 <code>nodes = 2..n</code>。<br/>
+         4）对每个根 <code>root = 1..nodes</code>，累加 <code>dp[root-1] * dp[nodes-root]</code>。<br/>
+         5）最终返回 <code>dp[n]</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n^2)</code>。<br/>空间复杂度：<code>O(n)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 忘记设置 <code>dp[0] = 1</code>，会导致计数全错。<br/>
+         - 右子树节点数下标写错，应是 <code>nodes-root</code>。<br/>
+         - 将“节点数量”与“节点值区间”混淆。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int numTrees(int n) {
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+
+        for (int nodes = 2; nodes &lt;= n; nodes++) {
+            int ways = 0;
+            for (int root = 1; root &lt;= nodes; root++) {
+                ways += dp[root - 1] * dp[nodes - root];
+            }
+            dp[nodes] = ways;
+        }
+
+        return dp[n];
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func numTrees(n int) int {
+    dp := make([]int, n+1)
+    dp[0] = 1
+    if n &gt;= 1 {
+        dp[1] = 1
+    }
+
+    for nodes := 2; nodes &lt;= n; nodes++ {
+        ways := 0
+        for root := 1; root &lt;= nodes; root++ {
+            ways += dp[root-1] * dp[nodes-root]
+        }
+        dp[nodes] = ways
+    }
+
+    return dp[n]
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int numTrees(int n) {
+        vector&lt;int&gt; dp(n + 1, 0);
+        dp[0] = 1;
+        if (n &gt;= 1) dp[1] = 1;
+
+        for (int nodes = 2; nodes &lt;= n; ++nodes) {
+            int ways = 0;
+            for (int root = 1; root &lt;= nodes; ++root) {
+                ways += dp[root - 1] * dp[nodes - root];
+            }
+            dp[nodes] = ways;
+        }
+
+        return dp[n];
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def numTrees(self, n: int) -&gt; int:
+        dp = [0] * (n + 1)
+        dp[0] = 1
+        if n &gt;= 1:
+            dp[1] = 1
+
+        for nodes in range(2, n + 1):
+            ways = 0
+            for root in range(1, nodes + 1):
+                ways += dp[root - 1] * dp[nodes - root]
+            dp[nodes] = ways
+
+        return dp[n]</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var numTrees = function(n) {
+  const dp = new Array(n + 1).fill(0);
+  dp[0] = 1;
+  if (n &gt;= 1) dp[1] = 1;
+
+  for (let nodes = 2; nodes &lt;= n; nodes++) {
+    let ways = 0;
+    for (let root = 1; root &lt;= nodes; root++) {
+      ways += dp[root - 1] * dp[nodes - root];
+    }
+    dp[nodes] = ways;
+  }
+
+  return dp[n];
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
