@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 207: Course Schedule (Topological Sort / Kahn BFS)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 207 with topological sort insight, complexity, pitfalls, and 5-language implementations."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 207: Course Schedule (Topological Sort / Kahn BFS)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with indegree graph modeling, cycle detection, complexity analysis, and code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-207-course-schedule.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-207-course-schedule.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 207: Course Schedule (Topological Sort / Kahn BFS)</h1>
+      <div class="meta">2026-03-18 · LeetCode · Graph</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 207</span><span class="tag">Graph</span><span class="tag">Topological Sort</span><span class="tag">BFS</span>
+
+      <p>Today we solve <strong>LeetCode 207 - Course Schedule</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/course-schedule/" target="_blank" rel="noopener">https://leetcode.com/problems/course-schedule/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-207-20260318.svg" alt="LeetCode 207 course prerequisite graph and topological ordering" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>There are <code>numCourses</code> courses labeled from <code>0</code> to <code>numCourses - 1</code>. Each prerequisite pair <code>[a, b]</code> means you must finish <code>b</code> before <code>a</code>. Return whether it is possible to finish all courses.</p>
+
+      <h3>Key Insight</h3>
+      <p>This is a <strong>cycle detection</strong> problem on a directed graph. If the prerequisite graph has a cycle, at least one course in that cycle can never have indegree 0, so you cannot finish all courses.</p>
+
+      <h3>Brute Force and Why Insufficient</h3>
+      <p>Trying all course-taking orders is factorial-time and impossible for constraints. We need linear graph processing.</p>
+
+      <h3>Optimal Algorithm (Kahn BFS Topological Sort)</h3>
+      <p>1) Build adjacency list <code>b -&gt; a</code> and indegree array.<br/>
+         2) Push all indegree-0 courses into a queue.<br/>
+         3) Pop queue, count processed courses, and decrease indegree of neighbors.<br/>
+         4) If any neighbor indegree becomes 0, push it into queue.<br/>
+         5) After BFS, if processed count equals <code>numCourses</code>, return true; otherwise false.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(V + E)</code>, where <code>V = numCourses</code> and <code>E = prerequisites.length</code>.<br/>Space: <code>O(V + E)</code> for adjacency list, indegree array, and queue.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Reversing edge direction incorrectly.<br/>
+         - Forgetting to initialize every course node (including isolated ones).<br/>
+         - Counting queue pops incorrectly and misjudging completion.<br/>
+         - Using DFS recursion without robust cycle-state marking, causing false positives/stack issues.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">import java.util.*;
+
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List&lt;List&lt;Integer&gt;&gt; graph = new ArrayList&lt;&gt;();
+        for (int i = 0; i &lt; numCourses; i++) graph.add(new ArrayList&lt;&gt;());
+
+        int[] indegree = new int[numCourses];
+        for (int[] p : prerequisites) {
+            int a = p[0], b = p[1];
+            graph.get(b).add(a);
+            indegree[a]++;
+        }
+
+        Deque&lt;Integer&gt; q = new ArrayDeque&lt;&gt;();
+        for (int i = 0; i &lt; numCourses; i++) {
+            if (indegree[i] == 0) q.offer(i);
+        }
+
+        int taken = 0;
+        while (!q.isEmpty()) {
+            int cur = q.poll();
+            taken++;
+            for (int nxt : graph.get(cur)) {
+                indegree[nxt]--;
+                if (indegree[nxt] == 0) q.offer(nxt);
+            }
+        }
+
+        return taken == numCourses;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func canFinish(numCourses int, prerequisites [][]int) bool {
+    graph := make([][]int, numCourses)
+    indegree := make([]int, numCourses)
+
+    for _, p := range prerequisites {
+        a, b := p[0], p[1]
+        graph[b] = append(graph[b], a)
+        indegree[a]++
+    }
+
+    queue := make([]int, 0)
+    for i := 0; i &lt; numCourses; i++ {
+        if indegree[i] == 0 {
+            queue = append(queue, i)
+        }
+    }
+
+    taken := 0
+    for head := 0; head &lt; len(queue); head++ {
+        cur := queue[head]
+        taken++
+        for _, nxt := range graph[cur] {
+            indegree[nxt]--
+            if indegree[nxt] == 0 {
+                queue = append(queue, nxt)
+            }
+        }
+    }
+
+    return taken == numCourses
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool canFinish(int numCourses, vector&lt;vector&lt;int&gt;&gt;&amp; prerequisites) {
+        vector&lt;vector&lt;int&gt;&gt; graph(numCourses);
+        vector&lt;int&gt; indegree(numCourses, 0);
+
+        for (auto &amp;p : prerequisites) {
+            int a = p[0], b = p[1];
+            graph[b].push_back(a);
+            indegree[a]++;
+        }
+
+        queue&lt;int&gt; q;
+        for (int i = 0; i &lt; numCourses; i++) {
+            if (indegree[i] == 0) q.push(i);
+        }
+
+        int taken = 0;
+        while (!q.empty()) {
+            int cur = q.front();
+            q.pop();
+            taken++;
+            for (int nxt : graph[cur]) {
+                if (--indegree[nxt] == 0) q.push(nxt);
+            }
+        }
+
+        return taken == numCourses;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">from collections import deque
+
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: list[list[int]]) -&gt; bool:
+        graph = [[] for _ in range(numCourses)]
+        indegree = [0] * numCourses
+
+        for a, b in prerequisites:
+            graph[b].append(a)
+            indegree[a] += 1
+
+        q = deque(i for i in range(numCourses) if indegree[i] == 0)
+        taken = 0
+
+        while q:
+            cur = q.popleft()
+            taken += 1
+            for nxt in graph[cur]:
+                indegree[nxt] -= 1
+                if indegree[nxt] == 0:
+                    q.append(nxt)
+
+        return taken == numCourses</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var canFinish = function(numCourses, prerequisites) {
+  const graph = Array.from({ length: numCourses }, () =&gt; []);
+  const indegree = new Array(numCourses).fill(0);
+
+  for (const [a, b] of prerequisites) {
+    graph[b].push(a);
+    indegree[a]++;
+  }
+
+  const queue = [];
+  for (let i = 0; i &lt; numCourses; i++) {
+    if (indegree[i] === 0) queue.push(i);
+  }
+
+  let taken = 0;
+  for (let head = 0; head &lt; queue.length; head++) {
+    const cur = queue[head];
+    taken++;
+    for (const nxt of graph[cur]) {
+      indegree[nxt]--;
+      if (indegree[nxt] === 0) queue.push(nxt);
+    }
+  }
+
+  return taken === numCourses;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>有 <code>numCourses</code> 门课程，编号为 <code>0</code> 到 <code>numCourses - 1</code>。先修关系 <code>[a, b]</code> 表示要先学完 <code>b</code> 才能学 <code>a</code>。请判断是否可以完成所有课程。</p>
+
+      <h3>核心思路</h3>
+      <p>本质是有向图中的<strong>环检测</strong>问题。若先修图存在环，则环上的课程都无法把入度降到 0，最终不可能全部修完。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>暴力枚举所有选课顺序复杂度接近阶乘，完全不可行。应使用线性时间的图算法。</p>
+
+      <h3>最优算法（Kahn BFS 拓扑排序）</h3>
+      <p>1）构建邻接表 <code>b -&gt; a</code> 与入度数组。<br/>
+         2）将所有入度为 0 的课程入队。<br/>
+         3）循环出队并计数已修课程，同时遍历其后继课程并降低入度。<br/>
+         4）某后继课程入度降到 0 时入队。<br/>
+         5）结束后若已修课程数等于 <code>numCourses</code>，返回 true，否则 false。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(V + E)</code>，其中 <code>V = numCourses</code>，<code>E = prerequisites.length</code>。<br/>空间复杂度：<code>O(V + E)</code>，用于邻接表、入度数组和队列。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 把边方向写反，导致入度逻辑错误。<br/>
+         - 忘记初始化“无先修关系”的独立课程节点。<br/>
+         - 统计已处理课程数量时遗漏或重复计数。<br/>
+         - DFS 写法未正确标记访问状态（0/1/2），容易误判或栈溢出。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">import java.util.*;
+
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List&lt;List&lt;Integer&gt;&gt; graph = new ArrayList&lt;&gt;();
+        for (int i = 0; i &lt; numCourses; i++) graph.add(new ArrayList&lt;&gt;());
+
+        int[] indegree = new int[numCourses];
+        for (int[] p : prerequisites) {
+            int a = p[0], b = p[1];
+            graph.get(b).add(a);
+            indegree[a]++;
+        }
+
+        Deque&lt;Integer&gt; q = new ArrayDeque&lt;&gt;();
+        for (int i = 0; i &lt; numCourses; i++) {
+            if (indegree[i] == 0) q.offer(i);
+        }
+
+        int taken = 0;
+        while (!q.isEmpty()) {
+            int cur = q.poll();
+            taken++;
+            for (int nxt : graph.get(cur)) {
+                indegree[nxt]--;
+                if (indegree[nxt] == 0) q.offer(nxt);
+            }
+        }
+
+        return taken == numCourses;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func canFinish(numCourses int, prerequisites [][]int) bool {
+    graph := make([][]int, numCourses)
+    indegree := make([]int, numCourses)
+
+    for _, p := range prerequisites {
+        a, b := p[0], p[1]
+        graph[b] = append(graph[b], a)
+        indegree[a]++
+    }
+
+    queue := make([]int, 0)
+    for i := 0; i &lt; numCourses; i++ {
+        if indegree[i] == 0 {
+            queue = append(queue, i)
+        }
+    }
+
+    taken := 0
+    for head := 0; head &lt; len(queue); head++ {
+        cur := queue[head]
+        taken++
+        for _, nxt := range graph[cur] {
+            indegree[nxt]--
+            if indegree[nxt] == 0 {
+                queue = append(queue, nxt)
+            }
+        }
+    }
+
+    return taken == numCourses
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool canFinish(int numCourses, vector&lt;vector&lt;int&gt;&gt;&amp; prerequisites) {
+        vector&lt;vector&lt;int&gt;&gt; graph(numCourses);
+        vector&lt;int&gt; indegree(numCourses, 0);
+
+        for (auto &amp;p : prerequisites) {
+            int a = p[0], b = p[1];
+            graph[b].push_back(a);
+            indegree[a]++;
+        }
+
+        queue&lt;int&gt; q;
+        for (int i = 0; i &lt; numCourses; i++) {
+            if (indegree[i] == 0) q.push(i);
+        }
+
+        int taken = 0;
+        while (!q.empty()) {
+            int cur = q.front();
+            q.pop();
+            taken++;
+            for (int nxt : graph[cur]) {
+                if (--indegree[nxt] == 0) q.push(nxt);
+            }
+        }
+
+        return taken == numCourses;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">from collections import deque
+
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: list[list[int]]) -&gt; bool:
+        graph = [[] for _ in range(numCourses)]
+        indegree = [0] * numCourses
+
+        for a, b in prerequisites:
+            graph[b].append(a)
+            indegree[a] += 1
+
+        q = deque(i for i in range(numCourses) if indegree[i] == 0)
+        taken = 0
+
+        while q:
+            cur = q.popleft()
+            taken += 1
+            for nxt in graph[cur]:
+                indegree[nxt] -= 1
+                if indegree[nxt] == 0:
+                    q.append(nxt)
+
+        return taken == numCourses</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var canFinish = function(numCourses, prerequisites) {
+  const graph = Array.from({ length: numCourses }, () =&gt; []);
+  const indegree = new Array(numCourses).fill(0);
+
+  for (const [a, b] of prerequisites) {
+    graph[b].push(a);
+    indegree[a]++;
+  }
+
+  const queue = [];
+  for (let i = 0; i &lt; numCourses; i++) {
+    if (indegree[i] === 0) queue.push(i);
+  }
+
+  let taken = 0;
+  for (let head = 0; head &lt; queue.length; head++) {
+    const cur = queue[head];
+    taken++;
+    for (const nxt of graph[cur]) {
+      indegree[nxt]--;
+      if (indegree[nxt] === 0) queue.push(nxt);
+    }
+  }
+
+  return taken === numCourses;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
