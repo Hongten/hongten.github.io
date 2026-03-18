@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 92: Reverse Linked List II (In-Place Head-Insertion)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 92 with sublist boundary handling, head-insertion rewiring, pitfalls, and 5-language implementations."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 92: Reverse Linked List II (In-Place Head-Insertion)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with algorithm, complexity, pitfalls, and full code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-92-reverse-linked-list-ii.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-92-reverse-linked-list-ii.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 92: Reverse Linked List II (In-Place Head-Insertion)</h1>
+      <div class="meta">2026-03-18 · LeetCode · Linked List</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 92</span><span class="tag">Linked List</span><span class="tag">In-Place</span>
+
+      <p>Today we solve <strong>LeetCode 92 - Reverse Linked List II</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/reverse-linked-list-ii/" target="_blank" rel="noopener">https://leetcode.com/problems/reverse-linked-list-ii/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-92-20260318.svg" alt="LeetCode 92 reverse sublist head-insertion diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given the head of a singly linked list and two positions <code>left</code> and <code>right</code> (1-indexed), reverse only the nodes from <code>left</code> to <code>right</code>, and return the new head.</p>
+
+      <h3>Key Insight</h3>
+      <p>Use a dummy node and perform repeated <strong>head-insertion</strong> within the target window. Keep a pointer <code>pre</code> to the node before <code>left</code>, and <code>cur</code> at the first node of the window. Each step extracts <code>cur.next</code> and inserts it right after <code>pre</code>.</p>
+
+      <h3>Optimal Algorithm (Step-by-Step)</h3>
+      <p>1) Create dummy -> head to simplify when <code>left = 1</code>.<br/>
+         2) Move <code>pre</code> to node before position <code>left</code>.<br/>
+         3) Set <code>cur = pre.next</code>.<br/>
+         4) Repeat <code>right - left</code> times: take <code>nxt = cur.next</code>, detach it, and insert after <code>pre</code>.<br/>
+         5) Return <code>dummy.next</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting dummy node when reversing from head.<br/>
+         - Breaking links in wrong order and losing sublist tail.<br/>
+         - Iterating wrong number of times (<code>right-left</code>, not <code>right-left+1</code>).<br/>
+         - Returning <code>head</code> instead of <code>dummy.next</code>.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        if (head == null || left == right) return head;
+
+        ListNode dummy = new ListNode(0, head);
+        ListNode pre = dummy;
+        for (int i = 1; i < left; i++) pre = pre.next;
+
+        ListNode cur = pre.next;
+        for (int i = 0; i < right - left; i++) {
+            ListNode nxt = cur.next;
+            cur.next = nxt.next;
+            nxt.next = pre.next;
+            pre.next = nxt;
+        }
+        return dummy.next;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func reverseBetween(head *ListNode, left int, right int) *ListNode {
+    if head == nil || left == right {
+        return head
+    }
+
+    dummy := &ListNode{Val: 0, Next: head}
+    pre := dummy
+    for i := 1; i < left; i++ {
+        pre = pre.Next
+    }
+
+    cur := pre.Next
+    for i := 0; i < right-left; i++ {
+        nxt := cur.Next
+        cur.Next = nxt.Next
+        nxt.Next = pre.Next
+        pre.Next = nxt
+    }
+    return dummy.Next
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    ListNode* reverseBetween(ListNode* head, int left, int right) {
+        if (!head || left == right) return head;
+
+        ListNode dummy(0, head);
+        ListNode* pre = &dummy;
+        for (int i = 1; i < left; ++i) pre = pre->next;
+
+        ListNode* cur = pre->next;
+        for (int i = 0; i < right - left; ++i) {
+            ListNode* nxt = cur->next;
+            cur->next = nxt->next;
+            nxt->next = pre->next;
+            pre->next = nxt;
+        }
+        return dummy.next;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def reverseBetween(self, head: Optional[ListNode], left: int, right: int) -> Optional[ListNode]:
+        if not head or left == right:
+            return head
+
+        dummy = ListNode(0, head)
+        pre = dummy
+        for _ in range(1, left):
+            pre = pre.next
+
+        cur = pre.next
+        for _ in range(right - left):
+            nxt = cur.next
+            cur.next = nxt.next
+            nxt.next = pre.next
+            pre.next = nxt
+
+        return dummy.next</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var reverseBetween = function(head, left, right) {
+  if (!head || left === right) return head;
+
+  const dummy = new ListNode(0, head);
+  let pre = dummy;
+  for (let i = 1; i < left; i++) {
+    pre = pre.next;
+  }
+
+  let cur = pre.next;
+  for (let i = 0; i < right - left; i++) {
+    const nxt = cur.next;
+    cur.next = nxt.next;
+    nxt.next = pre.next;
+    pre.next = nxt;
+  }
+
+  return dummy.next;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定单链表头节点 <code>head</code> 以及位置 <code>left</code>、<code>right</code>（从 1 开始），只反转区间 <code>[left, right]</code> 内的节点，返回新的头节点。</p>
+
+      <h3>核心思路</h3>
+      <p>使用虚拟头节点 + 区间内“头插法”。<code>pre</code> 指向反转区间前一个节点，<code>cur</code> 指向区间第一个节点。每次把 <code>cur.next</code> 抽出来，插到 <code>pre</code> 后面，重复即可完成局部反转。</p>
+
+      <h3>最优算法（步骤）</h3>
+      <p>1）构造 <code>dummy -&gt; head</code>，统一处理 <code>left = 1</code>。<br/>
+         2）将 <code>pre</code> 移动到第 <code>left-1</code> 个节点。<br/>
+         3）令 <code>cur = pre.next</code>。<br/>
+         4）循环 <code>right-left</code> 次：取 <code>nxt = cur.next</code>，摘下并头插到 <code>pre</code> 后。<br/>
+         5）返回 <code>dummy.next</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 没有使用 dummy，导致从头部反转时处理复杂。<br/>
+         - 指针重连顺序错误，丢失后续链表。<br/>
+         - 循环次数写错（应为 <code>right-left</code>）。<br/>
+         - 最后返回了旧 <code>head</code> 而不是 <code>dummy.next</code>。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        if (head == null || left == right) return head;
+
+        ListNode dummy = new ListNode(0, head);
+        ListNode pre = dummy;
+        for (int i = 1; i < left; i++) pre = pre.next;
+
+        ListNode cur = pre.next;
+        for (int i = 0; i < right - left; i++) {
+            ListNode nxt = cur.next;
+            cur.next = nxt.next;
+            nxt.next = pre.next;
+            pre.next = nxt;
+        }
+        return dummy.next;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func reverseBetween(head *ListNode, left int, right int) *ListNode {
+    if head == nil || left == right {
+        return head
+    }
+
+    dummy := &ListNode{Val: 0, Next: head}
+    pre := dummy
+    for i := 1; i < left; i++ {
+        pre = pre.Next
+    }
+
+    cur := pre.Next
+    for i := 0; i < right-left; i++ {
+        nxt := cur.Next
+        cur.Next = nxt.Next
+        nxt.Next = pre.Next
+        pre.Next = nxt
+    }
+    return dummy.Next
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    ListNode* reverseBetween(ListNode* head, int left, int right) {
+        if (!head || left == right) return head;
+
+        ListNode dummy(0, head);
+        ListNode* pre = &dummy;
+        for (int i = 1; i < left; ++i) pre = pre->next;
+
+        ListNode* cur = pre->next;
+        for (int i = 0; i < right - left; ++i) {
+            ListNode* nxt = cur->next;
+            cur->next = nxt->next;
+            nxt->next = pre->next;
+            pre->next = nxt;
+        }
+        return dummy.next;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def reverseBetween(self, head: Optional[ListNode], left: int, right: int) -> Optional[ListNode]:
+        if not head or left == right:
+            return head
+
+        dummy = ListNode(0, head)
+        pre = dummy
+        for _ in range(1, left):
+            pre = pre.next
+
+        cur = pre.next
+        for _ in range(right - left):
+            nxt = cur.next
+            cur.next = nxt.next
+            nxt.next = pre.next
+            pre.next = nxt
+
+        return dummy.next</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var reverseBetween = function(head, left, right) {
+  if (!head || left === right) return head;
+
+  const dummy = new ListNode(0, head);
+  let pre = dummy;
+  for (let i = 1; i < left; i++) {
+    pre = pre.next;
+  }
+
+  let cur = pre.next;
+  for (let i = 0; i < right - left; i++) {
+    const nxt = cur.next;
+    cur.next = nxt.next;
+    nxt.next = pre.next;
+    pre.next = nxt;
+  }
+
+  return dummy.next;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
