@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 114: Flatten Binary Tree to Linked List (Reverse Preorder Relinking)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 114 with reverse-preorder invariant, in-place pointer rewiring, pitfalls, and 5-language implementations."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 114: Flatten Binary Tree to Linked List (Reverse Preorder Relinking)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with algorithm steps, complexity, pitfalls, and code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-114-flatten-binary-tree-to-linked-list.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-114-flatten-binary-tree-to-linked-list.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 114: Flatten Binary Tree to Linked List (Reverse Preorder Relinking)</h1>
+      <div class="meta">2026-03-18 · LeetCode · Binary Tree</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 114</span><span class="tag">Binary Tree</span><span class="tag">DFS</span><span class="tag">In-Place</span>
+
+      <p>Today we solve <strong>LeetCode 114 - Flatten Binary Tree to Linked List</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/flatten-binary-tree-to-linked-list/" target="_blank" rel="noopener">https://leetcode.com/problems/flatten-binary-tree-to-linked-list/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-114-20260318.svg" alt="LeetCode 114 reverse preorder rewiring from tree to right-linked list" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given the root of a binary tree, modify the tree in-place so it becomes a right-skewed linked list following preorder traversal order (<code>root -&gt; left -&gt; right</code>). Every node's <code>left</code> must be set to <code>null</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>Process nodes in <strong>reverse preorder</strong> order: <code>right -&gt; left -&gt; root</code>. Keep a global <code>prev</code> pointer representing the already-flattened head. For each node: <code>node.right = prev</code>, <code>node.left = null</code>, then move <code>prev = node</code>.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>Collect preorder nodes into an array, then reconnect in a second pass. It works but uses <code>O(n)</code> extra space and loses the elegant in-place pointer invariant expected in interviews.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Initialize <code>prev = null</code>.<br/>
+         2) DFS(node): recurse to <code>node.right</code> first, then <code>node.left</code>.<br/>
+         3) Rewire current node: <code>node.right = prev</code>, <code>node.left = null</code>.<br/>
+         4) Update <code>prev = node</code>.<br/>
+         5) After DFS ends, original tree is flattened in preorder order.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code> (visit each node once).<br/>Space: <code>O(h)</code> recursion stack, where <code>h</code> is tree height.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Traversing left before right breaks ordering when rewiring.<br/>
+         - Forgetting <code>node.left = null</code> leaves invalid structure.<br/>
+         - Overwriting <code>node.right</code> before saving recursion order in iterative variants.<br/>
+         - Assuming balanced height; skewed tree recursion can reach <code>O(n)</code> stack.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    private TreeNode prev = null;
+
+    public void flatten(TreeNode root) {
+        dfs(root);
+    }
+
+    private void dfs(TreeNode node) {
+        if (node == null) return;
+        dfs(node.right);
+        dfs(node.left);
+        node.right = prev;
+        node.left = null;
+        prev = node;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func flatten(root *TreeNode) {
+    var prev *TreeNode
+    var dfs func(*TreeNode)
+
+    dfs = func(node *TreeNode) {
+        if node == nil {
+            return
+        }
+        dfs(node.Right)
+        dfs(node.Left)
+        node.Right = prev
+        node.Left = nil
+        prev = node
+    }
+
+    dfs(root)
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+    TreeNode* prev = nullptr;
+
+public:
+    void flatten(TreeNode* root) {
+        dfs(root);
+    }
+
+private:
+    void dfs(TreeNode* node) {
+        if (!node) return;
+        dfs(node-&gt;right);
+        dfs(node-&gt;left);
+        node-&gt;right = prev;
+        node-&gt;left = nullptr;
+        prev = node;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def flatten(self, root: Optional[TreeNode]) -&gt; None:
+        self.prev = None
+
+        def dfs(node: Optional[TreeNode]) -&gt; None:
+            if not node:
+                return
+            dfs(node.right)
+            dfs(node.left)
+            node.right = self.prev
+            node.left = None
+            self.prev = node
+
+        dfs(root)</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var flatten = function(root) {
+  let prev = null;
+
+  const dfs = (node) =&gt; {
+    if (!node) return;
+    dfs(node.right);
+    dfs(node.left);
+    node.right = prev;
+    node.left = null;
+    prev = node;
+  };
+
+  dfs(root);
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定一棵二叉树，请你<strong>原地</strong>将其展开为单链表，链表方向沿 <code>right</code> 指针，顺序必须是前序遍历（<code>root -&gt; left -&gt; right</code>），并把所有 <code>left</code> 置为 <code>null</code>。</p>
+
+      <h3>核心思路</h3>
+      <p>采用<strong>逆前序</strong>处理：<code>right -&gt; left -&gt; root</code>。维护一个 <code>prev</code> 表示“已经拉直好的链表头”。回溯到当前节点时，把它接到 <code>prev</code> 前面：<code>node.right = prev</code>，<code>node.left = null</code>，再更新 <code>prev = node</code>。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>可以先做前序遍历把节点存到数组，再二次遍历重连指针。虽然简单，但需要 <code>O(n)</code> 额外空间，不如原地方法更符合题目和面试期望。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）初始化 <code>prev = null</code>。<br/>
+         2）对当前节点先递归右子树，再递归左子树。<br/>
+         3）回到当前节点后执行重连：<code>node.right = prev</code>，<code>node.left = null</code>。<br/>
+         4）更新 <code>prev = node</code>。<br/>
+         5）遍历完成后，整棵树即被拉平成前序顺序的右链表。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(h)</code>（递归栈，<code>h</code> 为树高）。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 先处理左子树会导致重连顺序错误。<br/>
+         - 忘记清空 <code>left</code> 指针，结构不满足题意。<br/>
+         - 迭代实现时过早覆盖 <code>right</code> 导致丢失未处理分支。<br/>
+         - 忽视极端链状树导致递归深度接近 <code>n</code>。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    private TreeNode prev = null;
+
+    public void flatten(TreeNode root) {
+        dfs(root);
+    }
+
+    private void dfs(TreeNode node) {
+        if (node == null) return;
+        dfs(node.right);
+        dfs(node.left);
+        node.right = prev;
+        node.left = null;
+        prev = node;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func flatten(root *TreeNode) {
+    var prev *TreeNode
+    var dfs func(*TreeNode)
+
+    dfs = func(node *TreeNode) {
+        if node == nil {
+            return
+        }
+        dfs(node.Right)
+        dfs(node.Left)
+        node.Right = prev
+        node.Left = nil
+        prev = node
+    }
+
+    dfs(root)
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+    TreeNode* prev = nullptr;
+
+public:
+    void flatten(TreeNode* root) {
+        dfs(root);
+    }
+
+private:
+    void dfs(TreeNode* node) {
+        if (!node) return;
+        dfs(node-&gt;right);
+        dfs(node-&gt;left);
+        node-&gt;right = prev;
+        node-&gt;left = nullptr;
+        prev = node;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def flatten(self, root: Optional[TreeNode]) -&gt; None:
+        self.prev = None
+
+        def dfs(node: Optional[TreeNode]) -&gt; None:
+            if not node:
+                return
+            dfs(node.right)
+            dfs(node.left)
+            node.right = self.prev
+            node.left = None
+            self.prev = node
+
+        dfs(root)</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var flatten = function(root) {
+  let prev = null;
+
+  const dfs = (node) =&gt; {
+    if (!node) return;
+    dfs(node.right);
+    dfs(node.left);
+    node.right = prev;
+    node.left = null;
+    prev = node;
+  };
+
+  dfs(root);
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
