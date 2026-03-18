@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">LeetCode 103 Zigzag Level Order Traversal</title>
+  <desc id="desc">Binary tree levels with alternating traversal arrows.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#f59e0b"/>
+    </marker>
+    <style>
+      .title{font:700 44px 'Segoe UI',Arial,sans-serif;fill:#e2e8f0}
+      .sub{font:500 24px 'Segoe UI',Arial,sans-serif;fill:#93c5fd}
+      .node{fill:#334155;stroke:#94a3b8;stroke-width:2}
+      .val{font:700 26px 'Segoe UI',Arial,sans-serif;fill:#f8fafc;text-anchor:middle;dominant-baseline:middle}
+      .edge{stroke:#64748b;stroke-width:3}
+      .lab{font:600 20px 'Segoe UI',Arial,sans-serif;fill:#fbbf24}
+      .hint{font:500 20px 'Segoe UI',Arial,sans-serif;fill:#cbd5e1}
+    </style>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="75" class="title">LeetCode 103 · Zigzag Level Order</text>
+  <text x="60" y="110" class="sub">BFS by level + alternate write direction</text>
+
+  <line x1="600" y1="180" x2="420" y2="260" class="edge"/>
+  <line x1="600" y1="180" x2="780" y2="260" class="edge"/>
+  <line x1="420" y1="260" x2="320" y2="355" class="edge"/>
+  <line x1="420" y1="260" x2="520" y2="355" class="edge"/>
+  <line x1="780" y1="260" x2="680" y2="355" class="edge"/>
+  <line x1="780" y1="260" x2="880" y2="355" class="edge"/>
+
+  <circle cx="600" cy="180" r="34" class="node"/><text x="600" y="180" class="val">3</text>
+  <circle cx="420" cy="260" r="34" class="node"/><text x="420" y="260" class="val">9</text>
+  <circle cx="780" cy="260" r="34" class="node"/><text x="780" y="260" class="val">20</text>
+  <circle cx="320" cy="355" r="34" class="node"/><text x="320" y="355" class="val">15</text>
+  <circle cx="520" cy="355" r="34" class="node"/><text x="520" y="355" class="val">7</text>
+  <circle cx="680" cy="355" r="34" class="node"/><text x="680" y="355" class="val">8</text>
+  <circle cx="880" cy="355" r="34" class="node"/><text x="880" y="355" class="val">11</text>
+
+  <text x="70" y="200" class="lab">Level 0</text>
+  <line x1="210" y1="192" x2="340" y2="192" stroke="#f59e0b" stroke-width="5" marker-end="url(#arrow)"/>
+
+  <text x="70" y="290" class="lab">Level 1</text>
+  <line x1="340" y1="282" x2="210" y2="282" stroke="#f59e0b" stroke-width="5" marker-end="url(#arrow)"/>
+
+  <text x="70" y="385" class="lab">Level 2</text>
+  <line x1="210" y1="377" x2="340" y2="377" stroke="#f59e0b" stroke-width="5" marker-end="url(#arrow)"/>
+
+  <text x="60" y="520" class="hint">Index rule: idx = i (L→R), idx = size-1-i (R→L)</text>
+  <text x="60" y="555" class="hint">Output example: [[3], [20,9], [15,7,8,11]]</text>
+</svg>
