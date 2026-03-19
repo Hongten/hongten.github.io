@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 58: Length of Last Word (Reverse Scan)</title>
+  <meta name="description" content="Bilingual interview-grade walkthrough of LeetCode 58 with reverse-scan invariant, edge cases, and implementations in Java, Go, C++, Python, and JavaScript."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 58: Length of Last Word (Reverse Scan)" />
+  <meta property="og:description" content="Detailed bilingual guide with key insight, algorithm steps, complexity, pitfalls, and 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-58-length-of-last-word.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-58-length-of-last-word.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 58: Length of Last Word (Reverse Scan)</h1>
+      <div class="meta">2026-03-19 · LeetCode · String</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 58</span><span class="tag">String</span><span class="tag">Reverse Scan</span>
+
+      <p>Today we solve <strong>LeetCode 58 - Length of Last Word</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/length-of-last-word/" target="_blank" rel="noopener">https://leetcode.com/problems/length-of-last-word/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-58-20260319.svg" alt="LeetCode 58 reverse scan over trailing spaces and last word" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a string <code>s</code> containing words and spaces, return the length of its last word. A word is a maximal substring containing only non-space characters.</p>
+
+      <h3>Key Insight</h3>
+      <p>The last word is nearest to the right boundary. So scan from right to left: skip trailing spaces first, then count non-space characters until the next space or start of string.</p>
+
+      <h3>Brute Force and Why Insufficient</h3>
+      <p>A straightforward split-based approach (<code>s.trim().split(" ")</code>) can work, but creates extra substrings/arrays. Reverse scan is cleaner and uses constant auxiliary space.</p>
+
+      <h3>Optimal Algorithm (Step-by-Step)</h3>
+      <p>1) Set index <code>i = n - 1</code>.<br/>
+         2) While <code>i &gt;= 0</code> and <code>s[i] == ' '</code>, move left.<br/>
+         3) Initialize <code>len = 0</code>.<br/>
+         4) While <code>i &gt;= 0</code> and <code>s[i] != ' '</code>, increment <code>len</code> and move left.<br/>
+         5) Return <code>len</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting to skip trailing spaces first.<br/>
+         - Mis-handling all-space strings (constraints usually guarantee at least one word, but logic should still be robust).<br/>
+         - Off-by-one mistakes near index <code>0</code>.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int lengthOfLastWord(String s) {
+        int i = s.length() - 1;
+        while (i &gt;= 0 &amp;&amp; s.charAt(i) == ' ') i--;
+
+        int len = 0;
+        while (i &gt;= 0 &amp;&amp; s.charAt(i) != ' ') {
+            len++;
+            i--;
+        }
+        return len;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func lengthOfLastWord(s string) int {
+    i := len(s) - 1
+    for i &gt;= 0 &amp;&amp; s[i] == ' ' {
+        i--
+    }
+
+    length := 0
+    for i &gt;= 0 &amp;&amp; s[i] != ' ' {
+        length++
+        i--
+    }
+    return length
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        int i = (int)s.size() - 1;
+        while (i &gt;= 0 &amp;&amp; s[i] == ' ') i--;
+
+        int len = 0;
+        while (i &gt;= 0 &amp;&amp; s[i] != ' ') {
+            len++;
+            i--;
+        }
+        return len;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def lengthOfLastWord(self, s: str) -> int:
+        i = len(s) - 1
+        while i &gt;= 0 and s[i] == ' ':
+            i -= 1
+
+        length = 0
+        while i &gt;= 0 and s[i] != ' ':
+            length += 1
+            i -= 1
+        return length</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var lengthOfLastWord = function(s) {
+  let i = s.length - 1;
+  while (i &gt;= 0 &amp;&amp; s[i] === ' ') i--;
+
+  let len = 0;
+  while (i &gt;= 0 &amp;&amp; s[i] !== ' ') {
+    len++;
+    i--;
+  }
+  return len;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定一个由单词和空格组成的字符串 <code>s</code>，返回最后一个单词的长度。单词定义为由非空格字符组成的最长连续子串。</p>
+
+      <h3>核心思路</h3>
+      <p>最后一个单词一定靠近字符串右端。先从右往左跳过末尾空格，再继续往左统计连续非空格字符个数，直到遇到空格或越界。</p>
+
+      <h3>朴素解法与不足</h3>
+      <p>可以用 <code>trim + split</code> 做：<code>s.trim().split(" ")</code>，取最后一个元素长度。但会创建额外字符串和数组。反向扫描更直接，也只需 <code>O(1)</code> 额外空间。</p>
+
+      <h3>最优算法（步骤）</h3>
+      <p>1）令 <code>i = n - 1</code>。<br/>
+         2）当 <code>i &gt;= 0</code> 且 <code>s[i] == ' '</code> 时持续左移。<br/>
+         3）初始化 <code>len = 0</code>。<br/>
+         4）当 <code>i &gt;= 0</code> 且 <code>s[i] != ' '</code> 时，<code>len++</code> 并左移。<br/>
+         5）返回 <code>len</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 忘记先跳过尾部空格。<br/>
+         - 边界条件写错导致下标越界。<br/>
+         - 对全空格输入处理不稳（即使题目通常保证至少有一个单词）。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int lengthOfLastWord(String s) {
+        int i = s.length() - 1;
+        while (i &gt;= 0 &amp;&amp; s.charAt(i) == ' ') i--;
+
+        int len = 0;
+        while (i &gt;= 0 &amp;&amp; s.charAt(i) != ' ') {
+            len++;
+            i--;
+        }
+        return len;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func lengthOfLastWord(s string) int {
+    i := len(s) - 1
+    for i &gt;= 0 &amp;&amp; s[i] == ' ' {
+        i--
+    }
+
+    length := 0
+    for i &gt;= 0 &amp;&amp; s[i] != ' ' {
+        length++
+        i--
+    }
+    return length
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        int i = (int)s.size() - 1;
+        while (i &gt;= 0 &amp;&amp; s[i] == ' ') i--;
+
+        int len = 0;
+        while (i &gt;= 0 &amp;&amp; s[i] != ' ') {
+            len++;
+            i--;
+        }
+        return len;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def lengthOfLastWord(self, s: str) -> int:
+        i = len(s) - 1
+        while i &gt;= 0 and s[i] == ' ':
+            i -= 1
+
+        length = 0
+        while i &gt;= 0 and s[i] != ' ':
+            length += 1
+            i -= 1
+        return length</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var lengthOfLastWord = function(s) {
+  let i = s.length - 1;
+  while (i &gt;= 0 &amp;&amp; s[i] === ' ') i--;
+
+  let len = 0;
+  while (i &gt;= 0 &amp;&amp; s[i] !== ' ') {
+    len++;
+    i--;
+  }
+  return len;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
