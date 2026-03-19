@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 242 Valid Anagram frequency counting diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1020"/>
+      <stop offset="100%" stop-color="#1f2a44"/>
+    </linearGradient>
+    <style>
+      .title{font:700 44px 'Segoe UI',Arial,sans-serif;fill:#eaf2ff}
+      .sub{font:400 24px 'Segoe UI',Arial,sans-serif;fill:#c9d7ff}
+      .label{font:600 26px 'Segoe UI',Arial,sans-serif;fill:#ffffff}
+      .txt{font:500 24px 'Consolas','Menlo',monospace;fill:#e8f0ff}
+      .small{font:500 20px 'Segoe UI',Arial,sans-serif;fill:#9fc2ff}
+      .ok{fill:#34d399}
+      .warn{fill:#f59e0b}
+      .box{fill:#111a2e;stroke:#3b82f6;stroke-width:2;rx:16}
+      .arr{stroke:#93c5fd;stroke-width:3;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#93c5fd"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="80" class="title">LeetCode 242 · Valid Anagram</text>
+  <text x="60" y="118" class="sub">Frequency Counting Invariant: add with s, subtract with t, all zeros at end</text>
+
+  <rect x="60" y="170" width="500" height="140" class="box"/>
+  <text x="90" y="220" class="label">Input</text>
+  <text x="90" y="262" class="txt">s = "anagram"</text>
+  <text x="90" y="296" class="txt">t = "nagaram"</text>
+
+  <rect x="640" y="170" width="500" height="140" class="box"/>
+  <text x="670" y="220" class="label">Counter updates</text>
+  <text x="670" y="262" class="txt">cnt[s[i]-'a']++</text>
+  <text x="670" y="296" class="txt">cnt[t[i]-'a']--</text>
+
+  <line x1="560" y1="240" x2="635" y2="240" class="arr"/>
+
+  <rect x="60" y="360" width="1080" height="200" class="box"/>
+  <text x="90" y="410" class="label">26-letter frequency slots (sample)</text>
+  <text x="90" y="452" class="txt">a:0  g:0  m:0  n:0  r:0  ... others:0</text>
+  <text x="90" y="496" class="small">If any slot != 0 → not an anagram</text>
+  <text x="90" y="534" class="small">All slots == 0 → strings are anagrams ✅</text>
+  <circle cx="1030" cy="490" r="18" class="ok"/>
+  <text x="1060" y="498" class="small">balanced counts</text>
+</svg>
