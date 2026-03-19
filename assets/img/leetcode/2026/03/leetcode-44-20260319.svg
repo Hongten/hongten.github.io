@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Wildcard matching greedy backtracking diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .t{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#e2e8f0}
+      .m{font-family:JetBrains Mono,Consolas,monospace;fill:#93c5fd}
+      .k{fill:#22d3ee;font-weight:700}
+      .b{fill:#111827;stroke:#334155;stroke-width:2;rx:12}
+      .a{stroke:#f59e0b;stroke-width:4;marker-end:url(#arr)}
+    </style>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <polygon points="0 0, 6 3, 0 6" fill="#f59e0b"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="80" class="t" font-size="42" font-weight="700">LeetCode 44 · Wildcard Matching</text>
+  <text x="60" y="120" class="t" font-size="24">Greedy + Last Star Backtracking</text>
+
+  <rect x="60" y="170" width="1080" height="120" class="b"/>
+  <text x="90" y="220" class="m" font-size="30">s = adceb</text>
+  <text x="90" y="265" class="m" font-size="30">p = *a*b</text>
+
+  <rect x="60" y="320" width="330" height="220" class="b"/>
+  <text x="85" y="360" class="t" font-size="24" font-weight="700">State</text>
+  <text x="85" y="400" class="m" font-size="22">i: string pointer</text>
+  <text x="85" y="435" class="m" font-size="22">j: pattern pointer</text>
+  <text x="85" y="470" class="m" font-size="22">star: last '*' index</text>
+  <text x="85" y="505" class="m" font-size="22">match: start in s</text>
+
+  <rect x="430" y="320" width="330" height="220" class="b"/>
+  <text x="455" y="360" class="t" font-size="24" font-weight="700">Mismatch with star?</text>
+  <text x="455" y="405" class="m" font-size="22">Yes → j = star + 1</text>
+  <text x="455" y="440" class="m" font-size="22">match++ , i = match</text>
+  <text x="455" y="475" class="m" font-size="22">(star eats one more)</text>
+  <text x="455" y="510" class="k" font-size="22">No star → fail</text>
+
+  <rect x="800" y="320" width="340" height="220" class="b"/>
+  <text x="825" y="360" class="t" font-size="24" font-weight="700">Finish Check</text>
+  <text x="825" y="405" class="m" font-size="22">s consumed, skip trailing *</text>
+  <text x="825" y="440" class="m" font-size="22">if j == p.length → true</text>
+  <text x="825" y="475" class="m" font-size="22">else false</text>
+
+  <line x1="390" y1="430" x2="430" y2="430" class="a"/>
+  <line x1="760" y1="430" x2="800" y2="430" class="a"/>
+</svg>
