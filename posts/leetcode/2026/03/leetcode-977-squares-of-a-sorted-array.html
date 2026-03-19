@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 977: Squares of a Sorted Array (Two Pointers from Ends)</title>
+  <meta name="description" content="Bilingual interview-grade walkthrough of LeetCode 977 with two-end pointer invariant, fill-from-back strategy, pitfalls, and implementations in Java, Go, C++, Python, and JavaScript."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 977: Squares of a Sorted Array (Two Pointers from Ends)" />
+  <meta property="og:description" content="Detailed bilingual guide with key insight, algorithm steps, complexity, pitfalls, and 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-977-squares-of-a-sorted-array.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-977-squares-of-a-sorted-array.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 977: Squares of a Sorted Array (Two Pointers from Ends)</h1>
+      <div class="meta">2026-03-19 · LeetCode · Two Pointers</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 977</span><span class="tag">Two Pointers</span><span class="tag">Array</span>
+
+      <p>Today we solve <strong>LeetCode 977 - Squares of a Sorted Array</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/squares-of-a-sorted-array/" target="_blank" rel="noopener">https://leetcode.com/problems/squares-of-a-sorted-array/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-977-20260319.svg" alt="LeetCode 977 two pointers fill from back diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a non-decreasing integer array <code>nums</code>, return an array of each number squared, also in non-decreasing order.</p>
+
+      <h3>Key Insight</h3>
+      <p>After squaring, the largest value must come from one of the two ends (most negative or most positive). So compare absolute values at both ends and fill the answer from right to left.</p>
+
+      <h3>Brute Force and Why Insufficient</h3>
+      <p>Brute force is: square all elements first, then sort. That is <code>O(n log n)</code>. It works, but it ignores the sorted input property. We can do strictly better at <code>O(n)</code>.</p>
+
+      <h3>Optimal Algorithm (Step-by-Step)</h3>
+      <p>1) Create answer array <code>ans</code> of size <code>n</code>.<br/>
+         2) Set two pointers: <code>l = 0</code>, <code>r = n - 1</code>, and write index <code>k = n - 1</code>.<br/>
+         3) While <code>l &lt;= r</code>, compare <code>|nums[l]|</code> and <code>|nums[r]|</code>.<br/>
+         4) Put the larger square into <code>ans[k]</code>, then move that pointer inward, and decrement <code>k</code>.<br/>
+         5) Return <code>ans</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(n)</code> for the output array.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Filling answer from left to right (breaks ordering).<br/>
+         - Forgetting to use absolute values for comparison.<br/>
+         - Using <code>l &lt; r</code> instead of <code>l &lt;= r</code>, missing the middle element.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int[] sortedSquares(int[] nums) {
+        int n = nums.length;
+        int[] ans = new int[n];
+        int l = 0, r = n - 1, k = n - 1;
+
+        while (l &lt;= r) {
+            int lv = nums[l] * nums[l];
+            int rv = nums[r] * nums[r];
+            if (lv &gt; rv) {
+                ans[k--] = lv;
+                l++;
+            } else {
+                ans[k--] = rv;
+                r--;
+            }
+        }
+
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func sortedSquares(nums []int) []int {
+    n := len(nums)
+    ans := make([]int, n)
+    l, r, k := 0, n-1, n-1
+
+    for l &lt;= r {
+        lv := nums[l] * nums[l]
+        rv := nums[r] * nums[r]
+        if lv &gt; rv {
+            ans[k] = lv
+            l++
+        } else {
+            ans[k] = rv
+            r--
+        }
+        k--
+    }
+
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; sortedSquares(vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        vector&lt;int&gt; ans(n);
+        int l = 0, r = n - 1, k = n - 1;
+
+        while (l &lt;= r) {
+            int lv = nums[l] * nums[l];
+            int rv = nums[r] * nums[r];
+            if (lv &gt; rv) {
+                ans[k--] = lv;
+                l++;
+            } else {
+                ans[k--] = rv;
+                r--;
+            }
+        }
+
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def sortedSquares(self, nums: list[int]) -&gt; list[int]:
+        n = len(nums)
+        ans = [0] * n
+        l, r, k = 0, n - 1, n - 1
+
+        while l &lt;= r:
+            lv = nums[l] * nums[l]
+            rv = nums[r] * nums[r]
+            if lv &gt; rv:
+                ans[k] = lv
+                l += 1
+            else:
+                ans[k] = rv
+                r -= 1
+            k -= 1
+
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var sortedSquares = function(nums) {
+  const n = nums.length;
+  const ans = new Array(n);
+  let l = 0, r = n - 1, k = n - 1;
+
+  while (l &lt;= r) {
+    const lv = nums[l] * nums[l];
+    const rv = nums[r] * nums[r];
+    if (lv &gt; rv) {
+      ans[k--] = lv;
+      l++;
+    } else {
+      ans[k--] = rv;
+      r--;
+    }
+  }
+
+  return ans;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给你一个按非递减顺序排列的整数数组 <code>nums</code>，返回每个数字平方后、同样按非递减顺序排列的新数组。</p>
+
+      <h3>核心思路</h3>
+      <p>平方后的最大值一定来自两端：最左侧负数绝对值可能很大，最右侧正数也可能很大。用双指针比较两端绝对值，把更大的平方值从后往前放进答案数组。</p>
+
+      <h3>朴素解法与不足</h3>
+      <p>朴素做法是先把所有元素平方，再排序，复杂度 <code>O(n log n)</code>。虽然能过，但没有利用“原数组已排序”这个关键信息。双指针可以做到 <code>O(n)</code>。</p>
+
+      <h3>最优算法（步骤）</h3>
+      <p>1）创建长度为 <code>n</code> 的结果数组 <code>ans</code>。<br/>
+         2）定义 <code>l = 0</code>、<code>r = n - 1</code>，以及写入位置 <code>k = n - 1</code>。<br/>
+         3）当 <code>l &lt;= r</code> 时，比较 <code>|nums[l]|</code> 与 <code>|nums[r]|</code>。<br/>
+         4）将较大者的平方写入 <code>ans[k]</code>，对应指针向内移动，<code>k--</code>。<br/>
+         5）循环结束后返回 <code>ans</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(n)</code>（输出数组）。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 从前往后填结果，导致顺序错误。<br/>
+         - 比较时忘记绝对值逻辑。<br/>
+         - 循环条件写成 <code>l &lt; r</code>，漏掉中间元素。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int[] sortedSquares(int[] nums) {
+        int n = nums.length;
+        int[] ans = new int[n];
+        int l = 0, r = n - 1, k = n - 1;
+
+        while (l &lt;= r) {
+            int lv = nums[l] * nums[l];
+            int rv = nums[r] * nums[r];
+            if (lv &gt; rv) {
+                ans[k--] = lv;
+                l++;
+            } else {
+                ans[k--] = rv;
+                r--;
+            }
+        }
+
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func sortedSquares(nums []int) []int {
+    n := len(nums)
+    ans := make([]int, n)
+    l, r, k := 0, n-1, n-1
+
+    for l &lt;= r {
+        lv := nums[l] * nums[l]
+        rv := nums[r] * nums[r]
+        if lv &gt; rv {
+            ans[k] = lv
+            l++
+        } else {
+            ans[k] = rv
+            r--
+        }
+        k--
+    }
+
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; sortedSquares(vector&lt;int&gt;&amp; nums) {
+        int n = nums.size();
+        vector&lt;int&gt; ans(n);
+        int l = 0, r = n - 1, k = n - 1;
+
+        while (l &lt;= r) {
+            int lv = nums[l] * nums[l];
+            int rv = nums[r] * nums[r];
+            if (lv &gt; rv) {
+                ans[k--] = lv;
+                l++;
+            } else {
+                ans[k--] = rv;
+                r--;
+            }
+        }
+
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def sortedSquares(self, nums: list[int]) -&gt; list[int]:
+        n = len(nums)
+        ans = [0] * n
+        l, r, k = 0, n - 1, n - 1
+
+        while l &lt;= r:
+            lv = nums[l] * nums[l]
+            rv = nums[r] * nums[r]
+            if lv &gt; rv:
+                ans[k] = lv
+                l += 1
+            else:
+                ans[k] = rv
+                r -= 1
+            k -= 1
+
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var sortedSquares = function(nums) {
+  const n = nums.length;
+  const ans = new Array(n);
+  let l = 0, r = n - 1, k = n - 1;
+
+  while (l &lt;= r) {
+    const lv = nums[l] * nums[l];
+    const rv = nums[r] * nums[r];
+    if (lv &gt; rv) {
+      ans[k--] = lv;
+      l++;
+    } else {
+      ans[k--] = rv;
+      r--;
+    }
+  }
+
+  return ans;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
