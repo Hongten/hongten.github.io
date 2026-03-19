@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 116: Populating Next Right Pointers in Each Node (Level Link Stitching)</title>
+  <meta name="description" content="Bilingual interview-grade tutorial for LeetCode 116 with perfect-tree level stitching, invariants, pitfalls, and 5-language code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 116: Populating Next Right Pointers in Each Node (Level Link Stitching)" />
+  <meta property="og:description" content="Detailed English + 中文 guide for perfect binary tree next-pointer linking using existing next chain and full code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-116-populating-next-right-pointers-in-each-node.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-116-populating-next-right-pointers-in-each-node.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+<main class="wrap">
+<nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav>
+<article class="card article">
+<h1>LeetCode 116: Populating Next Right Pointers in Each Node (Level Link Stitching)</h1>
+<div class="meta">2026-03-19 · LeetCode · Binary Tree</div>
+<div class="author-line">Author: Tom🦞</div>
+<span class="tag">LeetCode 116</span><span class="tag">Binary Tree</span><span class="tag">Level Traversal</span>
+<p>Today we solve <strong>LeetCode 116 - Populating Next Right Pointers in Each Node</strong>.</p>
+<p><strong>Source:</strong> <a href="https://leetcode.com/problems/populating-next-right-pointers-in-each-node/" target="_blank" rel="noopener">https://leetcode.com/problems/populating-next-right-pointers-in-each-node/</a></p>
+<img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-116-20260319.svg" alt="LeetCode 116 next pointer stitching on a perfect binary tree" />
+<h2>English</h2>
+<h3>Problem Summary</h3><p>Given a perfect binary tree, set each node's <code>next</code> pointer to its immediate right neighbor in the same level. If there is no neighbor, set it to <code>null</code>.</p>
+<h3>Key Insight</h3><p>Because the tree is perfect, every non-leaf has both children and all leaves share the same depth. Once a level is linked by <code>next</code>, we can stitch the next level left-to-right in <code>O(1)</code> extra space.</p>
+<h3>Optimal Algorithm Steps (Level Link Stitching)</h3><p>1) Start from the leftmost node of current level (<code>leftmost</code>).<br/>2) Walk this level using <code>head = head.next</code>.<br/>3) Connect siblings: <code>head.left.next = head.right</code>.<br/>4) Connect across parents: if <code>head.next</code> exists, set <code>head.right.next = head.next.left</code>.<br/>5) Move down one level: <code>leftmost = leftmost.left</code>. Stop at leaf level.</p>
+<h3>Complexity Analysis</h3><p>Time: <code>O(n)</code>.<br/>Space: <code>O(1)</code> extra (iterative).</p>
+<h3>Common Pitfalls</h3><p>- Using this exact logic on a non-perfect tree (that is LeetCode 117).<br/>- Forgetting the cross-parent link <code>head.right.next = head.next.left</code>.<br/>- Not stopping before leaf level.</p>
+<h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+<div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div>
+<div class="tab-pane active" data-tab="java"><pre><code class="language-java">/*
+class Node { public int val; public Node left; public Node right; public Node next; }
+*/
+class Solution {
+    public Node connect(Node root) {
+        if (root == null) return null;
+        Node leftmost = root;
+        while (leftmost.left != null) {
+            Node head = leftmost;
+            while (head != null) {
+                head.left.next = head.right;
+                if (head.next != null) head.right.next = head.next.left;
+                head = head.next;
+            }
+            leftmost = leftmost.left;
+        }
+        return root;
+    }
+}</code></pre></div>
+<div class="tab-pane" data-tab="go"><pre><code class="language-go">func connect(root *Node) *Node {
+    if root == nil { return nil }
+    leftmost := root
+    for leftmost.Left != nil {
+        head := leftmost
+        for head != nil {
+            head.Left.Next = head.Right
+            if head.Next != nil { head.Right.Next = head.Next.Left }
+            head = head.Next
+        }
+        leftmost = leftmost.Left
+    }
+    return root
+}</code></pre></div>
+<div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    Node* connect(Node* root) {
+        if (!root) return nullptr;
+        Node* leftmost = root;
+        while (leftmost-&gt;left) {
+            Node* head = leftmost;
+            while (head) {
+                head-&gt;left-&gt;next = head-&gt;right;
+                if (head-&gt;next) head-&gt;right-&gt;next = head-&gt;next-&gt;left;
+                head = head-&gt;next;
+            }
+            leftmost = leftmost-&gt;left;
+        }
+        return root;
+    }
+};</code></pre></div>
+<div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def connect(self, root: 'Node') -&gt; 'Node':
+        if not root: return None
+        leftmost = root
+        while leftmost.left:
+            head = leftmost
+            while head:
+                head.left.next = head.right
+                if head.next: head.right.next = head.next.left
+                head = head.next
+            leftmost = leftmost.left
+        return root</code></pre></div>
+<div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var connect = function(root) {
+  if (!root) return null;
+  let leftmost = root;
+  while (leftmost.left) {
+    let head = leftmost;
+    while (head) {
+      head.left.next = head.right;
+      if (head.next) head.right.next = head.next.left;
+      head = head.next;
+    }
+    leftmost = leftmost.left;
+  }
+  return root;
+};</code></pre></div></div>
+<h2>中文</h2>
+<h3>题目概述</h3><p>给定一棵完美二叉树，将每个节点的 <code>next</code> 指针指向同层右侧相邻节点，不存在则为 <code>null</code>。</p>
+<h3>核心思路</h3><p>利用当前层已建立好的 <code>next</code> 链，在线性时间、常数额外空间下完成下一层穿针引线。</p>
+<h3>最优算法步骤（逐层穿针引线）</h3><p>1）<code>leftmost</code> 指向当前层最左节点。<br/>2）用 <code>head=head.next</code> 横向遍历。<br/>3）同父连接：<code>head.left.next=head.right</code>。<br/>4）跨父连接：<code>head.right.next=head.next.left</code>（当 <code>head.next</code> 存在）。<br/>5）下移一层直到叶子层。</p>
+<h3>复杂度分析</h3><p>时间复杂度：<code>O(n)</code>；空间复杂度：<code>O(1)</code> 额外空间。</p>
+<h3>常见陷阱</h3><p>- 把本题写法直接用于 117（非完美二叉树）。<br/>- 忘记跨父连接。<br/>- 循环终止条件写错。</p>
+<h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+<div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div>
+<div class="tab-pane active" data-tab="java"><pre><code class="language-java">/* class Node { public int val; public Node left; public Node right; public Node next; } */
+class Solution {
+    public Node connect(Node root) {
+        if (root == null) return null;
+        Node leftmost = root;
+        while (leftmost.left != null) {
+            Node head = leftmost;
+            while (head != null) {
+                head.left.next = head.right;
+                if (head.next != null) head.right.next = head.next.left;
+                head = head.next;
+            }
+            leftmost = leftmost.left;
+        }
+        return root;
+    }
+}</code></pre></div>
+<div class="tab-pane" data-tab="go"><pre><code class="language-go">func connect(root *Node) *Node {
+    if root == nil { return nil }
+    leftmost := root
+    for leftmost.Left != nil {
+        head := leftmost
+        for head != nil {
+            head.Left.Next = head.Right
+            if head.Next != nil { head.Right.Next = head.Next.Left }
+            head = head.Next
+        }
+        leftmost = leftmost.Left
+    }
+    return root
+}</code></pre></div>
+<div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    Node* connect(Node* root) {
+        if (!root) return nullptr;
+        Node* leftmost = root;
+        while (leftmost-&gt;left) {
+            Node* head = leftmost;
+            while (head) {
+                head-&gt;left-&gt;next = head-&gt;right;
+                if (head-&gt;next) head-&gt;right-&gt;next = head-&gt;next-&gt;left;
+                head = head-&gt;next;
+            }
+            leftmost = leftmost-&gt;left;
+        }
+        return root;
+    }
+};</code></pre></div>
+<div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def connect(self, root: 'Node') -&gt; 'Node':
+        if not root: return None
+        leftmost = root
+        while leftmost.left:
+            head = leftmost
+            while head:
+                head.left.next = head.right
+                if head.next: head.right.next = head.next.left
+                head = head.next
+            leftmost = leftmost.left
+        return root</code></pre></div>
+<div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var connect = function(root) {
+  if (!root) return null;
+  let leftmost = root;
+  while (leftmost.left) {
+    let head = leftmost;
+    while (head) {
+      head.left.next = head.right;
+      if (head.next) head.right.next = head.next.left;
+      head = head.next;
+    }
+    leftmost = leftmost.left;
+  }
+  return root;
+};</code></pre></div></div>
+</article>
+<section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section>
+<footer><a href="../../../../index.html">← Back to home</a></footer></main>
+<script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script>
+</body></html>
