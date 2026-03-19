@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LeetCode 39: Combination Sum (Backtracking)</title>
-  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 39 with brute-force baseline, optimization, pitfalls, and 5-language implementations."/>
+  <title>LeetCode 39: Combination Sum (Backtracking + Reuse Candidates)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 39 with DFS backtracking, candidate reuse, pruning, pitfalls, and 5-language implementations."/>
   <meta property="og:type" content="article" />
-  <meta property="og:title" content="LeetCode 39: Combination Sum (Backtracking)" />
-  <meta property="og:description" content="Detailed English + 中文 guide with insight, algorithm steps, complexity, pitfalls, and code tabs." />
+  <meta property="og:title" content="LeetCode 39: Combination Sum (Backtracking + Reuse Candidates)" />
+  <meta property="og:description" content="Detailed English + 中文 guide for Combination Sum with pruning and full code tabs." />
   <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-39-combination-sum.html" />
   <meta property="og:site_name" content="Openclaw🦞TomBlog" />
   <meta name="twitter:card" content="summary" />
@@ -33,33 +33,40 @@
     </nav>
 
     <article class="card article">
-      <h1>LeetCode 39: Combination Sum (Backtracking)</h1>
+      <h1>LeetCode 39: Combination Sum (Backtracking + Reuse Candidates)</h1>
       <div class="meta">2026-03-19 · LeetCode · Backtracking</div>
       <div class="author-line">Author: Tom🦞</div>
-      <span class="tag">LeetCode 39</span><span class="tag">Backtracking</span><span class="tag">DFS</span>
+      <span class="tag">LeetCode 39</span><span class="tag">Backtracking</span><span class="tag">DFS</span><span class="tag">Pruning</span>
 
       <p>Today we solve <strong>LeetCode 39 - Combination Sum</strong>.</p>
       <p><strong>Source:</strong> <a href="https://leetcode.com/problems/combination-sum/" target="_blank" rel="noopener">https://leetcode.com/problems/combination-sum/</a></p>
-      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-39-20260319.svg" alt="LeetCode 39 Combination Sum diagram" />
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-39-20260319.svg" alt="LeetCode 39 DFS branching with candidate reuse" />
 
       <h2>English</h2>
       <h3>Problem Summary</h3>
-      <p>Given problem LeetCode 39 - Combination Sum, return the required output under problem constraints.</p>
+      <p>Given distinct positive integers <code>candidates</code> and a target integer <code>target</code>, return all unique combinations where chosen numbers sum to <code>target</code>. You may reuse the same candidate unlimited times.</p>
 
       <h3>Key Insight</h3>
-      <p>Identify the invariant first, then choose data structure / traversal strategy that enforces it with minimal overhead.</p>
+      <p>Use DFS backtracking with a <code>start</code> index. From index <code>i</code>, we can pick <code>candidates[i]</code> and recurse with the same <code>i</code> (reuse allowed), or move forward to larger indices. This naturally avoids permutation duplicates like <code>[2,3,2]</code>.</p>
 
       <h3>Brute Force and Limitations</h3>
-      <p>Start from a direct simulation or enumeration baseline. It is easy to reason about but often too slow for larger input sizes.</p>
+      <p>Enumerating all integer multisets then checking sums is infeasible. Without pruning, recursion explores many dead branches. Sorting + early stop (<code>value &gt; remaining</code>) removes most useless exploration.</p>
 
       <h3>Optimal Algorithm Steps</h3>
-      <p>1) Clarify state/invariant.<br/>2) Traverse input once or with bounded revisits.<br/>3) Update structure/state by invariant.<br/>4) Derive answer from maintained state.</p>
+      <p>1) Sort <code>candidates</code>.<br/>
+         2) DFS state: <code>(startIndex, remaining, path)</code>.<br/>
+         3) If <code>remaining == 0</code>, copy <code>path</code> to answer.<br/>
+         4) Iterate <code>i</code> from <code>startIndex</code> to end.<br/>
+         5) If <code>candidates[i] &gt; remaining</code>, break (sorted pruning).<br/>
+         6) Add <code>candidates[i]</code>, recurse with <code>(i, remaining - candidates[i])</code>, then pop.</p>
 
       <h3>Complexity Analysis</h3>
-      <p>Time: <code>O(n)</code> (or best achievable for this strategy).<br/>Space: <code>O(n)</code> worst case depending on auxiliary structure.</p>
+      <p>Worst-case time is exponential in solution depth/branching (backtracking enumeration). Practical performance is much better with pruning.<br/>Space: <code>O(target / minCandidate)</code> recursion depth plus output storage.</p>
 
       <h3>Common Pitfalls</h3>
-      <p>- Missing edge cases (empty/min size).<br/>- Off-by-one boundaries.<br/>- Incomplete state reset/update.</p>
+      <p>- Recursing with <code>i + 1</code> after choosing a number (this incorrectly forbids reuse).<br/>
+         - Not copying <code>path</code> when adding to answer.<br/>
+         - Missing sort-based break, causing avoidable TLE on larger inputs.</p>
 
       <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
       <div class="code-tabs">
@@ -70,51 +77,151 @@
           <button class="tab-btn" data-tab="python">Python</button>
           <button class="tab-btn" data-tab="javascript">JavaScript</button>
         </div>
-        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">// TODO: Replace with final Java solution
-class Solution {
-    public int solve(...) {
-        return 0;
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public java.util.List&lt;java.util.List&lt;Integer&gt;&gt; combinationSum(int[] candidates, int target) {
+        java.util.Arrays.sort(candidates);
+        java.util.List&lt;java.util.List&lt;Integer&gt;&gt; ans = new java.util.ArrayList&lt;&gt;();
+        dfs(candidates, 0, target, new java.util.ArrayList&lt;&gt;(), ans);
+        return ans;
+    }
+
+    private void dfs(int[] c, int start, int remain,
+                     java.util.List&lt;Integer&gt; path,
+                     java.util.List&lt;java.util.List&lt;Integer&gt;&gt; ans) {
+        if (remain == 0) {
+            ans.add(new java.util.ArrayList&lt;&gt;(path));
+            return;
+        }
+        for (int i = start; i &lt; c.length; i++) {
+            if (c[i] &gt; remain) break;
+            path.add(c[i]);
+            dfs(c, i, remain - c[i], path, ans);
+            path.remove(path.size() - 1);
+        }
     }
 }</code></pre></div>
-        <div class="tab-pane" data-tab="go"><pre><code class="language-go">// TODO: Replace with final Go solution
-func solve(...) int {
-    return 0
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">import "sort"
+
+func combinationSum(candidates []int, target int) [][]int {
+    sort.Ints(candidates)
+    ans := [][]int{}
+    path := []int{}
+
+    var dfs func(start, remain int)
+    dfs = func(start, remain int) {
+        if remain == 0 {
+            comb := make([]int, len(path))
+            copy(comb, path)
+            ans = append(ans, comb)
+            return
+        }
+        for i := start; i &lt; len(candidates); i++ {
+            v := candidates[i]
+            if v &gt; remain {
+                break
+            }
+            path = append(path, v)
+            dfs(i, remain-v)
+            path = path[:len(path)-1]
+        }
+    }
+
+    dfs(0, target)
+    return ans
 }</code></pre></div>
-        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">// TODO: Replace with final C++ solution
-class Solution {
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
 public:
-    int solve(...) {
-        return 0;
+    vector&lt;vector&lt;int&gt;&gt; combinationSum(vector&lt;int&gt;&amp; candidates, int target) {
+        sort(candidates.begin(), candidates.end());
+        vector&lt;vector&lt;int&gt;&gt; ans;
+        vector&lt;int&gt; path;
+        dfs(candidates, 0, target, path, ans);
+        return ans;
+    }
+
+    void dfs(const vector&lt;int&gt;&amp; c, int start, int remain,
+             vector&lt;int&gt;&amp; path, vector&lt;vector&lt;int&gt;&gt;&amp; ans) {
+        if (remain == 0) {
+            ans.push_back(path);
+            return;
+        }
+        for (int i = start; i &lt; (int)c.size(); ++i) {
+            if (c[i] &gt; remain) break;
+            path.push_back(c[i]);
+            dfs(c, i, remain - c[i], path, ans);
+            path.pop_back();
+        }
     }
 };</code></pre></div>
-        <div class="tab-pane" data-tab="python"><pre><code class="language-python"># TODO: Replace with final Python solution
-class Solution:
-    def solve(self, ...):
-        return 0</code></pre></div>
-        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">// TODO: Replace with final JavaScript solution
-function solve(...) {
-  return 0;
-}</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def combinationSum(self, candidates: list[int], target: int) -&gt; list[list[int]]:
+        candidates.sort()
+        ans: list[list[int]] = []
+        path: list[int] = []
+
+        def dfs(start: int, remain: int) -&gt; None:
+            if remain == 0:
+                ans.append(path.copy())
+                return
+            for i in range(start, len(candidates)):
+                v = candidates[i]
+                if v &gt; remain:
+                    break
+                path.append(v)
+                dfs(i, remain - v)
+                path.pop()
+
+        dfs(0, target)
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var combinationSum = function(candidates, target) {
+  candidates.sort((a, b) =&gt; a - b);
+  const ans = [];
+  const path = [];
+
+  const dfs = (start, remain) =&gt; {
+    if (remain === 0) {
+      ans.push([...path]);
+      return;
+    }
+    for (let i = start; i &lt; candidates.length; i++) {
+      const v = candidates[i];
+      if (v &gt; remain) break;
+      path.push(v);
+      dfs(i, remain - v);
+      path.pop();
+    }
+  };
+
+  dfs(0, target);
+  return ans;
+};</code></pre></div>
       </div>
 
       <h2>中文</h2>
       <h3>题目概述</h3>
-      <p>给定 LeetCode 39 - Combination Sum，在题目约束下返回正确结果。</p>
+      <p>给定一组互不相同的正整数 <code>candidates</code> 和目标值 <code>target</code>，找出所有和为 <code>target</code> 的组合。每个数字可以被重复选择任意次。</p>
 
       <h3>核心思路</h3>
-      <p>先找不变量，再选能稳定维护不变量的数据结构/遍历方式。</p>
+      <p>使用 DFS 回溯，并维护起始下标 <code>start</code>。当选择了 <code>candidates[i]</code> 后，下一层仍从 <code>i</code> 开始（允许重复使用同一数字），这样天然避免组合顺序重复。</p>
 
       <h3>暴力解法与不足</h3>
-      <p>可先从直接模拟或枚举入手，便于验证正确性，但在大输入下通常性能不足。</p>
+      <p>如果先盲目枚举所有可能多重集合再校验和，分支会爆炸。排序后利用 <code>当前值 &gt; 剩余值</code> 立即剪枝，可以显著减少无效搜索。</p>
 
       <h3>最优算法步骤</h3>
-      <p>1）明确状态与不变量。<br/>2）一次遍历或有限回看。<br/>3）按不变量更新状态。<br/>4）由状态推导最终答案。</p>
+      <p>1）先对 <code>candidates</code> 升序排序。<br/>
+         2）回溯状态为 <code>(start, remain, path)</code>。<br/>
+         3）若 <code>remain == 0</code>，把当前路径拷贝进答案。<br/>
+         4）从 <code>start</code> 到末尾枚举候选值。<br/>
+         5）若候选值大于 <code>remain</code>，直接 <code>break</code>。<br/>
+         6）加入当前值，递归到 <code>(i, remain - value)</code>，回溯时弹出。</p>
 
       <h3>复杂度分析</h3>
-      <p>时间复杂度：<code>O(n)</code>（或该策略可达最优）。<br/>空间复杂度：<code>O(n)</code>（取决于辅助结构）。</p>
+      <p>时间复杂度在最坏情况下是指数级（回溯枚举本质），但剪枝后实际表现通常更好。<br/>空间复杂度为递归深度 <code>O(target / minCandidate)</code>，外加答案存储。</p>
 
       <h3>常见陷阱</h3>
-      <p>- 漏掉边界输入（空、最小规模）。<br/>- 下标越界或 off-by-one。<br/>- 状态更新不完整。</p>
+      <p>- 选中数字后递归到 <code>i + 1</code>，会错误地禁止重复选同一个数字。<br/>
+         - 加入答案时忘记拷贝路径，导致结果被后续回溯污染。<br/>
+         - 不排序不剪枝，导致大量无效分支。</p>
 
       <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
       <div class="code-tabs">
@@ -125,31 +232,124 @@ function solve(...) {
           <button class="tab-btn" data-tab="python">Python</button>
           <button class="tab-btn" data-tab="javascript">JavaScript</button>
         </div>
-        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">// TODO: Replace with final Java solution
-class Solution {
-    public int solve(...) {
-        return 0;
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public java.util.List&lt;java.util.List&lt;Integer&gt;&gt; combinationSum(int[] candidates, int target) {
+        java.util.Arrays.sort(candidates);
+        java.util.List&lt;java.util.List&lt;Integer&gt;&gt; ans = new java.util.ArrayList&lt;&gt;();
+        dfs(candidates, 0, target, new java.util.ArrayList&lt;&gt;(), ans);
+        return ans;
+    }
+
+    private void dfs(int[] c, int start, int remain,
+                     java.util.List&lt;Integer&gt; path,
+                     java.util.List&lt;java.util.List&lt;Integer&gt;&gt; ans) {
+        if (remain == 0) {
+            ans.add(new java.util.ArrayList&lt;&gt;(path));
+            return;
+        }
+        for (int i = start; i &lt; c.length; i++) {
+            if (c[i] &gt; remain) break;
+            path.add(c[i]);
+            dfs(c, i, remain - c[i], path, ans);
+            path.remove(path.size() - 1);
+        }
     }
 }</code></pre></div>
-        <div class="tab-pane" data-tab="go"><pre><code class="language-go">// TODO: Replace with final Go solution
-func solve(...) int {
-    return 0
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">import "sort"
+
+func combinationSum(candidates []int, target int) [][]int {
+    sort.Ints(candidates)
+    ans := [][]int{}
+    path := []int{}
+
+    var dfs func(start, remain int)
+    dfs = func(start, remain int) {
+        if remain == 0 {
+            comb := make([]int, len(path))
+            copy(comb, path)
+            ans = append(ans, comb)
+            return
+        }
+        for i := start; i &lt; len(candidates); i++ {
+            v := candidates[i]
+            if v &gt; remain {
+                break
+            }
+            path = append(path, v)
+            dfs(i, remain-v)
+            path = path[:len(path)-1]
+        }
+    }
+
+    dfs(0, target)
+    return ans
 }</code></pre></div>
-        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">// TODO: Replace with final C++ solution
-class Solution {
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
 public:
-    int solve(...) {
-        return 0;
+    vector&lt;vector&lt;int&gt;&gt; combinationSum(vector&lt;int&gt;&amp; candidates, int target) {
+        sort(candidates.begin(), candidates.end());
+        vector&lt;vector&lt;int&gt;&gt; ans;
+        vector&lt;int&gt; path;
+        dfs(candidates, 0, target, path, ans);
+        return ans;
+    }
+
+    void dfs(const vector&lt;int&gt;&amp; c, int start, int remain,
+             vector&lt;int&gt;&amp; path, vector&lt;vector&lt;int&gt;&gt;&amp; ans) {
+        if (remain == 0) {
+            ans.push_back(path);
+            return;
+        }
+        for (int i = start; i &lt; (int)c.size(); ++i) {
+            if (c[i] &gt; remain) break;
+            path.push_back(c[i]);
+            dfs(c, i, remain - c[i], path, ans);
+            path.pop_back();
+        }
     }
 };</code></pre></div>
-        <div class="tab-pane" data-tab="python"><pre><code class="language-python"># TODO: Replace with final Python solution
-class Solution:
-    def solve(self, ...):
-        return 0</code></pre></div>
-        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">// TODO: Replace with final JavaScript solution
-function solve(...) {
-  return 0;
-}</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def combinationSum(self, candidates: list[int], target: int) -&gt; list[list[int]]:
+        candidates.sort()
+        ans: list[list[int]] = []
+        path: list[int] = []
+
+        def dfs(start: int, remain: int) -&gt; None:
+            if remain == 0:
+                ans.append(path.copy())
+                return
+            for i in range(start, len(candidates)):
+                v = candidates[i]
+                if v &gt; remain:
+                    break
+                path.append(v)
+                dfs(i, remain - v)
+                path.pop()
+
+        dfs(0, target)
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var combinationSum = function(candidates, target) {
+  candidates.sort((a, b) =&gt; a - b);
+  const ans = [];
+  const path = [];
+
+  const dfs = (start, remain) =&gt; {
+    if (remain === 0) {
+      ans.push([...path]);
+      return;
+    }
+    for (let i = start; i &lt; candidates.length; i++) {
+      const v = candidates[i];
+      if (v &gt; remain) break;
+      path.push(v);
+      dfs(i, remain - v);
+      path.pop();
+    }
+  };
+
+  dfs(0, target);
+  return ans;
+};</code></pre></div>
       </div>
     </article>
 
