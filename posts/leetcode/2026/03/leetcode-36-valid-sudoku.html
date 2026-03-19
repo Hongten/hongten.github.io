@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 36: Valid Sudoku (Row/Col/Box Hash Validation)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 36 with row/column/sub-box set validation, pitfalls, and 5-language implementations."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 36: Valid Sudoku (Row/Col/Box Hash Validation)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with validation keys, complexity, pitfalls, and code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-36-valid-sudoku.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-36-valid-sudoku.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 36: Valid Sudoku (Row/Col/Box Hash Validation)</h1>
+      <div class="meta">2026-03-19 · LeetCode · Matrix / Hash Table</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 36</span><span class="tag">Matrix</span><span class="tag">Hash Table</span><span class="tag">Simulation</span>
+
+      <p>Today we solve <strong>LeetCode 36 - Valid Sudoku</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/valid-sudoku/" target="_blank" rel="noopener">https://leetcode.com/problems/valid-sudoku/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-36-20260319.svg" alt="LeetCode 36 row column box validation illustration" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a <code>9 x 9</code> Sudoku board, determine whether it is valid according to Sudoku rules. We only validate the current filled cells (<code>'.'</code> means empty), not whether the puzzle is solvable.</p>
+
+      <h3>Key Insight</h3>
+      <p>Each digit must be unique in three dimensions: row, column, and 3x3 box. While scanning each filled cell once, we build three keys and check duplicates immediately.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>For each filled cell, re-scan entire row/column/box to confirm uniqueness. This repeats work and is verbose. Since board size is fixed it still passes, but it is not clean and scales poorly to generalized boards.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Initialize one hash set <code>seen</code>.<br/>
+         2) Traverse all <code>(r, c)</code> positions.<br/>
+         3) Skip <code>'.'</code> cells.<br/>
+         4) Build three tokens for the same digit: <code>r{r}-{d}</code>, <code>c{c}-{d}</code>, <code>b{r/3}{c/3}-{d}</code>.<br/>
+         5) If any token already exists, board is invalid; otherwise insert all three.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(81)</code> (or <code>O(n^2)</code> for an <code>n x n</code> board).<br/>Space: <code>O(81)</code> max stored keys.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting to skip <code>'.'</code>.<br/>
+         - Wrong box index formula (must use integer division by 3).<br/>
+         - Only checking row/col but missing sub-box rule.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        java.util.Set&lt;String&gt; seen = new java.util.HashSet&lt;&gt;();
+
+        for (int r = 0; r &lt; 9; r++) {
+            for (int c = 0; c &lt; 9; c++) {
+                char d = board[r][c];
+                if (d == '.') continue;
+
+                String rowKey = "r" + r + "-" + d;
+                String colKey = "c" + c + "-" + d;
+                String boxKey = "b" + (r / 3) + (c / 3) + "-" + d;
+
+                if (!seen.add(rowKey) || !seen.add(colKey) || !seen.add(boxKey)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func isValidSudoku(board [][]byte) bool {
+    seen := map[string]bool{}
+
+    for r := 0; r &lt; 9; r++ {
+        for c := 0; c &lt; 9; c++ {
+            d := board[r][c]
+            if d == '.' {
+                continue
+            }
+
+            rowKey := fmt.Sprintf("r%d-%c", r, d)
+            colKey := fmt.Sprintf("c%d-%c", c, d)
+            boxKey := fmt.Sprintf("b%d%d-%c", r/3, c/3, d)
+
+            if seen[rowKey] || seen[colKey] || seen[boxKey] {
+                return false
+            }
+            seen[rowKey], seen[colKey], seen[boxKey] = true, true, true
+        }
+    }
+    return true
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool isValidSudoku(vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+        unordered_set&lt;string&gt; seen;
+
+        for (int r = 0; r &lt; 9; ++r) {
+            for (int c = 0; c &lt; 9; ++c) {
+                char d = board[r][c];
+                if (d == '.') continue;
+
+                string rowKey = "r" + to_string(r) + "-" + d;
+                string colKey = "c" + to_string(c) + "-" + d;
+                string boxKey = "b" + to_string(r / 3) + to_string(c / 3) + "-" + d;
+
+                if (seen.count(rowKey) || seen.count(colKey) || seen.count(boxKey)) {
+                    return false;
+                }
+                seen.insert(rowKey);
+                seen.insert(colKey);
+                seen.insert(boxKey);
+            }
+        }
+        return true;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def isValidSudoku(self, board: list[list[str]]) -&gt; bool:
+        seen: set[str] = set()
+
+        for r in range(9):
+            for c in range(9):
+                d = board[r][c]
+                if d == '.':
+                    continue
+
+                row_key = f"r{r}-{d}"
+                col_key = f"c{c}-{d}"
+                box_key = f"b{r // 3}{c // 3}-{d}"
+
+                if row_key in seen or col_key in seen or box_key in seen:
+                    return False
+
+                seen.add(row_key)
+                seen.add(col_key)
+                seen.add(box_key)
+
+        return True</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var isValidSudoku = function(board) {
+  const seen = new Set();
+
+  for (let r = 0; r &lt; 9; r++) {
+    for (let c = 0; c &lt; 9; c++) {
+      const d = board[r][c];
+      if (d === '.') continue;
+
+      const rowKey = `r${r}-${d}`;
+      const colKey = `c${c}-${d}`;
+      const boxKey = `b${Math.floor(r / 3)}${Math.floor(c / 3)}-${d}`;
+
+      if (seen.has(rowKey) || seen.has(colKey) || seen.has(boxKey)) {
+        return false;
+      }
+
+      seen.add(rowKey);
+      seen.add(colKey);
+      seen.add(boxKey);
+    }
+  }
+
+  return true;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定一个 <code>9 x 9</code> 的数独棋盘，判断当前填入是否有效。注意只校验已填数字是否违反规则，不要求这个棋盘一定可解。</p>
+
+      <h3>核心思路</h3>
+      <p>每个数字要同时满足三类唯一性：行唯一、列唯一、九宫格唯一。扫描到一个数字时，立刻构建三种标记并查重，任何一个冲突就返回 <code>false</code>。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>对每个已填格子都去重复扫描行/列/宫，逻辑冗余且重复计算多。固定 9x9 仍可通过，但可读性和可扩展性一般。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）准备哈希集合 <code>seen</code>。<br/>
+         2）双层循环扫描所有位置 <code>(r, c)</code>。<br/>
+         3）若是 <code>'.'</code> 直接跳过。<br/>
+         4）构建三类 key：<code>r{r}-{d}</code>、<code>c{c}-{d}</code>、<code>b{r/3}{c/3}-{d}</code>。<br/>
+         5）若任意 key 已存在则非法；否则全部写入集合。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(81)</code>（推广为 <code>O(n^2)</code>）。<br/>空间复杂度：<code>O(81)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 忘记跳过 <code>'.'</code>。<br/>
+         - 九宫格编号计算错误（应使用整除 3）。<br/>
+         - 只校验行列，漏掉九宫格冲突。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        java.util.Set&lt;String&gt; seen = new java.util.HashSet&lt;&gt;();
+
+        for (int r = 0; r &lt; 9; r++) {
+            for (int c = 0; c &lt; 9; c++) {
+                char d = board[r][c];
+                if (d == '.') continue;
+
+                String rowKey = "r" + r + "-" + d;
+                String colKey = "c" + c + "-" + d;
+                String boxKey = "b" + (r / 3) + (c / 3) + "-" + d;
+
+                if (!seen.add(rowKey) || !seen.add(colKey) || !seen.add(boxKey)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func isValidSudoku(board [][]byte) bool {
+    seen := map[string]bool{}
+
+    for r := 0; r &lt; 9; r++ {
+        for c := 0; c &lt; 9; c++ {
+            d := board[r][c]
+            if d == '.' {
+                continue
+            }
+
+            rowKey := fmt.Sprintf("r%d-%c", r, d)
+            colKey := fmt.Sprintf("c%d-%c", c, d)
+            boxKey := fmt.Sprintf("b%d%d-%c", r/3, c/3, d)
+
+            if seen[rowKey] || seen[colKey] || seen[boxKey] {
+                return false
+            }
+            seen[rowKey], seen[colKey], seen[boxKey] = true, true, true
+        }
+    }
+    return true
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool isValidSudoku(vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+        unordered_set&lt;string&gt; seen;
+
+        for (int r = 0; r &lt; 9; ++r) {
+            for (int c = 0; c &lt; 9; ++c) {
+                char d = board[r][c];
+                if (d == '.') continue;
+
+                string rowKey = "r" + to_string(r) + "-" + d;
+                string colKey = "c" + to_string(c) + "-" + d;
+                string boxKey = "b" + to_string(r / 3) + to_string(c / 3) + "-" + d;
+
+                if (seen.count(rowKey) || seen.count(colKey) || seen.count(boxKey)) {
+                    return false;
+                }
+                seen.insert(rowKey);
+                seen.insert(colKey);
+                seen.insert(boxKey);
+            }
+        }
+        return true;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def isValidSudoku(self, board: list[list[str]]) -&gt; bool:
+        seen: set[str] = set()
+
+        for r in range(9):
+            for c in range(9):
+                d = board[r][c]
+                if d == '.':
+                    continue
+
+                row_key = f"r{r}-{d}"
+                col_key = f"c{c}-{d}"
+                box_key = f"b{r // 3}{c // 3}-{d}"
+
+                if row_key in seen or col_key in seen or box_key in seen:
+                    return False
+
+                seen.add(row_key)
+                seen.add(col_key)
+                seen.add(box_key)
+
+        return True</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var isValidSudoku = function(board) {
+  const seen = new Set();
+
+  for (let r = 0; r &lt; 9; r++) {
+    for (let c = 0; c &lt; 9; c++) {
+      const d = board[r][c];
+      if (d === '.') continue;
+
+      const rowKey = `r${r}-${d}`;
+      const colKey = `c${c}-${d}`;
+      const boxKey = `b${Math.floor(r / 3)}${Math.floor(c / 3)}-${d}`;
+
+      if (seen.has(rowKey) || seen.has(colKey) || seen.has(boxKey)) {
+        return false;
+      }
+
+      seen.add(rowKey);
+      seen.add(colKey);
+      seen.add(boxKey);
+    }
+  }
+
+  return true;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
