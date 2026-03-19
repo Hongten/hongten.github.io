@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 695 max area of island diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0b1020"/>
+      <stop offset="100%" stop-color="#111a33"/>
+    </linearGradient>
+    <style>
+      .title{font:700 44px 'Segoe UI',Arial,sans-serif;fill:#eaf1ff}
+      .sub{font:500 24px 'Segoe UI',Arial,sans-serif;fill:#a9b8dd}
+      .cell{stroke:#2a3a66;stroke-width:2}
+      .water{fill:#1a2547}
+      .land{fill:#4ade80}
+      .island{fill:#22c55e}
+      .note{font:600 22px 'Segoe UI',Arial,sans-serif;fill:#dbe8ff}
+      .small{font:500 18px 'Segoe UI',Arial,sans-serif;fill:#9fb2df}
+    </style>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="90" class="title">LeetCode 695 · Max Area of Island</text>
+  <text x="60" y="130" class="sub">DFS Flood Fill: count connected 1s in 4 directions</text>
+
+  <g transform="translate(80,180)">
+    <rect class="water cell" x="0" y="0" width="70" height="70"/>
+    <rect class="land cell" x="70" y="0" width="70" height="70"/>
+    <rect class="land cell" x="140" y="0" width="70" height="70"/>
+    <rect class="water cell" x="210" y="0" width="70" height="70"/>
+    <rect class="water cell" x="280" y="0" width="70" height="70"/>
+
+    <rect class="water cell" x="0" y="70" width="70" height="70"/>
+    <rect class="land cell" x="70" y="70" width="70" height="70"/>
+    <rect class="water cell" x="140" y="70" width="70" height="70"/>
+    <rect class="water cell" x="210" y="70" width="70" height="70"/>
+    <rect class="land cell" x="280" y="70" width="70" height="70"/>
+
+    <rect class="water cell" x="0" y="140" width="70" height="70"/>
+    <rect class="island cell" x="70" y="140" width="70" height="70"/>
+    <rect class="island cell" x="140" y="140" width="70" height="70"/>
+    <rect class="island cell" x="210" y="140" width="70" height="70"/>
+    <rect class="land cell" x="280" y="140" width="70" height="70"/>
+
+    <rect class="water cell" x="0" y="210" width="70" height="70"/>
+    <rect class="water cell" x="70" y="210" width="70" height="70"/>
+    <rect class="water cell" x="140" y="210" width="70" height="70"/>
+    <rect class="island cell" x="210" y="210" width="70" height="70"/>
+    <rect class="water cell" x="280" y="210" width="70" height="70"/>
+  </g>
+
+  <text x="510" y="280" class="note">Largest island area = 4</text>
+  <text x="510" y="325" class="small">Scan all cells; when grid[r][c] == 1, start DFS</text>
+  <text x="510" y="355" class="small">Mark visited cell to 0 immediately to avoid recount</text>
+  <text x="510" y="385" class="small">Area = 1 + up + down + left + right</text>
+  <text x="510" y="415" class="small">Track global maximum across all components</text>
+</svg>
