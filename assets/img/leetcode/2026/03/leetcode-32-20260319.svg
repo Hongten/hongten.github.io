@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 32 stack sentinel index diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="95" fill="#e2e8f0" font-size="42" font-family="Arial, sans-serif" font-weight="700">LeetCode 32 · Longest Valid Parentheses</text>
+  <text x="60" y="140" fill="#93c5fd" font-size="26" font-family="Arial, sans-serif">Stack keeps indices + sentinel boundary for valid window length</text>
+
+  <rect x="60" y="190" width="1080" height="360" rx="16" fill="#111827" stroke="#334155"/>
+
+  <text x="90" y="245" fill="#f8fafc" font-size="24" font-family="monospace">s =  )  (  (  )  (  )  )</text>
+  <text x="90" y="285" fill="#94a3b8" font-size="20" font-family="monospace">i =  0  1  2  3  4  5  6</text>
+
+  <rect x="90" y="320" width="300" height="180" rx="12" fill="#0b1220" stroke="#475569"/>
+  <text x="110" y="355" fill="#f8fafc" font-size="22" font-family="Arial">Stack (indices)</text>
+  <text x="110" y="392" fill="#34d399" font-size="20" font-family="monospace">push(-1) sentinel</text>
+  <text x="110" y="424" fill="#fbbf24" font-size="20" font-family="monospace">on ')' pop once</text>
+  <text x="110" y="456" fill="#f472b6" font-size="20" font-family="monospace">empty => push(i)</text>
+  <text x="110" y="488" fill="#60a5fa" font-size="20" font-family="monospace">len = i - top</text>
+
+  <rect x="430" y="320" width="680" height="180" rx="12" fill="#0b1220" stroke="#475569"/>
+  <text x="455" y="355" fill="#f8fafc" font-size="22" font-family="Arial">Key transitions</text>
+  <text x="455" y="392" fill="#cbd5e1" font-size="20" font-family="monospace">i=0 ')': pop -1 -> empty, push(0) boundary</text>
+  <text x="455" y="424" fill="#cbd5e1" font-size="20" font-family="monospace">i=3 ')': match with '(' at 2, top becomes 1, len=3-1=2</text>
+  <text x="455" y="456" fill="#cbd5e1" font-size="20" font-family="monospace">i=6 ')': valid chain reaches index 1, len=6-0=6</text>
+  <text x="455" y="488" fill="#22d3ee" font-size="20" font-family="monospace">Answer = 6 (substring "(()())")</text>
+
+  <text x="60" y="595" fill="#94a3b8" font-size="18" font-family="Arial">Author: Tom🦞 · https://leetcode.com/problems/longest-valid-parentheses/</text>
+</svg>
