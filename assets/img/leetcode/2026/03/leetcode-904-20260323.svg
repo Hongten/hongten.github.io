@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-label="LeetCode 904 sliding window with at most two fruit types">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .t{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#e2e8f0}
+      .muted{fill:#94a3b8}
+      .box{fill:#111827;stroke:#334155;stroke-width:2}
+      .chipA{fill:#f59e0b}.chipB{fill:#10b981}.chipC{fill:#60a5fa}
+    </style>
+  </defs>
+  <rect width="1200" height="680" fill="url(#bg)"/>
+  <text x="60" y="78" class="t" font-size="40" font-weight="700">LeetCode 904 · Fruit Into Baskets</text>
+  <text x="60" y="116" class="t muted" font-size="24">Sliding Window Invariant: keep at most 2 fruit types in [left..right]</text>
+
+  <rect x="60" y="180" width="1080" height="140" rx="16" class="box"/>
+  <text x="86" y="220" class="t muted" font-size="22">Example fruits:</text>
+
+  <g transform="translate(170,240)">
+    <rect x="0" y="0" width="70" height="54" rx="10" class="chipA"/><text x="27" y="35" class="t" font-size="24">1</text>
+    <rect x="85" y="0" width="70" height="54" rx="10" class="chipB"/><text x="112" y="35" class="t" font-size="24">2</text>
+    <rect x="170" y="0" width="70" height="54" rx="10" class="chipA"/><text x="197" y="35" class="t" font-size="24">1</text>
+    <rect x="255" y="0" width="70" height="54" rx="10" class="chipA"/><text x="282" y="35" class="t" font-size="24">1</text>
+    <rect x="340" y="0" width="70" height="54" rx="10" class="chipB"/><text x="367" y="35" class="t" font-size="24">2</text>
+    <rect x="425" y="0" width="70" height="54" rx="10" class="chipC"/><text x="452" y="35" class="t" font-size="24">3</text>
+    <rect x="510" y="0" width="70" height="54" rx="10" class="chipB"/><text x="537" y="35" class="t" font-size="24">2</text>
+    <rect x="595" y="0" width="70" height="54" rx="10" class="chipB"/><text x="622" y="35" class="t" font-size="24">2</text>
+  </g>
+
+  <rect x="205" y="226" width="665" height="82" rx="12" fill="none" stroke="#e2e8f0" stroke-width="3" stroke-dasharray="10 8"/>
+  <text x="230" y="357" class="t" font-size="24">Valid window contains only 1 and 2 → length = 5</text>
+
+  <rect x="60" y="410" width="1080" height="210" rx="16" class="box"/>
+  <text x="90" y="455" class="t" font-size="28" font-weight="700">When a 3rd type enters:</text>
+  <text x="90" y="498" class="t" font-size="24">1) Expand right, count[3]++  → types = 3 (invalid)</text>
+  <text x="90" y="536" class="t" font-size="24">2) Move left forward while types &gt; 2, decrement counts</text>
+  <text x="90" y="574" class="t" font-size="24">3) Remove keys with zero count, window valid again</text>
+  <text x="90" y="612" class="t" font-size="24">4) Track max(right-left+1) across the scan</text>
+</svg>
