@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .t{font-family:Arial,sans-serif;fill:#e2e8f0}
+      .m{font-size:30px;font-weight:700}
+      .s{font-size:24px;fill:#cbd5e1}
+      .n{font-size:20px;fill:#94a3b8}
+    </style>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="80" class="t m">LeetCode 135 · Candy</text>
+  <text x="60" y="120" class="t s">Two-pass greedy: satisfy left slope then right slope</text>
+
+  <g transform="translate(60,180)">
+    <text x="0" y="0" class="t n">ratings: 1 0 2</text>
+    <rect x="0" y="30" width="90" height="70" fill="#334155" rx="8"/><rect x="110" y="30" width="90" height="70" fill="#334155" rx="8"/><rect x="220" y="30" width="90" height="70" fill="#334155" rx="8"/>
+    <text x="35" y="73" class="t s">1</text><text x="145" y="73" class="t s">0</text><text x="255" y="73" class="t s">2</text>
+    <text x="0" y="145" class="t n">left pass candies: 1 1 2</text>
+    <text x="0" y="185" class="t n">right pass update: 2 1 2</text>
+    <text x="0" y="230" class="t s">sum = 5 (minimum)</text>
+  </g>
+
+  <g transform="translate(680,180)">
+    <text x="0" y="0" class="t n">Rule A: rating[i] &gt; rating[i-1] ⇒ candy[i] &gt; candy[i-1]</text>
+    <text x="0" y="50" class="t n">Rule B: rating[i] &gt; rating[i+1] ⇒ candy[i] &gt; candy[i+1]</text>
+    <text x="0" y="120" class="t s">Answer = Σ max(leftConstraint, rightConstraint)</text>
+  </g>
+</svg>
