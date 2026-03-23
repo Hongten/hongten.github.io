@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 1004: Max Consecutive Ones III (Sliding Window with Flip Budget)</title>
+  <meta name="description" content="Bilingual interview-grade tutorial for LeetCode 1004 using a zero-count sliding window, with pitfalls, complexity, and 5-language code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 1004: Max Consecutive Ones III (Sliding Window with Flip Budget)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with invariant reasoning, window shrink logic, and full Java/Go/C++/Python/JavaScript implementations." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-1004-max-consecutive-ones-iii.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-1004-max-consecutive-ones-iii.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 1004: Max Consecutive Ones III (Sliding Window with Flip Budget)</h1>
+      <div class="meta">2026-03-23 · LeetCode · Sliding Window</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 1004</span><span class="tag">Sliding Window</span><span class="tag">Two Pointers</span>
+
+      <p>Today we solve <strong>LeetCode 1004 - Max Consecutive Ones III</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/max-consecutive-ones-iii/" target="_blank" rel="noopener">https://leetcode.com/problems/max-consecutive-ones-iii/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-1004-20260323.svg" alt="LeetCode 1004 sliding window with at most k zeros diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a binary array <code>nums</code> and an integer <code>k</code>, you may flip at most <code>k</code> zeros into ones. Return the maximum number of consecutive ones possible.</p>
+
+      <h3>Key Insight</h3>
+      <p>Maintain a window <code>[left, right]</code> that contains at most <code>k</code> zeros. If zeros exceed <code>k</code>, move <code>left</code> rightward until the window becomes valid again. The answer is the largest valid window length.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>Brute force checks every subarray and counts zeros, costing <code>O(n^2)</code> (or <code>O(n^3)</code> if counting each time). This is too slow for large input sizes.</p>
+
+      <h3>Optimal Algorithm Steps (Sliding Window)</h3>
+      <p>1) Initialize <code>left = 0</code>, <code>zeroCount = 0</code>, <code>best = 0</code>.<br/>
+         2) Expand <code>right</code> from 0 to n-1; if <code>nums[right] == 0</code>, increment <code>zeroCount</code>.<br/>
+         3) While <code>zeroCount &gt; k</code>, shrink from left; if leaving element is 0, decrement <code>zeroCount</code>.<br/>
+         4) Update <code>best = max(best, right - left + 1)</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>, each pointer moves at most n times.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting to decrement <code>zeroCount</code> when left passes a zero.<br/>
+         - Using <code>if</code> instead of <code>while</code> for shrinking when multiple extra zeros exist.<br/>
+         - Updating answer before restoring window validity.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int longestOnes(int[] nums, int k) {
+        int left = 0, zeroCount = 0, best = 0;
+
+        for (int right = 0; right &lt; nums.length; right++) {
+            if (nums[right] == 0) zeroCount++;
+
+            while (zeroCount &gt; k) {
+                if (nums[left] == 0) zeroCount--;
+                left++;
+            }
+
+            best = Math.max(best, right - left + 1);
+        }
+
+        return best;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func longestOnes(nums []int, k int) int {
+    left, zeroCount, best := 0, 0, 0
+
+    for right := 0; right &lt; len(nums); right++ {
+        if nums[right] == 0 {
+            zeroCount++
+        }
+
+        for zeroCount &gt; k {
+            if nums[left] == 0 {
+                zeroCount--
+            }
+            left++
+        }
+
+        if right-left+1 &gt; best {
+            best = right - left + 1
+        }
+    }
+
+    return best
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int longestOnes(vector&lt;int&gt;&amp; nums, int k) {
+        int left = 0, zeroCount = 0, best = 0;
+
+        for (int right = 0; right &lt; (int)nums.size(); ++right) {
+            if (nums[right] == 0) zeroCount++;
+
+            while (zeroCount &gt; k) {
+                if (nums[left] == 0) zeroCount--;
+                left++;
+            }
+
+            best = max(best, right - left + 1);
+        }
+
+        return best;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def longestOnes(self, nums: List[int], k: int) -&gt; int:
+        left = 0
+        zero_count = 0
+        best = 0
+
+        for right, value in enumerate(nums):
+            if value == 0:
+                zero_count += 1
+
+            while zero_count &gt; k:
+                if nums[left] == 0:
+                    zero_count -= 1
+                left += 1
+
+            best = max(best, right - left + 1)
+
+        return best</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
+var longestOnes = function(nums, k) {
+  let left = 0, zeroCount = 0, best = 0;
+
+  for (let right = 0; right &lt; nums.length; right++) {
+    if (nums[right] === 0) zeroCount++;
+
+    while (zeroCount &gt; k) {
+      if (nums[left] === 0) zeroCount--;
+      left++;
+    }
+
+    best = Math.max(best, right - left + 1);
+  }
+
+  return best;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定二进制数组 <code>nums</code> 和整数 <code>k</code>，你最多可以把 <code>k</code> 个 0 翻转成 1。求最长连续 1 的长度。</p>
+
+      <h3>核心思路</h3>
+      <p>维护一个滑动窗口 <code>[left, right]</code>，保证窗口内 0 的个数不超过 <code>k</code>。当 0 的个数超标时，不断右移左指针直到窗口重新合法。所有合法窗口中的最大长度即答案。</p>
+
+      <h3>基线解法与不足</h3>
+      <p>暴力解会枚举所有子数组并统计 0 的数量，复杂度至少 <code>O(n^2)</code>，在大输入下会超时。</p>
+
+      <h3>最优算法步骤（滑动窗口）</h3>
+      <p>1）初始化 <code>left = 0</code>、<code>zeroCount = 0</code>、<code>best = 0</code>。<br/>
+         2）右指针逐步扩展，遇到 0 就增加 <code>zeroCount</code>。<br/>
+         3）若 <code>zeroCount &gt; k</code>，持续右移左指针；若移出的是 0 则减少计数。<br/>
+         4）每轮更新最大窗口长度 <code>best</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 左指针越过 0 后忘记减少 <code>zeroCount</code>。<br/>
+         - 超标时只收缩一次（<code>if</code>）而不是循环收缩（<code>while</code>）。<br/>
+         - 在窗口仍非法时就更新答案。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int longestOnes(int[] nums, int k) {
+        int left = 0, zeroCount = 0, best = 0;
+
+        for (int right = 0; right &lt; nums.length; right++) {
+            if (nums[right] == 0) zeroCount++;
+
+            while (zeroCount &gt; k) {
+                if (nums[left] == 0) zeroCount--;
+                left++;
+            }
+
+            best = Math.max(best, right - left + 1);
+        }
+
+        return best;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func longestOnes(nums []int, k int) int {
+    left, zeroCount, best := 0, 0, 0
+
+    for right := 0; right &lt; len(nums); right++ {
+        if nums[right] == 0 {
+            zeroCount++
+        }
+
+        for zeroCount &gt; k {
+            if nums[left] == 0 {
+                zeroCount--
+            }
+            left++
+        }
+
+        if right-left+1 &gt; best {
+            best = right - left + 1
+        }
+    }
+
+    return best
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int longestOnes(vector&lt;int&gt;&amp; nums, int k) {
+        int left = 0, zeroCount = 0, best = 0;
+
+        for (int right = 0; right &lt; (int)nums.size(); ++right) {
+            if (nums[right] == 0) zeroCount++;
+
+            while (zeroCount &gt; k) {
+                if (nums[left] == 0) zeroCount--;
+                left++;
+            }
+
+            best = max(best, right - left + 1);
+        }
+
+        return best;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def longestOnes(self, nums: List[int], k: int) -&gt; int:
+        left = 0
+        zero_count = 0
+        best = 0
+
+        for right, value in enumerate(nums):
+            if value == 0:
+                zero_count += 1
+
+            while zero_count &gt; k:
+                if nums[left] == 0:
+                    zero_count -= 1
+                left += 1
+
+            best = max(best, right - left + 1)
+
+        return best</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
+var longestOnes = function(nums, k) {
+  let left = 0, zeroCount = 0, best = 0;
+
+  for (let right = 0; right &lt; nums.length; right++) {
+    if (nums[right] === 0) zeroCount++;
+
+    while (zeroCount &gt; k) {
+      if (nums[left] === 0) zeroCount--;
+      left++;
+    }
+
+    best = Math.max(best, right - left + 1);
+  }
+
+  return best;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
