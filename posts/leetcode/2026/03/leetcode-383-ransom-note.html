@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 383: Ransom Note (Frequency Counting with Early Exit)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 383 with counting-map invariant, correctness intuition, pitfalls, and 5-language implementations."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 383: Ransom Note (Frequency Counting with Early Exit)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with algorithm steps, complexity, pitfalls, and code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-383-ransom-note.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-383-ransom-note.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 383: Ransom Note (Frequency Counting with Early Exit)</h1>
+      <div class="meta">2026-03-23 · LeetCode · Hash Table / String</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 383</span><span class="tag">Hash Table</span><span class="tag">String</span><span class="tag">Interview</span>
+
+      <p>Today we solve <strong>LeetCode 383 - Ransom Note</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/ransom-note/" target="_blank" rel="noopener">https://leetcode.com/problems/ransom-note/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-383-20260323.svg" alt="LeetCode 383 frequency counting flow from magazine to ransom note" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given strings <code>ransomNote</code> and <code>magazine</code>, return <code>true</code> if you can construct <code>ransomNote</code> by using letters from <code>magazine</code>. Each letter in <code>magazine</code> can be used at most once.</p>
+
+      <h3>Key Insight</h3>
+      <p>This is a pure counting constraint: for every character <code>c</code>, we must have <code>count_magazine[c] &gt;= count_ransom[c]</code>. Build supply first, then consume demand.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>A naive approach repeatedly scans <code>magazine</code> for each ransom character and marks used positions, which can degrade to <code>O(nm)</code>. Counting gives linear time.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Count every character in <code>magazine</code>.<br/>
+         2) Iterate <code>ransomNote</code>, decrement corresponding count.<br/>
+         3) If any count becomes negative, return <code>false</code> immediately.<br/>
+         4) Finish loop and return <code>true</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(m + n)</code> where <code>m</code> and <code>n</code> are lengths of magazine and ransomNote.<br/>Space: <code>O(1)</code> for fixed lowercase alphabet (or <code>O(k)</code> for general charset).</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting early exit when count drops below zero.<br/>
+         - Using expensive string replace operations repeatedly.<br/>
+         - Not clarifying alphabet assumption (lowercase English letters in this problem).</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean canConstruct(String ransomNote, String magazine) {
+        int[] cnt = new int[26];
+        for (char c : magazine.toCharArray()) cnt[c - 'a']++;
+        for (char c : ransomNote.toCharArray()) {
+            if (--cnt[c - 'a'] &lt; 0) return false;
+        }
+        return true;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func canConstruct(ransomNote string, magazine string) bool {
+    cnt := [26]int{}
+    for _, c := range magazine {
+        cnt[c-'a']++
+    }
+    for _, c := range ransomNote {
+        cnt[c-'a']--
+        if cnt[c-'a'] &lt; 0 {
+            return false
+        }
+    }
+    return true
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool canConstruct(string ransomNote, string magazine) {
+        int cnt[26] = {0};
+        for (char c : magazine) cnt[c - 'a']++;
+        for (char c : ransomNote) {
+            if (--cnt[c - 'a'] &lt; 0) return false;
+        }
+        return true;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def canConstruct(self, ransomNote: str, magazine: str) -&gt; bool:
+        cnt = [0] * 26
+        for c in magazine:
+            cnt[ord(c) - ord('a')] += 1
+        for c in ransomNote:
+            idx = ord(c) - ord('a')
+            cnt[idx] -= 1
+            if cnt[idx] &lt; 0:
+                return False
+        return True</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var canConstruct = function(ransomNote, magazine) {
+  const cnt = new Array(26).fill(0);
+  for (const c of magazine) cnt[c.charCodeAt(0) - 97]++;
+  for (const c of ransomNote) {
+    const i = c.charCodeAt(0) - 97;
+    cnt[i]--;
+    if (cnt[i] &lt; 0) return false;
+  }
+  return true;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定字符串 <code>ransomNote</code> 和 <code>magazine</code>，判断是否可以用 <code>magazine</code> 中的字符拼出 <code>ransomNote</code>。每个字符最多使用一次。</p>
+
+      <h3>核心思路</h3>
+      <p>本质是字符频次约束：对任意字符 <code>c</code>，都要满足 <code>magazine</code> 的数量不少于 <code>ransomNote</code> 的需求。先统计供给，再逐个消耗需求。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>暴力法会为每个需求字符在 <code>magazine</code> 里反复查找并标记，最坏接近 <code>O(nm)</code>。计数法可以线性完成。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）遍历 <code>magazine</code>，统计每个字符出现次数。<br/>
+         2）遍历 <code>ransomNote</code>，对应计数减一。<br/>
+         3）若某次减完小于 0，立即返回 <code>false</code>。<br/>
+         4）全部处理完仍合法，返回 <code>true</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(m + n)</code>。<br/>空间复杂度：小写字母场景下为 <code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 计数小于 0 后没有及时返回，造成无谓计算。<br/>
+         - 用字符串替换模拟“删除字符”，复杂度偏高。<br/>
+         - 没写清楚题目字符集假设（本题为小写英文字母）。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean canConstruct(String ransomNote, String magazine) {
+        int[] cnt = new int[26];
+        for (char c : magazine.toCharArray()) cnt[c - 'a']++;
+        for (char c : ransomNote.toCharArray()) {
+            if (--cnt[c - 'a'] &lt; 0) return false;
+        }
+        return true;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func canConstruct(ransomNote string, magazine string) bool {
+    cnt := [26]int{}
+    for _, c := range magazine {
+        cnt[c-'a']++
+    }
+    for _, c := range ransomNote {
+        cnt[c-'a']--
+        if cnt[c-'a'] &lt; 0 {
+            return false
+        }
+    }
+    return true
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool canConstruct(string ransomNote, string magazine) {
+        int cnt[26] = {0};
+        for (char c : magazine) cnt[c - 'a']++;
+        for (char c : ransomNote) {
+            if (--cnt[c - 'a'] &lt; 0) return false;
+        }
+        return true;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def canConstruct(self, ransomNote: str, magazine: str) -&gt; bool:
+        cnt = [0] * 26
+        for c in magazine:
+            cnt[ord(c) - ord('a')] += 1
+        for c in ransomNote:
+            idx = ord(c) - ord('a')
+            cnt[idx] -= 1
+            if cnt[idx] &lt; 0:
+                return False
+        return True</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var canConstruct = function(ransomNote, magazine) {
+  const cnt = new Array(26).fill(0);
+  for (const c of magazine) cnt[c.charCodeAt(0) - 97]++;
+  for (const c of ransomNote) {
+    const i = c.charCodeAt(0) - 97;
+    cnt[i]--;
+    if (cnt[i] &lt; 0) return false;
+  }
+  return true;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
