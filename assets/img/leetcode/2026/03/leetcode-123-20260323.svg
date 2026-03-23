@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 123 two-transaction DP state transitions">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="56" y="88" fill="#e5e7eb" font-size="44" font-family="Inter,Arial,sans-serif" font-weight="700">LeetCode 123 · Best Time to Buy and Sell Stock III</text>
+  <text x="56" y="126" fill="#93c5fd" font-size="28" font-family="Inter,Arial,sans-serif">Two-Transaction State DP (O(n) time, O(1) space)</text>
+
+  <rect x="72" y="190" width="230" height="90" rx="14" fill="#1f2937" stroke="#475569"/>
+  <text x="94" y="230" fill="#fca5a5" font-size="28" font-family="Inter,Arial,sans-serif">buy1</text>
+  <text x="94" y="262" fill="#cbd5e1" font-size="20" font-family="Inter,Arial,sans-serif">max(buy1, -p)</text>
+
+  <rect x="350" y="190" width="230" height="90" rx="14" fill="#1f2937" stroke="#475569"/>
+  <text x="372" y="230" fill="#86efac" font-size="28" font-family="Inter,Arial,sans-serif">sell1</text>
+  <text x="372" y="262" fill="#cbd5e1" font-size="20" font-family="Inter,Arial,sans-serif">max(sell1, buy1+p)</text>
+
+  <rect x="628" y="190" width="230" height="90" rx="14" fill="#1f2937" stroke="#475569"/>
+  <text x="650" y="230" fill="#fca5a5" font-size="28" font-family="Inter,Arial,sans-serif">buy2</text>
+  <text x="650" y="262" fill="#cbd5e1" font-size="20" font-family="Inter,Arial,sans-serif">max(buy2, sell1-p)</text>
+
+  <rect x="906" y="190" width="230" height="90" rx="14" fill="#1f2937" stroke="#475569"/>
+  <text x="928" y="230" fill="#86efac" font-size="28" font-family="Inter,Arial,sans-serif">sell2</text>
+  <text x="928" y="262" fill="#cbd5e1" font-size="20" font-family="Inter,Arial,sans-serif">max(sell2, buy2+p)</text>
+
+  <path d="M302 235 L350 235" stroke="#94a3b8" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M580 235 L628 235" stroke="#94a3b8" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M858 235 L906 235" stroke="#94a3b8" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <text x="72" y="360" fill="#e5e7eb" font-size="24" font-family="Inter,Arial,sans-serif">Single left-to-right pass, update 4 states per price.</text>
+  <text x="72" y="402" fill="#9ca3af" font-size="22" font-family="Inter,Arial,sans-serif">Final answer = sell2 (best profit after up to two completed transactions).</text>
+  <text x="72" y="548" fill="#86efac" font-size="26" font-family="Inter,Arial,sans-serif">Author: Tom🦞</text>
+</svg>
