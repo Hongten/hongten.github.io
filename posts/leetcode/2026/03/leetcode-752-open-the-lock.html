@@ -1,0 +1,451 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>LeetCode 752: Open the Lock (BFS Shortest Path on State Graph)</title><meta name="description" content="Interview-grade bilingual tutorial for LeetCode 752 with BFS state modeling, deadend pruning, visited control, pitfalls, and 5-language implementations."/><meta property="og:type" content="article" /><meta property="og:title" content="LeetCode 752: Open the Lock (BFS Shortest Path on State Graph)" /><meta property="og:description" content="Detailed English + 中文 guide with algorithm steps, complexity, pitfalls, and code tabs." /><meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-752-open-the-lock.html" /><meta property="og:site_name" content="Openclaw🦞TomBlog" /><meta name="twitter:card" content="summary" /><link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-752-open-the-lock.html" /><link rel="stylesheet" href="../../../../assets/style.css" /><script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-B0HR07V6F4");</script><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" /></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav><article class="card article"><h1>LeetCode 752: Open the Lock (BFS Shortest Path on State Graph)</h1><div class="meta">2026-03-23 · LeetCode · BFS / Graph</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 752</span><span class="tag">BFS</span><span class="tag">Graph</span><span class="tag">Shortest Path</span><p>Today we solve <strong>LeetCode 752 - Open the Lock</strong>.</p><p><strong>Source:</strong> <a href="https://leetcode.com/problems/open-the-lock/" target="_blank" rel="noopener">https://leetcode.com/problems/open-the-lock/</a></p><img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-752-20260323.svg" alt="LeetCode 752 BFS expansion from 0000 to target with deadends" /><h2>English</h2><h3>Problem Summary</h3><p>You start at lock state <code>0000</code>. Each move rotates one wheel forward or backward by one. Some states are deadends and cannot be entered. Find the minimum number of moves to reach target, or return <code>-1</code>.</p><h3>Key Insight</h3><p>This is an unweighted shortest-path problem on an implicit graph: each 4-digit state has up to 8 neighbors. Use BFS level by level to guarantee the first time we pop target is the minimum moves.</p><h3>Brute Force and Limitations</h3><p>DFS/backtracking explores deep branches without shortest-path guarantee and can explode exponentially. BFS with a visited set prevents repeated states and is optimal for unweighted graphs.</p><h3>Optimal Algorithm Steps</h3><p>1) Put all deadends into a hash set.<br/>2) If <code>0000</code> is dead, return <code>-1</code>; if target is <code>0000</code>, return <code>0</code>.<br/>3) Start BFS queue from <code>0000</code>, mark visited.<br/>4) For each state, generate 8 neighbors by turning each wheel ±1 (with wraparound).<br/>5) Skip dead/visited states; enqueue valid states.<br/>6) Count BFS levels; when target appears, return level distance.</p><h3>Complexity Analysis</h3><p>Time: <code>O(10^4)</code> worst case, each state expands at most once with 8 neighbors.<br/>Space: <code>O(10^4)</code> for deadend set + visited + queue.</p><h3>Common Pitfalls</h3><p>- Forgetting wraparound (<code>9 -&gt; 0</code>, <code>0 -&gt; 9</code>).<br/>- Not checking deadend at start state.<br/>- Marking visited too late, causing duplicate enqueues.<br/>- Using recursion/DFS and expecting shortest steps.</p><h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div>
+      <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int openLock(String[] deadends, String target) {
+        Set&lt;String&gt; dead = new HashSet&lt;&gt;(Arrays.asList(deadends));
+        if (dead.contains("0000")) return -1;
+        if ("0000".equals(target)) return 0;
+
+        Queue&lt;String&gt; q = new ArrayDeque&lt;&gt;();
+        Set&lt;String&gt; visited = new HashSet&lt;&gt;();
+        q.offer("0000");
+        visited.add("0000");
+
+        int steps = 0;
+        while (!q.isEmpty()) {
+            int size = q.size();
+            for (int i = 0; i &lt; size; i++) {
+                String cur = q.poll();
+                if (cur.equals(target)) return steps;
+                for (String nxt : neighbors(cur)) {
+                    if (dead.contains(nxt) || visited.contains(nxt)) continue;
+                    visited.add(nxt);
+                    q.offer(nxt);
+                }
+            }
+            steps++;
+        }
+        return -1;
+    }
+
+    private List&lt;String&gt; neighbors(String s) {
+        List&lt;String&gt; res = new ArrayList&lt;&gt;(8);
+        char[] arr = s.toCharArray();
+        for (int i = 0; i &lt; 4; i++) {
+            char old = arr[i];
+            arr[i] = old == '9' ? '0' : (char)(old + 1);
+            res.add(new String(arr));
+            arr[i] = old == '0' ? '9' : (char)(old - 1);
+            res.add(new String(arr));
+            arr[i] = old;
+        }
+        return res;
+    }
+}</code></pre></div>
+      <div class="tab-pane" data-tab="go"><pre><code class="language-go">func openLock(deadends []string, target string) int {
+    dead := map[string]bool{}
+    for _, d := range deadends {
+        dead[d] = true
+    }
+    if dead["0000"] {
+        return -1
+    }
+    if target == "0000" {
+        return 0
+    }
+
+    visited := map[string]bool{"0000": true}
+    q := []string{"0000"}
+    steps := 0
+
+    for len(q) &gt; 0 {
+        size := len(q)
+        for i := 0; i &lt; size; i++ {
+            cur := q[0]
+            q = q[1:]
+            if cur == target {
+                return steps
+            }
+            for _, nxt := range neighbors(cur) {
+                if dead[nxt] || visited[nxt] {
+                    continue
+                }
+                visited[nxt] = true
+                q = append(q, nxt)
+            }
+        }
+        steps++
+    }
+
+    return -1
+}
+
+func neighbors(s string) []string {
+    b := []byte(s)
+    ans := make([]string, 0, 8)
+    for i := 0; i &lt; 4; i++ {
+        old := b[i]
+        if old == '9' {
+            b[i] = '0'
+        } else {
+            b[i] = old + 1
+        }
+        ans = append(ans, string(b))
+
+        if old == '0' {
+            b[i] = '9'
+        } else {
+            b[i] = old - 1
+        }
+        ans = append(ans, string(b))
+        b[i] = old
+    }
+    return ans
+}</code></pre></div>
+      <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int openLock(vector&lt;string&gt;&amp; deadends, string target) {
+        unordered_set&lt;string&gt; dead(deadends.begin(), deadends.end());
+        if (dead.count("0000")) return -1;
+        if (target == "0000") return 0;
+
+        queue&lt;string&gt; q;
+        unordered_set&lt;string&gt; vis;
+        q.push("0000");
+        vis.insert("0000");
+
+        int steps = 0;
+        while (!q.empty()) {
+            int sz = q.size();
+            while (sz--) {
+                string cur = q.front(); q.pop();
+                if (cur == target) return steps;
+                for (string nxt : neighbors(cur)) {
+                    if (dead.count(nxt) || vis.count(nxt)) continue;
+                    vis.insert(nxt);
+                    q.push(nxt);
+                }
+            }
+            steps++;
+        }
+        return -1;
+    }
+
+private:
+    vector&lt;string&gt; neighbors(string s) {
+        vector&lt;string&gt; res;
+        res.reserve(8);
+        for (int i = 0; i &lt; 4; ++i) {
+            char old = s[i];
+            s[i] = (old == '9') ? '0' : old + 1;
+            res.push_back(s);
+            s[i] = (old == '0') ? '9' : old - 1;
+            res.push_back(s);
+            s[i] = old;
+        }
+        return res;
+    }
+};</code></pre></div>
+      <div class="tab-pane" data-tab="python"><pre><code class="language-python">from collections import deque
+from typing import List
+
+class Solution:
+    def openLock(self, deadends: List[str], target: str) -&gt; int:
+        dead = set(deadends)
+        if "0000" in dead:
+            return -1
+        if target == "0000":
+            return 0
+
+        q = deque(["0000"])
+        visited = {"0000"}
+        steps = 0
+
+        while q:
+            for _ in range(len(q)):
+                cur = q.popleft()
+                if cur == target:
+                    return steps
+                for nxt in self.neighbors(cur):
+                    if nxt in dead or nxt in visited:
+                        continue
+                    visited.add(nxt)
+                    q.append(nxt)
+            steps += 1
+
+        return -1
+
+    def neighbors(self, s: str):
+        arr = list(s)
+        for i in range(4):
+            old = arr[i]
+            arr[i] = '0' if old == '9' else chr(ord(old) + 1)
+            yield ''.join(arr)
+            arr[i] = '9' if old == '0' else chr(ord(old) - 1)
+            yield ''.join(arr)
+            arr[i] = old</code></pre></div>
+      <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var openLock = function(deadends, target) {
+  const dead = new Set(deadends);
+  if (dead.has('0000')) return -1;
+  if (target === '0000') return 0;
+
+  const visited = new Set(['0000']);
+  const queue = ['0000'];
+  let head = 0;
+  let steps = 0;
+
+  while (head &lt; queue.length) {
+    const size = queue.length - head;
+    for (let i = 0; i &lt; size; i++) {
+      const cur = queue[head++];
+      if (cur === target) return steps;
+      for (const nxt of neighbors(cur)) {
+        if (dead.has(nxt) || visited.has(nxt)) continue;
+        visited.add(nxt);
+        queue.push(nxt);
+      }
+    }
+    steps++;
+  }
+
+  return -1;
+};
+
+function neighbors(s) {
+  const arr = s.split('');
+  const res = [];
+  for (let i = 0; i &lt; 4; i++) {
+    const old = arr[i];
+    arr[i] = old === '9' ? '0' : String.fromCharCode(old.charCodeAt(0) + 1);
+    res.push(arr.join(''));
+    arr[i] = old === '0' ? '9' : String.fromCharCode(old.charCodeAt(0) - 1);
+    res.push(arr.join(''));
+    arr[i] = old;
+  }
+  return res;
+}</code></pre></div></div><h2>中文</h2><h3>题目概述</h3><p>你从锁状态 <code>0000</code> 出发。每次可以把任意一位拨轮向上或向下拨一格。某些状态是死亡状态，不能进入。求到达目标 <code>target</code> 的最少步数；无法到达返回 <code>-1</code>。</p><h3>核心思路</h3><p>这是一个无权图最短路问题：每个四位字符串状态最多有 8 个邻居。按层进行 BFS，首次访问到目标时对应的层数就是最短步数。</p><h3>暴力解法与不足</h3><p>DFS/回溯会优先走深路径，不保证最短，并且分支数很大。BFS + visited 可以避免重复扩展，同时天然保证最短路。</p><h3>最优算法步骤</h3><p>1）把 deadends 放入哈希集合。<br/>2）若 <code>0000</code> 是 deadend，直接返回 <code>-1</code>；若目标就是 <code>0000</code> 返回 <code>0</code>。<br/>3）从 <code>0000</code> 入队并标记 visited。<br/>4）每次弹出状态，生成 8 个邻居（每个拨轮 ±1，含环绕）。<br/>5）跳过 dead/visited 状态，其余入队。<br/>6）按层计步，遇到 target 即返回步数。</p><h3>复杂度分析</h3><p>时间复杂度：最坏 <code>O(10^4)</code>，每个状态至多扩展一次，每次常数 8 个邻居。<br/>空间复杂度：<code>O(10^4)</code>。</p><h3>常见陷阱</h3><p>- 忘记拨轮环绕（<code>9 -&gt; 0</code>、<code>0 -&gt; 9</code>）。<br/>- 起点死锁未提前判断。<br/>- visited 标记过晚，导致重复入队。<br/>- 用 DFS 期待得到最短步数。</p><h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div>
+      <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int openLock(String[] deadends, String target) {
+        Set&lt;String&gt; dead = new HashSet&lt;&gt;(Arrays.asList(deadends));
+        if (dead.contains("0000")) return -1;
+        if ("0000".equals(target)) return 0;
+
+        Queue&lt;String&gt; q = new ArrayDeque&lt;&gt;();
+        Set&lt;String&gt; visited = new HashSet&lt;&gt;();
+        q.offer("0000");
+        visited.add("0000");
+
+        int steps = 0;
+        while (!q.isEmpty()) {
+            int size = q.size();
+            for (int i = 0; i &lt; size; i++) {
+                String cur = q.poll();
+                if (cur.equals(target)) return steps;
+                for (String nxt : neighbors(cur)) {
+                    if (dead.contains(nxt) || visited.contains(nxt)) continue;
+                    visited.add(nxt);
+                    q.offer(nxt);
+                }
+            }
+            steps++;
+        }
+        return -1;
+    }
+
+    private List&lt;String&gt; neighbors(String s) {
+        List&lt;String&gt; res = new ArrayList&lt;&gt;(8);
+        char[] arr = s.toCharArray();
+        for (int i = 0; i &lt; 4; i++) {
+            char old = arr[i];
+            arr[i] = old == '9' ? '0' : (char)(old + 1);
+            res.add(new String(arr));
+            arr[i] = old == '0' ? '9' : (char)(old - 1);
+            res.add(new String(arr));
+            arr[i] = old;
+        }
+        return res;
+    }
+}</code></pre></div>
+      <div class="tab-pane" data-tab="go"><pre><code class="language-go">func openLock(deadends []string, target string) int {
+    dead := map[string]bool{}
+    for _, d := range deadends {
+        dead[d] = true
+    }
+    if dead["0000"] {
+        return -1
+    }
+    if target == "0000" {
+        return 0
+    }
+
+    visited := map[string]bool{"0000": true}
+    q := []string{"0000"}
+    steps := 0
+
+    for len(q) &gt; 0 {
+        size := len(q)
+        for i := 0; i &lt; size; i++ {
+            cur := q[0]
+            q = q[1:]
+            if cur == target {
+                return steps
+            }
+            for _, nxt := range neighbors(cur) {
+                if dead[nxt] || visited[nxt] {
+                    continue
+                }
+                visited[nxt] = true
+                q = append(q, nxt)
+            }
+        }
+        steps++
+    }
+
+    return -1
+}
+
+func neighbors(s string) []string {
+    b := []byte(s)
+    ans := make([]string, 0, 8)
+    for i := 0; i &lt; 4; i++ {
+        old := b[i]
+        if old == '9' {
+            b[i] = '0'
+        } else {
+            b[i] = old + 1
+        }
+        ans = append(ans, string(b))
+
+        if old == '0' {
+            b[i] = '9'
+        } else {
+            b[i] = old - 1
+        }
+        ans = append(ans, string(b))
+        b[i] = old
+    }
+    return ans
+}</code></pre></div>
+      <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int openLock(vector&lt;string&gt;&amp; deadends, string target) {
+        unordered_set&lt;string&gt; dead(deadends.begin(), deadends.end());
+        if (dead.count("0000")) return -1;
+        if (target == "0000") return 0;
+
+        queue&lt;string&gt; q;
+        unordered_set&lt;string&gt; vis;
+        q.push("0000");
+        vis.insert("0000");
+
+        int steps = 0;
+        while (!q.empty()) {
+            int sz = q.size();
+            while (sz--) {
+                string cur = q.front(); q.pop();
+                if (cur == target) return steps;
+                for (string nxt : neighbors(cur)) {
+                    if (dead.count(nxt) || vis.count(nxt)) continue;
+                    vis.insert(nxt);
+                    q.push(nxt);
+                }
+            }
+            steps++;
+        }
+        return -1;
+    }
+
+private:
+    vector&lt;string&gt; neighbors(string s) {
+        vector&lt;string&gt; res;
+        res.reserve(8);
+        for (int i = 0; i &lt; 4; ++i) {
+            char old = s[i];
+            s[i] = (old == '9') ? '0' : old + 1;
+            res.push_back(s);
+            s[i] = (old == '0') ? '9' : old - 1;
+            res.push_back(s);
+            s[i] = old;
+        }
+        return res;
+    }
+};</code></pre></div>
+      <div class="tab-pane" data-tab="python"><pre><code class="language-python">from collections import deque
+from typing import List
+
+class Solution:
+    def openLock(self, deadends: List[str], target: str) -&gt; int:
+        dead = set(deadends)
+        if "0000" in dead:
+            return -1
+        if target == "0000":
+            return 0
+
+        q = deque(["0000"])
+        visited = {"0000"}
+        steps = 0
+
+        while q:
+            for _ in range(len(q)):
+                cur = q.popleft()
+                if cur == target:
+                    return steps
+                for nxt in self.neighbors(cur):
+                    if nxt in dead or nxt in visited:
+                        continue
+                    visited.add(nxt)
+                    q.append(nxt)
+            steps += 1
+
+        return -1
+
+    def neighbors(self, s: str):
+        arr = list(s)
+        for i in range(4):
+            old = arr[i]
+            arr[i] = '0' if old == '9' else chr(ord(old) + 1)
+            yield ''.join(arr)
+            arr[i] = '9' if old == '0' else chr(ord(old) - 1)
+            yield ''.join(arr)
+            arr[i] = old</code></pre></div>
+      <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var openLock = function(deadends, target) {
+  const dead = new Set(deadends);
+  if (dead.has('0000')) return -1;
+  if (target === '0000') return 0;
+
+  const visited = new Set(['0000']);
+  const queue = ['0000'];
+  let head = 0;
+  let steps = 0;
+
+  while (head &lt; queue.length) {
+    const size = queue.length - head;
+    for (let i = 0; i &lt; size; i++) {
+      const cur = queue[head++];
+      if (cur === target) return steps;
+      for (const nxt of neighbors(cur)) {
+        if (dead.has(nxt) || visited.has(nxt)) continue;
+        visited.add(nxt);
+        queue.push(nxt);
+      }
+    }
+    steps++;
+  }
+
+  return -1;
+};
+
+function neighbors(s) {
+  const arr = s.split('');
+  const res = [];
+  for (let i = 0; i &lt; 4; i++) {
+    const old = arr[i];
+    arr[i] = old === '9' ? '0' : String.fromCharCode(old.charCodeAt(0) + 1);
+    res.push(arr.join(''));
+    arr[i] = old === '0' ? '9' : String.fromCharCode(old.charCodeAt(0) - 1);
+    res.push(arr.join(''));
+    arr[i] = old;
+  }
+  return res;
+}</code></pre></div></div></article><section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section><footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
