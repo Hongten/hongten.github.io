@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 140 DP + DFS diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .t{font-family:Arial,Helvetica,sans-serif;fill:#e2e8f0}
+      .box{fill:#111827;stroke:#38bdf8;stroke-width:2}
+      .arrow{stroke:#94a3b8;stroke-width:2;marker-end:url(#m)}
+      .ok{fill:#22c55e}.bad{fill:#ef4444}
+    </style>
+    <marker id="m" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="80" class="t" font-size="42" font-weight="700">LeetCode 140 · Word Break II</text>
+  <text x="60" y="118" class="t" font-size="24">DP Feasibility Pruning + DFS Sentence Reconstruction</text>
+
+  <rect x="60" y="170" rx="14" ry="14" width="330" height="120" class="box"/>
+  <text x="85" y="215" class="t" font-size="26">canBreak[i]</text>
+  <text x="85" y="248" class="t" font-size="21">Suffix s[i..n) can split?</text>
+
+  <rect x="450" y="170" rx="14" ry="14" width="330" height="120" class="box"/>
+  <text x="475" y="215" class="t" font-size="26">DFS(i)</text>
+  <text x="475" y="248" class="t" font-size="21">Enumerate valid next word</text>
+
+  <rect x="840" y="170" rx="14" ry="14" width="300" height="120" class="box"/>
+  <text x="865" y="215" class="t" font-size="26">Memo[i]</text>
+  <text x="865" y="248" class="t" font-size="21">All sentences from i</text>
+
+  <line x1="390" y1="230" x2="450" y2="230" class="arrow"/>
+  <line x1="780" y1="230" x2="840" y2="230" class="arrow"/>
+
+  <text x="60" y="360" class="t" font-size="24">Example: s = "catsanddog"</text>
+  <text x="60" y="400" class="t ok" font-size="28" font-weight="700">cat | sand | dog</text>
+  <text x="60" y="440" class="t ok" font-size="28" font-weight="700">cats | and | dog</text>
+  <text x="60" y="480" class="t bad" font-size="24">catsa | ...  (pruned by canBreak[end] = false)</text>
+
+  <text x="60" y="560" class="t" font-size="22">Prune impossible suffixes first, then rebuild only feasible sentences.</text>
+</svg>
