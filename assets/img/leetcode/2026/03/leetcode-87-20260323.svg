@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 87 Scramble String diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0b1020"/>
+      <stop offset="100%" stop-color="#132a4a"/>
+    </linearGradient>
+    <style>
+      .t{font-family:'Segoe UI',Arial,sans-serif; fill:#e9f0ff}
+      .m{font-size:36px;font-weight:700}
+      .s{font-size:24px;fill:#b8c7e6}
+      .b{fill:#1f3a66;stroke:#78a6ff;stroke-width:2}
+      .a{stroke:#ffd166;stroke-width:4;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#ffd166"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="80" class="t m">LeetCode 87 · Scramble String</text>
+  <text x="60" y="118" class="t s">Split + Optional Swap + Memoized Recursion (i, j, len)</text>
+
+  <rect x="80" y="170" width="300" height="90" rx="14" class="b"/>
+  <text x="100" y="225" class="t" style="font-size:34px">great</text>
+
+  <rect x="460" y="150" width="220" height="70" rx="12" class="b"/>
+  <text x="530" y="194" class="t" style="font-size:30px">gr</text>
+  <rect x="460" y="245" width="220" height="70" rx="12" class="b"/>
+  <text x="530" y="289" class="t" style="font-size:30px">eat</text>
+
+  <rect x="810" y="130" width="250" height="70" rx="12" class="b"/>
+  <text x="880" y="174" class="t" style="font-size:30px">rge</text>
+  <rect x="810" y="235" width="250" height="70" rx="12" class="b"/>
+  <text x="900" y="279" class="t" style="font-size:30px">at</text>
+
+  <path d="M380 215 C420 215,430 185,460 185" class="a"/>
+  <path d="M380 215 C420 215,430 280,460 280" class="a"/>
+  <path d="M680 185 C740 185,760 165,810 165" class="a"/>
+  <path d="M680 280 C740 280,760 270,810 270" class="a"/>
+
+  <text x="80" y="400" class="t s">Transition checks per split k:</text>
+  <text x="80" y="438" class="t s">1) no-swap:  dfs(i,j,k) &amp;&amp; dfs(i+k,j+k,len-k)</text>
+  <text x="80" y="474" class="t s">2) swap:     dfs(i,j+len-k,k) &amp;&amp; dfs(i+k,j,len-k)</text>
+  <text x="80" y="530" class="t s">Prune early by character frequency mismatch; cache every (i,j,len).</text>
+</svg>
