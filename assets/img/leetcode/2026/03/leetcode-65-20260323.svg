@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560">
+  <defs>
+    <style>
+      .bg{fill:#0f172a}.title{fill:#e2e8f0;font:700 30px sans-serif}.sub{fill:#94a3b8;font:400 18px sans-serif}
+      .st{fill:#1e293b;stroke:#38bdf8;stroke-width:2}.ok{fill:#0b3b2e;stroke:#34d399;stroke-width:2}
+      .txt{fill:#e2e8f0;font:600 16px sans-serif}.edge{stroke:#94a3b8;stroke-width:2;marker-end:url(#a)}
+      .lbl{fill:#cbd5e1;font:500 14px sans-serif}
+    </style>
+    <marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#94a3b8"/></marker>
+  </defs>
+  <rect class="bg" width="1200" height="560"/>
+  <text x="40" y="56" class="title">LeetCode 65 · Valid Number</text>
+  <text x="40" y="86" class="sub">Single-pass deterministic state parsing (sign / digit / dot / exponent)</text>
+
+  <rect class="st" x="80" y="170" rx="12" ry="12" width="160" height="70"/><text class="txt" x="104" y="212">START</text>
+  <rect class="st" x="320" y="170" rx="12" ry="12" width="180" height="70"/><text class="txt" x="348" y="212">INT PART</text>
+  <rect class="ok" x="580" y="120" rx="12" ry="12" width="200" height="70"/><text class="txt" x="606" y="162">DECIMAL VALID</text>
+  <rect class="ok" x="580" y="250" rx="12" ry="12" width="200" height="70"/><text class="txt" x="614" y="292">INTEGER VALID</text>
+  <rect class="st" x="860" y="170" rx="12" ry="12" width="210" height="70"/><text class="txt" x="892" y="212">EXPONENT PART</text>
+
+  <line class="edge" x1="240" y1="205" x2="320" y2="205"/><text class="lbl" x="260" y="190">digit</text>
+  <line class="edge" x1="170" y1="240" x2="170" y2="320"/><line class="edge" x1="170" y1="320" x2="580" y2="285"/><text class="lbl" x="190" y="308">'.' then digit</text>
+  <line class="edge" x1="500" y1="205" x2="580" y2="285"/><text class="lbl" x="515" y="250">end</text>
+  <line class="edge" x1="500" y1="185" x2="580" y2="155"/><text class="lbl" x="508" y="168">'.' + optional digits</text>
+  <line class="edge" x1="780" y1="155" x2="860" y2="205"/><text class="lbl" x="798" y="170">e/E (+/-) digit</text>
+  <line class="edge" x1="780" y1="285" x2="860" y2="205"/><text class="lbl" x="792" y="262">e/E (+/-) digit</text>
+
+  <text x="80" y="420" class="sub">Accepting states: DECIMAL VALID or INTEGER VALID, and if exponent appears, exponent must contain at least one digit.</text>
+</svg>
