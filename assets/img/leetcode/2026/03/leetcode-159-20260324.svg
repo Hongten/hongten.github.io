@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-label="LeetCode 159 sliding window illustration">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .title{font:700 42px 'Segoe UI',Arial,sans-serif;fill:#e2e8f0}
+      .sub{font:500 24px 'Segoe UI',Arial,sans-serif;fill:#cbd5e1}
+      .txt{font:600 24px 'Consolas',monospace;fill:#f8fafc}
+      .small{font:500 20px 'Segoe UI',Arial,sans-serif;fill:#94a3b8}
+      .box{fill:#334155;stroke:#64748b;stroke-width:2}
+      .win{fill:#0ea5e933;stroke:#22d3ee;stroke-width:4}
+      .arrow{stroke:#f59e0b;stroke-width:4;marker-end:url(#m)}
+    </style>
+    <marker id="m" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <polygon points="0,0 8,4 0,8" fill="#f59e0b"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="680" fill="url(#bg)"/>
+  <text x="60" y="80" class="title">LeetCode 159 · Sliding Window (≤ 2 Distinct)</text>
+  <text x="60" y="120" class="sub">Expand right, shrink left when distinct chars &gt; 2</text>
+
+  <g transform="translate(80,220)">
+    <rect class="box" x="0" y="0" width="120" height="120" rx="10"/><text x="52" y="75" class="txt">e</text>
+    <rect class="box" x="130" y="0" width="120" height="120" rx="10"/><text x="182" y="75" class="txt">c</text>
+    <rect class="box" x="260" y="0" width="120" height="120" rx="10"/><text x="312" y="75" class="txt">e</text>
+    <rect class="box" x="390" y="0" width="120" height="120" rx="10"/><text x="442" y="75" class="txt">b</text>
+    <rect class="box" x="520" y="0" width="120" height="120" rx="10"/><text x="572" y="75" class="txt">a</text>
+    <rect class="box" x="650" y="0" width="120" height="120" rx="10"/><text x="702" y="75" class="txt">a</text>
+
+    <rect class="win" x="0" y="-12" width="640" height="144" rx="14"/>
+    <text x="8" y="170" class="small">current valid window: "eceba" -&gt; shrink to keep only 2 kinds</text>
+
+    <line class="arrow" x1="40" y1="-40" x2="40" y2="-4"/>
+    <text x="8" y="-55" class="sub" fill="#f59e0b">left</text>
+
+    <line class="arrow" x1="560" y1="-40" x2="560" y2="-4"/>
+    <text x="522" y="-55" class="sub" fill="#f59e0b">right</text>
+  </g>
+
+  <text x="80" y="500" class="sub">Invariant: map.size() ≤ 2 after each shrink step</text>
+  <text x="80" y="545" class="sub">Answer = max(window length) throughout the scan</text>
+</svg>
