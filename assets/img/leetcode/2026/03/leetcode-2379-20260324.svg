@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-label="LeetCode 2379 fixed-size sliding window recolors">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .title{font:700 40px 'Segoe UI',Arial,sans-serif;fill:#e2e8f0}
+      .sub{font:500 24px 'Segoe UI',Arial,sans-serif;fill:#cbd5e1}
+      .txt{font:700 28px 'Consolas',monospace;fill:#f8fafc}
+      .small{font:500 20px 'Segoe UI',Arial,sans-serif;fill:#94a3b8}
+      .box{fill:#334155;stroke:#64748b;stroke-width:2}
+      .win{fill:#22d3ee22;stroke:#22d3ee;stroke-width:4}
+      .w{fill:#ef4444}
+      .b{fill:#22c55e}
+    </style>
+  </defs>
+  <rect width="1200" height="680" fill="url(#bg)"/>
+  <text x="56" y="78" class="title">LeetCode 2379 · Minimum Recolors to Get K Consecutive Black Blocks</text>
+  <text x="56" y="118" class="sub">Fixed-size window: answer = minimum #W inside any length-k window</text>
+
+  <g transform="translate(70,220)">
+    <rect class="box" x="0" y="0" width="95" height="95" rx="10"/><text x="36" y="60" class="txt">W</text>
+    <rect class="box" x="105" y="0" width="95" height="95" rx="10"/><text x="141" y="60" class="txt">B</text>
+    <rect class="box" x="210" y="0" width="95" height="95" rx="10"/><text x="246" y="60" class="txt">W</text>
+    <rect class="box" x="315" y="0" width="95" height="95" rx="10"/><text x="351" y="60" class="txt">B</text>
+    <rect class="box" x="420" y="0" width="95" height="95" rx="10"/><text x="456" y="60" class="txt">B</text>
+    <rect class="box" x="525" y="0" width="95" height="95" rx="10"/><text x="561" y="60" class="txt">W</text>
+    <rect class="box" x="630" y="0" width="95" height="95" rx="10"/><text x="666" y="60" class="txt">B</text>
+
+    <rect class="win" x="200" y="-14" width="335" height="123" rx="14"/>
+
+    <circle cx="48" cy="132" r="8" class="w"/><text x="66" y="139" class="small">W contributes +1 recolor</text>
+    <circle cx="332" cy="132" r="8" class="b"/><text x="350" y="139" class="small">B contributes +0 recolor</text>
+  </g>
+
+  <text x="70" y="500" class="sub">Slide window by 1: remove left char contribution, add right char contribution</text>
+  <text x="70" y="545" class="sub">Track minimum white count across all windows → minimal recolors</text>
+</svg>

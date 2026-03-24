@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 2379: Minimum Recolors to Get K Consecutive Black Blocks (Fixed-Size Sliding Window)</title>
+  <meta name="description" content="Bilingual interview-grade tutorial for LeetCode 2379 using a fixed-size sliding window to minimize recolors, with full multi-language code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 2379: Minimum Recolors to Get K Consecutive Black Blocks (Fixed-Size Sliding Window)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with fixed-length window transitions and full 5-language implementations." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-2379-minimum-recolors-to-get-k-consecutive-black-blocks.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-2379-minimum-recolors-to-get-k-consecutive-black-blocks.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 2379: Minimum Recolors to Get K Consecutive Black Blocks (Fixed-Size Sliding Window)</h1>
+      <div class="meta">2026-03-24 · LeetCode · Sliding Window / String</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 2379</span><span class="tag">Sliding Window</span><span class="tag">String</span>
+
+      <p>Today we solve <strong>LeetCode 2379 - Minimum Recolors to Get K Consecutive Black Blocks</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/minimum-recolors-to-get-k-consecutive-black-blocks/" target="_blank" rel="noopener">https://leetcode.com/problems/minimum-recolors-to-get-k-consecutive-black-blocks/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-2379-20260324.svg" alt="LeetCode 2379 fixed-size sliding window recolor count" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a string <code>blocks</code> where each character is either <code>'W'</code> or <code>'B'</code>, and an integer <code>k</code>, find the minimum number of recolors needed so there exists a substring of length <code>k</code> containing only black blocks.</p>
+
+      <h3>Key Insight</h3>
+      <p>For any window of length <code>k</code>, the required recolors equals the number of white blocks in that window. So we just need the minimum white-count among all length-<code>k</code> windows.</p>
+
+      <h3>Algorithm</h3>
+      <p>1) Count whites in the first <code>k</code> characters.<br/>
+         2) Slide window right by one step each time: remove left char contribution, add new right char contribution.<br/>
+         3) Track the minimum white count seen.</p>
+
+      <h3>Complexity</h3>
+      <p>Time: <code>O(n)</code>, each index enters/leaves the window once.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int minimumRecolors(String blocks, int k) {
+        int whites = 0;
+        for (int i = 0; i &lt; k; i++) {
+            if (blocks.charAt(i) == 'W') whites++;
+        }
+
+        int ans = whites;
+        for (int i = k; i &lt; blocks.length(); i++) {
+            if (blocks.charAt(i - k) == 'W') whites--;
+            if (blocks.charAt(i) == 'W') whites++;
+            ans = Math.min(ans, whites);
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func minimumRecolors(blocks string, k int) int {
+    whites := 0
+    for i := 0; i &lt; k; i++ {
+        if blocks[i] == 'W' {
+            whites++
+        }
+    }
+
+    ans := whites
+    for i := k; i &lt; len(blocks); i++ {
+        if blocks[i-k] == 'W' {
+            whites--
+        }
+        if blocks[i] == 'W' {
+            whites++
+        }
+        if whites &lt; ans {
+            ans = whites
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int minimumRecolors(string blocks, int k) {
+        int whites = 0;
+        for (int i = 0; i &lt; k; ++i) {
+            if (blocks[i] == 'W') whites++;
+        }
+
+        int ans = whites;
+        for (int i = k; i &lt; (int)blocks.size(); ++i) {
+            if (blocks[i - k] == 'W') whites--;
+            if (blocks[i] == 'W') whites++;
+            ans = min(ans, whites);
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def minimumRecolors(self, blocks: str, k: int) -&gt; int:
+        whites = sum(1 for i in range(k) if blocks[i] == 'W')
+        ans = whites
+
+        for i in range(k, len(blocks)):
+            if blocks[i - k] == 'W':
+                whites -= 1
+            if blocks[i] == 'W':
+                whites += 1
+            ans = min(ans, whites)
+
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {string} blocks
+ * @param {number} k
+ * @return {number}
+ */
+var minimumRecolors = function(blocks, k) {
+  let whites = 0;
+  for (let i = 0; i &lt; k; i++) {
+    if (blocks[i] === 'W') whites++;
+  }
+
+  let ans = whites;
+  for (let i = k; i &lt; blocks.length; i++) {
+    if (blocks[i - k] === 'W') whites--;
+    if (blocks[i] === 'W') whites++;
+    ans = Math.min(ans, whites);
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定一个仅由 <code>'W'</code> 和 <code>'B'</code> 组成的字符串 <code>blocks</code>，以及整数 <code>k</code>。你需要把尽可能少的白块重涂成黑块，使得存在一个长度为 <code>k</code> 的全黑连续子串，返回最少重涂次数。</p>
+
+      <h3>核心思路</h3>
+      <p>任意长度为 <code>k</code> 的窗口，要变成全黑，代价就是窗口里 <code>'W'</code> 的数量。因此问题转化为：在所有长度为 <code>k</code> 的窗口中，找到白块数最小值。</p>
+
+      <h3>算法步骤</h3>
+      <p>1）先统计前 <code>k</code> 个字符中的白块数。<br/>
+         2）窗口每次右移 1 格：若移出字符是 <code>'W'</code> 则减 1，若新进入字符是 <code>'W'</code> 则加 1。<br/>
+         3）持续维护白块最小值，最终即答案。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int minimumRecolors(String blocks, int k) {
+        int whites = 0;
+        for (int i = 0; i &lt; k; i++) {
+            if (blocks.charAt(i) == 'W') whites++;
+        }
+
+        int ans = whites;
+        for (int i = k; i &lt; blocks.length(); i++) {
+            if (blocks.charAt(i - k) == 'W') whites--;
+            if (blocks.charAt(i) == 'W') whites++;
+            ans = Math.min(ans, whites);
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func minimumRecolors(blocks string, k int) int {
+    whites := 0
+    for i := 0; i &lt; k; i++ {
+        if blocks[i] == 'W' {
+            whites++
+        }
+    }
+
+    ans := whites
+    for i := k; i &lt; len(blocks); i++ {
+        if blocks[i-k] == 'W' {
+            whites--
+        }
+        if blocks[i] == 'W' {
+            whites++
+        }
+        if whites &lt; ans {
+            ans = whites
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int minimumRecolors(string blocks, int k) {
+        int whites = 0;
+        for (int i = 0; i &lt; k; ++i) {
+            if (blocks[i] == 'W') whites++;
+        }
+
+        int ans = whites;
+        for (int i = k; i &lt; (int)blocks.size(); ++i) {
+            if (blocks[i - k] == 'W') whites--;
+            if (blocks[i] == 'W') whites++;
+            ans = min(ans, whites);
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def minimumRecolors(self, blocks: str, k: int) -&gt; int:
+        whites = sum(1 for i in range(k) if blocks[i] == 'W')
+        ans = whites
+
+        for i in range(k, len(blocks)):
+            if blocks[i - k] == 'W':
+                whites -= 1
+            if blocks[i] == 'W':
+                whites += 1
+            ans = min(ans, whites)
+
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {string} blocks
+ * @param {number} k
+ * @return {number}
+ */
+var minimumRecolors = function(blocks, k) {
+  let whites = 0;
+  for (let i = 0; i &lt; k; i++) {
+    if (blocks[i] === 'W') whites++;
+  }
+
+  let ans = whites;
+  for (let i = k; i &lt; blocks.length; i++) {
+    if (blocks[i - k] === 'W') whites--;
+    if (blocks[i] === 'W') whites++;
+    ans = Math.min(ans, whites);
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
