@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 188 DP states">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#38bdf8"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="84" fill="#e2e8f0" font-size="40" font-family="Arial, sans-serif" font-weight="700">LeetCode 188 · Best Time to Buy and Sell Stock IV</text>
+  <text x="60" y="124" fill="#94a3b8" font-size="24" font-family="Arial, sans-serif">k-Transaction DP States: buy[t], sell[t]</text>
+
+  <rect x="120" y="210" width="250" height="110" rx="14" fill="#1d4ed8"/>
+  <text x="145" y="258" fill="#eff6ff" font-size="30" font-family="Arial">sell[t-1]</text>
+  <text x="145" y="292" fill="#dbeafe" font-size="22" font-family="Arial">not holding</text>
+
+  <rect x="470" y="210" width="250" height="110" rx="14" fill="#0f766e"/>
+  <text x="540" y="258" fill="#ecfeff" font-size="30" font-family="Arial">buy[t]</text>
+  <text x="525" y="292" fill="#ccfbf1" font-size="22" font-family="Arial">holding stock</text>
+
+  <rect x="820" y="210" width="250" height="110" rx="14" fill="#7c3aed"/>
+  <text x="890" y="258" fill="#f5f3ff" font-size="30" font-family="Arial">sell[t]</text>
+  <text x="867" y="292" fill="#ede9fe" font-size="22" font-family="Arial">not holding</text>
+
+  <line x1="370" y1="265" x2="470" y2="265" stroke="#38bdf8" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="382" y="245" fill="#7dd3fc" font-size="22" font-family="Arial">- price</text>
+
+  <line x1="720" y1="265" x2="820" y2="265" stroke="#38bdf8" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="736" y="245" fill="#7dd3fc" font-size="22" font-family="Arial">+ price</text>
+
+  <text x="120" y="410" fill="#e2e8f0" font-size="30" font-family="Arial" font-weight="700">Transitions per price p:</text>
+  <text x="120" y="455" fill="#bae6fd" font-size="28" font-family="Courier New">buy[t] = max(buy[t], sell[t-1] - p)</text>
+  <text x="120" y="500" fill="#bae6fd" font-size="28" font-family="Courier New">sell[t] = max(sell[t], buy[t] + p)</text>
+  <text x="120" y="548" fill="#94a3b8" font-size="23" font-family="Arial">If k &gt;= n/2, switch to unlimited-transactions greedy sum.</text>
+</svg>
