@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 338 counting bits DP diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .title { font: 700 44px 'Segoe UI', Arial, sans-serif; fill: #e2e8f0; }
+      .sub { font: 400 26px 'Segoe UI', Arial, sans-serif; fill: #cbd5e1; }
+      .box { fill: #111827; stroke: #38bdf8; stroke-width: 2; rx: 14; }
+      .txt { font: 600 24px 'Consolas', monospace; fill: #f8fafc; }
+      .arrow { stroke: #f59e0b; stroke-width: 4; marker-end: url(#m); }
+    </style>
+    <marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="90" class="title">LeetCode 338 — Counting Bits</text>
+  <text x="60" y="130" class="sub">DP transition: ans[i] = ans[i &amp; (i - 1)] + 1</text>
+
+  <rect x="80" y="200" width="310" height="120" class="box"/>
+  <text x="110" y="250" class="txt">i = 13 (1101₂)</text>
+  <text x="110" y="290" class="txt">ans[13] = ?</text>
+
+  <line x1="390" y1="260" x2="560" y2="260" class="arrow"/>
+
+  <rect x="560" y="200" width="360" height="120" class="box"/>
+  <text x="590" y="250" class="txt">i &amp; (i-1) = 12 (1100₂)</text>
+  <text x="590" y="290" class="txt">ans[13] = ans[12] + 1</text>
+
+  <rect x="80" y="390" width="1040" height="150" class="box"/>
+  <text x="110" y="450" class="txt">Build from 1..n, each state references a smaller solved state.</text>
+  <text x="110" y="500" class="txt">Time O(n), Space O(n), simple and interview-friendly.</text>
+</svg>
