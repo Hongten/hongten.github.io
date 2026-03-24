@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 158 read4 persistent buffer diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1020"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .title{font:700 44px 'Segoe UI',Arial,sans-serif;fill:#e2e8f0}
+      .sub{font:500 24px 'Segoe UI',Arial,sans-serif;fill:#93c5fd}
+      .label{font:600 22px 'Segoe UI',Arial,sans-serif;fill:#f8fafc}
+      .small{font:500 18px 'Segoe UI',Arial,sans-serif;fill:#cbd5e1}
+      .box{fill:#111827;stroke:#60a5fa;stroke-width:2.2;rx:14}
+      .slot{fill:#1f2937;stroke:#94a3b8;stroke-width:1.4;rx:8}
+      .arrow{stroke:#f59e0b;stroke-width:3;fill:none;marker-end:url(#m)}
+    </style>
+    <marker id="m" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#f59e0b"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="82" class="title">LeetCode 158 · read4 II (Call Multiple Times)</text>
+  <text x="60" y="118" class="sub">Keep unread chars in persistent buffer across read() calls</text>
+
+  <rect x="70" y="180" width="460" height="320" class="box"/>
+  <text x="95" y="220" class="label">File stream + read4(tmp)</text>
+  <text x="95" y="252" class="small">Each read4 fetches up to 4 chars</text>
+  <rect x="95" y="280" width="95" height="62" class="slot"/><text x="126" y="320" class="label">a</text>
+  <rect x="205" y="280" width="95" height="62" class="slot"/><text x="236" y="320" class="label">b</text>
+  <rect x="315" y="280" width="95" height="62" class="slot"/><text x="346" y="320" class="label">c</text>
+  <rect x="425" y="280" width="95" height="62" class="slot"/><text x="456" y="320" class="label">d</text>
+  <text x="95" y="385" class="small">If caller needs only 2 chars, keep the rest.</text>
+  <text x="95" y="415" class="small">Never lose over-fetched chars between calls.</text>
+
+  <rect x="660" y="180" width="470" height="320" class="box"/>
+  <text x="685" y="220" class="label">Persistent internal state</text>
+  <text x="685" y="252" class="small">buf4[4], ptr, cnt stored in object fields</text>
+  <rect x="685" y="280" width="95" height="62" class="slot"/><text x="716" y="320" class="label">c</text>
+  <rect x="795" y="280" width="95" height="62" class="slot"/><text x="826" y="320" class="label">d</text>
+  <rect x="905" y="280" width="95" height="62" class="slot"/><text x="936" y="320" class="label">·</text>
+  <rect x="1015" y="280" width="95" height="62" class="slot"/><text x="1046" y="320" class="label">·</text>
+  <text x="685" y="385" class="small">ptr = 0, cnt = 2 after previous call</text>
+  <text x="685" y="415" class="small">next read() consumes cache first, then read4()</text>
+
+  <path d="M530 312 C580 312, 610 312, 650 312" class="arrow"/>
+  <text x="545" y="292" class="small">carry-over</text>
+</svg>
