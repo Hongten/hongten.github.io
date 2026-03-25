@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 409: Longest Palindrome (Character Frequency Parity)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 409 with odd/even frequency parity insight and full 5-language code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 409: Longest Palindrome (Character Frequency Parity)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with frequency-counting intuition, complexity, pitfalls, and full code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-409-longest-palindrome.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-409-longest-palindrome.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 409: Longest Palindrome (Character Frequency Parity)</h1>
+      <div class="meta">2026-03-25 · LeetCode · Hash Table / String</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 409</span><span class="tag">Hash Table</span><span class="tag">String</span><span class="tag">Interview</span>
+
+      <p>Today we solve <strong>LeetCode 409 - Longest Palindrome</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/longest-palindrome/" target="_blank" rel="noopener">https://leetcode.com/problems/longest-palindrome/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-409-20260325.svg" alt="LeetCode 409 odd/even character count composition for longest palindrome" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a string <code>s</code> containing uppercase/lowercase letters, return the length of the longest palindrome that can be built using its characters.</p>
+
+      <h3>Key Insight</h3>
+      <p>For each character count <code>c</code>, we can always use the largest even part: <code>c / 2 * 2</code>. If at least one character has an odd count, we can place exactly one odd character in the center, adding <code>+1</code>.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>Trying all permutations/combinations is infeasible. The palindrome structure only depends on frequency parity, so counting is sufficient.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Count each character frequency.<br/>
+         2) Accumulate <code>ans += (count / 2) * 2</code> for every character.<br/>
+         3) If <code>ans &lt; s.length()</code>, there exists an odd count, so return <code>ans + 1</code>; otherwise return <code>ans</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(1)</code> for fixed alphabet (or <code>O(k)</code> for general charset).</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting the center <code>+1</code> when odd counts exist.<br/>
+         - Treating uppercase and lowercase as the same character (they are different).<br/>
+         - Adding all odd counts directly instead of only one center character.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int longestPalindrome(String s) {
+        int[] freq = new int[128];
+        for (int i = 0; i < s.length(); i++) {
+            freq[s.charAt(i)]++;
+        }
+
+        int ans = 0;
+        for (int c : freq) {
+            ans += (c / 2) * 2;
+        }
+        if (ans < s.length()) ans++;
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func longestPalindrome(s string) int {
+    freq := make([]int, 128)
+    for i := 0; i < len(s); i++ {
+        freq[s[i]]++
+    }
+
+    ans := 0
+    for _, c := range freq {
+        ans += (c / 2) * 2
+    }
+    if ans < len(s) {
+        ans++
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int longestPalindrome(string s) {
+        vector<int> freq(128, 0);
+        for (char ch : s) {
+            freq[(int)ch]++;
+        }
+
+        int ans = 0;
+        for (int c : freq) {
+            ans += (c / 2) * 2;
+        }
+        if (ans < (int)s.size()) ans++;
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def longestPalindrome(self, s: str) -> int:
+        freq = [0] * 128
+        for ch in s:
+            freq[ord(ch)] += 1
+
+        ans = 0
+        for c in freq:
+            ans += (c // 2) * 2
+
+        if ans < len(s):
+            ans += 1
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var longestPalindrome = function(s) {
+  const freq = new Array(128).fill(0);
+  for (const ch of s) {
+    freq[ch.charCodeAt(0)]++;
+  }
+
+  let ans = 0;
+  for (const c of freq) {
+    ans += Math.floor(c / 2) * 2;
+  }
+  if (ans < s.length) ans++;
+  return ans;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定字符串 <code>s</code>（包含大小写字母），你可以重排字符。请返回能够构造出的最长回文串长度。</p>
+
+      <h3>核心思路</h3>
+      <p>每种字符出现次数为 <code>c</code> 时，回文两侧最多能用掉 <code>(c / 2) * 2</code> 个字符（偶数部分）。如果存在任意奇数次字符，还可以把其中一个字符放在回文中心，多加 <code>1</code>。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>枚举所有排列/组合几乎不可行。该题只与“每个字符频次的奇偶性”相关，因此统计频次即可。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）统计每个字符的出现次数。<br/>
+         2）对每个计数累加 <code>(count / 2) * 2</code>。<br/>
+         3）若 <code>ans &lt; s.length()</code>，说明存在奇数计数，可放一个中心字符，返回 <code>ans + 1</code>；否则返回 <code>ans</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：固定字符集下为 <code>O(1)</code>（一般字符集记作 <code>O(k)</code>）。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 有奇数计数时忘记给中心位加 <code>1</code>。<br/>
+         - 把大小写字符当成同一个字符处理（题目里是区分的）。<br/>
+         - 把所有奇数都加进去（实际上中心只能放 1 个字符）。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int longestPalindrome(String s) {
+        int[] freq = new int[128];
+        for (int i = 0; i < s.length(); i++) {
+            freq[s.charAt(i)]++;
+        }
+
+        int ans = 0;
+        for (int c : freq) {
+            ans += (c / 2) * 2;
+        }
+        if (ans < s.length()) ans++;
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func longestPalindrome(s string) int {
+    freq := make([]int, 128)
+    for i := 0; i < len(s); i++ {
+        freq[s[i]]++
+    }
+
+    ans := 0
+    for _, c := range freq {
+        ans += (c / 2) * 2
+    }
+    if ans < len(s) {
+        ans++
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int longestPalindrome(string s) {
+        vector<int> freq(128, 0);
+        for (char ch : s) {
+            freq[(int)ch]++;
+        }
+
+        int ans = 0;
+        for (int c : freq) {
+            ans += (c / 2) * 2;
+        }
+        if (ans < (int)s.size()) ans++;
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def longestPalindrome(self, s: str) -> int:
+        freq = [0] * 128
+        for ch in s:
+            freq[ord(ch)] += 1
+
+        ans = 0
+        for c in freq:
+            ans += (c // 2) * 2
+
+        if ans < len(s):
+            ans += 1
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var longestPalindrome = function(s) {
+  const freq = new Array(128).fill(0);
+  for (const ch of s) {
+    freq[ch.charCodeAt(0)]++;
+  }
+
+  let ans = 0;
+  for (const c of freq) {
+    ans += Math.floor(c / 2) * 2;
+  }
+  if (ans < s.length) ans++;
+  return ans;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
