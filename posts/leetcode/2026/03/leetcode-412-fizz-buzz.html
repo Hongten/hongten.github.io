@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 412: Fizz Buzz (Modulus Rules Simulation)</title>
+  <meta name="description" content="Bilingual interview-grade tutorial for LeetCode 412 with clean modulus-rule simulation and full multi-language code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 412: Fizz Buzz (Modulus Rules Simulation)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with rule-order reasoning and full 5-language implementations." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-412-fizz-buzz.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-412-fizz-buzz.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 412: Fizz Buzz (Modulus Rules Simulation)</h1>
+      <div class="meta">2026-03-26 · LeetCode · Math / Simulation / String</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 412</span><span class="tag">Math</span><span class="tag">Simulation</span>
+
+      <p>Today we solve <strong>LeetCode 412 - Fizz Buzz</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/fizz-buzz/" target="_blank" rel="noopener">https://leetcode.com/problems/fizz-buzz/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-412-20260326.svg" alt="LeetCode 412 fizz buzz divisibility rule flow diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given an integer <code>n</code>, return a string array from <code>1</code> to <code>n</code> where each position follows rules: multiples of 3 become <code>Fizz</code>, multiples of 5 become <code>Buzz</code>, and multiples of both become <code>FizzBuzz</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>The only subtle part is rule priority: check divisibility by both 3 and 5 first (i.e., 15), otherwise values like 15 would be incorrectly mapped to only <code>Fizz</code> or <code>Buzz</code>.</p>
+
+      <h3>Algorithm</h3>
+      <p>1) Create an output list.<br/>
+         2) For each integer <code>i</code> from <code>1</code> to <code>n</code>:<br/>
+         &nbsp;&nbsp;- if <code>i % 15 == 0</code>, append <code>"FizzBuzz"</code><br/>
+         &nbsp;&nbsp;- else if <code>i % 3 == 0</code>, append <code>"Fizz"</code><br/>
+         &nbsp;&nbsp;- else if <code>i % 5 == 0</code>, append <code>"Buzz"</code><br/>
+         &nbsp;&nbsp;- else append <code>String.valueOf(i)</code> (or equivalent).<br/>
+         3) Return the list.</p>
+
+      <h3>Complexity</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(n)</code> (for output).</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public List&lt;String&gt; fizzBuzz(int n) {
+        List&lt;String&gt; ans = new ArrayList&lt;&gt;();
+        for (int i = 1; i &lt;= n; i++) {
+            if (i % 15 == 0) {
+                ans.add("FizzBuzz");
+            } else if (i % 3 == 0) {
+                ans.add("Fizz");
+            } else if (i % 5 == 0) {
+                ans.add("Buzz");
+            } else {
+                ans.add(String.valueOf(i));
+            }
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func fizzBuzz(n int) []string {
+    ans := make([]string, 0, n)
+    for i := 1; i &lt;= n; i++ {
+        if i%15 == 0 {
+            ans = append(ans, "FizzBuzz")
+        } else if i%3 == 0 {
+            ans = append(ans, "Fizz")
+        } else if i%5 == 0 {
+            ans = append(ans, "Buzz")
+        } else {
+            ans = append(ans, strconv.Itoa(i))
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;string&gt; fizzBuzz(int n) {
+        vector&lt;string&gt; ans;
+        ans.reserve(n);
+        for (int i = 1; i &lt;= n; i++) {
+            if (i % 15 == 0) {
+                ans.push_back("FizzBuzz");
+            } else if (i % 3 == 0) {
+                ans.push_back("Fizz");
+            } else if (i % 5 == 0) {
+                ans.push_back("Buzz");
+            } else {
+                ans.push_back(to_string(i));
+            }
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def fizzBuzz(self, n: int) -&gt; list[str]:
+        ans = []
+        for i in range(1, n + 1):
+            if i % 15 == 0:
+                ans.append("FizzBuzz")
+            elif i % 3 == 0:
+                ans.append("Fizz")
+            elif i % 5 == 0:
+                ans.append("Buzz")
+            else:
+                ans.append(str(i))
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {number} n
+ * @return {string[]}
+ */
+var fizzBuzz = function(n) {
+  const ans = [];
+  for (let i = 1; i &lt;= n; i++) {
+    if (i % 15 === 0) {
+      ans.push("FizzBuzz");
+    } else if (i % 3 === 0) {
+      ans.push("Fizz");
+    } else if (i % 5 === 0) {
+      ans.push("Buzz");
+    } else {
+      ans.push(String(i));
+    }
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定整数 <code>n</code>，返回从 <code>1</code> 到 <code>n</code> 的字符串数组：3 的倍数写 <code>Fizz</code>，5 的倍数写 <code>Buzz</code>，同时是 3 和 5 的倍数写 <code>FizzBuzz</code>。</p>
+
+      <h3>核心思路</h3>
+      <p>关键在规则顺序：必须先判断 <code>15</code> 的倍数，再判断 <code>3</code> 或 <code>5</code>，否则 15 会被提前匹配成 <code>Fizz</code> 或 <code>Buzz</code>。</p>
+
+      <h3>算法步骤</h3>
+      <p>1）初始化结果数组。<br/>
+         2）遍历 <code>i = 1..n</code>：<br/>
+         &nbsp;&nbsp;- 若 <code>i % 15 == 0</code>，加入 <code>"FizzBuzz"</code>；<br/>
+         &nbsp;&nbsp;- 否则若 <code>i % 3 == 0</code>，加入 <code>"Fizz"</code>；<br/>
+         &nbsp;&nbsp;- 否则若 <code>i % 5 == 0</code>，加入 <code>"Buzz"</code>；<br/>
+         &nbsp;&nbsp;- 否则加入数字字符串。<br/>
+         3）返回结果。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(n)</code>（结果数组）。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public List&lt;String&gt; fizzBuzz(int n) {
+        List&lt;String&gt; ans = new ArrayList&lt;&gt;();
+        for (int i = 1; i &lt;= n; i++) {
+            if (i % 15 == 0) {
+                ans.add("FizzBuzz");
+            } else if (i % 3 == 0) {
+                ans.add("Fizz");
+            } else if (i % 5 == 0) {
+                ans.add("Buzz");
+            } else {
+                ans.add(String.valueOf(i));
+            }
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func fizzBuzz(n int) []string {
+    ans := make([]string, 0, n)
+    for i := 1; i &lt;= n; i++ {
+        if i%15 == 0 {
+            ans = append(ans, "FizzBuzz")
+        } else if i%3 == 0 {
+            ans = append(ans, "Fizz")
+        } else if i%5 == 0 {
+            ans = append(ans, "Buzz")
+        } else {
+            ans = append(ans, strconv.Itoa(i))
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;string&gt; fizzBuzz(int n) {
+        vector&lt;string&gt; ans;
+        ans.reserve(n);
+        for (int i = 1; i &lt;= n; i++) {
+            if (i % 15 == 0) {
+                ans.push_back("FizzBuzz");
+            } else if (i % 3 == 0) {
+                ans.push_back("Fizz");
+            } else if (i % 5 == 0) {
+                ans.push_back("Buzz");
+            } else {
+                ans.push_back(to_string(i));
+            }
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def fizzBuzz(self, n: int) -&gt; list[str]:
+        ans = []
+        for i in range(1, n + 1):
+            if i % 15 == 0:
+                ans.append("FizzBuzz")
+            elif i % 3 == 0:
+                ans.append("Fizz")
+            elif i % 5 == 0:
+                ans.append("Buzz")
+            else:
+                ans.append(str(i))
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {number} n
+ * @return {string[]}
+ */
+var fizzBuzz = function(n) {
+  const ans = [];
+  for (let i = 1; i &lt;= n; i++) {
+    if (i % 15 === 0) {
+      ans.push("FizzBuzz");
+    } else if (i % 3 === 0) {
+      ans.push("Fizz");
+    } else if (i % 5 === 0) {
+      ans.push("Buzz");
+    } else {
+      ans.push(String(i));
+    }
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
