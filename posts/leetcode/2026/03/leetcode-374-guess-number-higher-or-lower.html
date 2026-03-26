@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 374: Guess Number Higher or Lower (Binary Search on Feedback API)</title>
+  <meta name="description" content="Bilingual interview-grade tutorial for LeetCode 374 using binary search over feedback API with full multi-language code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 374: Guess Number Higher or Lower (Binary Search on Feedback API)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with binary search invariants, API feedback interpretation, and full 5-language implementations." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-374-guess-number-higher-or-lower.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-374-guess-number-higher-or-lower.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 374: Guess Number Higher or Lower (Binary Search on Feedback API)</h1>
+      <div class="meta">2026-03-26 · LeetCode · Binary Search / Interactive API</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 374</span><span class="tag">Binary Search</span><span class="tag">Interactive</span>
+
+      <p>Today we solve <strong>LeetCode 374 - Guess Number Higher or Lower</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/guess-number-higher-or-lower/" target="_blank" rel="noopener">https://leetcode.com/problems/guess-number-higher-or-lower/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-374-20260326.svg" alt="LeetCode 374 binary search decision flow from guess feedback" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>You must guess a hidden number in the range <code>[1, n]</code>. The provided API <code>guess(num)</code> returns:</p>
+      <p><code>-1</code> if your guess is higher than the picked number, <code>1</code> if lower, and <code>0</code> if correct.</p>
+
+      <h3>Key Insight</h3>
+      <p>The API feedback gives an ordered direction, so each guess can eliminate half of the remaining range. This is exactly binary search.</p>
+
+      <h3>Algorithm</h3>
+      <p>1) Initialize search boundaries <code>left = 1</code>, <code>right = n</code>.<br/>
+         2) Compute middle <code>mid = left + (right - left) / 2</code>.<br/>
+         3) Query <code>guess(mid)</code>:
+         if <code>0</code>, return <code>mid</code>;
+         if <code>-1</code>, move <code>right = mid - 1</code>;
+         if <code>1</code>, move <code>left = mid + 1</code>.<br/>
+         4) Continue until found.</p>
+
+      <h3>Complexity</h3>
+      <p>Time: <code>O(log n)</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">public class Solution extends GuessGame {
+    public int guessNumber(int n) {
+        int left = 1, right = n;
+        while (left &lt;= right) {
+            int mid = left + (right - left) / 2;
+            int g = guess(mid);
+            if (g == 0) return mid;
+            if (g &lt; 0) right = mid - 1;
+            else left = mid + 1;
+        }
+        return -1;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">/**
+ * Forward declaration of guess API.
+ * @param  num   your guess
+ * @return       -1 if num is higher than pick
+ *                1 if num is lower than pick
+ *                otherwise return 0
+ * func guess(num int) int;
+ */
+func guessNumber(n int) int {
+    left, right := 1, n
+    for left &lt;= right {
+        mid := left + (right-left)/2
+        g := guess(mid)
+        if g == 0 {
+            return mid
+        }
+        if g &lt; 0 {
+            right = mid - 1
+        } else {
+            left = mid + 1
+        }
+    }
+    return -1
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">// Forward declaration of guess API.
+// int guess(int num);
+class Solution {
+public:
+    int guessNumber(int n) {
+        int left = 1, right = n;
+        while (left &lt;= right) {
+            int mid = left + (right - left) / 2;
+            int g = guess(mid);
+            if (g == 0) return mid;
+            if (g &lt; 0) right = mid - 1;
+            else left = mid + 1;
+        }
+        return -1;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python"># The guess API is already defined for you.
+# @param num, your guess
+# @return -1 if num is higher than the picked number
+#          1 if num is lower than the picked number
+#          otherwise return 0
+# def guess(num: int) -&gt; int:
+
+class Solution:
+    def guessNumber(self, n: int) -&gt; int:
+        left, right = 1, n
+        while left &lt;= right:
+            mid = left + (right - left) // 2
+            g = guess(mid)
+            if g == 0:
+                return mid
+            if g &lt; 0:
+                right = mid - 1
+            else:
+                left = mid + 1
+        return -1</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * Forward declaration of guess API.
+ * @param {number} num   your guess
+ * @return {-1|0|1}      -1 if num is higher than pick
+ *                        1 if num is lower than pick
+ *                        otherwise return 0
+ * var guess = function(num) {}
+ */
+var guessNumber = function(n) {
+  let left = 1, right = n;
+  while (left &lt;= right) {
+    const mid = left + Math.floor((right - left) / 2);
+    const g = guess(mid);
+    if (g === 0) return mid;
+    if (g &lt; 0) right = mid - 1;
+    else left = mid + 1;
+  }
+  return -1;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>在 <code>[1, n]</code> 中有一个被选中的数字。你调用 <code>guess(num)</code> 接口来猜：</p>
+      <p><code>-1</code> 表示你猜大了，<code>1</code> 表示你猜小了，<code>0</code> 表示猜中，返回被选中的数字。</p>
+
+      <h3>核心思路</h3>
+      <p>接口反馈具有“大小方向”信息，因此每次猜测都能排除一半区间，天然适配二分查找。</p>
+
+      <h3>算法步骤</h3>
+      <p>1）初始化边界 <code>left = 1</code>、<code>right = n</code>。<br/>
+         2）取中点 <code>mid = left + (right - left) / 2</code>。<br/>
+         3）调用 <code>guess(mid)</code>：
+         若为 <code>0</code> 直接返回；
+         若为 <code>-1</code> 说明猜大，令 <code>right = mid - 1</code>；
+         若为 <code>1</code> 说明猜小，令 <code>left = mid + 1</code>。<br/>
+         4）循环直到找到答案。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(log n)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">public class Solution extends GuessGame {
+    public int guessNumber(int n) {
+        int left = 1, right = n;
+        while (left &lt;= right) {
+            int mid = left + (right - left) / 2;
+            int g = guess(mid);
+            if (g == 0) return mid;
+            if (g &lt; 0) right = mid - 1;
+            else left = mid + 1;
+        }
+        return -1;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">/**
+ * Forward declaration of guess API.
+ * @param  num   your guess
+ * @return       -1 if num is higher than pick
+ *                1 if num is lower than pick
+ *                otherwise return 0
+ * func guess(num int) int;
+ */
+func guessNumber(n int) int {
+    left, right := 1, n
+    for left &lt;= right {
+        mid := left + (right-left)/2
+        g := guess(mid)
+        if g == 0 {
+            return mid
+        }
+        if g &lt; 0 {
+            right = mid - 1
+        } else {
+            left = mid + 1
+        }
+    }
+    return -1
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">// Forward declaration of guess API.
+// int guess(int num);
+class Solution {
+public:
+    int guessNumber(int n) {
+        int left = 1, right = n;
+        while (left &lt;= right) {
+            int mid = left + (right - left) / 2;
+            int g = guess(mid);
+            if (g == 0) return mid;
+            if (g &lt; 0) right = mid - 1;
+            else left = mid + 1;
+        }
+        return -1;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python"># The guess API is already defined for you.
+# @param num, your guess
+# @return -1 if num is higher than the picked number
+#          1 if num is lower than the picked number
+#          otherwise return 0
+# def guess(num: int) -&gt; int:
+
+class Solution:
+    def guessNumber(self, n: int) -&gt; int:
+        left, right = 1, n
+        while left &lt;= right:
+            mid = left + (right - left) // 2
+            g = guess(mid)
+            if g == 0:
+                return mid
+            if g &lt; 0:
+                right = mid - 1
+            else:
+                left = mid + 1
+        return -1</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * Forward declaration of guess API.
+ * @param {number} num   your guess
+ * @return {-1|0|1}      -1 if num is higher than pick
+ *                        1 if num is lower than pick
+ *                        otherwise return 0
+ * var guess = function(num) {}
+ */
+var guessNumber = function(n) {
+  let left = 1, right = n;
+  while (left &lt;= right) {
+    const mid = left + Math.floor((right - left) / 2);
+    const g = guess(mid);
+    if (g === 0) return mid;
+    if (g &lt; 0) right = mid - 1;
+    else left = mid + 1;
+  }
+  return -1;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
