@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 905: Sort Array By Parity (Two-Pointer In-Place Partition)</title>
+  <meta name="description" content="Bilingual interview-grade walkthrough of LeetCode 905 with in-place two-pointer partition invariant, pitfalls, and implementations in Java, Go, C++, Python, and JavaScript."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 905: Sort Array By Parity (Two-Pointer In-Place Partition)" />
+  <meta property="og:description" content="Detailed bilingual guide with invariant, algorithm steps, complexity, pitfalls, and full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-905-sort-array-by-parity.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-905-sort-array-by-parity.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 905: Sort Array By Parity (Two-Pointer In-Place Partition)</h1>
+      <div class="meta">2026-03-27 · LeetCode · Two Pointers / Array</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 905</span><span class="tag">Two Pointers</span><span class="tag">Array</span>
+
+      <p>Today we solve <strong>LeetCode 905 - Sort Array By Parity</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/sort-array-by-parity/" target="_blank" rel="noopener">https://leetcode.com/problems/sort-array-by-parity/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-905-20260327.svg" alt="LeetCode 905 two-pointer parity partition diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given an integer array <code>nums</code>, move all even integers to the front and all odd integers to the back, and return any valid reordered array.</p>
+
+      <h3>Key Insight</h3>
+      <p>This is a classic in-place partition problem. Maintain two pointers: left seeks misplaced odd values, right seeks misplaced even values. When both are found, swap and continue shrinking the window.</p>
+
+      <h3>Brute Force and Why Insufficient</h3>
+      <p>A straightforward method is creating a new array: append evens first, then odds. It is simple but uses extra <code>O(n)</code> space. The in-place two-pointer approach achieves <code>O(1)</code> extra space.</p>
+
+      <h3>Optimal Algorithm (Step-by-Step)</h3>
+      <p>1) Set <code>l = 0</code>, <code>r = n - 1</code>.<br/>
+         2) Move <code>l</code> right while <code>nums[l]</code> is even.<br/>
+         3) Move <code>r</code> left while <code>nums[r]</code> is odd.<br/>
+         4) If <code>l &lt; r</code>, swap <code>nums[l]</code> and <code>nums[r]</code>, then move both pointers.<br/>
+         5) Stop when <code>l &gt;= r</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(1)</code> extra space.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting to move both pointers after swap, causing infinite loops.<br/>
+         - Using strict parity checks incorrectly (remember <code>x % 2 == 0</code> means even).<br/>
+         - Over-constraining output order; the problem allows any arrangement with evens before odds.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int[] sortArrayByParity(int[] nums) {
+        int l = 0, r = nums.length - 1;
+
+        while (l &lt; r) {
+            while (l &lt; r &amp;&amp; nums[l] % 2 == 0) l++;
+            while (l &lt; r &amp;&amp; nums[r] % 2 != 0) r--;
+
+            if (l &lt; r) {
+                int tmp = nums[l];
+                nums[l] = nums[r];
+                nums[r] = tmp;
+                l++;
+                r--;
+            }
+        }
+
+        return nums;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func sortArrayByParity(nums []int) []int {
+    l, r := 0, len(nums)-1
+
+    for l &lt; r {
+        for l &lt; r &amp;&amp; nums[l]%2 == 0 {
+            l++
+        }
+        for l &lt; r &amp;&amp; nums[r]%2 != 0 {
+            r--
+        }
+
+        if l &lt; r {
+            nums[l], nums[r] = nums[r], nums[l]
+            l++
+            r--
+        }
+    }
+
+    return nums
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; sortArrayByParity(vector&lt;int&gt;&amp; nums) {
+        int l = 0, r = static_cast&lt;int&gt;(nums.size()) - 1;
+
+        while (l &lt; r) {
+            while (l &lt; r &amp;&amp; nums[l] % 2 == 0) l++;
+            while (l &lt; r &amp;&amp; nums[r] % 2 != 0) r--;
+
+            if (l &lt; r) {
+                swap(nums[l], nums[r]);
+                l++;
+                r--;
+            }
+        }
+
+        return nums;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def sortArrayByParity(self, nums: list[int]) -&gt; list[int]:
+        l, r = 0, len(nums) - 1
+
+        while l &lt; r:
+            while l &lt; r and nums[l] % 2 == 0:
+                l += 1
+            while l &lt; r and nums[r] % 2 != 0:
+                r -= 1
+
+            if l &lt; r:
+                nums[l], nums[r] = nums[r], nums[l]
+                l += 1
+                r -= 1
+
+        return nums</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var sortArrayByParity = function(nums) {
+  let l = 0, r = nums.length - 1;
+
+  while (l &lt; r) {
+    while (l &lt; r &amp;&amp; nums[l] % 2 === 0) l++;
+    while (l &lt; r &amp;&amp; nums[r] % 2 !== 0) r--;
+
+    if (l &lt; r) {
+      [nums[l], nums[r]] = [nums[r], nums[l]];
+      l++;
+      r--;
+    }
+  }
+
+  return nums;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给你一个整数数组 <code>nums</code>，将所有偶数放到前面，所有奇数放到后面，返回任意满足条件的数组即可。</p>
+
+      <h3>核心思路</h3>
+      <p>这是典型的“原地分区”问题。双指针从两端向中间收缩：左指针找放错位置的奇数，右指针找放错位置的偶数，找到后交换。</p>
+
+      <h3>朴素解法与不足</h3>
+      <p>朴素方法是开新数组，先收集偶数再收集奇数。虽然直观，但额外空间是 <code>O(n)</code>。双指针可在原地完成，额外空间仅 <code>O(1)</code>。</p>
+
+      <h3>最优算法（步骤）</h3>
+      <p>1）初始化 <code>l = 0</code>，<code>r = n - 1</code>。<br/>
+         2）当 <code>nums[l]</code> 为偶数时，<code>l</code> 持续右移。<br/>
+         3）当 <code>nums[r]</code> 为奇数时，<code>r</code> 持续左移。<br/>
+         4）若 <code>l &lt; r</code>，交换两者并继续收缩。<br/>
+         5）当 <code>l &gt;= r</code> 时结束。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>（额外空间）。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 交换后忘记移动指针，导致死循环。<br/>
+         - 奇偶判断写错（偶数条件是 <code>x % 2 == 0</code>）。<br/>
+         - 误以为必须保持原相对顺序；本题不要求稳定分区。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int[] sortArrayByParity(int[] nums) {
+        int l = 0, r = nums.length - 1;
+
+        while (l &lt; r) {
+            while (l &lt; r &amp;&amp; nums[l] % 2 == 0) l++;
+            while (l &lt; r &amp;&amp; nums[r] % 2 != 0) r--;
+
+            if (l &lt; r) {
+                int tmp = nums[l];
+                nums[l] = nums[r];
+                nums[r] = tmp;
+                l++;
+                r--;
+            }
+        }
+
+        return nums;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func sortArrayByParity(nums []int) []int {
+    l, r := 0, len(nums)-1
+
+    for l &lt; r {
+        for l &lt; r &amp;&amp; nums[l]%2 == 0 {
+            l++
+        }
+        for l &lt; r &amp;&amp; nums[r]%2 != 0 {
+            r--
+        }
+
+        if l &lt; r {
+            nums[l], nums[r] = nums[r], nums[l]
+            l++
+            r--
+        }
+    }
+
+    return nums
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; sortArrayByParity(vector&lt;int&gt;&amp; nums) {
+        int l = 0, r = static_cast&lt;int&gt;(nums.size()) - 1;
+
+        while (l &lt; r) {
+            while (l &lt; r &amp;&amp; nums[l] % 2 == 0) l++;
+            while (l &lt; r &amp;&amp; nums[r] % 2 != 0) r--;
+
+            if (l &lt; r) {
+                swap(nums[l], nums[r]);
+                l++;
+                r--;
+            }
+        }
+
+        return nums;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def sortArrayByParity(self, nums: list[int]) -&gt; list[int]:
+        l, r = 0, len(nums) - 1
+
+        while l &lt; r:
+            while l &lt; r and nums[l] % 2 == 0:
+                l += 1
+            while l &lt; r and nums[r] % 2 != 0:
+                r -= 1
+
+            if l &lt; r:
+                nums[l], nums[r] = nums[r], nums[l]
+                l += 1
+                r -= 1
+
+        return nums</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var sortArrayByParity = function(nums) {
+  let l = 0, r = nums.length - 1;
+
+  while (l &lt; r) {
+    while (l &lt; r &amp;&amp; nums[l] % 2 === 0) l++;
+    while (l &lt; r &amp;&amp; nums[r] % 2 !== 0) r--;
+
+    if (l &lt; r) {
+      [nums[l], nums[r]] = [nums[r], nums[l]];
+      l++;
+      r--;
+    }
+  }
+
+  return nums;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
