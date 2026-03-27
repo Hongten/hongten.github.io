@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 744 binary search wrap-around diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .title{font:700 42px 'Segoe UI',Arial,sans-serif;fill:#e2e8f0}
+      .sub{font:500 24px 'Segoe UI',Arial,sans-serif;fill:#93c5fd}
+      .txt{font:500 22px 'Segoe UI',Arial,sans-serif;fill:#e5e7eb}
+      .small{font:500 18px 'Segoe UI',Arial,sans-serif;fill:#cbd5e1}
+      .cell{fill:#111827;stroke:#334155;stroke-width:2;rx:10}
+      .hl{fill:#1d4ed8;stroke:#60a5fa;stroke-width:3;rx:10}
+    </style>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="85" class="title">LeetCode 744 · First letter &gt; target</text>
+  <text x="60" y="125" class="sub">Binary Search Upper Bound + Wrap-Around</text>
+
+  <text x="60" y="190" class="txt">letters = [c, f, j], target = j</text>
+  <rect x="60" y="220" width="100" height="70" class="cell"/><text x="108" y="265" text-anchor="middle" class="txt">c</text>
+  <rect x="180" y="220" width="100" height="70" class="cell"/><text x="228" y="265" text-anchor="middle" class="txt">f</text>
+  <rect x="300" y="220" width="100" height="70" class="cell"/><text x="348" y="265" text-anchor="middle" class="txt">j</text>
+
+  <text x="60" y="340" class="txt">Search first index with letters[i] &gt; target</text>
+  <text x="60" y="378" class="txt">No index found ⇒ i = n ⇒ return letters[i % n] = letters[0] = 'c'</text>
+
+  <rect x="60" y="430" width="360" height="110" class="hl"/>
+  <text x="80" y="472" class="txt">Invariant (right-open):</text>
+  <text x="80" y="505" class="small">[0, l): ≤ target, [r, n): &gt; target</text>
+
+  <text x="720" y="260" class="txt">Case 2: target = d</text>
+  <text x="720" y="300" class="small">first greater is 'f' (index 1)</text>
+  <path d="M770 330 C840 355, 900 355, 970 330" stroke="#60a5fa" stroke-width="4" fill="none" marker-end="url(#arr)"/>
+  <defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#60a5fa"/></marker></defs>
+  <rect x="930" y="295" width="80" height="55" class="hl"/>
+  <text x="970" y="331" text-anchor="middle" class="txt">f</text>
+</svg>
