@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 735: Asteroid Collision (Stack Simulation of Right-Moving Survivors)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 735 with stack collision invariant, edge cases, and 5-language implementations."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 735: Asteroid Collision (Stack Simulation of Right-Moving Survivors)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with algorithm steps, complexity, pitfalls, and code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-735-asteroid-collision.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-735-asteroid-collision.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 735: Asteroid Collision (Stack Simulation of Right-Moving Survivors)</h1>
+      <div class="meta">2026-03-27 · LeetCode · Stack / Simulation</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 735</span><span class="tag">Stack</span><span class="tag">Simulation</span>
+
+      <p>Today we solve <strong>LeetCode 735 - Asteroid Collision</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/asteroid-collision/" target="_blank" rel="noopener">https://leetcode.com/problems/asteroid-collision/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-735-20260327.svg" alt="LeetCode 735 stack collision process diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Each asteroid has a size and direction (positive = right, negative = left). Asteroids moving in the same direction never meet. When a right-moving asteroid meets a left-moving one, the smaller explodes; equal sizes both explode. Return the final surviving sequence.</p>
+
+      <h3>Key Insight</h3>
+      <p>Potential collisions only happen when a new asteroid goes left (<code>&lt; 0</code>) and the current survivor tail goes right (<code>&gt; 0</code>). A stack naturally stores current survivors, and we resolve collisions against the top until the new asteroid is destroyed or safely appended.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Iterate asteroids one by one.<br/>
+         2) If current asteroid goes right, push directly.<br/>
+         3) If it goes left, while stack top is right-moving, compare absolute sizes and resolve collisions.<br/>
+         4) Push current asteroid only if it survives all collisions.<br/>
+         5) Convert stack to result array.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>, because each asteroid is pushed/popped at most once.<br/>Space: <code>O(n)</code> in the worst case.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting to keep colliding in a loop for one strong left-moving asteroid.<br/>
+         - Handling only one collision and immediately pushing.<br/>
+         - Wrong equal-size rule (both must explode).</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int[] asteroidCollision(int[] asteroids) {
+        Deque&lt;Integer&gt; stack = new ArrayDeque&lt;&gt;();
+
+        for (int a : asteroids) {
+            boolean alive = true;
+            while (alive &amp;&amp; a &lt; 0 &amp;&amp; !stack.isEmpty() &amp;&amp; stack.peekLast() &gt; 0) {
+                int top = stack.peekLast();
+                if (top &lt; -a) {
+                    stack.pollLast();
+                } else if (top == -a) {
+                    stack.pollLast();
+                    alive = false;
+                } else {
+                    alive = false;
+                }
+            }
+            if (alive) stack.offerLast(a);
+        }
+
+        int[] ans = new int[stack.size()];
+        int i = 0;
+        for (int v : stack) ans[i++] = v;
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func asteroidCollision(asteroids []int) []int {
+    stack := make([]int, 0)
+
+    for _, a := range asteroids {
+        alive := true
+        for alive &amp;&amp; a &lt; 0 &amp;&amp; len(stack) &gt; 0 &amp;&amp; stack[len(stack)-1] &gt; 0 {
+            top := stack[len(stack)-1]
+            if top &lt; -a {
+                stack = stack[:len(stack)-1]
+            } else if top == -a {
+                stack = stack[:len(stack)-1]
+                alive = false
+            } else {
+                alive = false
+            }
+        }
+        if alive {
+            stack = append(stack, a)
+        }
+    }
+
+    return stack
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; asteroidCollision(vector&lt;int&gt;&amp; asteroids) {
+        vector&lt;int&gt; st;
+
+        for (int a : asteroids) {
+            bool alive = true;
+            while (alive &amp;&amp; a &lt; 0 &amp;&amp; !st.empty() &amp;&amp; st.back() &gt; 0) {
+                int top = st.back();
+                if (top &lt; -a) {
+                    st.pop_back();
+                } else if (top == -a) {
+                    st.pop_back();
+                    alive = false;
+                } else {
+                    alive = false;
+                }
+            }
+            if (alive) st.push_back(a);
+        }
+
+        return st;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def asteroidCollision(self, asteroids: list[int]) -> list[int]:
+        stack = []
+
+        for a in asteroids:
+            alive = True
+            while alive and a &lt; 0 and stack and stack[-1] &gt; 0:
+                top = stack[-1]
+                if top &lt; -a:
+                    stack.pop()
+                elif top == -a:
+                    stack.pop()
+                    alive = False
+                else:
+                    alive = False
+            if alive:
+                stack.append(a)
+
+        return stack</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var asteroidCollision = function(asteroids) {
+  const stack = [];
+
+  for (const a of asteroids) {
+    let alive = true;
+    while (alive &amp;&amp; a &lt; 0 &amp;&amp; stack.length &amp;&amp; stack[stack.length - 1] &gt; 0) {
+      const top = stack[stack.length - 1];
+      if (top &lt; -a) {
+        stack.pop();
+      } else if (top === -a) {
+        stack.pop();
+        alive = false;
+      } else {
+        alive = false;
+      }
+    }
+    if (alive) stack.push(a);
+  }
+
+  return stack;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>每个小行星的绝对值是大小，正负号是方向（正向右，负向左）。同向不会相撞；当右行与左行相遇时，小的爆炸，相等则同归于尽。返回最终剩余序列。</p>
+
+      <h3>核心思路</h3>
+      <p>只有“栈顶向右 + 当前向左”才会发生碰撞，所以用栈维护当前幸存序列最自然。对一个向左的小行星，需要持续与栈顶比较，直到它被摧毁或成功存活。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）遍历输入数组。<br/>
+         2）当前值向右时直接入栈。<br/>
+         3）当前值向左时，只要栈顶向右就循环碰撞比较绝对值。<br/>
+         4）若当前值存活，入栈。<br/>
+         5）最后把栈转为答案数组。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>，每个元素最多入栈出栈一次。<br/>空间复杂度：<code>O(n)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 忘了用 <code>while</code> 连续处理多次碰撞。<br/>
+         - 只处理一次就把当前元素入栈，导致错误。<br/>
+         - 相等大小时没有同时移除两者。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int[] asteroidCollision(int[] asteroids) {
+        Deque&lt;Integer&gt; stack = new ArrayDeque&lt;&gt;();
+
+        for (int a : asteroids) {
+            boolean alive = true;
+            while (alive &amp;&amp; a &lt; 0 &amp;&amp; !stack.isEmpty() &amp;&amp; stack.peekLast() &gt; 0) {
+                int top = stack.peekLast();
+                if (top &lt; -a) {
+                    stack.pollLast();
+                } else if (top == -a) {
+                    stack.pollLast();
+                    alive = false;
+                } else {
+                    alive = false;
+                }
+            }
+            if (alive) stack.offerLast(a);
+        }
+
+        int[] ans = new int[stack.size()];
+        int i = 0;
+        for (int v : stack) ans[i++] = v;
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func asteroidCollision(asteroids []int) []int {
+    stack := make([]int, 0)
+
+    for _, a := range asteroids {
+        alive := true
+        for alive &amp;&amp; a &lt; 0 &amp;&amp; len(stack) &gt; 0 &amp;&amp; stack[len(stack)-1] &gt; 0 {
+            top := stack[len(stack)-1]
+            if top &lt; -a {
+                stack = stack[:len(stack)-1]
+            } else if top == -a {
+                stack = stack[:len(stack)-1]
+                alive = false
+            } else {
+                alive = false
+            }
+        }
+        if alive {
+            stack = append(stack, a)
+        }
+    }
+
+    return stack
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; asteroidCollision(vector&lt;int&gt;&amp; asteroids) {
+        vector&lt;int&gt; st;
+
+        for (int a : asteroids) {
+            bool alive = true;
+            while (alive &amp;&amp; a &lt; 0 &amp;&amp; !st.empty() &amp;&amp; st.back() &gt; 0) {
+                int top = st.back();
+                if (top &lt; -a) {
+                    st.pop_back();
+                } else if (top == -a) {
+                    st.pop_back();
+                    alive = false;
+                } else {
+                    alive = false;
+                }
+            }
+            if (alive) st.push_back(a);
+        }
+
+        return st;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def asteroidCollision(self, asteroids: list[int]) -> list[int]:
+        stack = []
+
+        for a in asteroids:
+            alive = True
+            while alive and a &lt; 0 and stack and stack[-1] &gt; 0:
+                top = stack[-1]
+                if top &lt; -a:
+                    stack.pop()
+                elif top == -a:
+                    stack.pop()
+                    alive = False
+                else:
+                    alive = False
+            if alive:
+                stack.append(a)
+
+        return stack</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var asteroidCollision = function(asteroids) {
+  const stack = [];
+
+  for (const a of asteroids) {
+    let alive = true;
+    while (alive &amp;&amp; a &lt; 0 &amp;&amp; stack.length &amp;&amp; stack[stack.length - 1] &gt; 0) {
+      const top = stack[stack.length - 1];
+      if (top &lt; -a) {
+        stack.pop();
+      } else if (top === -a) {
+        stack.pop();
+        alive = false;
+      } else {
+        alive = false;
+      }
+    }
+    if (alive) stack.push(a);
+  }
+
+  return stack;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
