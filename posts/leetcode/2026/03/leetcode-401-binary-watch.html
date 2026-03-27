@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 401: Binary Watch (Bit Count Enumeration for Hour/Minute Split)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 401 with bit-count enumeration, pruning constraints, pitfalls, and 5-language implementations."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 401: Binary Watch (Bit Count Enumeration for Hour/Minute Split)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with algorithm steps, complexity, pitfalls, and full code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-401-binary-watch.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-401-binary-watch.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 401: Binary Watch (Bit Count Enumeration for Hour/Minute Split)</h1>
+      <div class="meta">2026-03-27 · LeetCode · Bit Manipulation / Enumeration</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 401</span><span class="tag">Bit Manipulation</span><span class="tag">Enumeration</span><span class="tag">Time Formatting</span>
+
+      <p>Today we solve <strong>LeetCode 401 - Binary Watch</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/binary-watch/" target="_blank" rel="noopener">https://leetcode.com/problems/binary-watch/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-401-20260327.svg" alt="LeetCode 401 binary watch hour/minute bit split diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>A binary watch has 4 LEDs for hours (0-11) and 6 LEDs for minutes (0-59). Given <code>turnedOn</code>, return all possible times where exactly that many LEDs are on.</p>
+
+      <h3>Key Insight</h3>
+      <p>Brute-force over all legal hour/minute pairs is tiny: only <code>12 * 60 = 720</code> states. For each pair, keep it if <code>bitCount(hour) + bitCount(minute) == turnedOn</code>.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>Trying to directly generate LED combinations is possible but more error-prone because you still need to validate hour/minute ranges and format strings. Enumerating valid times first is simpler and interview-safe.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Initialize empty answer list.<br/>
+         2) For each <code>hour</code> in <code>[0, 11]</code> and <code>minute</code> in <code>[0, 59]</code>, compute set bits.<br/>
+         3) If total set bits equals <code>turnedOn</code>, format as <code>H:MM</code> (<code>minute</code> must be 2 digits).<br/>
+         4) Append to answer list and return it.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(12 * 60)</code>, effectively constant.<br/>Space: <code>O(k)</code> for output size.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting minute zero-padding (<code>3:07</code>, not <code>3:7</code>).<br/>
+         - Using hour range 0-15 instead of 0-11.<br/>
+         - Using minute range 0-63 instead of 0-59.<br/>
+         - Returning duplicates from combination-based generation.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public List&lt;String&gt; readBinaryWatch(int turnedOn) {
+        List&lt;String&gt; ans = new ArrayList&lt;&gt;();
+        for (int h = 0; h &lt; 12; h++) {
+            for (int m = 0; m &lt; 60; m++) {
+                if (Integer.bitCount(h) + Integer.bitCount(m) == turnedOn) {
+                    ans.add(h + ":" + (m &lt; 10 ? "0" : "") + m);
+                }
+            }
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func readBinaryWatch(turnedOn int) []string {
+    ans := make([]string, 0)
+    for h := 0; h &lt; 12; h++ {
+        for m := 0; m &lt; 60; m++ {
+            if bits.OnesCount(uint(h))+bits.OnesCount(uint(m)) == turnedOn {
+                ans = append(ans, fmt.Sprintf("%d:%02d", h, m))
+            }
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;string&gt; readBinaryWatch(int turnedOn) {
+        vector&lt;string&gt; ans;
+        for (int h = 0; h &lt; 12; ++h) {
+            for (int m = 0; m &lt; 60; ++m) {
+                if (__builtin_popcount(h) + __builtin_popcount(m) == turnedOn) {
+                    ans.push_back(to_string(h) + ":" + (m &lt; 10 ? "0" : "") + to_string(m));
+                }
+            }
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def readBinaryWatch(self, turnedOn: int) -&gt; List[str]:
+        ans = []
+        for h in range(12):
+            for m in range(60):
+                if h.bit_count() + m.bit_count() == turnedOn:
+                    ans.append(f"{h}:{m:02d}")
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var readBinaryWatch = function(turnedOn) {
+  const bitCount = (x) =&gt; x.toString(2).split('').filter(ch =&gt; ch === '1').length;
+  const ans = [];
+
+  for (let h = 0; h &lt; 12; h++) {
+    for (let m = 0; m &lt; 60; m++) {
+      if (bitCount(h) + bitCount(m) === turnedOn) {
+        ans.push(`${h}:${m.toString().padStart(2, '0')}`);
+      }
+    }
+  }
+
+  return ans;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>二进制手表用 4 个 LED 表示小时（0-11），6 个 LED 表示分钟（0-59）。给定 <code>turnedOn</code>，返回所有恰好点亮这么多 LED 的合法时间。</p>
+
+      <h3>核心思路</h3>
+      <p>直接枚举所有合法时间组合即可：总共只有 <code>12 * 60 = 720</code> 种。判断条件是 <code>bitCount(hour) + bitCount(minute) == turnedOn</code>。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>也可以从“选哪些 LED 亮”去组合生成，但实现会更绕，还要额外过滤非法小时/分钟并处理格式；面试中通常不如直接枚举合法时间直观。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）初始化答案数组。<br/>
+         2）枚举 <code>hour</code> 从 0 到 11、<code>minute</code> 从 0 到 59。<br/>
+         3）若两者二进制 1 的个数之和等于 <code>turnedOn</code>，按 <code>H:MM</code> 格式加入答案。<br/>
+         4）遍历结束后返回答案。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(12 * 60)</code>，常数级。<br/>空间复杂度：<code>O(k)</code>（答案列表大小）。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 分钟未补零（应为 <code>3:07</code>，不是 <code>3:7</code>）。<br/>
+         - 小时枚举写成 0-15。<br/>
+         - 分钟枚举写成 0-63。<br/>
+         - 组合生成时出现重复结果。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public List&lt;String&gt; readBinaryWatch(int turnedOn) {
+        List&lt;String&gt; ans = new ArrayList&lt;&gt;();
+        for (int h = 0; h &lt; 12; h++) {
+            for (int m = 0; m &lt; 60; m++) {
+                if (Integer.bitCount(h) + Integer.bitCount(m) == turnedOn) {
+                    ans.add(h + ":" + (m &lt; 10 ? "0" : "") + m);
+                }
+            }
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func readBinaryWatch(turnedOn int) []string {
+    ans := make([]string, 0)
+    for h := 0; h &lt; 12; h++ {
+        for m := 0; m &lt; 60; m++ {
+            if bits.OnesCount(uint(h))+bits.OnesCount(uint(m)) == turnedOn {
+                ans = append(ans, fmt.Sprintf("%d:%02d", h, m))
+            }
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;string&gt; readBinaryWatch(int turnedOn) {
+        vector&lt;string&gt; ans;
+        for (int h = 0; h &lt; 12; ++h) {
+            for (int m = 0; m &lt; 60; ++m) {
+                if (__builtin_popcount(h) + __builtin_popcount(m) == turnedOn) {
+                    ans.push_back(to_string(h) + ":" + (m &lt; 10 ? "0" : "") + to_string(m));
+                }
+            }
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def readBinaryWatch(self, turnedOn: int) -&gt; List[str]:
+        ans = []
+        for h in range(12):
+            for m in range(60):
+                if h.bit_count() + m.bit_count() == turnedOn:
+                    ans.append(f"{h}:{m:02d}")
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var readBinaryWatch = function(turnedOn) {
+  const bitCount = (x) =&gt; x.toString(2).split('').filter(ch =&gt; ch === '1').length;
+  const ans = [];
+
+  for (let h = 0; h &lt; 12; h++) {
+    for (let m = 0; m &lt; 60; m++) {
+      if (bitCount(h) + bitCount(m) === turnedOn) {
+        ans.push(`${h}:${m.toString().padStart(2, '0')}`);
+      }
+    }
+  }
+
+  return ans;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
