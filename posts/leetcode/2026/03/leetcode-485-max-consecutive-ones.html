@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 485: Max Consecutive Ones (Single Pass Streak Counter)</title>
+  <meta name="description" content="Bilingual interview-grade tutorial for LeetCode 485 with streak invariant, pitfalls, and full 5-language code tabs in both English and Chinese sections."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 485: Max Consecutive Ones (Single Pass Streak Counter)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with invariant reasoning, complexity, pitfalls, and code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-485-max-consecutive-ones.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-485-max-consecutive-ones.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 485: Max Consecutive Ones (Single Pass Streak Counter)</h1>
+      <div class="meta">2026-03-27 · LeetCode · Array / Simulation</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 485</span><span class="tag">Array</span><span class="tag">Simulation</span><span class="tag">Interview</span>
+
+      <p>Today we solve <strong>LeetCode 485 - Max Consecutive Ones</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/max-consecutive-ones/" target="_blank" rel="noopener">https://leetcode.com/problems/max-consecutive-ones/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-485-20260327.svg" alt="LeetCode 485 one-pass streak counter transitions on 0 and 1" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a binary array <code>nums</code>, return the maximum number of consecutive <code>1</code>s.</p>
+
+      <h3>Key Insight</h3>
+      <p>Maintain a running streak <code>cur</code> for the current consecutive ones segment, and a global best <code>best</code>. When you see <code>1</code>, grow the streak; when you see <code>0</code>, reset streak to zero.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>You could check every subarray and verify whether it contains only ones, but that is unnecessary and expensive. The answer can be derived online in one pass.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Initialize <code>cur = 0</code>, <code>best = 0</code>.<br/>
+         2) For each number <code>x</code> in <code>nums</code>:<br/>
+         &nbsp;&nbsp;- if <code>x == 1</code>, set <code>cur++</code> and update <code>best = max(best, cur)</code>.<br/>
+         &nbsp;&nbsp;- else set <code>cur = 0</code>.<br/>
+         3) Return <code>best</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting to update <code>best</code> after incrementing <code>cur</code>.<br/>
+         - Resetting on non-zero values in generalized variants (this problem is strictly binary).<br/>
+         - Off-by-one confusion when all elements are <code>1</code> or all are <code>0</code>.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int findMaxConsecutiveOnes(int[] nums) {
+        int cur = 0, best = 0;
+        for (int x : nums) {
+            if (x == 1) {
+                cur++;
+                best = Math.max(best, cur);
+            } else {
+                cur = 0;
+            }
+        }
+        return best;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func findMaxConsecutiveOnes(nums []int) int {
+    cur, best := 0, 0
+    for _, x := range nums {
+        if x == 1 {
+            cur++
+            if cur &gt; best {
+                best = cur
+            }
+        } else {
+            cur = 0
+        }
+    }
+    return best
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int findMaxConsecutiveOnes(vector&lt;int&gt;&amp; nums) {
+        int cur = 0, best = 0;
+        for (int x : nums) {
+            if (x == 1) {
+                ++cur;
+                best = max(best, cur);
+            } else {
+                cur = 0;
+            }
+        }
+        return best;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def findMaxConsecutiveOnes(self, nums: list[int]) -&gt; int:
+        cur = 0
+        best = 0
+        for x in nums:
+            if x == 1:
+                cur += 1
+                best = max(best, cur)
+            else:
+                cur = 0
+        return best</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var findMaxConsecutiveOnes = function(nums) {
+  let cur = 0, best = 0;
+  for (const x of nums) {
+    if (x === 1) {
+      cur += 1;
+      best = Math.max(best, cur);
+    } else {
+      cur = 0;
+    }
+  }
+  return best;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定一个二进制数组 <code>nums</code>，返回其中连续 <code>1</code> 的最大长度。</p>
+
+      <h3>核心思路</h3>
+      <p>用 <code>cur</code> 表示“当前连续 1 段长度”，用 <code>best</code> 记录全局最大值。遇到 <code>1</code> 就累加，遇到 <code>0</code> 就清零。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>可以枚举所有子数组判断是否全为 1，但复杂度高、信息重复。实际上答案可以在一次线性扫描中实时更新得到。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）初始化 <code>cur = 0</code>、<code>best = 0</code>。<br/>
+         2）遍历数组元素 <code>x</code>：<br/>
+         &nbsp;&nbsp;- 若 <code>x == 1</code>，执行 <code>cur++</code>，并更新 <code>best = max(best, cur)</code>。<br/>
+         &nbsp;&nbsp;- 否则执行 <code>cur = 0</code>。<br/>
+         3）返回 <code>best</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 递增 <code>cur</code> 后忘记更新 <code>best</code>。<br/>
+         - 把“非 1”处理写成了不严谨条件（本题输入严格是 0/1）。<br/>
+         - 在全 1 或全 0 边界样例上出现 off-by-one 错误。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int findMaxConsecutiveOnes(int[] nums) {
+        int cur = 0, best = 0;
+        for (int x : nums) {
+            if (x == 1) {
+                cur++;
+                best = Math.max(best, cur);
+            } else {
+                cur = 0;
+            }
+        }
+        return best;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func findMaxConsecutiveOnes(nums []int) int {
+    cur, best := 0, 0
+    for _, x := range nums {
+        if x == 1 {
+            cur++
+            if cur &gt; best {
+                best = cur
+            }
+        } else {
+            cur = 0
+        }
+    }
+    return best
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int findMaxConsecutiveOnes(vector&lt;int&gt;&amp; nums) {
+        int cur = 0, best = 0;
+        for (int x : nums) {
+            if (x == 1) {
+                ++cur;
+                best = max(best, cur);
+            } else {
+                cur = 0;
+            }
+        }
+        return best;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def findMaxConsecutiveOnes(self, nums: list[int]) -&gt; int:
+        cur = 0
+        best = 0
+        for x in nums:
+            if x == 1:
+                cur += 1
+                best = max(best, cur)
+            else:
+                cur = 0
+        return best</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var findMaxConsecutiveOnes = function(nums) {
+  let cur = 0, best = 0;
+  for (const x of nums) {
+    if (x === 1) {
+      cur += 1;
+      best = Math.max(best, cur);
+    } else {
+      cur = 0;
+    }
+  }
+  return best;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
