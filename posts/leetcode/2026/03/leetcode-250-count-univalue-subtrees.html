@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 250: Count Univalue Subtrees (Postorder DFS)</title>
+  <meta name="description" content="Interview-ready bilingual tutorial for LeetCode 250 Count Univalue Subtrees with postorder DFS state design, correctness details, and Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 250: Count Univalue Subtrees (Postorder DFS)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with postorder traversal, univalue validation rules, and 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-250-count-univalue-subtrees.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-250-count-univalue-subtrees.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 250: Count Univalue Subtrees (Postorder DFS)</h1>
+      <div class="meta">2026-03-30 · LeetCode · Binary Tree / DFS</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 250</span><span class="tag">Binary Tree</span><span class="tag">DFS</span>
+
+      <p>Today we solve <strong>LeetCode 250 - Count Univalue Subtrees</strong>. The key is to determine from children upward whether each subtree is univalue.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/count-univalue-subtrees/" target="_blank" rel="noopener">https://leetcode.com/problems/count-univalue-subtrees/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-250-20260330.svg" alt="LeetCode 250 postorder DFS checks if left and right subtrees share the same value with root" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a binary tree, return the number of <em>univalue subtrees</em>. A subtree is univalue if every node in that subtree has the same value.</p>
+
+      <h3>Key Insight</h3>
+      <p>Use postorder DFS. A node can be root of a univalue subtree only if both child subtrees are already univalue and every existing child has value equal to the current node.</p>
+
+      <h3>Optimal Algorithm (Postorder DFS)</h3>
+      <p>Traverse left and right first. Let DFS return whether subtree rooted at current node is univalue.<br/>
+         Conditions for current node to be univalue:<br/>
+         1) left subtree is univalue;<br/>
+         2) right subtree is univalue;<br/>
+         3) if left child exists, <code>left.val == node.val</code>;<br/>
+         4) if right child exists, <code>right.val == node.val</code>.<br/>
+         If all true, increment answer and return true; otherwise return false.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code> (visit each node once).<br/>Space: <code>O(h)</code> recursion stack, where <code>h</code> is tree height.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting that null child should be treated as valid for univalue check.<br/>
+         - Comparing child values before confirming child subtree itself is univalue.<br/>
+         - Counting a node before validating both sides.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    private int count = 0;
+
+    public int countUnivalSubtrees(TreeNode root) {
+        dfs(root);
+        return count;
+    }
+
+    private boolean dfs(TreeNode node) {
+        if (node == null) {
+            return true;
+        }
+
+        boolean leftUni = dfs(node.left);
+        boolean rightUni = dfs(node.right);
+
+        if (!leftUni || !rightUni) {
+            return false;
+        }
+        if (node.left != null &amp;&amp; node.left.val != node.val) {
+            return false;
+        }
+        if (node.right != null &amp;&amp; node.right.val != node.val) {
+            return false;
+        }
+
+        count++;
+        return true;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func countUnivalSubtrees(root *TreeNode) int {
+    count := 0
+
+    var dfs func(*TreeNode) bool
+    dfs = func(node *TreeNode) bool {
+        if node == nil {
+            return true
+        }
+
+        leftUni := dfs(node.Left)
+        rightUni := dfs(node.Right)
+
+        if !leftUni || !rightUni {
+            return false
+        }
+        if node.Left != nil &amp;&amp; node.Left.Val != node.Val {
+            return false
+        }
+        if node.Right != nil &amp;&amp; node.Right.Val != node.Val {
+            return false
+        }
+
+        count++
+        return true
+    }
+
+    dfs(root)
+    return count
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int count = 0;
+
+    int countUnivalSubtrees(TreeNode* root) {
+        dfs(root);
+        return count;
+    }
+
+    bool dfs(TreeNode* node) {
+        if (!node) return true;
+
+        bool leftUni = dfs(node-&gt;left);
+        bool rightUni = dfs(node-&gt;right);
+
+        if (!leftUni || !rightUni) return false;
+        if (node-&gt;left &amp;&amp; node-&gt;left-&gt;val != node-&gt;val) return false;
+        if (node-&gt;right &amp;&amp; node-&gt;right-&gt;val != node-&gt;val) return false;
+
+        count++;
+        return true;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def countUnivalSubtrees(self, root: Optional[TreeNode]) -&gt; int:
+        self.count = 0
+
+        def dfs(node: Optional[TreeNode]) -&gt; bool:
+            if not node:
+                return True
+
+            left_uni = dfs(node.left)
+            right_uni = dfs(node.right)
+
+            if not left_uni or not right_uni:
+                return False
+            if node.left and node.left.val != node.val:
+                return False
+            if node.right and node.right.val != node.val:
+                return False
+
+            self.count += 1
+            return True
+
+        dfs(root)
+        return self.count</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var countUnivalSubtrees = function(root) {
+  let count = 0;
+
+  const dfs = (node) =&gt; {
+    if (!node) return true;
+
+    const leftUni = dfs(node.left);
+    const rightUni = dfs(node.right);
+
+    if (!leftUni || !rightUni) return false;
+    if (node.left &amp;&amp; node.left.val !== node.val) return false;
+    if (node.right &amp;&amp; node.right.val !== node.val) return false;
+
+    count++;
+    return true;
+  };
+
+  dfs(root);
+  return count;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定一棵二叉树，返回其中“单值子树”的数量。单值子树指该子树内所有节点值都相同。</p>
+
+      <h3>核心思路</h3>
+      <p>使用后序 DFS。因为当前节点是否为单值子树，必须在左右子树判断完成后才能确定。</p>
+
+      <h3>最优算法（后序 DFS）</h3>
+      <p>递归先处理左右子树，让 DFS 返回“该子树是否单值”。<br/>
+         当前节点成为单值子树的条件：<br/>
+         1）左子树是单值；<br/>
+         2）右子树是单值；<br/>
+         3）若左孩子存在，则 <code>left.val == node.val</code>；<br/>
+         4）若右孩子存在，则 <code>right.val == node.val</code>。<br/>
+         条件全部满足则计数加一并返回 true，否则返回 false。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>（每个节点访问一次）。<br/>空间复杂度：<code>O(h)</code>（递归栈高度，<code>h</code> 为树高）。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 空孩子应视为“天然满足”单值条件，别误判。<br/>
+         - 先比较节点值、后判断子树是否单值，顺序写反会出错。<br/>
+         - 未完整校验左右两边就提前计数。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java-zh">Java</button>
+          <button class="tab-btn" data-tab="go-zh">Go</button>
+          <button class="tab-btn" data-tab="cpp-zh">C++</button>
+          <button class="tab-btn" data-tab="python-zh">Python</button>
+          <button class="tab-btn" data-tab="javascript-zh">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java-zh"><pre><code class="language-java">class Solution {
+    private int count = 0;
+
+    public int countUnivalSubtrees(TreeNode root) {
+        dfs(root);
+        return count;
+    }
+
+    private boolean dfs(TreeNode node) {
+        if (node == null) {
+            return true;
+        }
+
+        boolean leftUni = dfs(node.left);
+        boolean rightUni = dfs(node.right);
+
+        if (!leftUni || !rightUni) {
+            return false;
+        }
+        if (node.left != null &amp;&amp; node.left.val != node.val) {
+            return false;
+        }
+        if (node.right != null &amp;&amp; node.right.val != node.val) {
+            return false;
+        }
+
+        count++;
+        return true;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go-zh"><pre><code class="language-go">func countUnivalSubtrees(root *TreeNode) int {
+    count := 0
+
+    var dfs func(*TreeNode) bool
+    dfs = func(node *TreeNode) bool {
+        if node == nil {
+            return true
+        }
+
+        leftUni := dfs(node.Left)
+        rightUni := dfs(node.Right)
+
+        if !leftUni || !rightUni {
+            return false
+        }
+        if node.Left != nil &amp;&amp; node.Left.Val != node.Val {
+            return false
+        }
+        if node.Right != nil &amp;&amp; node.Right.Val != node.Val {
+            return false
+        }
+
+        count++
+        return true
+    }
+
+    dfs(root)
+    return count
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp-zh"><pre><code class="language-cpp">class Solution {
+public:
+    int count = 0;
+
+    int countUnivalSubtrees(TreeNode* root) {
+        dfs(root);
+        return count;
+    }
+
+    bool dfs(TreeNode* node) {
+        if (!node) return true;
+
+        bool leftUni = dfs(node-&gt;left);
+        bool rightUni = dfs(node-&gt;right);
+
+        if (!leftUni || !rightUni) return false;
+        if (node-&gt;left &amp;&amp; node-&gt;left-&gt;val != node-&gt;val) return false;
+        if (node-&gt;right &amp;&amp; node-&gt;right-&gt;val != node-&gt;val) return false;
+
+        count++;
+        return true;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python-zh"><pre><code class="language-python">class Solution:
+    def countUnivalSubtrees(self, root: Optional[TreeNode]) -&gt; int:
+        self.count = 0
+
+        def dfs(node: Optional[TreeNode]) -&gt; bool:
+            if not node:
+                return True
+
+            left_uni = dfs(node.left)
+            right_uni = dfs(node.right)
+
+            if not left_uni or not right_uni:
+                return False
+            if node.left and node.left.val != node.val:
+                return False
+            if node.right and node.right.val != node.val:
+                return False
+
+            self.count += 1
+            return True
+
+        dfs(root)
+        return self.count</code></pre></div>
+        <div class="tab-pane" data-tab="javascript-zh"><pre><code class="language-javascript">var countUnivalSubtrees = function(root) {
+  let count = 0;
+
+  const dfs = (node) =&gt; {
+    if (!node) return true;
+
+    const leftUni = dfs(node.left);
+    const rightUni = dfs(node.right);
+
+    if (!leftUni || !rightUni) return false;
+    if (node.left &amp;&amp; node.left.val !== node.val) return false;
+    if (node.right &amp;&amp; node.right.val !== node.val) return false;
+
+    count++;
+    return true;
+  };
+
+  dfs(root);
+  return count;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
