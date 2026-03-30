@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 2529: Maximum Count of Positive Integer and Negative Integer (Dual Binary Boundaries)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 2529 using lower/upper-bound binary search on sorted arrays, with Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 2529: Maximum Count of Positive Integer and Negative Integer (Dual Binary Boundaries)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with two boundary searches and full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-2529-maximum-count-of-positive-integer-and-negative-integer.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-2529-maximum-count-of-positive-integer-and-negative-integer.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 2529: Maximum Count of Positive Integer and Negative Integer (Dual Binary Boundaries)</h1>
+      <div class="meta">2026-03-30 · LeetCode · Binary Search / Array</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 2529</span><span class="tag">Binary Search</span><span class="tag">Array</span>
+
+      <p>Today we solve <strong>LeetCode 2529 - Maximum Count of Positive Integer and Negative Integer</strong>. Because the array is sorted, boundary binary search gives a clean and fast answer.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/maximum-count-of-positive-integer-and-negative-integer/" target="_blank" rel="noopener">https://leetcode.com/problems/maximum-count-of-positive-integer-and-negative-integer/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-2529-20260330.svg" alt="LeetCode 2529 boundary search diagram showing first index of zero and first index of positive numbers" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a sorted integer array <code>nums</code>, return the larger count between negative numbers and positive numbers. Zeros are ignored.</p>
+
+      <h3>Key Insight</h3>
+      <p>In a sorted array, negatives are on the left, zeros in the middle, positives on the right. So we only need two split points:</p>
+      <ul>
+        <li><code>firstNonNegative</code>: first index with value <code>&gt;= 0</code></li>
+        <li><code>firstPositive</code>: first index with value <code>&gt; 0</code></li>
+      </ul>
+      <p>Then:</p>
+      <ul>
+        <li><code>negativeCount = firstNonNegative</code></li>
+        <li><code>positiveCount = n - firstPositive</code></li>
+      </ul>
+
+      <h3>Optimal Algorithm</h3>
+      <p>Run two lower-bound style binary searches with different conditions and compute the max count.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(log n)</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int maximumCount(int[] nums) {
+        int n = nums.length;
+        int firstNonNegative = lowerBound(nums, 0); // first >= 0
+        int firstPositive = upperBoundZero(nums);   // first > 0
+        int negativeCount = firstNonNegative;
+        int positiveCount = n - firstPositive;
+        return Math.max(negativeCount, positiveCount);
+    }
+
+    private int lowerBound(int[] nums, int target) {
+        int l = 0, r = nums.length;
+        while (l < r) {
+            int m = l + (r - l) / 2;
+            if (nums[m] >= target) r = m;
+            else l = m + 1;
+        }
+        return l;
+    }
+
+    private int upperBoundZero(int[] nums) {
+        int l = 0, r = nums.length;
+        while (l < r) {
+            int m = l + (r - l) / 2;
+            if (nums[m] > 0) r = m;
+            else l = m + 1;
+        }
+        return l;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func maximumCount(nums []int) int {
+    n := len(nums)
+    firstNonNegative := lowerBound(nums, 0) // first >= 0
+    firstPositive := upperBoundZero(nums)   // first > 0
+
+    negativeCount := firstNonNegative
+    positiveCount := n - firstPositive
+    if negativeCount > positiveCount {
+        return negativeCount
+    }
+    return positiveCount
+}
+
+func lowerBound(nums []int, target int) int {
+    l, r := 0, len(nums)
+    for l < r {
+        m := l + (r-l)/2
+        if nums[m] >= target {
+            r = m
+        } else {
+            l = m + 1
+        }
+    }
+    return l
+}
+
+func upperBoundZero(nums []int) int {
+    l, r := 0, len(nums)
+    for l < r {
+        m := l + (r-l)/2
+        if nums[m] > 0 {
+            r = m
+        } else {
+            l = m + 1
+        }
+    }
+    return l
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int maximumCount(vector<int>& nums) {
+        int n = nums.size();
+        int firstNonNegative = lowerBound(nums, 0); // first >= 0
+        int firstPositive = upperBoundZero(nums);   // first > 0
+
+        int negativeCount = firstNonNegative;
+        int positiveCount = n - firstPositive;
+        return max(negativeCount, positiveCount);
+    }
+
+private:
+    int lowerBound(const vector<int>& nums, int target) {
+        int l = 0, r = nums.size();
+        while (l < r) {
+            int m = l + (r - l) / 2;
+            if (nums[m] >= target) r = m;
+            else l = m + 1;
+        }
+        return l;
+    }
+
+    int upperBoundZero(const vector<int>& nums) {
+        int l = 0, r = nums.size();
+        while (l < r) {
+            int m = l + (r - l) / 2;
+            if (nums[m] > 0) r = m;
+            else l = m + 1;
+        }
+        return l;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def maximumCount(self, nums: list[int]) -> int:
+        n = len(nums)
+        first_non_negative = self.lower_bound(nums, 0)  # first >= 0
+        first_positive = self.upper_bound_zero(nums)    # first > 0
+
+        negative_count = first_non_negative
+        positive_count = n - first_positive
+        return max(negative_count, positive_count)
+
+    def lower_bound(self, nums: list[int], target: int) -> int:
+        l, r = 0, len(nums)
+        while l < r:
+            m = l + (r - l) // 2
+            if nums[m] >= target:
+                r = m
+            else:
+                l = m + 1
+        return l
+
+    def upper_bound_zero(self, nums: list[int]) -> int:
+        l, r = 0, len(nums)
+        while l < r:
+            m = l + (r - l) // 2
+            if nums[m] > 0:
+                r = m
+            else:
+                l = m + 1
+        return l</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var maximumCount = function(nums) {
+  const n = nums.length;
+  const firstNonNegative = lowerBound(nums, 0); // first >= 0
+  const firstPositive = upperBoundZero(nums);   // first > 0
+
+  const negativeCount = firstNonNegative;
+  const positiveCount = n - firstPositive;
+  return Math.max(negativeCount, positiveCount);
+};
+
+function lowerBound(nums, target) {
+  let l = 0, r = nums.length;
+  while (l < r) {
+    const m = l + ((r - l) >> 1);
+    if (nums[m] >= target) r = m;
+    else l = m + 1;
+  }
+  return l;
+}
+
+function upperBoundZero(nums) {
+  let l = 0, r = nums.length;
+  while (l < r) {
+    const m = l + ((r - l) >> 1);
+    if (nums[m] > 0) r = m;
+    else l = m + 1;
+  }
+  return l;
+}</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定一个<strong>有序</strong>整数数组 <code>nums</code>，返回“负数个数”和“正数个数”中的较大值；0 不计入任一方。</p>
+
+      <h3>核心思路</h3>
+      <p>因为数组有序，区间天然分成：负数区、零区、正数区。我们只要找到两个边界：</p>
+      <ul>
+        <li><code>firstNonNegative</code>：第一个 <code>&gt;= 0</code> 的下标</li>
+        <li><code>firstPositive</code>：第一个 <code>&gt; 0</code> 的下标</li>
+      </ul>
+      <p>于是：</p>
+      <ul>
+        <li><code>负数个数 = firstNonNegative</code></li>
+        <li><code>正数个数 = n - firstPositive</code></li>
+      </ul>
+
+      <h3>最优算法</h3>
+      <p>做两次二分边界搜索（lower bound 风格），最后取两者最大值。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(log n)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java-zh">Java</button>
+          <button class="tab-btn" data-tab="go-zh">Go</button>
+          <button class="tab-btn" data-tab="cpp-zh">C++</button>
+          <button class="tab-btn" data-tab="python-zh">Python</button>
+          <button class="tab-btn" data-tab="javascript-zh">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java-zh"><pre><code class="language-java">class Solution {
+    public int maximumCount(int[] nums) {
+        int n = nums.length;
+        int firstNonNegative = lowerBound(nums, 0); // first >= 0
+        int firstPositive = upperBoundZero(nums);   // first > 0
+        int negativeCount = firstNonNegative;
+        int positiveCount = n - firstPositive;
+        return Math.max(negativeCount, positiveCount);
+    }
+
+    private int lowerBound(int[] nums, int target) {
+        int l = 0, r = nums.length;
+        while (l < r) {
+            int m = l + (r - l) / 2;
+            if (nums[m] >= target) r = m;
+            else l = m + 1;
+        }
+        return l;
+    }
+
+    private int upperBoundZero(int[] nums) {
+        int l = 0, r = nums.length;
+        while (l < r) {
+            int m = l + (r - l) / 2;
+            if (nums[m] > 0) r = m;
+            else l = m + 1;
+        }
+        return l;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go-zh"><pre><code class="language-go">func maximumCount(nums []int) int {
+    n := len(nums)
+    firstNonNegative := lowerBound(nums, 0) // first >= 0
+    firstPositive := upperBoundZero(nums)   // first > 0
+
+    negativeCount := firstNonNegative
+    positiveCount := n - firstPositive
+    if negativeCount > positiveCount {
+        return negativeCount
+    }
+    return positiveCount
+}
+
+func lowerBound(nums []int, target int) int {
+    l, r := 0, len(nums)
+    for l < r {
+        m := l + (r-l)/2
+        if nums[m] >= target {
+            r = m
+        } else {
+            l = m + 1
+        }
+    }
+    return l
+}
+
+func upperBoundZero(nums []int) int {
+    l, r := 0, len(nums)
+    for l < r {
+        m := l + (r-l)/2
+        if nums[m] > 0 {
+            r = m
+        } else {
+            l = m + 1
+        }
+    }
+    return l
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp-zh"><pre><code class="language-cpp">class Solution {
+public:
+    int maximumCount(vector<int>& nums) {
+        int n = nums.size();
+        int firstNonNegative = lowerBound(nums, 0); // first >= 0
+        int firstPositive = upperBoundZero(nums);   // first > 0
+
+        int negativeCount = firstNonNegative;
+        int positiveCount = n - firstPositive;
+        return max(negativeCount, positiveCount);
+    }
+
+private:
+    int lowerBound(const vector<int>& nums, int target) {
+        int l = 0, r = nums.size();
+        while (l < r) {
+            int m = l + (r - l) / 2;
+            if (nums[m] >= target) r = m;
+            else l = m + 1;
+        }
+        return l;
+    }
+
+    int upperBoundZero(const vector<int>& nums) {
+        int l = 0, r = nums.size();
+        while (l < r) {
+            int m = l + (r - l) / 2;
+            if (nums[m] > 0) r = m;
+            else l = m + 1;
+        }
+        return l;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python-zh"><pre><code class="language-python">class Solution:
+    def maximumCount(self, nums: list[int]) -> int:
+        n = len(nums)
+        first_non_negative = self.lower_bound(nums, 0)  # first >= 0
+        first_positive = self.upper_bound_zero(nums)    # first > 0
+
+        negative_count = first_non_negative
+        positive_count = n - first_positive
+        return max(negative_count, positive_count)
+
+    def lower_bound(self, nums: list[int], target: int) -> int:
+        l, r = 0, len(nums)
+        while l < r:
+            m = l + (r - l) // 2
+            if nums[m] >= target:
+                r = m
+            else:
+                l = m + 1
+        return l
+
+    def upper_bound_zero(self, nums: list[int]) -> int:
+        l, r = 0, len(nums)
+        while l < r:
+            m = l + (r - l) // 2
+            if nums[m] > 0:
+                r = m
+            else:
+                l = m + 1
+        return l</code></pre></div>
+        <div class="tab-pane" data-tab="javascript-zh"><pre><code class="language-javascript">var maximumCount = function(nums) {
+  const n = nums.length;
+  const firstNonNegative = lowerBound(nums, 0); // first >= 0
+  const firstPositive = upperBoundZero(nums);   // first > 0
+
+  const negativeCount = firstNonNegative;
+  const positiveCount = n - firstPositive;
+  return Math.max(negativeCount, positiveCount);
+};
+
+function lowerBound(nums, target) {
+  let l = 0, r = nums.length;
+  while (l < r) {
+    const m = l + ((r - l) >> 1);
+    if (nums[m] >= target) r = m;
+    else l = m + 1;
+  }
+  return l;
+}
+
+function upperBoundZero(nums) {
+  let l = 0, r = nums.length;
+  while (l < r) {
+    const m = l + ((r - l) >> 1);
+    if (nums[m] > 0) r = m;
+    else l = m + 1;
+  }
+  return l;
+}</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
