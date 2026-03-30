@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 1704: Determine if String Halves Are Alike (Vowel Balance Counting)</title>
+  <meta name="description" content="Bilingual interview-grade tutorial for LeetCode 1704 with two-half vowel counting, balance logic, pitfalls, and full 5-language code tabs in both sections."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 1704: Determine if String Halves Are Alike (Vowel Balance Counting)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with half-split traversal, vowel set checks, complexity, pitfalls, and complete multi-language tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-1704-determine-if-string-halves-are-alike.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-1704-determine-if-string-halves-are-alike.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 1704: Determine if String Halves Are Alike (Vowel Balance Counting)</h1>
+      <div class="meta">2026-03-30 · LeetCode · String / Counting</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 1704</span><span class="tag">String</span><span class="tag">Counting</span>
+
+      <p>Today we solve <strong>LeetCode 1704 - Determine if String Halves Are Alike</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/determine-if-string-halves-are-alike/" target="_blank" rel="noopener">https://leetcode.com/problems/determine-if-string-halves-are-alike/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-1704-20260330.svg" alt="LeetCode 1704 halves alike vowel balance diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>You are given an even-length string <code>s</code>. Split it into two equal halves and return <code>true</code> if both halves contain the same number of vowels; otherwise return <code>false</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>Only vowel counts matter. Scan left half and right half simultaneously and maintain a balance: <code>+1</code> for a vowel in the left half, <code>-1</code> for a vowel in the right half. Final balance <code>0</code> means the halves are alike.</p>
+
+      <h3>Algorithm Steps</h3>
+      <p>1) Build a vowel lookup set for both lowercase and uppercase vowels.<br/>
+         2) Let <code>n = s.length()</code>, <code>half = n / 2</code>.<br/>
+         3) For each <code>i</code> in <code>[0, half)</code>: if <code>s[i]</code> is vowel, increment balance; if <code>s[i+half]</code> is vowel, decrement balance.<br/>
+         4) Return whether balance equals zero.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(1)</code> (fixed vowel set size).</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting uppercase vowels like <code>'A'</code>, <code>'E'</code>.<br/>
+         - Splitting at wrong index for even-length string.<br/>
+         - Counting all characters instead of vowels only.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean halvesAreAlike(String s) {
+        String vowels = "aeiouAEIOU";
+        int n = s.length();
+        int half = n / 2;
+        int balance = 0;
+
+        for (int i = 0; i < half; i++) {
+            if (vowels.indexOf(s.charAt(i)) >= 0) balance++;
+            if (vowels.indexOf(s.charAt(i + half)) >= 0) balance--;
+        }
+        return balance == 0;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func halvesAreAlike(s string) bool {
+    isVowel := func(c byte) bool {
+        switch c {
+        case 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U':
+            return true
+        }
+        return false
+    }
+
+    n := len(s)
+    half := n / 2
+    balance := 0
+
+    for i := 0; i < half; i++ {
+        if isVowel(s[i]) {
+            balance++
+        }
+        if isVowel(s[i+half]) {
+            balance--
+        }
+    }
+    return balance == 0
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool isVowel(char c) {
+        switch (c) {
+            case 'a': case 'e': case 'i': case 'o': case 'u':
+            case 'A': case 'E': case 'I': case 'O': case 'U':
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    bool halvesAreAlike(string s) {
+        int n = (int)s.size();
+        int half = n / 2;
+        int balance = 0;
+
+        for (int i = 0; i < half; ++i) {
+            if (isVowel(s[i])) balance++;
+            if (isVowel(s[i + half])) balance--;
+        }
+        return balance == 0;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def halvesAreAlike(self, s: str) -> bool:
+        vowels = set("aeiouAEIOU")
+        n = len(s)
+        half = n // 2
+        balance = 0
+
+        for i in range(half):
+            if s[i] in vowels:
+                balance += 1
+            if s[i + half] in vowels:
+                balance -= 1
+
+        return balance == 0</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var halvesAreAlike = function(s) {
+  const vowels = new Set(['a','e','i','o','u','A','E','I','O','U']);
+  const n = s.length;
+  const half = n >> 1;
+  let balance = 0;
+
+  for (let i = 0; i < half; i++) {
+    if (vowels.has(s[i])) balance++;
+    if (vowels.has(s[i + half])) balance--;
+  }
+  return balance === 0;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定一个长度为偶数的字符串 <code>s</code>，将其分成左右两半。若两半中元音字母数量相同，返回 <code>true</code>，否则返回 <code>false</code>。</p>
+
+      <h3>核心思路</h3>
+      <p>本题只关心“元音数量是否相等”。可以使用“平衡值”技巧：左半遇到元音 <code>+1</code>，右半遇到元音 <code>-1</code>。最终平衡值为 <code>0</code> 即表示两半元音数一致。</p>
+
+      <h3>算法步骤</h3>
+      <p>1）准备元音集合，包含大小写：<code>a,e,i,o,u,A,E,I,O,U</code>。<br/>
+         2）设 <code>half = n / 2</code>。<br/>
+         3）遍历 <code>i = 0..half-1</code>：若左半字符是元音则 <code>balance++</code>；若右半对应字符是元音则 <code>balance--</code>。<br/>
+         4）最后判断 <code>balance == 0</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>（元音集合大小固定）。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 漏掉大写元音，导致统计错误。<br/>
+         - 分割点写错，没有严格按一半长度对应比较。<br/>
+         - 把所有字母都计数，而非仅统计元音。</p>
+
+      <h3>参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean halvesAreAlike(String s) {
+        String vowels = "aeiouAEIOU";
+        int n = s.length();
+        int half = n / 2;
+        int balance = 0;
+
+        for (int i = 0; i < half; i++) {
+            if (vowels.indexOf(s.charAt(i)) >= 0) balance++;
+            if (vowels.indexOf(s.charAt(i + half)) >= 0) balance--;
+        }
+        return balance == 0;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func halvesAreAlike(s string) bool {
+    isVowel := func(c byte) bool {
+        switch c {
+        case 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U':
+            return true
+        }
+        return false
+    }
+
+    n := len(s)
+    half := n / 2
+    balance := 0
+
+    for i := 0; i < half; i++ {
+        if isVowel(s[i]) {
+            balance++
+        }
+        if isVowel(s[i+half]) {
+            balance--
+        }
+    }
+    return balance == 0
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool isVowel(char c) {
+        switch (c) {
+            case 'a': case 'e': case 'i': case 'o': case 'u':
+            case 'A': case 'E': case 'I': case 'O': case 'U':
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    bool halvesAreAlike(string s) {
+        int n = (int)s.size();
+        int half = n / 2;
+        int balance = 0;
+
+        for (int i = 0; i < half; ++i) {
+            if (isVowel(s[i])) balance++;
+            if (isVowel(s[i + half])) balance--;
+        }
+        return balance == 0;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def halvesAreAlike(self, s: str) -> bool:
+        vowels = set("aeiouAEIOU")
+        n = len(s)
+        half = n // 2
+        balance = 0
+
+        for i in range(half):
+            if s[i] in vowels:
+                balance += 1
+            if s[i + half] in vowels:
+                balance -= 1
+
+        return balance == 0</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var halvesAreAlike = function(s) {
+  const vowels = new Set(['a','e','i','o','u','A','E','I','O','U']);
+  const n = s.length;
+  const half = n >> 1;
+  let balance = 0;
+
+  for (let i = 0; i < half; i++) {
+    if (vowels.has(s[i])) balance++;
+    if (vowels.has(s[i + half])) balance--;
+  }
+  return balance === 0;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
