@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 1762: Buildings With an Ocean View (Reverse Scan with Running Max Height)</title>
+  <meta name="description" content="Bilingual interview-grade tutorial for LeetCode 1762 with reverse scan invariant, correctness reasoning, and 5-language code tabs in both English and Chinese sections."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 1762: Buildings With an Ocean View (Reverse Scan with Running Max Height)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with right-max invariant, pitfalls, and complete code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-1762-buildings-with-an-ocean-view.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-1762-buildings-with-an-ocean-view.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 1762: Buildings With an Ocean View (Reverse Scan with Running Max Height)</h1>
+      <div class="meta">2026-03-30 · LeetCode · Array / Monotonic Thinking</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 1762</span><span class="tag">Array</span><span class="tag">Monotonic Thinking</span>
+
+      <p>Today we solve <strong>LeetCode 1762 - Buildings With an Ocean View</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/buildings-with-an-ocean-view/" target="_blank" rel="noopener">https://leetcode.com/problems/buildings-with-an-ocean-view/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-1762-20260330.svg" alt="LeetCode 1762 reverse scan keeps buildings taller than all to their right" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>You are given an array <code>heights</code>, where <code>heights[i]</code> is the height of building <code>i</code>. A building has an ocean view if every building to its right is strictly shorter. Return all such indices in increasing order.</p>
+
+      <h3>Key Insight</h3>
+      <p>Scan from right to left and maintain <code>maxRight</code>, the maximum height seen so far on the right side. Building <code>i</code> has ocean view iff <code>heights[i] &gt; maxRight</code>. After selecting it, update <code>maxRight</code>.</p>
+
+      <h3>Brute Force and Limitation</h3>
+      <p>Brute force checks every building against all buildings to its right, which is <code>O(n^2)</code>. This is unnecessary because we only need the right-side maximum, not every comparison.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Initialize <code>maxRight = -1</code>, empty answer list.<br/>
+         2) Iterate <code>i</code> from <code>n-1</code> down to <code>0</code>.<br/>
+         3) If <code>heights[i] &gt; maxRight</code>, append <code>i</code> and update <code>maxRight</code>.<br/>
+         4) Reverse collected indices to restore increasing order.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(n)</code> for output (excluding output, auxiliary is <code>O(1)</code>).</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Using <code>&gt;=</code> instead of <code>&gt;</code> (equal height on the right still blocks the view).<br/>
+         - Forgetting to reverse the result before returning.<br/>
+         - Scanning left-to-right without a suffix-max structure, causing wrong logic or extra complexity.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int[] findBuildings(int[] heights) {
+        java.util.List&lt;Integer&gt; ans = new java.util.ArrayList&lt;&gt;();
+        int maxRight = -1;
+
+        for (int i = heights.length - 1; i &gt;= 0; i--) {
+            if (heights[i] &gt; maxRight) {
+                ans.add(i);
+                maxRight = heights[i];
+            }
+        }
+
+        java.util.Collections.reverse(ans);
+        int[] res = new int[ans.size()];
+        for (int i = 0; i &lt; ans.size(); i++) {
+            res[i] = ans.get(i);
+        }
+        return res;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func findBuildings(heights []int) []int {
+    ans := make([]int, 0)
+    maxRight := -1
+
+    for i := len(heights) - 1; i &gt;= 0; i-- {
+        if heights[i] &gt; maxRight {
+            ans = append(ans, i)
+            maxRight = heights[i]
+        }
+    }
+
+    for l, r := 0, len(ans)-1; l &lt; r; l, r = l+1, r-1 {
+        ans[l], ans[r] = ans[r], ans[l]
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; findBuildings(vector&lt;int&gt;&amp; heights) {
+        vector&lt;int&gt; ans;
+        int maxRight = -1;
+
+        for (int i = (int)heights.size() - 1; i &gt;= 0; --i) {
+            if (heights[i] &gt; maxRight) {
+                ans.push_back(i);
+                maxRight = heights[i];
+            }
+        }
+
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">from typing import List
+
+class Solution:
+    def findBuildings(self, heights: List[int]) -&gt; List[int]:
+        ans = []
+        max_right = -1
+
+        for i in range(len(heights) - 1, -1, -1):
+            if heights[i] &gt; max_right:
+                ans.append(i)
+                max_right = heights[i]
+
+        ans.reverse()
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {number[]} heights
+ * @return {number[]}
+ */
+var findBuildings = function(heights) {
+  const ans = [];
+  let maxRight = -1;
+
+  for (let i = heights.length - 1; i &gt;= 0; i--) {
+    if (heights[i] &gt; maxRight) {
+      ans.push(i);
+      maxRight = heights[i];
+    }
+  }
+
+  ans.reverse();
+  return ans;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定数组 <code>heights</code>，<code>heights[i]</code> 表示第 <code>i</code> 栋楼高度。若第 <code>i</code> 栋楼右侧所有楼都比它矮，则它有海景。返回所有有海景的下标，且按升序返回。</p>
+
+      <h3>核心思路</h3>
+      <p>从右往左扫描，维护右侧最高高度 <code>maxRight</code>。当且仅当 <code>heights[i] &gt; maxRight</code> 时，第 <code>i</code> 栋楼可见海景；随后更新 <code>maxRight</code>。</p>
+
+      <h3>朴素解法与不足</h3>
+      <p>朴素做法是对每个 <code>i</code> 向右逐个比较，复杂度为 <code>O(n^2)</code>。但我们实际只关心“右侧最大值”，无需重复比较所有元素。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）初始化 <code>maxRight = -1</code>，答案列表为空。<br/>
+         2）下标从 <code>n-1</code> 遍历到 <code>0</code>。<br/>
+         3）若 <code>heights[i] &gt; maxRight</code>，记录下标并更新 <code>maxRight</code>。<br/>
+         4）最终将答案反转，得到升序下标。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(n)</code>（结果集本身；额外辅助空间为 <code>O(1)</code>）。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 条件写成 <code>&gt;=</code> 会出错：右侧若有等高楼，也会挡住海景。<br/>
+         - 忘记反转答案，导致顺序变成降序。<br/>
+         - 从左到右硬做比较，逻辑更复杂且容易退化为 <code>O(n^2)</code>。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int[] findBuildings(int[] heights) {
+        java.util.List&lt;Integer&gt; ans = new java.util.ArrayList&lt;&gt;();
+        int maxRight = -1;
+
+        for (int i = heights.length - 1; i &gt;= 0; i--) {
+            if (heights[i] &gt; maxRight) {
+                ans.add(i);
+                maxRight = heights[i];
+            }
+        }
+
+        java.util.Collections.reverse(ans);
+        int[] res = new int[ans.size()];
+        for (int i = 0; i &lt; ans.size(); i++) {
+            res[i] = ans.get(i);
+        }
+        return res;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func findBuildings(heights []int) []int {
+    ans := make([]int, 0)
+    maxRight := -1
+
+    for i := len(heights) - 1; i &gt;= 0; i-- {
+        if heights[i] &gt; maxRight {
+            ans = append(ans, i)
+            maxRight = heights[i]
+        }
+    }
+
+    for l, r := 0, len(ans)-1; l &lt; r; l, r = l+1, r-1 {
+        ans[l], ans[r] = ans[r], ans[l]
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; findBuildings(vector&lt;int&gt;&amp; heights) {
+        vector&lt;int&gt; ans;
+        int maxRight = -1;
+
+        for (int i = (int)heights.size() - 1; i &gt;= 0; --i) {
+            if (heights[i] &gt; maxRight) {
+                ans.push_back(i);
+                maxRight = heights[i];
+            }
+        }
+
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">from typing import List
+
+class Solution:
+    def findBuildings(self, heights: List[int]) -&gt; List[int]:
+        ans = []
+        max_right = -1
+
+        for i in range(len(heights) - 1, -1, -1):
+            if heights[i] &gt; max_right:
+                ans.append(i)
+                max_right = heights[i]
+
+        ans.reverse()
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {number[]} heights
+ * @return {number[]}
+ */
+var findBuildings = function(heights) {
+  const ans = [];
+  let maxRight = -1;
+
+  for (let i = heights.length - 1; i &gt;= 0; i--) {
+    if (heights[i] &gt; maxRight) {
+      ans.push(i);
+      maxRight = heights[i];
+    }
+  }
+
+  ans.reverse();
+  return ans;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
