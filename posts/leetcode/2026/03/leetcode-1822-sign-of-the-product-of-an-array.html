@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 1822: Sign of the Product of an Array (Zero Short-Circuit + Negative Parity)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 1822 with zero short-circuit logic, negative parity insight, complexity, pitfalls, and 5-language code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 1822: Sign of the Product of an Array (Zero Short-Circuit + Negative Parity)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with sign invariant, complexity analysis, and complete code tabs in both sections." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/03/leetcode-1822-sign-of-the-product-of-an-array.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/03/leetcode-1822-sign-of-the-product-of-an-array.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 1822: Sign of the Product of an Array (Zero Short-Circuit + Negative Parity)</h1>
+      <div class="meta">2026-03-30 · LeetCode · Array / Math</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 1822</span><span class="tag">Array</span><span class="tag">Math</span><span class="tag">Sign Parity</span>
+
+      <p>Today we solve <strong>LeetCode 1822 - Sign of the Product of an Array</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/sign-of-the-product-of-an-array/" target="_blank" rel="noopener">https://leetcode.com/problems/sign-of-the-product-of-an-array/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/03/leetcode-1822-20260330.svg" alt="LeetCode 1822 sign flow: any zero gives 0, otherwise odd negatives gives -1, even gives 1" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given an integer array <code>nums</code>, return the sign of the product of all numbers: <code>1</code> if positive, <code>-1</code> if negative, and <code>0</code> if any element is zero.</p>
+
+      <h3>Key Insight</h3>
+      <p>We never need the actual product (which can overflow). The sign is fully determined by two facts: whether any element is zero, and whether the count of negative numbers is odd or even.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>Direct multiplication can overflow in fixed-width integer languages. Even if constraints are small, using product is unnecessary work and less robust.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Initialize <code>negCount = 0</code>.<br/>
+         2) Scan each <code>x</code> in <code>nums</code>.<br/>
+         3) If <code>x == 0</code>, return <code>0</code> immediately.<br/>
+         4) If <code>x &lt; 0</code>, increment <code>negCount</code>.<br/>
+         5) After scan, return <code>-1</code> if <code>negCount</code> is odd, else <code>1</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Multiplying values directly and risking overflow.<br/>
+         - Forgetting to short-circuit when zero appears.<br/>
+         - Mis-handling parity check for negative count.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int arraySign(int[] nums) {
+        int negCount = 0;
+        for (int x : nums) {
+            if (x == 0) return 0;
+            if (x &lt; 0) negCount++;
+        }
+        return (negCount % 2 == 0) ? 1 : -1;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func arraySign(nums []int) int {
+    negCount := 0
+    for _, x := range nums {
+        if x == 0 {
+            return 0
+        }
+        if x &lt; 0 {
+            negCount++
+        }
+    }
+    if negCount%2 == 0 {
+        return 1
+    }
+    return -1
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int arraySign(vector&lt;int&gt;&amp; nums) {
+        int negCount = 0;
+        for (int x : nums) {
+            if (x == 0) return 0;
+            if (x &lt; 0) ++negCount;
+        }
+        return (negCount % 2 == 0) ? 1 : -1;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def arraySign(self, nums: list[int]) -&gt; int:
+        neg_count = 0
+        for x in nums:
+            if x == 0:
+                return 0
+            if x &lt; 0:
+                neg_count += 1
+        return 1 if neg_count % 2 == 0 else -1</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var arraySign = function(nums) {
+  let negCount = 0;
+  for (const x of nums) {
+    if (x === 0) return 0;
+    if (x &lt; 0) negCount++;
+  }
+  return (negCount % 2 === 0) ? 1 : -1;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定整数数组 <code>nums</code>，返回所有元素乘积的符号：正数返回 <code>1</code>，负数返回 <code>-1</code>，若存在零则返回 <code>0</code>。</p>
+
+      <h3>核心思路</h3>
+      <p>不需要真的计算乘积。乘积符号只由两件事决定：是否出现 <code>0</code>，以及负数个数的奇偶性。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>直接相乘会有溢出风险（尤其在定长整型语言中），而且本题只关心符号，这样做不必要。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）初始化 <code>negCount = 0</code>。<br/>
+         2）遍历数组元素 <code>x</code>。<br/>
+         3）若 <code>x == 0</code>，立即返回 <code>0</code>。<br/>
+         4）若 <code>x &lt; 0</code>，<code>negCount++</code>。<br/>
+         5）遍历结束后，若 <code>negCount</code> 为奇数返回 <code>-1</code>，否则返回 <code>1</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 直接乘法导致潜在溢出。<br/>
+         - 遇到 <code>0</code> 没有立即返回。<br/>
+         - 负数个数奇偶判断写错。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int arraySign(int[] nums) {
+        int negCount = 0;
+        for (int x : nums) {
+            if (x == 0) return 0;
+            if (x &lt; 0) negCount++;
+        }
+        return (negCount % 2 == 0) ? 1 : -1;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func arraySign(nums []int) int {
+    negCount := 0
+    for _, x := range nums {
+        if x == 0 {
+            return 0
+        }
+        if x &lt; 0 {
+            negCount++
+        }
+    }
+    if negCount%2 == 0 {
+        return 1
+    }
+    return -1
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int arraySign(vector&lt;int&gt;&amp; nums) {
+        int negCount = 0;
+        for (int x : nums) {
+            if (x == 0) return 0;
+            if (x &lt; 0) ++negCount;
+        }
+        return (negCount % 2 == 0) ? 1 : -1;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def arraySign(self, nums: list[int]) -&gt; int:
+        neg_count = 0
+        for x in nums:
+            if x == 0:
+                return 0
+            if x &lt; 0:
+                neg_count += 1
+        return 1 if neg_count % 2 == 0 else -1</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var arraySign = function(nums) {
+  let negCount = 0;
+  for (const x of nums) {
+    if (x === 0) return 0;
+    if (x &lt; 0) negCount++;
+  }
+  return (negCount % 2 === 0) ? 1 : -1;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
