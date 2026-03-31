@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 229 majority voting diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0b1020"/>
+      <stop offset="100%" stop-color="#1f2937"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="56" y="86" fill="#e5e7eb" font-size="44" font-family="Inter,Arial,sans-serif" font-weight="700">LeetCode 229 · Majority Element II</text>
+  <text x="56" y="126" fill="#93c5fd" font-size="28" font-family="Inter,Arial,sans-serif">Extended Boyer-Moore: at most 2 winners for threshold &gt; n/3</text>
+
+  <rect x="56" y="170" width="520" height="390" rx="16" fill="#111827" stroke="#374151"/>
+  <text x="84" y="212" fill="#f9fafb" font-size="26" font-family="Inter,Arial,sans-serif">Pass 1: Candidate Voting</text>
+  <text x="84" y="252" fill="#d1d5db" font-size="22" font-family="monospace">cand1=2, cnt1=1</text>
+  <text x="84" y="286" fill="#d1d5db" font-size="22" font-family="monospace">cand2=1, cnt2=1</text>
+  <text x="84" y="330" fill="#86efac" font-size="21" font-family="Inter,Arial,sans-serif">Rule A: hit cand1/cand2 =&gt; increment</text>
+  <text x="84" y="364" fill="#86efac" font-size="21" font-family="Inter,Arial,sans-serif">Rule B: empty slot =&gt; adopt new candidate</text>
+  <text x="84" y="398" fill="#fca5a5" font-size="21" font-family="Inter,Arial,sans-serif">Rule C: third distinct + both busy =&gt; cnt1--, cnt2--</text>
+  <text x="84" y="446" fill="#c4b5fd" font-size="20" font-family="Inter,Arial,sans-serif">Triple cancellation removes balanced noise.</text>
+
+  <rect x="622" y="170" width="522" height="390" rx="16" fill="#0f172a" stroke="#334155"/>
+  <text x="650" y="212" fill="#f9fafb" font-size="26" font-family="Inter,Arial,sans-serif">Pass 2: Verify Real Counts</text>
+  <text x="650" y="254" fill="#d1d5db" font-size="22" font-family="monospace">count(cand1) = 4</text>
+  <text x="650" y="288" fill="#d1d5db" font-size="22" font-family="monospace">count(cand2) = 3</text>
+  <text x="650" y="334" fill="#fde68a" font-size="22" font-family="Inter,Arial,sans-serif">keep if count &gt; floor(n/3)</text>
+  <text x="650" y="372" fill="#fde68a" font-size="22" font-family="Inter,Arial,sans-serif">strict inequality, not &gt;=</text>
+  <text x="650" y="434" fill="#93c5fd" font-size="21" font-family="Inter,Arial,sans-serif">Time O(n), Extra Space O(1)</text>
+  <text x="650" y="472" fill="#f9fafb" font-size="21" font-family="Inter,Arial,sans-serif">Author: Tom🦞</text>
+</svg>
