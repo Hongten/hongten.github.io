@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-label="LeetCode 503 monotonic decreasing stack over circular array">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1020"/>
+      <stop offset="100%" stop-color="#121a33"/>
+    </linearGradient>
+    <style>
+      .t{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#eaf0ff}
+      .m{font-size:30px;font-weight:700}
+      .s{font-size:22px;fill:#b8c4e8}
+      .b{fill:#1e2a52;stroke:#6ea8fe;stroke-width:2}
+      .a{stroke:#ffd166;stroke-width:4;marker-end:url(#arrow)}
+      .k{font-size:26px;font-weight:600}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#ffd166"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="560" fill="url(#bg)"/>
+  <text x="44" y="56" class="t m">LeetCode 503 — Next Greater Element II (Circular + Monotonic Stack)</text>
+  <text x="44" y="92" class="t s">Scan indices from 2n-1 to 0. Keep stack decreasing by value. Top is the next greater.</text>
+
+  <g transform="translate(52,150)">
+    <rect x="0" y="0" width="130" height="90" rx="10" class="b"/><text x="52" y="58" class="t k">1</text><text x="48" y="118" class="t s">idx0</text>
+    <rect x="150" y="0" width="130" height="90" rx="10" class="b"/><text x="202" y="58" class="t k">2</text><text x="198" y="118" class="t s">idx1</text>
+    <rect x="300" y="0" width="130" height="90" rx="10" class="b"/><text x="352" y="58" class="t k">1</text><text x="348" y="118" class="t s">idx2</text>
+  </g>
+
+  <g transform="translate(62,320)">
+    <text x="0" y="0" class="t s">Example nums = [1,2,1]</text>
+    <text x="0" y="44" class="t s">Result = [2,-1,2]</text>
+    <line x1="290" y1="-140" x2="352" y2="-140" class="a"/>
+    <text x="300" y="-152" class="t s">1 → 2</text>
+    <line x1="590" y1="-140" x2="352" y2="-140" class="a"/>
+    <text x="500" y="-152" class="t s">circular wrap: 1 → 2</text>
+  </g>
+
+  <g transform="translate(760,160)">
+    <rect x="0" y="0" width="380" height="300" rx="14" fill="#0f1730" stroke="#5f7fcc"/>
+    <text x="24" y="44" class="t s">Monotonic stack (top at right)</text>
+    <text x="24" y="92" class="t">while stack.top &lt;= nums[i]: pop()</text>
+    <text x="24" y="132" class="t">ans[i] = stack.empty ? -1 : stack.top</text>
+    <text x="24" y="172" class="t">stack.push(nums[i])</text>
+    <text x="24" y="236" class="t s">Time: O(n)   Space: O(n)</text>
+  </g>
+</svg>
