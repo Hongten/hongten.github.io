@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-label="Sequential digits construction diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .title{font:700 34px 'Segoe UI',Arial,sans-serif;fill:#e2e8f0}
+      .sub{font:500 20px 'Segoe UI',Arial,sans-serif;fill:#cbd5e1}
+      .box{fill:#111827;stroke:#38bdf8;stroke-width:2;rx:14}
+      .txt{font:700 30px 'Consolas','Courier New',monospace;fill:#f8fafc}
+      .hint{font:500 18px 'Segoe UI',Arial,sans-serif;fill:#94a3b8}
+      .ok{font:700 20px 'Segoe UI',Arial,sans-serif;fill:#22c55e}
+    </style>
+  </defs>
+  <rect width="1200" height="420" fill="url(#bg)"/>
+  <text x="40" y="56" class="title">LeetCode 1291 · Sequential Digits</text>
+  <text x="40" y="90" class="sub">Enumerate by length and start digit (not by scanning every number)</text>
+
+  <rect x="40" y="130" width="330" height="180" class="box"/>
+  <text x="65" y="170" class="hint">len = 3, start = 2</text>
+  <text x="65" y="230" class="txt">2 → 3 → 4</text>
+  <text x="65" y="278" class="ok">number = 234 ✓</text>
+
+  <rect x="435" y="130" width="330" height="180" class="box"/>
+  <text x="460" y="170" class="hint">len = 4, start = 5</text>
+  <text x="460" y="230" class="txt">5 → 6 → 7 → 8</text>
+  <text x="460" y="278" class="ok">number = 5678 ✓</text>
+
+  <rect x="830" y="130" width="330" height="180" class="box"/>
+  <text x="855" y="170" class="hint">start upper bound = 10 - len</text>
+  <text x="855" y="230" class="txt">len=5 ⇒ start≤5</text>
+  <text x="855" y="278" class="hint">avoid overflow past digit 9</text>
+
+  <text x="40" y="360" class="sub">Filter each candidate by low ≤ num ≤ high; generation order is naturally ascending.</text>
+</svg>
