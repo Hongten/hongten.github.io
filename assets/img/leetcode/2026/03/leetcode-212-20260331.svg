@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 212 Trie DFS diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#93c5fd"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="50" y="70" fill="#e5e7eb" font-size="38" font-family="Inter,Arial,sans-serif" font-weight="700">LeetCode 212: Trie + DFS Backtracking Pruning</text>
+
+  <rect x="50" y="110" width="500" height="470" rx="16" fill="#1f2937" stroke="#374151"/>
+  <text x="75" y="150" fill="#93c5fd" font-size="26" font-family="Inter,Arial,sans-serif">Board DFS (path search)</text>
+  <g font-family="monospace" font-size="28" fill="#e5e7eb">
+    <text x="90" y="220">o a a n</text>
+    <text x="90" y="270">e t a e</text>
+    <text x="90" y="320">i h k r</text>
+    <text x="90" y="370">i f l v</text>
+  </g>
+  <path d="M 310 210 L 350 260 L 300 310" fill="none" stroke="#86efac" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="310" cy="210" r="10" fill="#86efac"/>
+  <circle cx="350" cy="260" r="10" fill="#86efac"/>
+  <circle cx="300" cy="310" r="10" fill="#86efac"/>
+  <text x="75" y="430" fill="#d1d5db" font-size="23" font-family="Inter,Arial,sans-serif">Only continue if current prefix exists in Trie.</text>
+  <text x="75" y="465" fill="#d1d5db" font-size="23" font-family="Inter,Arial,sans-serif">Hit word node => record + clear marker.</text>
+
+  <rect x="620" y="110" width="530" height="470" rx="16" fill="#1f2937" stroke="#374151"/>
+  <text x="645" y="150" fill="#93c5fd" font-size="26" font-family="Inter,Arial,sans-serif">Trie (shared prefixes)</text>
+  <circle cx="700" cy="220" r="22" fill="#111827" stroke="#60a5fa"/>
+  <text x="693" y="227" fill="#e5e7eb" font-size="18" font-family="monospace">∅</text>
+  <circle cx="790" cy="290" r="20" fill="#111827" stroke="#60a5fa"/>
+  <text x="784" y="296" fill="#e5e7eb" font-size="16" font-family="monospace">o</text>
+  <circle cx="890" cy="360" r="20" fill="#111827" stroke="#34d399"/>
+  <text x="884" y="366" fill="#e5e7eb" font-size="16" font-family="monospace">a</text>
+  <circle cx="990" cy="430" r="22" fill="#052e2b" stroke="#34d399"/>
+  <text x="980" y="436" fill="#86efac" font-size="16" font-family="monospace">th✓</text>
+
+  <line x1="718" y1="235" x2="772" y2="275" stroke="#93c5fd" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="808" y1="305" x2="872" y2="345" stroke="#93c5fd" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="908" y1="375" x2="968" y2="414" stroke="#93c5fd" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <text x="645" y="490" fill="#d1d5db" font-size="23" font-family="Inter,Arial,sans-serif">Prune branch immediately when prefix misses.</text>
+  <text x="645" y="525" fill="#d1d5db" font-size="23" font-family="Inter,Arial,sans-serif">This avoids repeated DFS for each word.</text>
+</svg>
