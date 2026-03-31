@@ -44,22 +44,22 @@
 
       <h2>English</h2>
       <h3>Problem Summary</h3>
-      <p>Given problem LeetCode 844 - Backspace String Compare, return the required output under problem constraints.</p>
+      <p>Given two strings <code>s</code> and <code>t</code>, where <code>#</code> means backspace, determine whether the two strings are equal after applying all backspaces.</p>
 
       <h3>Key Insight</h3>
-      <p>Identify the invariant first, then choose data structure / traversal strategy that enforces it with minimal overhead.</p>
+      <p>Scan from right to left with two pointers. When you see <code>#</code>, increase a skip counter; when you see a normal character while skip &gt; 0, consume it. The next remaining character on each side is the real typed character to compare.</p>
 
       <h3>Brute Force and Limitations</h3>
-      <p>Start from a direct simulation or enumeration baseline. It is easy to reason about but often too slow for larger input sizes.</p>
+      <p>A straightforward approach builds final strings using stacks/StringBuilder and compares them. It works in <code>O(n)</code> time, but uses extra <code>O(n)</code> space.</p>
 
       <h3>Optimal Algorithm Steps</h3>
-      <p>1) Clarify state/invariant.<br/>2) Traverse input once or with bounded revisits.<br/>3) Update structure/state by invariant.<br/>4) Derive answer from maintained state.</p>
+      <p>1) Set <code>i = s.length - 1</code>, <code>j = t.length - 1</code>.<br/>2) Move <code>i</code> to the next valid char in <code>s</code> (skip deleted chars).<br/>3) Move <code>j</code> similarly in <code>t</code>.<br/>4) If both valid chars exist, compare them; if different, return false.<br/>5) If only one side has chars left, return false; otherwise continue until both finish.</p>
 
       <h3>Complexity Analysis</h3>
-      <p>Time: <code>O(n)</code> (or best achievable for this strategy).<br/>Space: <code>O(n)</code> worst case depending on auxiliary structure.</p>
+      <p>Time: <code>O(n + m)</code>, each character is visited at most once.<br/>Space: <code>O(1)</code>, only pointers and counters.</p>
 
       <h3>Common Pitfalls</h3>
-      <p>- Missing edge cases (empty/min size).<br/>- Off-by-one boundaries.<br/>- Incomplete state reset/update.</p>
+      <p>- Forgetting to process consecutive <code>#</code> (e.g. <code>"ab###"</code>).<br/>- Comparing characters before fully skipping deleted ones.<br/>- Not handling the case where one pointer is exhausted first.</p>
 
       <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
       <div class="code-tabs">
@@ -70,51 +70,200 @@
           <button class="tab-btn" data-tab="python">Python</button>
           <button class="tab-btn" data-tab="javascript">JavaScript</button>
         </div>
-        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">// TODO: Replace with final Java solution
-class Solution {
-    public int solve(...) {
-        return 0;
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean backspaceCompare(String s, String t) {
+        int i = s.length() - 1, j = t.length() - 1;
+
+        while (i >= 0 || j >= 0) {
+            i = nextValidIndex(s, i);
+            j = nextValidIndex(t, j);
+
+            if (i >= 0 && j >= 0) {
+                if (s.charAt(i) != t.charAt(j)) return false;
+                i--;
+                j--;
+            } else {
+                return i == j;
+            }
+        }
+        return true;
+    }
+
+    private int nextValidIndex(String str, int idx) {
+        int skip = 0;
+        while (idx >= 0) {
+            char c = str.charAt(idx);
+            if (c == '#') {
+                skip++;
+                idx--;
+            } else if (skip > 0) {
+                skip--;
+                idx--;
+            } else {
+                break;
+            }
+        }
+        return idx;
     }
 }</code></pre></div>
-        <div class="tab-pane" data-tab="go"><pre><code class="language-go">// TODO: Replace with final Go solution
-func solve(...) int {
-    return 0
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func backspaceCompare(s string, t string) bool {
+    i, j := len(s)-1, len(t)-1
+
+    for i >= 0 || j >= 0 {
+        i = nextValidIndex(s, i)
+        j = nextValidIndex(t, j)
+
+        if i >= 0 && j >= 0 {
+            if s[i] != t[j] {
+                return false
+            }
+            i--
+            j--
+        } else {
+            return i == j
+        }
+    }
+    return true
+}
+
+func nextValidIndex(str string, idx int) int {
+    skip := 0
+    for idx >= 0 {
+        if str[idx] == '#' {
+            skip++
+            idx--
+        } else if skip > 0 {
+            skip--
+            idx--
+        } else {
+            break
+        }
+    }
+    return idx
 }</code></pre></div>
-        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">// TODO: Replace with final C++ solution
-class Solution {
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
 public:
-    int solve(...) {
-        return 0;
+    bool backspaceCompare(string s, string t) {
+        int i = (int)s.size() - 1;
+        int j = (int)t.size() - 1;
+
+        while (i >= 0 || j >= 0) {
+            i = nextValidIndex(s, i);
+            j = nextValidIndex(t, j);
+
+            if (i >= 0 && j >= 0) {
+                if (s[i] != t[j]) return false;
+                --i;
+                --j;
+            } else {
+                return i == j;
+            }
+        }
+        return true;
+    }
+
+private:
+    int nextValidIndex(const string& str, int idx) {
+        int skip = 0;
+        while (idx >= 0) {
+            if (str[idx] == '#') {
+                ++skip;
+                --idx;
+            } else if (skip > 0) {
+                --skip;
+                --idx;
+            } else {
+                break;
+            }
+        }
+        return idx;
     }
 };</code></pre></div>
-        <div class="tab-pane" data-tab="python"><pre><code class="language-python"># TODO: Replace with final Python solution
-class Solution:
-    def solve(self, ...):
-        return 0</code></pre></div>
-        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">// TODO: Replace with final JavaScript solution
-function solve(...) {
-  return 0;
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def backspaceCompare(self, s: str, t: str) -> bool:
+        i, j = len(s) - 1, len(t) - 1
+
+        while i >= 0 or j >= 0:
+            i = self.next_valid_index(s, i)
+            j = self.next_valid_index(t, j)
+
+            if i >= 0 and j >= 0:
+                if s[i] != t[j]:
+                    return False
+                i -= 1
+                j -= 1
+            else:
+                return i == j
+
+        return True
+
+    def next_valid_index(self, string: str, idx: int) -> int:
+        skip = 0
+        while idx >= 0:
+            if string[idx] == '#':
+                skip += 1
+                idx -= 1
+            elif skip > 0:
+                skip -= 1
+                idx -= 1
+            else:
+                break
+        return idx</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">function backspaceCompare(s, t) {
+  let i = s.length - 1;
+  let j = t.length - 1;
+
+  while (i >= 0 || j >= 0) {
+    i = nextValidIndex(s, i);
+    j = nextValidIndex(t, j);
+
+    if (i >= 0 && j >= 0) {
+      if (s[i] !== t[j]) return false;
+      i--;
+      j--;
+    } else {
+      return i === j;
+    }
+  }
+
+  return true;
+}
+
+function nextValidIndex(str, idx) {
+  let skip = 0;
+  while (idx >= 0) {
+    if (str[idx] === '#') {
+      skip++;
+      idx--;
+    } else if (skip > 0) {
+      skip--;
+      idx--;
+    } else {
+      break;
+    }
+  }
+  return idx;
 }</code></pre></div>
       </div>
 
       <h2>中文</h2>
       <h3>题目概述</h3>
-      <p>给定 LeetCode 844 - Backspace String Compare，在题目约束下返回正确结果。</p>
+      <p>给定两个字符串 <code>s</code> 和 <code>t</code>，其中 <code>#</code> 表示退格，判断它们在执行所有退格后是否相同。</p>
 
       <h3>核心思路</h3>
-      <p>先找不变量，再选能稳定维护不变量的数据结构/遍历方式。</p>
+      <p>从右往左双指针扫描：遇到 <code>#</code> 就增加“待删除计数”，遇到普通字符且计数 &gt; 0 就跳过。这样每次拿到的都是“最终真正保留”的字符。</p>
 
       <h3>暴力解法与不足</h3>
-      <p>可先从直接模拟或枚举入手，便于验证正确性，但在大输入下通常性能不足。</p>
+      <p>朴素做法是用栈或 StringBuilder 分别还原两个字符串，再比较结果。时间 <code>O(n)</code>，但需要额外 <code>O(n)</code> 空间。</p>
 
       <h3>最优算法步骤</h3>
-      <p>1）明确状态与不变量。<br/>2）一次遍历或有限回看。<br/>3）按不变量更新状态。<br/>4）由状态推导最终答案。</p>
+      <p>1）初始化 <code>i = s.length - 1</code>、<code>j = t.length - 1</code>。<br/>2）把 <code>i</code> 移到 <code>s</code> 的下一个有效字符。<br/>3）把 <code>j</code> 移到 <code>t</code> 的下一个有效字符。<br/>4）若两边都有效则比较字符，不同直接 false。<br/>5）若仅一边还有字符，false；两边都结束则 true。</p>
 
       <h3>复杂度分析</h3>
-      <p>时间复杂度：<code>O(n)</code>（或该策略可达最优）。<br/>空间复杂度：<code>O(n)</code>（取决于辅助结构）。</p>
+      <p>时间复杂度：<code>O(n + m)</code>，每个字符最多访问一次。<br/>空间复杂度：<code>O(1)</code>，只用指针和计数器。</p>
 
       <h3>常见陷阱</h3>
-      <p>- 漏掉边界输入（空、最小规模）。<br/>- 下标越界或 off-by-one。<br/>- 状态更新不完整。</p>
+      <p>- 连续多个 <code>#</code> 处理不完整（如 <code>"ab###"</code>）。<br/>- 还没跳过被删除字符就提前比较。<br/>- 一侧先结束时没有正确返回 false。</p>
 
       <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
       <div class="code-tabs">
@@ -125,30 +274,179 @@ function solve(...) {
           <button class="tab-btn" data-tab="python">Python</button>
           <button class="tab-btn" data-tab="javascript">JavaScript</button>
         </div>
-        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">// TODO: Replace with final Java solution
-class Solution {
-    public int solve(...) {
-        return 0;
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean backspaceCompare(String s, String t) {
+        int i = s.length() - 1, j = t.length() - 1;
+
+        while (i >= 0 || j >= 0) {
+            i = nextValidIndex(s, i);
+            j = nextValidIndex(t, j);
+
+            if (i >= 0 && j >= 0) {
+                if (s.charAt(i) != t.charAt(j)) return false;
+                i--;
+                j--;
+            } else {
+                return i == j;
+            }
+        }
+        return true;
+    }
+
+    private int nextValidIndex(String str, int idx) {
+        int skip = 0;
+        while (idx >= 0) {
+            char c = str.charAt(idx);
+            if (c == '#') {
+                skip++;
+                idx--;
+            } else if (skip > 0) {
+                skip--;
+                idx--;
+            } else {
+                break;
+            }
+        }
+        return idx;
     }
 }</code></pre></div>
-        <div class="tab-pane" data-tab="go"><pre><code class="language-go">// TODO: Replace with final Go solution
-func solve(...) int {
-    return 0
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func backspaceCompare(s string, t string) bool {
+    i, j := len(s)-1, len(t)-1
+
+    for i >= 0 || j >= 0 {
+        i = nextValidIndex(s, i)
+        j = nextValidIndex(t, j)
+
+        if i >= 0 && j >= 0 {
+            if s[i] != t[j] {
+                return false
+            }
+            i--
+            j--
+        } else {
+            return i == j
+        }
+    }
+    return true
+}
+
+func nextValidIndex(str string, idx int) int {
+    skip := 0
+    for idx >= 0 {
+        if str[idx] == '#' {
+            skip++
+            idx--
+        } else if skip > 0 {
+            skip--
+            idx--
+        } else {
+            break
+        }
+    }
+    return idx
 }</code></pre></div>
-        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">// TODO: Replace with final C++ solution
-class Solution {
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
 public:
-    int solve(...) {
-        return 0;
+    bool backspaceCompare(string s, string t) {
+        int i = (int)s.size() - 1;
+        int j = (int)t.size() - 1;
+
+        while (i >= 0 || j >= 0) {
+            i = nextValidIndex(s, i);
+            j = nextValidIndex(t, j);
+
+            if (i >= 0 && j >= 0) {
+                if (s[i] != t[j]) return false;
+                --i;
+                --j;
+            } else {
+                return i == j;
+            }
+        }
+        return true;
+    }
+
+private:
+    int nextValidIndex(const string& str, int idx) {
+        int skip = 0;
+        while (idx >= 0) {
+            if (str[idx] == '#') {
+                ++skip;
+                --idx;
+            } else if (skip > 0) {
+                --skip;
+                --idx;
+            } else {
+                break;
+            }
+        }
+        return idx;
     }
 };</code></pre></div>
-        <div class="tab-pane" data-tab="python"><pre><code class="language-python"># TODO: Replace with final Python solution
-class Solution:
-    def solve(self, ...):
-        return 0</code></pre></div>
-        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">// TODO: Replace with final JavaScript solution
-function solve(...) {
-  return 0;
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def backspaceCompare(self, s: str, t: str) -> bool:
+        i, j = len(s) - 1, len(t) - 1
+
+        while i >= 0 or j >= 0:
+            i = self.next_valid_index(s, i)
+            j = self.next_valid_index(t, j)
+
+            if i >= 0 and j >= 0:
+                if s[i] != t[j]:
+                    return False
+                i -= 1
+                j -= 1
+            else:
+                return i == j
+
+        return True
+
+    def next_valid_index(self, string: str, idx: int) -> int:
+        skip = 0
+        while idx >= 0:
+            if string[idx] == '#':
+                skip += 1
+                idx -= 1
+            elif skip > 0:
+                skip -= 1
+                idx -= 1
+            else:
+                break
+        return idx</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">function backspaceCompare(s, t) {
+  let i = s.length - 1;
+  let j = t.length - 1;
+
+  while (i >= 0 || j >= 0) {
+    i = nextValidIndex(s, i);
+    j = nextValidIndex(t, j);
+
+    if (i >= 0 && j >= 0) {
+      if (s[i] !== t[j]) return false;
+      i--;
+      j--;
+    } else {
+      return i === j;
+    }
+  }
+
+  return true;
+}
+
+function nextValidIndex(str, idx) {
+  let skip = 0;
+  while (idx >= 0) {
+    if (str[idx] === '#') {
+      skip++;
+      idx--;
+    } else if (skip > 0) {
+      skip--;
+      idx--;
+    } else {
+      break;
+    }
+  }
+  return idx;
 }</code></pre></div>
       </div>
     </article>
