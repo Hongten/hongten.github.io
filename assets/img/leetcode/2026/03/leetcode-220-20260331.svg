@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-label="LeetCode 220 bucket sliding window illustration">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1220"/>
+      <stop offset="100%" stop-color="#172554"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="620" fill="url(#bg)"/>
+  <text x="50" y="70" fill="#e2e8f0" font-size="38" font-family="Arial, sans-serif" font-weight="700">LeetCode 220 · Bucket + Sliding Window</text>
+  <text x="50" y="110" fill="#93c5fd" font-size="24" font-family="Arial, sans-serif">width = valueDiff + 1, check same/neighbor bucket, evict by indexDiff</text>
+
+  <rect x="60" y="160" width="1080" height="160" rx="14" fill="#0f172a" stroke="#334155"/>
+  <text x="80" y="195" fill="#cbd5e1" font-size="22" font-family="Arial, sans-serif">Current window (indices within indexDiff):</text>
+
+  <g font-family="Arial, sans-serif" font-size="22" text-anchor="middle">
+    <rect x="90" y="215" width="150" height="80" rx="10" fill="#1e293b" stroke="#64748b"/>
+    <text x="165" y="260" fill="#e2e8f0">bucket k-1</text>
+
+    <rect x="265" y="215" width="150" height="80" rx="10" fill="#334155" stroke="#93c5fd" stroke-width="2"/>
+    <text x="340" y="260" fill="#e2e8f0">bucket k</text>
+
+    <rect x="440" y="215" width="150" height="80" rx="10" fill="#1e293b" stroke="#64748b"/>
+    <text x="515" y="260" fill="#e2e8f0">bucket k+1</text>
+
+    <rect x="615" y="215" width="150" height="80" rx="10" fill="#0b3b2e" stroke="#34d399"/>
+    <text x="690" y="260" fill="#d1fae5">hit? |x-y|≤valueDiff</text>
+
+    <rect x="790" y="215" width="320" height="80" rx="10" fill="#3f1d2e" stroke="#f472b6"/>
+    <text x="950" y="248" fill="#fde2f3">if i &gt;= indexDiff</text>
+    <text x="950" y="276" fill="#fde2f3">remove nums[i-indexDiff]</text>
+  </g>
+
+  <text x="60" y="375" fill="#e2e8f0" font-size="30" font-family="Arial, sans-serif" font-weight="700">Negative-safe bucket id</text>
+  <rect x="60" y="395" width="1080" height="170" rx="14" fill="#111827" stroke="#475569"/>
+  <text x="90" y="445" fill="#bfdbfe" font-size="27" font-family="Courier New, monospace">id = x &gt;= 0 ? x / w : ((x + 1) / w) - 1</text>
+  <text x="90" y="490" fill="#cbd5e1" font-size="24" font-family="Arial, sans-serif">Prevents wrong bucket mapping for negative values and keeps floor-division behavior.</text>
+  <text x="90" y="530" fill="#cbd5e1" font-size="24" font-family="Arial, sans-serif">Average O(n), memory O(min(n, indexDiff)).</text>
+</svg>
