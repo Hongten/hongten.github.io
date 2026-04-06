@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 1684: Count the Number of Consistent Strings (Allowed-Set Membership Filtering)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 1684 with hash-set filtering, complexity analysis, pitfalls, and 5-language code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 1684: Count the Number of Consistent Strings (Allowed-Set Membership Filtering)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with allowed-character filtering strategy, correctness intuition, complexity, pitfalls, and full code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1684-count-the-number-of-consistent-strings.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1684-count-the-number-of-consistent-strings.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 1684: Count the Number of Consistent Strings (Allowed-Set Membership Filtering)</h1>
+      <div class="meta">2026-04-06 · LeetCode · String / Hash Set</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 1684</span><span class="tag">String</span><span class="tag">Hash Set</span><span class="tag">Filtering</span>
+
+      <p>Today we solve <strong>LeetCode 1684 - Count the Number of Consistent Strings</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/count-the-number-of-consistent-strings/" target="_blank" rel="noopener">https://leetcode.com/problems/count-the-number-of-consistent-strings/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-1684-20260406.svg" alt="LeetCode 1684 allowed-set filtering diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a string <code>allowed</code> and an array <code>words</code>, a word is <em>consistent</em> if every character in it appears in <code>allowed</code>. Return the number of consistent words.</p>
+
+      <h3>Key Insight</h3>
+      <p>Convert <code>allowed</code> into a fast membership structure (boolean array or set). Then validate each word character-by-character; if any character is not allowed, reject that word immediately.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>Without preprocessing, each character check may scan the whole <code>allowed</code> string, making checks slower. Preprocessing <code>allowed</code> once gives O(1) average membership lookups.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Build an allowed lookup table from <code>allowed</code>.<br/>
+         2) For each word, scan its characters.<br/>
+         3) If any character is not in lookup table, mark this word invalid and stop scanning it.<br/>
+         4) Count words that remain valid.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Let total characters across all words be <code>M</code>.<br/>
+         Time: <code>O(|allowed| + M)</code>.<br/>
+         Space: <code>O(1)</code> if using fixed-size 26 boolean array (or <code>O(|allowed|)</code> with a generic set).</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting to stop early after finding an invalid character.<br/>
+         - Recomputing allowed lookup for every word.<br/>
+         - Treating duplicated characters in a word as special cases (they are naturally handled by membership checks).</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int countConsistentStrings(String allowed, String[] words) {
+        boolean[] ok = new boolean[26];
+        for (char c : allowed.toCharArray()) {
+            ok[c - 'a'] = true;
+        }
+
+        int count = 0;
+        for (String w : words) {
+            boolean valid = true;
+            for (int i = 0; i &lt; w.length(); i++) {
+                if (!ok[w.charAt(i) - 'a']) {
+                    valid = false;
+                    break;
+                }
+            }
+            if (valid) count++;
+        }
+        return count;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func countConsistentStrings(allowed string, words []string) int {
+    ok := make([]bool, 26)
+    for _, ch := range allowed {
+        ok[ch-'a'] = true
+    }
+
+    ans := 0
+    for _, w := range words {
+        valid := true
+        for _, ch := range w {
+            if !ok[ch-'a'] {
+                valid = false
+                break
+            }
+        }
+        if valid {
+            ans++
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+class Solution {
+public:
+    int countConsistentStrings(string allowed, vector&lt;string&gt;&amp; words) {
+        vector&lt;bool&gt; ok(26, false);
+        for (char c : allowed) ok[c - 'a'] = true;
+
+        int ans = 0;
+        for (const string&amp; w : words) {
+            bool valid = true;
+            for (char c : w) {
+                if (!ok[c - 'a']) {
+                    valid = false;
+                    break;
+                }
+            }
+            if (valid) ans++;
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">from typing import List
+
+
+class Solution:
+    def countConsistentStrings(self, allowed: str, words: List[str]) -&gt; int:
+        ok = set(allowed)
+        ans = 0
+
+        for w in words:
+            valid = True
+            for ch in w:
+                if ch not in ok:
+                    valid = False
+                    break
+            if valid:
+                ans += 1
+
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var countConsistentStrings = function(allowed, words) {
+  const ok = new Set(allowed);
+  let ans = 0;
+
+  for (const w of words) {
+    let valid = true;
+    for (const ch of w) {
+      if (!ok.has(ch)) {
+        valid = false;
+        break;
+      }
+    }
+    if (valid) ans++;
+  }
+
+  return ans;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定字符串 <code>allowed</code> 和字符串数组 <code>words</code>。如果一个单词中的每个字符都出现在 <code>allowed</code> 中，则该单词是“一致字符串”。返回一致字符串的数量。</p>
+
+      <h3>核心思路</h3>
+      <p>先把 <code>allowed</code> 预处理成可 O(1) 查询的结构（如布尔数组或哈希集合）。随后逐词逐字符检查，只要遇到非法字符就立刻判定该词不一致。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>若不做预处理，每次判断字符是否允许都去线性扫描 <code>allowed</code>，会产生重复开销。预处理后整体效率更高。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）根据 <code>allowed</code> 构建查表结构。<br/>
+         2）遍历每个单词并逐字符检查。<br/>
+         3）若出现不在查表中的字符，立即判该词无效并跳出。<br/>
+         4）统计所有有效单词数量。</p>
+
+      <h3>复杂度分析</h3>
+      <p>设所有单词总字符数为 <code>M</code>。<br/>
+         时间复杂度：<code>O(|allowed| + M)</code>。<br/>
+         空间复杂度：若用 26 长度布尔数组为 <code>O(1)</code>；若用集合则为 <code>O(|allowed|)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 发现非法字符后没有及时终止当前单词检查。<br/>
+         - 每个单词都重复构建 allowed 查表，造成不必要开销。<br/>
+         - 误以为重复字符需要特殊处理（实际上按成员判断即可）。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int countConsistentStrings(String allowed, String[] words) {
+        boolean[] ok = new boolean[26];
+        for (char c : allowed.toCharArray()) {
+            ok[c - 'a'] = true;
+        }
+
+        int count = 0;
+        for (String w : words) {
+            boolean valid = true;
+            for (int i = 0; i &lt; w.length(); i++) {
+                if (!ok[w.charAt(i) - 'a']) {
+                    valid = false;
+                    break;
+                }
+            }
+            if (valid) count++;
+        }
+        return count;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func countConsistentStrings(allowed string, words []string) int {
+    ok := make([]bool, 26)
+    for _, ch := range allowed {
+        ok[ch-'a'] = true
+    }
+
+    ans := 0
+    for _, w := range words {
+        valid := true
+        for _, ch := range w {
+            if !ok[ch-'a'] {
+                valid = false
+                break
+            }
+        }
+        if valid {
+            ans++
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+class Solution {
+public:
+    int countConsistentStrings(string allowed, vector&lt;string&gt;&amp; words) {
+        vector&lt;bool&gt; ok(26, false);
+        for (char c : allowed) ok[c - 'a'] = true;
+
+        int ans = 0;
+        for (const string&amp; w : words) {
+            bool valid = true;
+            for (char c : w) {
+                if (!ok[c - 'a']) {
+                    valid = false;
+                    break;
+                }
+            }
+            if (valid) ans++;
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">from typing import List
+
+
+class Solution:
+    def countConsistentStrings(self, allowed: str, words: List[str]) -&gt; int:
+        ok = set(allowed)
+        ans = 0
+
+        for w in words:
+            valid = True
+            for ch in w:
+                if ch not in ok:
+                    valid = False
+                    break
+            if valid:
+                ans += 1
+
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var countConsistentStrings = function(allowed, words) {
+  const ok = new Set(allowed);
+  let ans = 0;
+
+  for (const w of words) {
+    let valid = true;
+    for (const ch of w) {
+      if (!ok.has(ch)) {
+        valid = false;
+        break;
+      }
+    }
+    if (valid) ans++;
+  }
+
+  return ans;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
