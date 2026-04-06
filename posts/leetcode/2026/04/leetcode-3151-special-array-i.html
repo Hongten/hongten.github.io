@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 3151: Special Array I (Adjacent Parity Alternation Check)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 3151 with parity alternation invariant, pitfalls, and 5-language implementations."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 3151: Special Array I (Adjacent Parity Alternation Check)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with one-pass parity-check reasoning, complexity, pitfalls, and full code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3151-special-array-i.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3151-special-array-i.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 3151: Special Array I (Adjacent Parity Alternation Check)</h1>
+      <div class="meta">2026-04-06 · LeetCode · Array / Parity</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 3151</span><span class="tag">Array</span><span class="tag">Parity</span><span class="tag">One Pass</span>
+
+      <p>Today we solve <strong>LeetCode 3151 - Special Array I</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/special-array-i/" target="_blank" rel="noopener">https://leetcode.com/problems/special-array-i/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-3151-20260406.svg" alt="LeetCode 3151 adjacent parity alternation diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>An array is <em>special</em> if every pair of adjacent numbers has different parity: one odd and the other even. Return <code>true</code> if the given array is special, otherwise return <code>false</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>The global condition is just a set of local checks: for each adjacent pair <code>(nums[i-1], nums[i])</code>, parity must differ. If one pair violates this, we can return immediately.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>A brute-force mindset might build a parity array first, then scan it. That works but uses extra space. We can compare parity directly in one pass.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Start from <code>i = 1</code>.<br/>
+         2) Compare <code>nums[i] % 2</code> and <code>nums[i - 1] % 2</code>.<br/>
+         3) If equal, return <code>false</code> immediately.<br/>
+         4) If all adjacent pairs differ, return <code>true</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting to handle arrays of length 1 (they are always special).<br/>
+         - Mixing up “value parity” and index parity (this problem is about <strong>value</strong> parity).<br/>
+         - Not early-returning when a bad adjacent pair is found.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean isArraySpecial(int[] nums) {
+        for (int i = 1; i &lt; nums.length; i++) {
+            if ((nums[i] &amp; 1) == (nums[i - 1] &amp; 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func isArraySpecial(nums []int) bool {
+    for i := 1; i &lt; len(nums); i++ {
+        if nums[i]%2 == nums[i-1]%2 {
+            return false
+        }
+    }
+    return true
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool isArraySpecial(vector&lt;int&gt;&amp; nums) {
+        for (int i = 1; i &lt; (int)nums.size(); i++) {
+            if ((nums[i] &amp; 1) == (nums[i - 1] &amp; 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def isArraySpecial(self, nums: List[int]) -&gt; bool:
+        for i in range(1, len(nums)):
+            if nums[i] % 2 == nums[i - 1] % 2:
+                return False
+        return True</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var isArraySpecial = function(nums) {
+  for (let i = 1; i &lt; nums.length; i++) {
+    if ((nums[i] &amp; 1) === (nums[i - 1] &amp; 1)) {
+      return false;
+    }
+  }
+  return true;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>如果数组中每一对相邻元素的奇偶性都不同（一个奇数一个偶数），则称该数组是 <em>special</em>。给定数组 <code>nums</code>，判断它是否 special。</p>
+
+      <h3>核心思路</h3>
+      <p>整体条件可以分解为局部条件：逐个检查相邻元素是否“奇偶相反”。只要发现一对奇偶相同，就可以立刻返回 <code>false</code>。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>可以先构造一个奇偶数组再判断相邻项，但这会多占空间。直接在原数组上比较相邻元素奇偶性更简洁。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）从 <code>i = 1</code> 开始遍历。<br/>
+         2）比较 <code>nums[i]</code> 与 <code>nums[i-1]</code> 的奇偶性。<br/>
+         3）若奇偶相同，立即返回 <code>false</code>。<br/>
+         4）遍历结束仍未冲突，返回 <code>true</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 忽略长度为 1 的情况（长度为 1 一定 special）。<br/>
+         - 把“下标奇偶”误当成“数值奇偶”（本题看的是数值奇偶）。<br/>
+         - 发现冲突后没有及时返回，导致多余计算。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean isArraySpecial(int[] nums) {
+        for (int i = 1; i &lt; nums.length; i++) {
+            if ((nums[i] &amp; 1) == (nums[i - 1] &amp; 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func isArraySpecial(nums []int) bool {
+    for i := 1; i &lt; len(nums); i++ {
+        if nums[i]%2 == nums[i-1]%2 {
+            return false
+        }
+    }
+    return true
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool isArraySpecial(vector&lt;int&gt;&amp; nums) {
+        for (int i = 1; i &lt; (int)nums.size(); i++) {
+            if ((nums[i] &amp; 1) == (nums[i - 1] &amp; 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def isArraySpecial(self, nums: List[int]) -&gt; bool:
+        for i in range(1, len(nums)):
+            if nums[i] % 2 == nums[i - 1] % 2:
+                return False
+        return True</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var isArraySpecial = function(nums) {
+  for (let i = 1; i &lt; nums.length; i++) {
+    if ((nums[i] &amp; 1) === (nums[i - 1] &amp; 1)) {
+      return false;
+    }
+  }
+  return true;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
