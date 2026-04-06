@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 223: Rectangle Area (Inclusion-Exclusion with Overlap Width/Height)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 223 using inclusion-exclusion and overlap projection with full 5-language code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 223: Rectangle Area (Inclusion-Exclusion with Overlap Width/Height)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with overlap geometry insight, algorithm steps, complexity, pitfalls, and full code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-223-rectangle-area.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-223-rectangle-area.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 223: Rectangle Area (Inclusion-Exclusion with Overlap Width/Height)</h1>
+      <div class="meta">2026-04-06 · LeetCode · Geometry / Math</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 223</span><span class="tag">Geometry</span><span class="tag">Math</span><span class="tag">Inclusion-Exclusion</span>
+
+      <p>Today we solve <strong>LeetCode 223 - Rectangle Area</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/rectangle-area/" target="_blank" rel="noopener">https://leetcode.com/problems/rectangle-area/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-223-20260406.svg" alt="LeetCode 223 rectangle overlap area diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given two axis-aligned rectangles <code>A(ax1, ay1, ax2, ay2)</code> and <code>B(bx1, by1, bx2, by2)</code>, return the total covered area. If they overlap, the overlap should be counted only once.</p>
+
+      <h3>Key Insight</h3>
+      <p>Use inclusion-exclusion: total area = area(A) + area(B) - overlap(A, B). The overlap area can be computed from 1D projections on x/y axes.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>A grid simulation over coordinate cells is possible in theory, but impossible in practice because coordinates can be very large. Geometry formulas are required.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Compute each rectangle area separately.<br/>
+         2) Compute overlap width: <code>max(0, min(ax2, bx2) - max(ax1, bx1))</code>.<br/>
+         3) Compute overlap height: <code>max(0, min(ay2, by2) - max(ay1, by1))</code>.<br/>
+         4) Overlap area = width × height, then apply inclusion-exclusion.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(1)</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting to clamp overlap width/height with <code>max(0, ...)</code>, causing negative overlap.<br/>
+         - Mixing corners (left/bottom vs right/top).<br/>
+         - Integer overflow in fixed-width languages if constraints are expanded (use long/64-bit where needed).</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int computeArea(int ax1, int ay1, int ax2, int ay2,
+                           int bx1, int by1, int bx2, int by2) {
+        int areaA = (ax2 - ax1) * (ay2 - ay1);
+        int areaB = (bx2 - bx1) * (by2 - by1);
+
+        int overlapW = Math.max(0, Math.min(ax2, bx2) - Math.max(ax1, bx1));
+        int overlapH = Math.max(0, Math.min(ay2, by2) - Math.max(ay1, by1));
+        int overlap = overlapW * overlapH;
+
+        return areaA + areaB - overlap;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func computeArea(ax1 int, ay1 int, ax2 int, ay2 int,
+    bx1 int, by1 int, bx2 int, by2 int) int {
+    areaA := (ax2 - ax1) * (ay2 - ay1)
+    areaB := (bx2 - bx1) * (by2 - by1)
+
+    overlapW := max(0, min(ax2, bx2)-max(ax1, bx1))
+    overlapH := max(0, min(ay2, by2)-max(ay1, by1))
+    overlap := overlapW * overlapH
+
+    return areaA + areaB - overlap
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int computeArea(int ax1, int ay1, int ax2, int ay2,
+                    int bx1, int by1, int bx2, int by2) {
+        int areaA = (ax2 - ax1) * (ay2 - ay1);
+        int areaB = (bx2 - bx1) * (by2 - by1);
+
+        int overlapW = std::max(0, std::min(ax2, bx2) - std::max(ax1, bx1));
+        int overlapH = std::max(0, std::min(ay2, by2) - std::max(ay1, by1));
+        int overlap = overlapW * overlapH;
+
+        return areaA + areaB - overlap;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def computeArea(self, ax1: int, ay1: int, ax2: int, ay2: int,
+                    bx1: int, by1: int, bx2: int, by2: int) -&gt; int:
+        area_a = (ax2 - ax1) * (ay2 - ay1)
+        area_b = (bx2 - bx1) * (by2 - by1)
+
+        overlap_w = max(0, min(ax2, bx2) - max(ax1, bx1))
+        overlap_h = max(0, min(ay2, by2) - max(ay1, by1))
+        overlap = overlap_w * overlap_h
+
+        return area_a + area_b - overlap</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var computeArea = function(ax1, ay1, ax2, ay2, bx1, by1, bx2, by2) {
+  const areaA = (ax2 - ax1) * (ay2 - ay1);
+  const areaB = (bx2 - bx1) * (by2 - by1);
+
+  const overlapW = Math.max(0, Math.min(ax2, bx2) - Math.max(ax1, bx1));
+  const overlapH = Math.max(0, Math.min(ay2, by2) - Math.max(ay1, by1));
+  const overlap = overlapW * overlapH;
+
+  return areaA + areaB - overlap;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定两个与坐标轴平行的矩形 <code>A(ax1, ay1, ax2, ay2)</code> 和 <code>B(bx1, by1, bx2, by2)</code>，求它们覆盖的总面积。若有重叠区域，重叠部分只能计算一次。</p>
+
+      <h3>核心思路</h3>
+      <p>使用容斥原理：总面积 = A 面积 + B 面积 - 重叠面积。重叠面积可通过 x 轴和 y 轴投影长度相乘得到。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>按网格逐点/逐小块统计理论上可行，但坐标范围很大时完全不可行，因此必须用几何公式一次计算。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）分别计算矩形 A 与矩形 B 的面积。<br/>
+         2）重叠宽度：<code>max(0, min(ax2, bx2) - max(ax1, bx1))</code>。<br/>
+         3）重叠高度：<code>max(0, min(ay2, by2) - max(ay1, by1))</code>。<br/>
+         4）重叠面积 = 宽 × 高，最后代入容斥公式。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(1)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 忘记对重叠宽高做 <code>max(0, ...)</code> 截断，导致出现负面积。<br/>
+         - 左下角/右上角坐标混用。<br/>
+         - 在固定宽度整型语言中，若约束扩大可能溢出（可改用 long/64 位）。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int computeArea(int ax1, int ay1, int ax2, int ay2,
+                           int bx1, int by1, int bx2, int by2) {
+        int areaA = (ax2 - ax1) * (ay2 - ay1);
+        int areaB = (bx2 - bx1) * (by2 - by1);
+
+        int overlapW = Math.max(0, Math.min(ax2, bx2) - Math.max(ax1, bx1));
+        int overlapH = Math.max(0, Math.min(ay2, by2) - Math.max(ay1, by1));
+        int overlap = overlapW * overlapH;
+
+        return areaA + areaB - overlap;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func computeArea(ax1 int, ay1 int, ax2 int, ay2 int,
+    bx1 int, by1 int, bx2 int, by2 int) int {
+    areaA := (ax2 - ax1) * (ay2 - ay1)
+    areaB := (bx2 - bx1) * (by2 - by1)
+
+    overlapW := max(0, min(ax2, bx2)-max(ax1, bx1))
+    overlapH := max(0, min(ay2, by2)-max(ay1, by1))
+    overlap := overlapW * overlapH
+
+    return areaA + areaB - overlap
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int computeArea(int ax1, int ay1, int ax2, int ay2,
+                    int bx1, int by1, int bx2, int by2) {
+        int areaA = (ax2 - ax1) * (ay2 - ay1);
+        int areaB = (bx2 - bx1) * (by2 - by1);
+
+        int overlapW = std::max(0, std::min(ax2, bx2) - std::max(ax1, bx1));
+        int overlapH = std::max(0, std::min(ay2, by2) - std::max(ay1, by1));
+        int overlap = overlapW * overlapH;
+
+        return areaA + areaB - overlap;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def computeArea(self, ax1: int, ay1: int, ax2: int, ay2: int,
+                    bx1: int, by1: int, bx2: int, by2: int) -&gt; int:
+        area_a = (ax2 - ax1) * (ay2 - ay1)
+        area_b = (bx2 - bx1) * (by2 - by1)
+
+        overlap_w = max(0, min(ax2, bx2) - max(ax1, bx1))
+        overlap_h = max(0, min(ay2, by2) - max(ay1, by1))
+        overlap = overlap_w * overlap_h
+
+        return area_a + area_b - overlap</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var computeArea = function(ax1, ay1, ax2, ay2, bx1, by1, bx2, by2) {
+  const areaA = (ax2 - ax1) * (ay2 - ay1);
+  const areaB = (bx2 - bx1) * (by2 - by1);
+
+  const overlapW = Math.max(0, Math.min(ax2, bx2) - Math.max(ax1, bx1));
+  const overlapH = Math.max(0, Math.min(ay2, by2) - Math.max(ay1, by1));
+  const overlap = overlapW * overlapH;
+
+  return areaA + areaB - overlap;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
