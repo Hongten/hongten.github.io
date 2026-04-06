@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 405 nibble extraction diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .title { font: 700 44px 'Segoe UI', Arial, sans-serif; fill: #e2e8f0; }
+      .subtitle { font: 500 24px 'Segoe UI', Arial, sans-serif; fill: #93c5fd; }
+      .label { font: 600 24px 'Consolas', 'Courier New', monospace; fill: #f8fafc; }
+      .small { font: 500 20px 'Segoe UI', Arial, sans-serif; fill: #cbd5e1; }
+      .hex { font: 700 34px 'Consolas', 'Courier New', monospace; fill: #facc15; }
+      .box { fill: #111827; stroke: #334155; stroke-width: 2; rx: 14; }
+      .chip { fill: #1f2937; stroke: #475569; stroke-width: 2; rx: 10; }
+      .arrow { stroke: #38bdf8; stroke-width: 4; marker-end: url(#m); fill: none; }
+    </style>
+    <marker id="m" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#38bdf8"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="90" class="title">LeetCode 405 · Convert a Number to Hexadecimal</text>
+  <text x="60" y="130" class="subtitle">Take lowest nibble (num &amp; 0xf), map to 0-9a-f, then unsigned shift by 4</text>
+
+  <rect x="60" y="180" width="1080" height="380" class="box"/>
+
+  <text x="100" y="235" class="label">Example: num = -26 (32-bit two's complement)</text>
+  <rect x="100" y="260" width="1000" height="70" class="chip"/>
+  <text x="130" y="306" class="label">11111111 11111111 11111111 11100110</text>
+
+  <path d="M220 345 L220 390" class="arrow"/>
+  <text x="140" y="430" class="small">num &amp; 0xf = 6</text>
+  <text x="135" y="470" class="hex">append '6'</text>
+
+  <path d="M600 345 L600 390" class="arrow"/>
+  <text x="520" y="430" class="small">num >>> 4</text>
+  <text x="460" y="470" class="label">00001111 11111111 11111111 11111110</text>
+
+  <path d="M975 345 L975 390" class="arrow"/>
+  <text x="895" y="430" class="small">next nibble = e</text>
+  <text x="860" y="470" class="hex">append 'e' ... reverse at end</text>
+
+  <text x="100" y="530" class="subtitle">At most 8 iterations for 32-bit integers → O(1) time, O(1) space</text>
+</svg>

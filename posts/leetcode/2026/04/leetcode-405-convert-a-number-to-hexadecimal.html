@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 405: Convert a Number to Hexadecimal (32-bit Nibble Extraction)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 405 using 32-bit nibble extraction and unsigned right shift with full 5-language code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 405: Convert a Number to Hexadecimal (32-bit Nibble Extraction)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with bit manipulation reasoning, pitfalls, and complete Java/Go/C++/Python/JavaScript code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-405-convert-a-number-to-hexadecimal.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-405-convert-a-number-to-hexadecimal.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 405: Convert a Number to Hexadecimal (32-bit Nibble Extraction)</h1>
+      <div class="meta">2026-04-06 · LeetCode · Bit Manipulation</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 405</span><span class="tag">Bit Manipulation</span><span class="tag">Two's Complement</span><span class="tag">32-bit</span>
+
+      <p>Today we solve <strong>LeetCode 405 - Convert a Number to Hexadecimal</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/convert-a-number-to-hexadecimal/" target="_blank" rel="noopener">https://leetcode.com/problems/convert-a-number-to-hexadecimal/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-405-20260406.svg" alt="LeetCode 405 nibble-by-nibble hexadecimal conversion flow" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a 32-bit signed integer <code>num</code>, return its lowercase hexadecimal representation without leading zeros. For negative values, use two's complement representation.</p>
+
+      <h3>Key Insight</h3>
+      <p>A hexadecimal digit represents 4 bits (one nibble). Repeatedly take the lowest nibble via <code>num &amp; 0xf</code>, map it to <code>0-9a-f</code>, then perform an unsigned right shift by 4 bits.</p>
+
+      <h3>Bit Strategy</h3>
+      <p>- If <code>num == 0</code>, return <code>"0"</code>.<br/>
+         - Use a digit table <code>"0123456789abcdef"</code>.<br/>
+         - Loop while value is non-zero:<br/>
+         &nbsp;&nbsp;1) <code>digit = value &amp; 15</code><br/>
+         &nbsp;&nbsp;2) append mapped hex char<br/>
+         &nbsp;&nbsp;3) unsigned-shift <code>value</code> by 4.<br/>
+         - Reverse at the end.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(1)</code> (at most 8 iterations for 32-bit).<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Using arithmetic right shift for negative numbers in languages where it keeps the sign forever.<br/>
+         - Forgetting special case <code>num == 0</code>.<br/>
+         - Returning uppercase letters when lowercase is required.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public String toHex(int num) {
+        if (num == 0) return "0";
+        char[] digits = "0123456789abcdef".toCharArray();
+        StringBuilder sb = new StringBuilder();
+        while (num != 0) {
+            sb.append(digits[num & 15]);
+            num >>>= 4;
+        }
+        return sb.reverse().toString();
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func toHex(num int) string {
+    if num == 0 {
+        return "0"
+    }
+    digits := "0123456789abcdef"
+    v := uint32(num)
+    out := make([]byte, 0, 8)
+    for v != 0 {
+        out = append(out, digits[v&15])
+        v >>= 4
+    }
+    for i, j := 0, len(out)-1; i &lt; j; i, j = i+1, j-1 {
+        out[i], out[j] = out[j], out[i]
+    }
+    return string(out)
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    string toHex(int num) {
+        if (num == 0) return "0";
+        const string digits = "0123456789abcdef";
+        unsigned int v = static_cast&lt;unsigned int&gt;(num);
+        string out;
+        while (v != 0) {
+            out.push_back(digits[v & 15]);
+            v >>= 4;
+        }
+        reverse(out.begin(), out.end());
+        return out;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def toHex(self, num: int) -> str:
+        if num == 0:
+            return "0"
+        digits = "0123456789abcdef"
+        v = num & 0xffffffff
+        out = []
+        while v:
+            out.append(digits[v & 15])
+            v >>= 4
+        return "".join(reversed(out))</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var toHex = function(num) {
+  if (num === 0) return "0";
+  const digits = "0123456789abcdef";
+  let out = "";
+  while (num !== 0) {
+    out += digits[num & 15];
+    num >>>= 4;
+  }
+  return out.split("").reverse().join("");
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定一个 32 位有符号整数 <code>num</code>，返回其小写十六进制字符串（无多余前导零）。负数按二进制补码表示来转换。</p>
+
+      <h3>核心思路</h3>
+      <p>十六进制每一位对应 4 bit（一个 nibble）。每次取最低 4 位：<code>num &amp; 0xf</code>，映射到 <code>0-9a-f</code>，再无符号右移 4 位，直到为 0。</p>
+
+      <h3>位运算步骤</h3>
+      <p>- 若 <code>num == 0</code>，直接返回 <code>"0"</code>。<br/>
+         - 使用映射表 <code>"0123456789abcdef"</code>。<br/>
+         - 循环处理中间值：<br/>
+         &nbsp;&nbsp;1) <code>digit = value &amp; 15</code><br/>
+         &nbsp;&nbsp;2) 追加对应字符<br/>
+         &nbsp;&nbsp;3) 无符号右移 4 位。<br/>
+         - 最后反转结果得到高位在前的表示。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(1)</code>（32 位最多 8 轮）。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 对负数使用算术右移导致符号位持续补 1，循环无法结束。<br/>
+         - 漏掉 <code>num == 0</code> 的特判。<br/>
+         - 输出大写字母而非题目要求的小写。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public String toHex(int num) {
+        if (num == 0) return "0";
+        char[] digits = "0123456789abcdef".toCharArray();
+        StringBuilder sb = new StringBuilder();
+        while (num != 0) {
+            sb.append(digits[num & 15]);
+            num >>>= 4;
+        }
+        return sb.reverse().toString();
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func toHex(num int) string {
+    if num == 0 {
+        return "0"
+    }
+    digits := "0123456789abcdef"
+    v := uint32(num)
+    out := make([]byte, 0, 8)
+    for v != 0 {
+        out = append(out, digits[v&15])
+        v >>= 4
+    }
+    for i, j := 0, len(out)-1; i &lt; j; i, j = i+1, j-1 {
+        out[i], out[j] = out[j], out[i]
+    }
+    return string(out)
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    string toHex(int num) {
+        if (num == 0) return "0";
+        const string digits = "0123456789abcdef";
+        unsigned int v = static_cast&lt;unsigned int&gt;(num);
+        string out;
+        while (v != 0) {
+            out.push_back(digits[v & 15]);
+            v >>= 4;
+        }
+        reverse(out.begin(), out.end());
+        return out;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def toHex(self, num: int) -> str:
+        if num == 0:
+            return "0"
+        digits = "0123456789abcdef"
+        v = num & 0xffffffff
+        out = []
+        while v:
+            out.append(digits[v & 15])
+            v >>= 4
+        return "".join(reversed(out))</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var toHex = function(num) {
+  if (num === 0) return "0";
+  const digits = "0123456789abcdef";
+  let out = "";
+  while (num !== 0) {
+    out += digits[num & 15];
+    num >>>= 4;
+  }
+  return out.split("").reverse().join("");
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
