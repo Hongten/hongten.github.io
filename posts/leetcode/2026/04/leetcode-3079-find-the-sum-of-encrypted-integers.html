@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 3079: Find the Sum of Encrypted Integers (Max-Digit Repeat Construction)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 3079 using max-digit repeat construction, linear scan, pitfalls, and 5-language code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 3079: Find the Sum of Encrypted Integers (Max-Digit Repeat Construction)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with per-number encryption logic, complexity, pitfalls, and full code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3079-find-the-sum-of-encrypted-integers.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3079-find-the-sum-of-encrypted-integers.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 3079: Find the Sum of Encrypted Integers (Max-Digit Repeat Construction)</h1>
+      <div class="meta">2026-04-07 · LeetCode · Array / Math / Simulation</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 3079</span><span class="tag">Array</span><span class="tag">Math</span><span class="tag">Digit Processing</span>
+
+      <p>Today we solve <strong>LeetCode 3079 - Find the Sum of Encrypted Integers</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/find-the-sum-of-encrypted-integers/" target="_blank" rel="noopener">https://leetcode.com/problems/find-the-sum-of-encrypted-integers/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-3079-20260407.svg" alt="LeetCode 3079 encryption diagram by repeating maximum digit per number" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>For each integer in <code>nums</code>, replace it with an encrypted value formed by repeating its maximum digit for the same number of digits. Return the sum of all encrypted values.</p>
+
+      <h3>Key Insight</h3>
+      <p>Each number can be processed independently: while scanning digits, track <code>maxDigit</code> and <code>digitCount</code>. Then construct encrypted value as <code>maxDigit</code> repeated <code>digitCount</code> times.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>A string-based approach (convert number to string, find max char, build repeated string, parse back) works but adds conversion overhead. Integer math is cleaner and faster.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Initialize total sum = 0.<br/>
+         2) For each number, scan digits to get <code>maxDigit</code> and <code>digitCount</code>.<br/>
+         3) Build encrypted number by repeating <code>maxDigit</code> exactly <code>digitCount</code> times.<br/>
+         4) Add encrypted number to sum and return final sum.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n * d)</code>, where <code>d</code> is digits per number (at most 4 under constraints, effectively linear).<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting single-digit numbers should keep one digit.<br/>
+         - Not handling <code>0</code> safely in a generic helper.<br/>
+         - Mixing “maximum digit value” with “most frequent digit”.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int sumOfEncryptedInt(int[] nums) {
+        int ans = 0;
+        for (int x : nums) {
+            ans += encrypt(x);
+        }
+        return ans;
+    }
+
+    private int encrypt(int x) {
+        if (x == 0) return 0;
+        int maxDigit = 0;
+        int digits = 0;
+        int t = x;
+        while (t &gt; 0) {
+            maxDigit = Math.max(maxDigit, t % 10);
+            digits++;
+            t /= 10;
+        }
+        int encrypted = 0;
+        for (int i = 0; i &lt; digits; i++) {
+            encrypted = encrypted * 10 + maxDigit;
+        }
+        return encrypted;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func sumOfEncryptedInt(nums []int) int {
+    ans := 0
+    for _, x := range nums {
+        ans += encrypt(x)
+    }
+    return ans
+}
+
+func encrypt(x int) int {
+    if x == 0 {
+        return 0
+    }
+    maxDigit, digits := 0, 0
+    for t := x; t &gt; 0; t /= 10 {
+        d := t % 10
+        if d &gt; maxDigit {
+            maxDigit = d
+        }
+        digits++
+    }
+    encrypted := 0
+    for i := 0; i &lt; digits; i++ {
+        encrypted = encrypted*10 + maxDigit
+    }
+    return encrypted
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int sumOfEncryptedInt(vector&lt;int&gt;&amp; nums) {
+        int ans = 0;
+        for (int x : nums) {
+            ans += encrypt(x);
+        }
+        return ans;
+    }
+
+private:
+    int encrypt(int x) {
+        if (x == 0) return 0;
+        int maxDigit = 0, digits = 0;
+        int t = x;
+        while (t &gt; 0) {
+            maxDigit = max(maxDigit, t % 10);
+            digits++;
+            t /= 10;
+        }
+        int encrypted = 0;
+        for (int i = 0; i &lt; digits; i++) {
+            encrypted = encrypted * 10 + maxDigit;
+        }
+        return encrypted;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def sumOfEncryptedInt(self, nums: list[int]) -&gt; int:
+        return sum(self._encrypt(x) for x in nums)
+
+    def _encrypt(self, x: int) -&gt; int:
+        if x == 0:
+            return 0
+        max_digit = 0
+        digits = 0
+        t = x
+        while t &gt; 0:
+            max_digit = max(max_digit, t % 10)
+            digits += 1
+            t //= 10
+
+        encrypted = 0
+        for _ in range(digits):
+            encrypted = encrypted * 10 + max_digit
+        return encrypted</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var sumOfEncryptedInt = function(nums) {
+  let ans = 0;
+  for (const x of nums) {
+    ans += encrypt(x);
+  }
+  return ans;
+};
+
+function encrypt(x) {
+  if (x === 0) return 0;
+  let maxDigit = 0;
+  let digits = 0;
+  for (let t = x; t &gt; 0; t = Math.floor(t / 10)) {
+    const d = t % 10;
+    if (d &gt; maxDigit) maxDigit = d;
+    digits++;
+  }
+  let encrypted = 0;
+  for (let i = 0; i &lt; digits; i++) {
+    encrypted = encrypted * 10 + maxDigit;
+  }
+  return encrypted;
+}</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定数组 <code>nums</code>，把每个整数加密为：取该数中的最大数字，并按原位数重复拼接成新数。返回所有加密数之和。</p>
+
+      <h3>核心思路</h3>
+      <p>每个数字互不影响。对单个数字做一遍“取位”扫描，拿到最大数字和位数；再按位数把最大数字重复拼接即可。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>可以先转字符串再处理（找最大字符、重复构造字符串、再转回整数），但这种写法多了不必要的转换。直接用整数运算更稳更快。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）初始化总和 <code>sum = 0</code>。<br/>
+         2）遍历 <code>nums</code>，对每个数统计 <code>maxDigit</code> 与位数 <code>digits</code>。<br/>
+         3）将 <code>maxDigit</code> 重复 <code>digits</code> 次构造加密值。<br/>
+         4）累加后返回总和。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n * d)</code>，其中 <code>d</code> 为每个数的位数（题目约束下很小）。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 单位数也要按 1 位处理。<br/>
+         - 通用函数里忘记处理 <code>0</code>。<br/>
+         - 把“最大数字”误写成“出现次数最多的数字”。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int sumOfEncryptedInt(int[] nums) {
+        int ans = 0;
+        for (int x : nums) {
+            ans += encrypt(x);
+        }
+        return ans;
+    }
+
+    private int encrypt(int x) {
+        if (x == 0) return 0;
+        int maxDigit = 0;
+        int digits = 0;
+        int t = x;
+        while (t &gt; 0) {
+            maxDigit = Math.max(maxDigit, t % 10);
+            digits++;
+            t /= 10;
+        }
+        int encrypted = 0;
+        for (int i = 0; i &lt; digits; i++) {
+            encrypted = encrypted * 10 + maxDigit;
+        }
+        return encrypted;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func sumOfEncryptedInt(nums []int) int {
+    ans := 0
+    for _, x := range nums {
+        ans += encrypt(x)
+    }
+    return ans
+}
+
+func encrypt(x int) int {
+    if x == 0 {
+        return 0
+    }
+    maxDigit, digits := 0, 0
+    for t := x; t &gt; 0; t /= 10 {
+        d := t % 10
+        if d &gt; maxDigit {
+            maxDigit = d
+        }
+        digits++
+    }
+    encrypted := 0
+    for i := 0; i &lt; digits; i++ {
+        encrypted = encrypted*10 + maxDigit
+    }
+    return encrypted
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int sumOfEncryptedInt(vector&lt;int&gt;&amp; nums) {
+        int ans = 0;
+        for (int x : nums) {
+            ans += encrypt(x);
+        }
+        return ans;
+    }
+
+private:
+    int encrypt(int x) {
+        if (x == 0) return 0;
+        int maxDigit = 0, digits = 0;
+        int t = x;
+        while (t &gt; 0) {
+            maxDigit = max(maxDigit, t % 10);
+            digits++;
+            t /= 10;
+        }
+        int encrypted = 0;
+        for (int i = 0; i &lt; digits; i++) {
+            encrypted = encrypted * 10 + maxDigit;
+        }
+        return encrypted;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def sumOfEncryptedInt(self, nums: list[int]) -&gt; int:
+        return sum(self._encrypt(x) for x in nums)
+
+    def _encrypt(self, x: int) -&gt; int:
+        if x == 0:
+            return 0
+        max_digit = 0
+        digits = 0
+        t = x
+        while t &gt; 0:
+            max_digit = max(max_digit, t % 10)
+            digits += 1
+            t //= 10
+
+        encrypted = 0
+        for _ in range(digits):
+            encrypted = encrypted * 10 + max_digit
+        return encrypted</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var sumOfEncryptedInt = function(nums) {
+  let ans = 0;
+  for (const x of nums) {
+    ans += encrypt(x);
+  }
+  return ans;
+};
+
+function encrypt(x) {
+  if (x === 0) return 0;
+  let maxDigit = 0;
+  let digits = 0;
+  for (let t = x; t &gt; 0; t = Math.floor(t / 10)) {
+    const d = t % 10;
+    if (d &gt; maxDigit) maxDigit = d;
+    digits++;
+  }
+  let encrypted = 0;
+  for (let i = 0; i &lt; digits; i++) {
+    encrypted = encrypted * 10 + maxDigit;
+  }
+  return encrypted;
+}</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
