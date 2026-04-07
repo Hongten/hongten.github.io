@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-label="Meeting intervals overlap check timeline">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .title{font:700 40px 'Segoe UI',Arial,sans-serif;fill:#e2e8f0}
+      .sub{font:500 22px 'Segoe UI',Arial,sans-serif;fill:#cbd5e1}
+      .label{font:600 18px 'Segoe UI',Arial,sans-serif;fill:#e2e8f0}
+      .tick{font:500 16px 'Segoe UI',Arial,sans-serif;fill:#94a3b8}
+      .ok{fill:#22c55e}
+      .bad{fill:#ef4444}
+      .meetA{fill:#38bdf8}
+      .meetB{fill:#f59e0b}
+      .meetC{fill:#a78bfa}
+    </style>
+  </defs>
+  <rect width="1200" height="620" fill="url(#bg)"/>
+  <text x="60" y="80" class="title">LeetCode 252 · Meeting Rooms</text>
+  <text x="60" y="118" class="sub">Sort by start, then check adjacent overlap: prev.end &gt; curr.start =&gt; conflict</text>
+
+  <line x1="100" y1="220" x2="1100" y2="220" stroke="#64748b" stroke-width="4"/>
+  <line x1="100" y1="220" x2="100" y2="240" stroke="#64748b" stroke-width="3"/>
+  <line x1="300" y1="220" x2="300" y2="240" stroke="#64748b" stroke-width="3"/>
+  <line x1="500" y1="220" x2="500" y2="240" stroke="#64748b" stroke-width="3"/>
+  <line x1="700" y1="220" x2="700" y2="240" stroke="#64748b" stroke-width="3"/>
+  <line x1="900" y1="220" x2="900" y2="240" stroke="#64748b" stroke-width="3"/>
+  <line x1="1100" y1="220" x2="1100" y2="240" stroke="#64748b" stroke-width="3"/>
+
+  <text x="94" y="270" class="tick">0</text>
+  <text x="294" y="270" class="tick">2</text>
+  <text x="494" y="270" class="tick">4</text>
+  <text x="694" y="270" class="tick">6</text>
+  <text x="894" y="270" class="tick">8</text>
+  <text x="1088" y="270" class="tick">10</text>
+
+  <text x="60" y="340" class="label">Case 1 (valid): [0,2], [2,5], [6,8]</text>
+  <rect x="100" y="360" width="200" height="34" rx="8" class="meetA"/>
+  <rect x="300" y="360" width="300" height="34" rx="8" class="meetB"/>
+  <rect x="700" y="360" width="200" height="34" rx="8" class="meetC"/>
+  <text x="930" y="384" class="label ok">No overlap → true</text>
+
+  <text x="60" y="470" class="label">Case 2 (conflict): [1,4], [3,6]</text>
+  <rect x="200" y="490" width="300" height="34" rx="8" class="meetA"/>
+  <rect x="400" y="490" width="300" height="34" rx="8" class="meetB" opacity="0.9"/>
+  <rect x="400" y="490" width="100" height="34" rx="8" class="bad" opacity="0.9"/>
+  <text x="730" y="514" class="label bad">Overlap (4 &gt; 3) → false</text>
+</svg>
