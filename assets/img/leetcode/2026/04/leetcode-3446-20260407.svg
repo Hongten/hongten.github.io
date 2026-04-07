@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620">
+  <defs>
+    <style>
+      .title{font:700 34px 'Segoe UI',Arial,sans-serif;fill:#e6edf3}
+      .sub{font:500 20px 'Segoe UI',Arial,sans-serif;fill:#9fb3c8}
+      .label{font:600 18px 'Segoe UI',Arial,sans-serif;fill:#dce6f2}
+      .cell{font:700 22px 'Consolas',monospace;fill:#0b1220}
+    </style>
+  </defs>
+  <rect width="1200" height="620" fill="#0d1117"/>
+  <text x="60" y="64" class="title">LeetCode 3446 · Sort Matrix by Diagonals</text>
+  <text x="60" y="98" class="sub">Group by d = i - j · d ≥ 0 descending · d &lt; 0 ascending</text>
+
+  <g transform="translate(90,150)">
+    <text x="0" y="-20" class="label">Diagonal key map (same color = same d)</text>
+    <rect x="0" y="0" width="80" height="80" fill="#ffb86c"/>
+    <rect x="80" y="0" width="80" height="80" fill="#8be9fd"/>
+    <rect x="160" y="0" width="80" height="80" fill="#8be9fd"/>
+    <rect x="240" y="0" width="80" height="80" fill="#8be9fd"/>
+
+    <rect x="0" y="80" width="80" height="80" fill="#50fa7b"/>
+    <rect x="80" y="80" width="80" height="80" fill="#ffb86c"/>
+    <rect x="160" y="80" width="80" height="80" fill="#8be9fd"/>
+    <rect x="240" y="80" width="80" height="80" fill="#8be9fd"/>
+
+    <rect x="0" y="160" width="80" height="80" fill="#50fa7b"/>
+    <rect x="80" y="160" width="80" height="80" fill="#50fa7b"/>
+    <rect x="160" y="160" width="80" height="80" fill="#ffb86c"/>
+    <rect x="240" y="160" width="80" height="80" fill="#8be9fd"/>
+
+    <rect x="0" y="240" width="80" height="80" fill="#50fa7b"/>
+    <rect x="80" y="240" width="80" height="80" fill="#50fa7b"/>
+    <rect x="160" y="240" width="80" height="80" fill="#50fa7b"/>
+    <rect x="240" y="240" width="80" height="80" fill="#ffb86c"/>
+
+    <text x="28" y="48" class="cell">0</text><text x="108" y="48" class="cell">-1</text><text x="188" y="48" class="cell">-2</text><text x="268" y="48" class="cell">-3</text>
+    <text x="28" y="128" class="cell">1</text><text x="108" y="128" class="cell">0</text><text x="188" y="128" class="cell">-1</text><text x="268" y="128" class="cell">-2</text>
+    <text x="28" y="208" class="cell">2</text><text x="108" y="208" class="cell">1</text><text x="188" y="208" class="cell">0</text><text x="268" y="208" class="cell">-1</text>
+    <text x="28" y="288" class="cell">3</text><text x="108" y="288" class="cell">2</text><text x="188" y="288" class="cell">1</text><text x="268" y="288" class="cell">0</text>
+  </g>
+
+  <g transform="translate(520,180)">
+    <rect x="0" y="0" width="620" height="300" rx="16" fill="#111827" stroke="#334155"/>
+    <text x="30" y="50" class="label">Rule A: d ≥ 0 (lower-left + main diagonal) → sort descending</text>
+    <text x="30" y="95" class="sub">Example d=1 values [2, 9, 5] → [9, 5, 2]</text>
+    <text x="30" y="150" class="label">Rule B: d &lt; 0 (upper-right) → sort ascending</text>
+    <text x="30" y="195" class="sub">Example d=-2 values [8, 3] → [3, 8]</text>
+    <text x="30" y="255" class="sub">Write back in row-major order by each diagonal pointer.</text>
+  </g>
+</svg>
