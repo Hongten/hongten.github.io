@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 521: Longest Uncommon Subsequence I (Equality Check + Length Max)</title>
+  <meta name="description" content="Bilingual interview-grade tutorial for LeetCode 521 using a simple equality observation and maximum-length selection with full 5-language code tabs in both EN/CN sections."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 521: Longest Uncommon Subsequence I (Equality Check + Length Max)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with key insight, proof sketch, complexity, pitfalls, and full multi-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-521-longest-uncommon-subsequence-i.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-521-longest-uncommon-subsequence-i.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 521: Longest Uncommon Subsequence I (Equality Check + Length Max)</h1>
+      <div class="meta">2026-04-07 · LeetCode · String / Greedy</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 521</span><span class="tag">String</span><span class="tag">Greedy</span>
+
+      <p>Today we solve <strong>LeetCode 521 - Longest Uncommon Subsequence I</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/longest-uncommon-subsequence-i/" target="_blank" rel="noopener">https://leetcode.com/problems/longest-uncommon-subsequence-i/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-521-20260407.svg" alt="LeetCode 521 equality check and answer decision diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given two strings <code>a</code> and <code>b</code>, return the length of the longest string that is a subsequence of one string but <strong>not</strong> a subsequence of the other. If no such string exists, return <code>-1</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>If <code>a == b</code>, every subsequence of <code>a</code> is also a subsequence of <code>b</code>, so answer is <code>-1</code>. If <code>a != b</code>, then the longer whole string itself is already an uncommon subsequence (it cannot be a subsequence of a shorter string, and if same length but different content, it also cannot match as a subsequence).</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>Brute force would enumerate all subsequences and test membership across strings, which is exponential and unnecessary for this problem.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Compare <code>a</code> and <code>b</code>.<br/>
+         2) If equal, return <code>-1</code>.<br/>
+         3) Otherwise return <code>max(a.length, b.length)</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code> for string equality check (where <code>n</code> is string length bound).<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Overthinking with DP/LCS when a direct observation solves it.<br/>
+         - Forgetting the equal-strings case must return <code>-1</code>.<br/>
+         - Assuming same length but different strings could still fully match as subsequences (they cannot as whole strings).</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int findLUSlength(String a, String b) {
+        if (a.equals(b)) {
+            return -1;
+        }
+        return Math.max(a.length(), b.length());
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func findLUSlength(a string, b string) int {
+    if a == b {
+        return -1
+    }
+    if len(a) &gt; len(b) {
+        return len(a)
+    }
+    return len(b)
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int findLUSlength(string a, string b) {
+        if (a == b) {
+            return -1;
+        }
+        return max((int)a.size(), (int)b.size());
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def findLUSlength(self, a: str, b: str) -&gt; int:
+        if a == b:
+            return -1
+        return max(len(a), len(b))</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var findLUSlength = function(a, b) {
+  if (a === b) {
+    return -1;
+  }
+  return Math.max(a.length, b.length);
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定两个字符串 <code>a</code> 和 <code>b</code>，返回最长“特殊序列”的长度：该序列是其中一个字符串的子序列，但不是另一个字符串的子序列。若不存在，返回 <code>-1</code>。</p>
+
+      <h3>核心思路</h3>
+      <p>若 <code>a == b</code>，两者子序列集合完全一致，不可能有“只属于一边”的子序列，答案是 <code>-1</code>。若 <code>a != b</code>，则较长的那个完整字符串本身就能作为特殊序列（它不可能成为更短字符串的子序列；同长度但不同内容也不可能完整匹配）。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>暴力做法是枚举所有子序列再逐个验证，复杂度指数级，远超题目需要。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）先比较 <code>a</code> 与 <code>b</code> 是否相等。<br/>
+         2）若相等，返回 <code>-1</code>。<br/>
+         3）否则返回 <code>max(len(a), len(b))</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>（字符串比较）。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 用 DP/LCS 过度设计。<br/>
+         - 忘记相等场景必须返回 <code>-1</code>。<br/>
+         - 误以为“等长但不同字符串”仍可能作为完整子序列匹配。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int findLUSlength(String a, String b) {
+        if (a.equals(b)) {
+            return -1;
+        }
+        return Math.max(a.length(), b.length());
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func findLUSlength(a string, b string) int {
+    if a == b {
+        return -1
+    }
+    if len(a) &gt; len(b) {
+        return len(a)
+    }
+    return len(b)
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int findLUSlength(string a, string b) {
+        if (a == b) {
+            return -1;
+        }
+        return max((int)a.size(), (int)b.size());
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def findLUSlength(self, a: str, b: str) -&gt; int:
+        if a == b:
+            return -1
+        return max(len(a), len(b))</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var findLUSlength = function(a, b) {
+  if (a === b) {
+    return -1;
+  }
+  return Math.max(a.length, b.length);
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
