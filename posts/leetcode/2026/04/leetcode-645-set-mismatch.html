@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 645: Set Mismatch (Count Frequency to Find Duplicate and Missing)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 645 using frequency counting to find duplicate and missing numbers, with complete Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 645: Set Mismatch (Count Frequency to Find Duplicate and Missing)" />
+  <meta property="og:description" content="English + 中文 explanation with counting-array insight, complexity analysis, pitfalls, and full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-645-set-mismatch.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-645-set-mismatch.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 645: Set Mismatch (Count Frequency to Find Duplicate and Missing)</h1>
+      <div class="meta">2026-04-08 · LeetCode · Array / Counting</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 645</span><span class="tag">Array</span><span class="tag">Counting</span>
+
+      <p>Today we solve <strong>LeetCode 645 - Set Mismatch</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/set-mismatch/" target="_blank" rel="noopener">https://leetcode.com/problems/set-mismatch/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-645-20260408.svg" alt="LeetCode 645 counting diagram showing duplicate number appearing twice and missing number appearing zero times" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>You are given an array <code>nums</code> of length <code>n</code> that should contain each number from <code>1</code> to <code>n</code> exactly once. But one value appears twice and one value is missing. Return <code>[duplicate, missing]</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>Since values are constrained to <code>1..n</code>, we can count occurrences directly. The number with frequency <code>2</code> is the duplicate, and the number with frequency <code>0</code> is the missing value.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Build a count array of size <code>n + 1</code>.<br/>
+         - Count each number in <code>nums</code>.<br/>
+         - Scan <code>1..n</code>: frequency <code>2</code> gives duplicate, frequency <code>0</code> gives missing.<br/>
+         - Return the pair <code>[duplicate, missing]</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(n)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting to use <code>n + 1</code> size for 1-based values.<br/>
+         - Returning <code>[missing, duplicate]</code> in reversed order.<br/>
+         - Using map/set unnecessarily when array counting is simpler here.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int[] findErrorNums(int[] nums) {
+        int n = nums.length;
+        int[] count = new int[n + 1];
+        for (int x : nums) {
+            count[x]++;
+        }
+
+        int duplicate = -1, missing = -1;
+        for (int i = 1; i &lt;= n; i++) {
+            if (count[i] == 2) duplicate = i;
+            else if (count[i] == 0) missing = i;
+        }
+        return new int[]{duplicate, missing};
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func findErrorNums(nums []int) []int {
+    n := len(nums)
+    count := make([]int, n+1)
+    for _, x := range nums {
+        count[x]++
+    }
+
+    duplicate, missing := -1, -1
+    for i := 1; i &lt;= n; i++ {
+        if count[i] == 2 {
+            duplicate = i
+        } else if count[i] == 0 {
+            missing = i
+        }
+    }
+    return []int{duplicate, missing}
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; findErrorNums(vector&lt;int&gt;&amp; nums) {
+        int n = (int)nums.size();
+        vector&lt;int&gt; count(n + 1, 0);
+        for (int x : nums) {
+            count[x]++;
+        }
+
+        int duplicate = -1, missing = -1;
+        for (int i = 1; i &lt;= n; ++i) {
+            if (count[i] == 2) duplicate = i;
+            else if (count[i] == 0) missing = i;
+        }
+        return {duplicate, missing};
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def findErrorNums(self, nums: List[int]) -&gt; List[int]:
+        n = len(nums)
+        count = [0] * (n + 1)
+        for x in nums:
+            count[x] += 1
+
+        duplicate = -1
+        missing = -1
+        for i in range(1, n + 1):
+            if count[i] == 2:
+                duplicate = i
+            elif count[i] == 0:
+                missing = i
+        return [duplicate, missing]</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var findErrorNums = function(nums) {
+  const n = nums.length;
+  const count = new Array(n + 1).fill(0);
+  for (const x of nums) {
+    count[x]++;
+  }
+
+  let duplicate = -1;
+  let missing = -1;
+  for (let i = 1; i &lt;= n; i++) {
+    if (count[i] === 2) duplicate = i;
+    else if (count[i] === 0) missing = i;
+  }
+  return [duplicate, missing];
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定长度为 <code>n</code> 的数组 <code>nums</code>，理论上应包含 <code>1..n</code> 每个数字各一次。但现在有一个数字重复出现了两次，另一个数字缺失。返回 <code>[重复值, 缺失值]</code>。</p>
+
+      <h3>核心思路</h3>
+      <p>由于数值范围固定在 <code>1..n</code>，可以直接做计数。出现次数为 <code>2</code> 的是重复值，出现次数为 <code>0</code> 的是缺失值。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 创建长度为 <code>n + 1</code> 的计数数组。<br/>
+         - 遍历 <code>nums</code> 并累加频次。<br/>
+         - 再遍历 <code>1..n</code>：频次为 <code>2</code> 记录为重复值，频次为 <code>0</code> 记录为缺失值。<br/>
+         - 返回 <code>[重复值, 缺失值]</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(n)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 忘记开 <code>n + 1</code> 大小导致越界。<br/>
+         - 返回顺序写反成 <code>[缺失值, 重复值]</code>。<br/>
+         - 该题可用数组计数时却引入不必要的复杂结构。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int[] findErrorNums(int[] nums) {
+        int n = nums.length;
+        int[] count = new int[n + 1];
+        for (int x : nums) {
+            count[x]++;
+        }
+
+        int duplicate = -1, missing = -1;
+        for (int i = 1; i &lt;= n; i++) {
+            if (count[i] == 2) duplicate = i;
+            else if (count[i] == 0) missing = i;
+        }
+        return new int[]{duplicate, missing};
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func findErrorNums(nums []int) []int {
+    n := len(nums)
+    count := make([]int, n+1)
+    for _, x := range nums {
+        count[x]++
+    }
+
+    duplicate, missing := -1, -1
+    for i := 1; i &lt;= n; i++ {
+        if count[i] == 2 {
+            duplicate = i
+        } else if count[i] == 0 {
+            missing = i
+        }
+    }
+    return []int{duplicate, missing}
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; findErrorNums(vector&lt;int&gt;&amp; nums) {
+        int n = (int)nums.size();
+        vector&lt;int&gt; count(n + 1, 0);
+        for (int x : nums) {
+            count[x]++;
+        }
+
+        int duplicate = -1, missing = -1;
+        for (int i = 1; i &lt;= n; ++i) {
+            if (count[i] == 2) duplicate = i;
+            else if (count[i] == 0) missing = i;
+        }
+        return {duplicate, missing};
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def findErrorNums(self, nums: List[int]) -&gt; List[int]:
+        n = len(nums)
+        count = [0] * (n + 1)
+        for x in nums:
+            count[x] += 1
+
+        duplicate = -1
+        missing = -1
+        for i in range(1, n + 1):
+            if count[i] == 2:
+                duplicate = i
+            elif count[i] == 0:
+                missing = i
+        return [duplicate, missing]</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var findErrorNums = function(nums) {
+  const n = nums.length;
+  const count = new Array(n + 1).fill(0);
+  for (const x of nums) {
+    count[x]++;
+  }
+
+  let duplicate = -1;
+  let missing = -1;
+  for (let i = 1; i &lt;= n; i++) {
+    if (count[i] === 2) duplicate = i;
+    else if (count[i] === 0) missing = i;
+  }
+  return [duplicate, missing];
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
