@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 507: Perfect Number (Divisor Pair Enumeration up to √n)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 507 using divisor pair enumeration up to sqrt(n), with complete Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 507: Perfect Number (Divisor Pair Enumeration up to √n)" />
+  <meta property="og:description" content="English + 中文 explanation with divisor pairing insight, complexity, corner cases, and full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-507-perfect-number.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-507-perfect-number.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 507: Perfect Number (Divisor Pair Enumeration up to √n)</h1>
+      <div class="meta">2026-04-08 · LeetCode · Math / Number Theory</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 507</span><span class="tag">Math</span><span class="tag">Number Theory</span>
+
+      <p>Today we solve <strong>LeetCode 507 - Perfect Number</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/perfect-number/" target="_blank" rel="noopener">https://leetcode.com/problems/perfect-number/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-507-20260408.svg" alt="LeetCode 507 divisor pair diagram for perfect number check" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>A <em>perfect number</em> equals the sum of its positive divisors excluding itself. Given an integer <code>num</code>, return <code>true</code> if it is perfect, otherwise <code>false</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>Divisors come in pairs. If <code>d</code> divides <code>num</code>, then <code>num / d</code> is also a divisor. So we only need to iterate <code>d</code> from <code>2</code> to <code>√num</code>, and add both divisors when a division is exact.</p>
+
+      <h3>Algorithm</h3>
+      <p>- If <code>num &lt;= 1</code>, return <code>false</code>.<br/>
+         - Initialize <code>sum = 1</code> (because 1 is a proper divisor for all <code>num &gt; 1</code>).<br/>
+         - For each <code>d</code> from <code>2</code> while <code>d * d &lt;= num</code>:<br/>
+         &nbsp;&nbsp;• if <code>num % d == 0</code>, add <code>d</code> and <code>num / d</code>.<br/>
+         &nbsp;&nbsp;• if <code>d == num / d</code> (perfect square), add it only once.<br/>
+         - Return whether <code>sum == num</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(√n)</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting <code>num = 1</code> should be <code>false</code>.<br/>
+         - Double-counting divisor when <code>d * d == num</code>.<br/>
+         - Starting sum at 0 and missing divisor <code>1</code>.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean checkPerfectNumber(int num) {
+        if (num &lt;= 1) return false;
+
+        int sum = 1;
+        for (int d = 2; d * d &lt;= num; d++) {
+            if (num % d == 0) {
+                sum += d;
+                int other = num / d;
+                if (other != d) {
+                    sum += other;
+                }
+            }
+        }
+        return sum == num;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func checkPerfectNumber(num int) bool {
+    if num &lt;= 1 {
+        return false
+    }
+
+    sum := 1
+    for d := 2; d*d &lt;= num; d++ {
+        if num%d == 0 {
+            sum += d
+            other := num / d
+            if other != d {
+                sum += other
+            }
+        }
+    }
+    return sum == num
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool checkPerfectNumber(int num) {
+        if (num &lt;= 1) return false;
+
+        int sum = 1;
+        for (int d = 2; d * d &lt;= num; ++d) {
+            if (num % d == 0) {
+                sum += d;
+                int other = num / d;
+                if (other != d) {
+                    sum += other;
+                }
+            }
+        }
+        return sum == num;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def checkPerfectNumber(self, num: int) -&gt; bool:
+        if num &lt;= 1:
+            return False
+
+        total = 1
+        d = 2
+        while d * d &lt;= num:
+            if num % d == 0:
+                total += d
+                other = num // d
+                if other != d:
+                    total += other
+            d += 1
+
+        return total == num</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var checkPerfectNumber = function(num) {
+  if (num &lt;= 1) return false;
+
+  let sum = 1;
+  for (let d = 2; d * d &lt;= num; d++) {
+    if (num % d === 0) {
+      sum += d;
+      const other = Math.floor(num / d);
+      if (other !== d) {
+        sum += other;
+      }
+    }
+  }
+
+  return sum === num;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>如果一个正整数等于其所有<strong>真因子</strong>（不包含自身）的和，则称为完美数。给定整数 <code>num</code>，判断它是否为完美数。</p>
+
+      <h3>核心思路</h3>
+      <p>因子是成对出现的：若 <code>d</code> 是因子，则 <code>num/d</code> 也是因子。因此只需枚举到 <code>√num</code>，每次命中整除时同时累加这对因子。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 若 <code>num &lt;= 1</code>，直接返回 <code>false</code>。<br/>
+         - 先令 <code>sum = 1</code>（对 <code>num &gt; 1</code>，1 一定是真因子）。<br/>
+         - 枚举 <code>d = 2..√num</code>：若 <code>num % d == 0</code>，加入 <code>d</code> 与 <code>num/d</code>。<br/>
+         - 若是完全平方（<code>d == num/d</code>），只加一次避免重复。<br/>
+         - 最后判断 <code>sum == num</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(√n)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 把 <code>1</code> 误判为完美数。<br/>
+         - 在平方根点把同一个因子加了两次。<br/>
+         - 忘记把 1 计入真因子和。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean checkPerfectNumber(int num) {
+        if (num &lt;= 1) return false;
+
+        int sum = 1;
+        for (int d = 2; d * d &lt;= num; d++) {
+            if (num % d == 0) {
+                sum += d;
+                int other = num / d;
+                if (other != d) {
+                    sum += other;
+                }
+            }
+        }
+        return sum == num;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func checkPerfectNumber(num int) bool {
+    if num &lt;= 1 {
+        return false
+    }
+
+    sum := 1
+    for d := 2; d*d &lt;= num; d++ {
+        if num%d == 0 {
+            sum += d
+            other := num / d
+            if other != d {
+                sum += other
+            }
+        }
+    }
+    return sum == num
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool checkPerfectNumber(int num) {
+        if (num &lt;= 1) return false;
+
+        int sum = 1;
+        for (int d = 2; d * d &lt;= num; ++d) {
+            if (num % d == 0) {
+                sum += d;
+                int other = num / d;
+                if (other != d) {
+                    sum += other;
+                }
+            }
+        }
+        return sum == num;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def checkPerfectNumber(self, num: int) -&gt; bool:
+        if num &lt;= 1:
+            return False
+
+        total = 1
+        d = 2
+        while d * d &lt;= num:
+            if num % d == 0:
+                total += d
+                other = num // d
+                if other != d:
+                    total += other
+            d += 1
+
+        return total == num</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var checkPerfectNumber = function(num) {
+  if (num &lt;= 1) return false;
+
+  let sum = 1;
+  for (let d = 2; d * d &lt;= num; d++) {
+    if (num % d === 0) {
+      sum += d;
+      const other = Math.floor(num / d);
+      if (other !== d) {
+        sum += other;
+      }
+    }
+  }
+
+  return sum === num;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
