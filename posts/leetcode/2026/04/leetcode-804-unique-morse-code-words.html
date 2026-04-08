@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 804: Unique Morse Code Words (Character Mapping + Hash Set Dedup)</title>
+  <meta name="description" content="LeetCode 804 bilingual solution using character-to-Morse mapping and hash set deduplication, with Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 804: Unique Morse Code Words (Character Mapping + Hash Set Dedup)" />
+  <meta property="og:description" content="English + 中文 walkthrough, complexity, pitfalls, and full 5-language reference implementations." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-804-unique-morse-code-words.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-804-unique-morse-code-words.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 804: Unique Morse Code Words (Character Mapping + Hash Set Dedup)</h1>
+      <div class="meta">2026-04-08 · LeetCode · String / Hash Set</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 804</span><span class="tag">String</span><span class="tag">Hash Set</span>
+
+      <p>Today we solve <strong>LeetCode 804 - Unique Morse Code Words</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/unique-morse-code-words/" target="_blank" rel="noopener">https://leetcode.com/problems/unique-morse-code-words/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-804-20260408.svg" alt="LeetCode 804 Unique Morse Code Words transformation diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a list of lowercase English words, convert each word into Morse code by replacing every letter with its Morse representation, then count how many distinct transformed strings exist.</p>
+
+      <h3>Key Insight</h3>
+      <p>The Morse alphabet table is fixed for 26 letters. For each word, we can build its transformed Morse string in linear time and use a hash set to automatically deduplicate equivalent transformations.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>A brute-force approach compares every transformed word against all previously transformed words, which can degrade to <code>O(n^2)</code> comparisons. A hash set improves this to near-linear expected time.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Prepare a 26-length Morse mapping array where index <code>0..25</code> maps to <code>'a'..'z'</code>.<br/>
+         2) For each word, append mapped Morse tokens character by character into a builder.<br/>
+         3) Insert the transformed Morse string into a hash set.<br/>
+         4) Return <code>set.size()</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Let <code>S</code> be the total number of characters across all words.<br/>
+         Time: <code>O(S)</code> expected.<br/>
+         Space: <code>O(S)</code> in the worst case (all transformed words distinct).</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Using <code>list</code> instead of a set, causing duplicate counting errors.<br/>
+         - Incorrect char-index conversion (<code>c - 'a'</code>).<br/>
+         - Reusing one mutable builder without resetting for each word.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int uniqueMorseRepresentations(String[] words) {
+        String[] morse = {
+            ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",
+            "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",
+            "..-", "...-", ".--", "-..-", "-.--", "--.."
+        };
+
+        java.util.Set&lt;String&gt; set = new java.util.HashSet&lt;&gt;();
+        for (String word : words) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i &lt; word.length(); i++) {
+                sb.append(morse[word.charAt(i) - 'a']);
+            }
+            set.add(sb.toString());
+        }
+        return set.size();
+    }
+}
+</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func uniqueMorseRepresentations(words []string) int {
+	morse := []string{
+		".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",
+		"-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",
+		"..-", "...-", ".--", "-..-", "-.--", "--..",
+	}
+
+	seen := make(map[string]struct{})
+	for _, w := range words {
+		var b strings.Builder
+		for i := 0; i &lt; len(w); i++ {
+			b.WriteString(morse[w[i]-'a'])
+		}
+		seen[b.String()] = struct{}{}
+	}
+	return len(seen)
+}
+</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int uniqueMorseRepresentations(vector&lt;string&gt;&amp; words) {
+        vector&lt;string&gt; morse = {
+            ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",
+            "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",
+            "..-", "...-", ".--", "-..-", "-.--", "--.."
+        };
+
+        unordered_set&lt;string&gt; seen;
+        for (const string&amp; w : words) {
+            string t;
+            for (char c : w) t += morse[c - 'a'];
+            seen.insert(t);
+        }
+        return (int)seen.size();
+    }
+};
+</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def uniqueMorseRepresentations(self, words: list[str]) -&gt; int:
+        morse = [
+            ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",
+            "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",
+            "..-", "...-", ".--", "-..-", "-.--", "--.."
+        ]
+
+        seen = set()
+        for w in words:
+            transformed = "".join(morse[ord(c) - ord('a')] for c in w)
+            seen.add(transformed)
+        return len(seen)
+</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var uniqueMorseRepresentations = function(words) {
+  const morse = [
+    ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",
+    "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",
+    "..-", "...-", ".--", "-..-", "-.--", "--.."
+  ];
+
+  const seen = new Set();
+  for (const w of words) {
+    let transformed = "";
+    for (const ch of w) {
+      transformed += morse[ch.charCodeAt(0) - 97];
+    }
+    seen.add(transformed);
+  }
+  return seen.size;
+};
+</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定一组仅包含小写字母的单词，把每个字母按摩斯码表转换并拼接成新字符串，最后统计不同转换结果的数量。</p>
+
+      <h3>核心思路</h3>
+      <p>字母到摩斯码是固定 26 项映射。逐词构建转换串，然后放入哈希集合去重即可；集合大小就是答案。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>暴力法可将每个转换结果与历史结果逐一比较，最坏会达到 <code>O(n^2)</code> 级别。使用哈希集合可以把查重降为均摊 <code>O(1)</code>。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）准备 26 个字母对应的摩斯码数组。<br/>
+         2）遍历每个单词，按 <code>c - 'a'</code> 查表并拼接。<br/>
+         3）将拼接后的摩斯串加入哈希集合。<br/>
+         4）返回集合大小。</p>
+
+      <h3>复杂度分析</h3>
+      <p>设所有单词总字符数为 <code>S</code>。<br/>
+         时间复杂度：<code>O(S)</code>（均摊）。<br/>
+         空间复杂度：<code>O(S)</code>（最坏情况下全部转换串都不同）。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 用数组存转换结果而不是集合，导致重复计数。<br/>
+         - 字符转索引写错（比如漏掉减 <code>'a'</code>）。<br/>
+         - 构建字符串时忘记为每个单词重新初始化。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int uniqueMorseRepresentations(String[] words) {
+        String[] morse = {
+            ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",
+            "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",
+            "..-", "...-", ".--", "-..-", "-.--", "--.."
+        };
+
+        java.util.Set&lt;String&gt; set = new java.util.HashSet&lt;&gt;();
+        for (String word : words) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i &lt; word.length(); i++) {
+                sb.append(morse[word.charAt(i) - 'a']);
+            }
+            set.add(sb.toString());
+        }
+        return set.size();
+    }
+}
+</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func uniqueMorseRepresentations(words []string) int {
+	morse := []string{
+		".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",
+		"-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",
+		"..-", "...-", ".--", "-..-", "-.--", "--..",
+	}
+
+	seen := make(map[string]struct{})
+	for _, w := range words {
+		var b strings.Builder
+		for i := 0; i &lt; len(w); i++ {
+			b.WriteString(morse[w[i]-'a'])
+		}
+		seen[b.String()] = struct{}{}
+	}
+	return len(seen)
+}
+</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int uniqueMorseRepresentations(vector&lt;string&gt;&amp; words) {
+        vector&lt;string&gt; morse = {
+            ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",
+            "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",
+            "..-", "...-", ".--", "-..-", "-.--", "--.."
+        };
+
+        unordered_set&lt;string&gt; seen;
+        for (const string&amp; w : words) {
+            string t;
+            for (char c : w) t += morse[c - 'a'];
+            seen.insert(t);
+        }
+        return (int)seen.size();
+    }
+};
+</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def uniqueMorseRepresentations(self, words: list[str]) -&gt; int:
+        morse = [
+            ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",
+            "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",
+            "..-", "...-", ".--", "-..-", "-.--", "--.."
+        ]
+
+        seen = set()
+        for w in words:
+            transformed = "".join(morse[ord(c) - ord('a')] for c in w)
+            seen.add(transformed)
+        return len(seen)
+</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var uniqueMorseRepresentations = function(words) {
+  const morse = [
+    ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",
+    "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",
+    "..-", "...-", ".--", "-..-", "-.--", "--.."
+  ];
+
+  const seen = new Set();
+  for (const w of words) {
+    let transformed = "";
+    for (const ch of w) {
+      transformed += morse[ch.charCodeAt(0) - 97];
+    }
+    seen.add(transformed);
+  }
+  return seen.size;
+};
+</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
