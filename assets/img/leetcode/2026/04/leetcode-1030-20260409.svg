@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">LeetCode 1030 Manhattan Distance Layer Expansion</title>
+  <desc id="desc">Grid cells are visited by increasing Manhattan distance from start cell. Same-distance cells form diamond-like layers.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .title { font: 700 44px 'Segoe UI', Arial, sans-serif; fill: #e2e8f0; }
+      .sub { font: 500 24px 'Segoe UI', Arial, sans-serif; fill: #cbd5e1; }
+      .cell { stroke: #64748b; stroke-width: 2; }
+      .d0 { fill: #ef4444; }
+      .d1 { fill: #f97316; }
+      .d2 { fill: #eab308; }
+      .d3 { fill: #22c55e; }
+      .txt { font: 700 22px 'JetBrains Mono', Consolas, monospace; fill: #0f172a; }
+      .legend { font: 600 20px 'Segoe UI', Arial, sans-serif; fill: #e2e8f0; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <text x="60" y="80" class="title">LeetCode 1030 — Matrix Cells in Distance Order</text>
+  <text x="60" y="118" class="sub">Sort all cells by Manhattan distance |d| = |r-r0| + |c-c0|</text>
+
+  <g transform="translate(120,170)">
+    <rect class="cell d2" x="0" y="0" width="90" height="90"/><text class="txt" x="30" y="55">2</text>
+    <rect class="cell d1" x="95" y="0" width="90" height="90"/><text class="txt" x="125" y="55">1</text>
+    <rect class="cell d2" x="190" y="0" width="90" height="90"/><text class="txt" x="220" y="55">2</text>
+    <rect class="cell d3" x="285" y="0" width="90" height="90"/><text class="txt" x="315" y="55">3</text>
+
+    <rect class="cell d1" x="0" y="95" width="90" height="90"/><text class="txt" x="30" y="150">1</text>
+    <rect class="cell d0" x="95" y="95" width="90" height="90"/><text class="txt" x="125" y="150">0</text>
+    <rect class="cell d1" x="190" y="95" width="90" height="90"/><text class="txt" x="220" y="150">1</text>
+    <rect class="cell d2" x="285" y="95" width="90" height="90"/><text class="txt" x="315" y="150">2</text>
+
+    <rect class="cell d2" x="0" y="190" width="90" height="90"/><text class="txt" x="30" y="245">2</text>
+    <rect class="cell d1" x="95" y="190" width="90" height="90"/><text class="txt" x="125" y="245">1</text>
+    <rect class="cell d2" x="190" y="190" width="90" height="90"/><text class="txt" x="220" y="245">2</text>
+    <rect class="cell d3" x="285" y="190" width="90" height="90"/><text class="txt" x="315" y="245">3</text>
+  </g>
+
+  <g transform="translate(610,210)">
+    <text class="legend" x="0" y="0">r0 = 1, c0 = 1 (center cell)</text>
+    <text class="legend" x="0" y="45">Distance layers: 0 → 1 → 2 → 3</text>
+    <text class="legend" x="0" y="90">Collect all coordinates, then sort by distance.</text>
+    <text class="legend" x="0" y="135">Ties can be returned in any order.</text>
+  </g>
+</svg>
