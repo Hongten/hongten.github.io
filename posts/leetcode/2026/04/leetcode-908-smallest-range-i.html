@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 908: Smallest Range I (Clamp-to-Center Interval Shrink)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 908 with min/max interval shrink intuition and complete Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 908: Smallest Range I (Clamp-to-Center Interval Shrink)" />
+  <meta property="og:description" content="English + 中文 explanation, proof sketch, edge cases, and full 5-language code tabs for LeetCode 908." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-908-smallest-range-i.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-908-smallest-range-i.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 908: Smallest Range I (Clamp-to-Center Interval Shrink)</h1>
+      <div class="meta">2026-04-09 · LeetCode · Array / Greedy / Math</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 908</span><span class="tag">Array</span><span class="tag">Greedy</span><span class="tag">Math</span>
+
+      <p>Today we solve <strong>LeetCode 908 - Smallest Range I</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/smallest-range-i/" target="_blank" rel="noopener">https://leetcode.com/problems/smallest-range-i/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-908-20260409.svg" alt="LeetCode 908 interval shrink diagram: [min, max] shrinks by k from both ends, result max(0, max-min-2k)" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given an integer array <code>nums</code> and integer <code>k</code>, each element can be changed once to any value in <code>[nums[i]-k, nums[i]+k]</code>. Return the minimum possible difference between the maximum and minimum values after changes.</p>
+
+      <h3>Key Insight</h3>
+      <p>Only the global extremes matter. Let <code>minV = min(nums)</code> and <code>maxV = max(nums)</code>. The smallest value can be pushed up by at most <code>k</code>, and the largest value can be pushed down by at most <code>k</code>. So the original gap <code>maxV - minV</code> can shrink by at most <code>2k</code>.</p>
+      <p>Therefore answer is <code>max(0, maxV - minV - 2k)</code>.</p>
+
+      <h3>Why It Is Correct</h3>
+      <p>- We cannot make the minimum exceed <code>minV + k</code>.<br/>
+         - We cannot make the maximum go below <code>maxV - k</code>.<br/>
+         - So any final range is at least <code>(maxV - k) - (minV + k) = maxV - minV - 2k</code>.<br/>
+         - If this value is negative, intervals overlap and range can be <code>0</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code> to scan min/max.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int smallestRangeI(int[] nums, int k) {
+        int minV = Integer.MAX_VALUE;
+        int maxV = Integer.MIN_VALUE;
+        for (int x : nums) {
+            minV = Math.min(minV, x);
+            maxV = Math.max(maxV, x);
+        }
+        return Math.max(0, maxV - minV - 2 * k);
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func smallestRangeI(nums []int, k int) int {
+    minV, maxV := nums[0], nums[0]
+    for _, x := range nums {
+        if x &lt; minV {
+            minV = x
+        }
+        if x &gt; maxV {
+            maxV = x
+        }
+    }
+    ans := maxV - minV - 2*k
+    if ans &lt; 0 {
+        return 0
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int smallestRangeI(vector&lt;int&gt;&amp; nums, int k) {
+        int minV = INT_MAX, maxV = INT_MIN;
+        for (int x : nums) {
+            minV = min(minV, x);
+            maxV = max(maxV, x);
+        }
+        return max(0, maxV - minV - 2 * k);
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def smallestRangeI(self, nums: List[int], k: int) -&gt; int:
+        min_v = min(nums)
+        max_v = max(nums)
+        return max(0, max_v - min_v - 2 * k)</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var smallestRangeI = function(nums, k) {
+  let minV = Infinity;
+  let maxV = -Infinity;
+  for (const x of nums) {
+    minV = Math.min(minV, x);
+    maxV = Math.max(maxV, x);
+  }
+  return Math.max(0, maxV - minV - 2 * k);
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定整数数组 <code>nums</code> 和整数 <code>k</code>，每个元素 <code>nums[i]</code> 可以调整为区间 <code>[nums[i]-k, nums[i]+k]</code> 内任意值。求调整后数组最大值与最小值差值的最小可能值。</p>
+
+      <h3>核心思路</h3>
+      <p>只需要关注全局最小值与最大值。设 <code>minV = min(nums)</code>、<code>maxV = max(nums)</code>：</p>
+      <p>- 最小值最多上移 <code>k</code>，即不超过 <code>minV + k</code>。<br/>
+         - 最大值最多下移 <code>k</code>，即不低于 <code>maxV - k</code>。<br/>
+         - 原始差值 <code>maxV - minV</code> 最多减少 <code>2k</code>。</p>
+      <p>因此答案是 <code>max(0, maxV - minV - 2k)</code>。</p>
+
+      <h3>正确性说明</h3>
+      <p>最终区间长度至少是 <code>(maxV - k) - (minV + k)</code>。当这个值小于 0 时，说明上下区间有重叠，可以把所有值压到同一点或重叠区间内，最小差值就是 <code>0</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>（一次遍历找最值）。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int smallestRangeI(int[] nums, int k) {
+        int minV = Integer.MAX_VALUE;
+        int maxV = Integer.MIN_VALUE;
+        for (int x : nums) {
+            minV = Math.min(minV, x);
+            maxV = Math.max(maxV, x);
+        }
+        return Math.max(0, maxV - minV - 2 * k);
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func smallestRangeI(nums []int, k int) int {
+    minV, maxV := nums[0], nums[0]
+    for _, x := range nums {
+        if x &lt; minV {
+            minV = x
+        }
+        if x &gt; maxV {
+            maxV = x
+        }
+    }
+    ans := maxV - minV - 2*k
+    if ans &lt; 0 {
+        return 0
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int smallestRangeI(vector&lt;int&gt;&amp; nums, int k) {
+        int minV = INT_MAX, maxV = INT_MIN;
+        for (int x : nums) {
+            minV = min(minV, x);
+            maxV = max(maxV, x);
+        }
+        return max(0, maxV - minV - 2 * k);
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def smallestRangeI(self, nums: List[int], k: int) -&gt; int:
+        min_v = min(nums)
+        max_v = max(nums)
+        return max(0, max_v - min_v - 2 * k)</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var smallestRangeI = function(nums, k) {
+  let minV = Infinity;
+  let maxV = -Infinity;
+  for (const x of nums) {
+    minV = Math.min(minV, x);
+    maxV = Math.max(maxV, x);
+  }
+  return Math.max(0, maxV - minV - 2 * k);
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
