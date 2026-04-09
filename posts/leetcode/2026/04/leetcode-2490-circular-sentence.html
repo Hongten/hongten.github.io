@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 2490: Circular Sentence (Word Boundary Character Check)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 2490 using single-pass boundary checks between adjacent words plus wrap-around validation, with full Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 2490: Circular Sentence (Word Boundary Character Check)" />
+  <meta property="og:description" content="English + 中文 explanation with complete 5-language code tabs and edge-case handling." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-2490-circular-sentence.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-2490-circular-sentence.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 2490: Circular Sentence (Word Boundary Character Check)</h1>
+      <div class="meta">2026-04-09 · LeetCode · String / Simulation</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 2490</span><span class="tag">String</span><span class="tag">Simulation</span>
+
+      <p>Today we solve <strong>LeetCode 2490 - Circular Sentence</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/circular-sentence/" target="_blank" rel="noopener">https://leetcode.com/problems/circular-sentence/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-2490-20260409.svg" alt="LeetCode 2490 circular sentence boundary character matching diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>A sentence is circular when the last character of each word matches the first character of the next word, and the last word also connects back to the first word. Return whether the given sentence is circular.</p>
+
+      <h3>Key Insight</h3>
+      <p>We do not need to split into a word list. It is enough to validate all spaces: for every space at index <code>i</code>, check <code>sentence[i-1] == sentence[i+1]</code>. Then additionally validate wrap-around: <code>sentence[0] == sentence[n-1]</code>.</p>
+
+      <h3>Algorithm</h3>
+      <p>- If first and last characters differ, return <code>false</code> immediately.<br/>
+         - Scan the sentence once.<br/>
+         - Whenever we see a space, compare the char before it and after it.<br/>
+         - If any mismatch exists, return <code>false</code>; otherwise <code>true</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Let <code>n</code> be sentence length.<br/>Time: <code>O(n)</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean isCircularSentence(String sentence) {
+        int n = sentence.length();
+        if (sentence.charAt(0) != sentence.charAt(n - 1)) {
+            return false;
+        }
+        for (int i = 0; i &lt; n; i++) {
+            if (sentence.charAt(i) == ' ' &amp;&amp; sentence.charAt(i - 1) != sentence.charAt(i + 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func isCircularSentence(sentence string) bool {
+    n := len(sentence)
+    if sentence[0] != sentence[n-1] {
+        return false
+    }
+    for i := 0; i &lt; n; i++ {
+        if sentence[i] == ' ' &amp;&amp; sentence[i-1] != sentence[i+1] {
+            return false
+        }
+    }
+    return true
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool isCircularSentence(string sentence) {
+        int n = sentence.size();
+        if (sentence[0] != sentence[n - 1]) return false;
+        for (int i = 0; i &lt; n; i++) {
+            if (sentence[i] == ' ' &amp;&amp; sentence[i - 1] != sentence[i + 1]) {
+                return false;
+            }
+        }
+        return true;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def isCircularSentence(self, sentence: str) -&gt; bool:
+        if sentence[0] != sentence[-1]:
+            return False
+        for i, ch in enumerate(sentence):
+            if ch == ' ' and sentence[i - 1] != sentence[i + 1]:
+                return False
+        return True</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var isCircularSentence = function(sentence) {
+  const n = sentence.length;
+  if (sentence[0] !== sentence[n - 1]) {
+    return false;
+  }
+  for (let i = 0; i &lt; n; i++) {
+    if (sentence[i] === ' ' &amp;&amp; sentence[i - 1] !== sentence[i + 1]) {
+      return false;
+    }
+  }
+  return true;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>如果句子中每个单词的最后一个字符都等于下一个单词的首字符，并且最后一个单词还能和第一个单词首尾相接，则该句子是 circular sentence。判断给定句子是否满足该条件。</p>
+
+      <h3>核心思路</h3>
+      <p>不必先 <code>split</code> 成数组。只要检查每个空格位置 <code>i</code>：是否满足 <code>sentence[i-1] == sentence[i+1]</code>。再额外检查整句首尾字符是否相等（最后词回到第一词）。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 先判断首字符与尾字符，不相等直接返回 <code>false</code>。<br/>
+         - 线性扫描字符串。<br/>
+         - 每遇到空格，就比较空格前后两个字符。<br/>
+         - 出现任意不等返回 <code>false</code>，否则返回 <code>true</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>设字符串长度为 <code>n</code>。<br/>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean isCircularSentence(String sentence) {
+        int n = sentence.length();
+        if (sentence.charAt(0) != sentence.charAt(n - 1)) {
+            return false;
+        }
+        for (int i = 0; i &lt; n; i++) {
+            if (sentence.charAt(i) == ' ' &amp;&amp; sentence.charAt(i - 1) != sentence.charAt(i + 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func isCircularSentence(sentence string) bool {
+    n := len(sentence)
+    if sentence[0] != sentence[n-1] {
+        return false
+    }
+    for i := 0; i &lt; n; i++ {
+        if sentence[i] == ' ' &amp;&amp; sentence[i-1] != sentence[i+1] {
+            return false
+        }
+    }
+    return true
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool isCircularSentence(string sentence) {
+        int n = sentence.size();
+        if (sentence[0] != sentence[n - 1]) return false;
+        for (int i = 0; i &lt; n; i++) {
+            if (sentence[i] == ' ' &amp;&amp; sentence[i - 1] != sentence[i + 1]) {
+                return false;
+            }
+        }
+        return true;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def isCircularSentence(self, sentence: str) -&gt; bool:
+        if sentence[0] != sentence[-1]:
+            return False
+        for i, ch in enumerate(sentence):
+            if ch == ' ' and sentence[i - 1] != sentence[i + 1]:
+                return False
+        return True</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var isCircularSentence = function(sentence) {
+  const n = sentence.length;
+  if (sentence[0] !== sentence[n - 1]) {
+    return false;
+  }
+  for (let i = 0; i &lt; n; i++) {
+    if (sentence[i] === ' ' &amp;&amp; sentence[i - 1] !== sentence[i + 1]) {
+      return false;
+    }
+  }
+  return true;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
