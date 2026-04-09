@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 836: Rectangle Overlap (Axis Projection Intersection)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 836 using strict interval-overlap checks on x/y projections, with full Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 836: Rectangle Overlap (Axis Projection Intersection)" />
+  <meta property="og:description" content="English + 中文 explanation with geometry insight, edge handling, and complete 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-836-rectangle-overlap.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-836-rectangle-overlap.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 836: Rectangle Overlap (Axis Projection Intersection)</h1>
+      <div class="meta">2026-04-09 · LeetCode · Geometry / Math</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 836</span><span class="tag">Geometry</span><span class="tag">Math</span>
+
+      <p>Today we solve <strong>LeetCode 836 - Rectangle Overlap</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/rectangle-overlap/" target="_blank" rel="noopener">https://leetcode.com/problems/rectangle-overlap/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-836-20260409.svg" alt="LeetCode 836 diagram showing x/y axis projections and strict overlap area" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given two axis-aligned rectangles <code>rec1</code> and <code>rec2</code> in format <code>[x1, y1, x2, y2]</code>, return whether they have a strictly positive overlap area.</p>
+
+      <h3>Key Insight</h3>
+      <p>Two rectangles overlap in area <strong>iff</strong> their projections overlap on <strong>both</strong> axes with strict inequality. Touching only on edge/corner is not overlap area.</p>
+
+      <h3>Algorithm</h3>
+      <p>- X-axis overlap: <code>max(x1a, x1b) &lt; min(x2a, x2b)</code>.<br/>
+         - Y-axis overlap: <code>max(y1a, y1b) &lt; min(y2a, y2b)</code>.<br/>
+         - Return true only if both are true.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(1)</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Using <code>&lt;=</code> instead of <code>&lt;</code>, which incorrectly treats edge-touching as overlap.<br/>
+         - Over-complicating with area formulas when axis checks are enough.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean isRectangleOverlap(int[] rec1, int[] rec2) {
+        return Math.max(rec1[0], rec2[0]) &lt; Math.min(rec1[2], rec2[2])
+            &amp;&amp; Math.max(rec1[1], rec2[1]) &lt; Math.min(rec1[3], rec2[3]);
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func isRectangleOverlap(rec1 []int, rec2 []int) bool {
+    maxX1 := max(rec1[0], rec2[0])
+    minX2 := min(rec1[2], rec2[2])
+    maxY1 := max(rec1[1], rec2[1])
+    minY2 := min(rec1[3], rec2[3])
+
+    return maxX1 &lt; minX2 &amp;&amp; maxY1 &lt; minY2
+}
+
+func max(a, b int) int {
+    if a &gt; b {
+        return a
+    }
+    return b
+}
+
+func min(a, b int) int {
+    if a &lt; b {
+        return a
+    }
+    return b
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+class Solution {
+public:
+    bool isRectangleOverlap(vector&lt;int&gt;&amp; rec1, vector&lt;int&gt;&amp; rec2) {
+        return max(rec1[0], rec2[0]) &lt; min(rec1[2], rec2[2])
+            &amp;&amp; max(rec1[1], rec2[1]) &lt; min(rec1[3], rec2[3]);
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">from typing import List
+
+class Solution:
+    def isRectangleOverlap(self, rec1: List[int], rec2: List[int]) -&gt; bool:
+        return (max(rec1[0], rec2[0]) &lt; min(rec1[2], rec2[2]) and
+                max(rec1[1], rec2[1]) &lt; min(rec1[3], rec2[3]))</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var isRectangleOverlap = function(rec1, rec2) {
+  const maxX1 = Math.max(rec1[0], rec2[0]);
+  const minX2 = Math.min(rec1[2], rec2[2]);
+  const maxY1 = Math.max(rec1[1], rec2[1]);
+  const minY2 = Math.min(rec1[3], rec2[3]);
+
+  return maxX1 &lt; minX2 &amp;&amp; maxY1 &lt; minY2;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定两个与坐标轴平行的矩形 <code>rec1</code>、<code>rec2</code>（格式为 <code>[x1, y1, x2, y2]</code>），判断它们是否存在严格大于 0 的重叠面积。</p>
+
+      <h3>核心思路</h3>
+      <p>矩形有面积重叠，当且仅当它们在 x 轴投影和 y 轴投影都严格相交。若只在边或角接触，面积为 0，不算重叠。</p>
+
+      <h3>算法步骤</h3>
+      <p>- x 轴投影严格相交条件：<code>max(x1a, x1b) &lt; min(x2a, x2b)</code>。<br/>
+         - y 轴投影严格相交条件：<code>max(y1a, y1b) &lt; min(y2a, y2b)</code>。<br/>
+         - 两者同时成立才返回 <code>true</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(1)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 把严格不等式写成 <code>&lt;=</code>，会把“仅贴边”误判为重叠。<br/>
+         - 过度使用面积公式；本题直接做轴投影判断更直接可靠。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean isRectangleOverlap(int[] rec1, int[] rec2) {
+        return Math.max(rec1[0], rec2[0]) &lt; Math.min(rec1[2], rec2[2])
+            &amp;&amp; Math.max(rec1[1], rec2[1]) &lt; Math.min(rec1[3], rec2[3]);
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func isRectangleOverlap(rec1 []int, rec2 []int) bool {
+    maxX1 := max(rec1[0], rec2[0])
+    minX2 := min(rec1[2], rec2[2])
+    maxY1 := max(rec1[1], rec2[1])
+    minY2 := min(rec1[3], rec2[3])
+
+    return maxX1 &lt; minX2 &amp;&amp; maxY1 &lt; minY2
+}
+
+func max(a, b int) int {
+    if a &gt; b {
+        return a
+    }
+    return b
+}
+
+func min(a, b int) int {
+    if a &lt; b {
+        return a
+    }
+    return b
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+class Solution {
+public:
+    bool isRectangleOverlap(vector&lt;int&gt;&amp; rec1, vector&lt;int&gt;&amp; rec2) {
+        return max(rec1[0], rec2[0]) &lt; min(rec1[2], rec2[2])
+            &amp;&amp; max(rec1[1], rec2[1]) &lt; min(rec1[3], rec2[3]);
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">from typing import List
+
+class Solution:
+    def isRectangleOverlap(self, rec1: List[int], rec2: List[int]) -&gt; bool:
+        return (max(rec1[0], rec2[0]) &lt; min(rec1[2], rec2[2]) and
+                max(rec1[1], rec2[1]) &lt; min(rec1[3], rec2[3]))</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var isRectangleOverlap = function(rec1, rec2) {
+  const maxX1 = Math.max(rec1[0], rec2[0]);
+  const minX2 = Math.min(rec1[2], rec2[2]);
+  const maxY1 = Math.max(rec1[1], rec2[1]);
+  const minY2 = Math.min(rec1[3], rec2[3]);
+
+  return maxX1 &lt; minX2 &amp;&amp; maxY1 &lt; minY2;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
