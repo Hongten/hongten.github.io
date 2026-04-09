@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 1160 frequency counting validation diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1220"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <text x="48" y="74" fill="#e5e7eb" font-size="36" font-family="Inter,Arial,sans-serif" font-weight="700">LeetCode 1160 · Find Words That Can Be Formed by Characters</text>
+  <text x="48" y="112" fill="#93c5fd" font-size="24" font-family="Inter,Arial,sans-serif">Count chars once, validate each word against available frequencies</text>
+
+  <rect x="48" y="150" width="500" height="420" rx="18" fill="#1f2937" stroke="#374151"/>
+  <text x="78" y="195" fill="#86efac" font-size="26" font-family="Inter,Arial,sans-serif" font-weight="700">chars = "atach" → inventory</text>
+  <text x="78" y="240" fill="#e5e7eb" font-size="22" font-family="monospace">a:2  c:1  h:1  t:1</text>
+  <rect x="78" y="270" width="430" height="48" rx="8" fill="#0f172a" stroke="#334155"/>
+  <text x="96" y="301" fill="#fcd34d" font-size="22" font-family="monospace">word = "cat"  need: c1 a1 t1  ✓</text>
+  <rect x="78" y="330" width="430" height="48" rx="8" fill="#0f172a" stroke="#334155"/>
+  <text x="96" y="361" fill="#fcd34d" font-size="22" font-family="monospace">word = "bt"   need: b1 t1      ✗</text>
+  <rect x="78" y="390" width="430" height="48" rx="8" fill="#0f172a" stroke="#334155"/>
+  <text x="96" y="421" fill="#fcd34d" font-size="22" font-family="monospace">word = "hat"  need: h1 a1 t1  ✓</text>
+  <rect x="78" y="450" width="430" height="48" rx="8" fill="#0f172a" stroke="#334155"/>
+  <text x="96" y="481" fill="#fcd34d" font-size="22" font-family="monospace">word = "tree" need: e2 ...    ✗</text>
+  <text x="78" y="535" fill="#cbd5e1" font-size="22" font-family="Inter,Arial,sans-serif">Result: len("cat") + len("hat") = 3 + 3 = 6</text>
+
+  <rect x="600" y="150" width="552" height="420" rx="18" fill="#111827" stroke="#374151"/>
+  <text x="630" y="198" fill="#93c5fd" font-size="26" font-family="Inter,Arial,sans-serif" font-weight="700">Validation Loop</text>
+  <text x="630" y="248" fill="#e5e7eb" font-size="23" font-family="monospace">base[26] = count(chars)</text>
+  <text x="630" y="292" fill="#e5e7eb" font-size="23" font-family="monospace">for word in words:</text>
+  <text x="666" y="332" fill="#e5e7eb" font-size="23" font-family="monospace">need[26] = count(word)</text>
+  <text x="666" y="372" fill="#e5e7eb" font-size="23" font-family="monospace">if any need[i] &gt; base[i]: reject</text>
+  <text x="666" y="412" fill="#e5e7eb" font-size="23" font-family="monospace">else total += len(word)</text>
+  <text x="630" y="472" fill="#86efac" font-size="23" font-family="Inter,Arial,sans-serif">Time: O(|chars| + Σ|word| + 26·n)</text>
+  <text x="630" y="512" fill="#86efac" font-size="23" font-family="Inter,Arial,sans-serif">Space: O(26)</text>
+
+  <text x="48" y="603" fill="#9ca3af" font-size="18" font-family="Inter,Arial,sans-serif">Author: Tom🦞</text>
+</svg>
