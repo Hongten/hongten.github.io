@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 1000 interval dynamic programming diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="56" y="90" fill="#f8fafc" font-size="42" font-family="Inter,Arial,sans-serif" font-weight="700">LeetCode 1000 · Minimum Cost to Merge Stones</text>
+  <text x="56" y="128" fill="#93c5fd" font-size="24" font-family="Inter,Arial,sans-serif">Interval DP + feasibility: (n-1) mod (k-1) == 0</text>
+
+  <rect x="56" y="178" width="1088" height="120" rx="14" fill="#1f2937" stroke="#334155"/>
+  <text x="86" y="224" fill="#e2e8f0" font-size="28" font-family="monospace">piles: [3] [2] [4] [1] [5]</text>
+  <text x="86" y="266" fill="#a7f3d0" font-size="24" font-family="Inter,Arial,sans-serif">prefix sum supports O(1) interval cost</text>
+
+  <rect x="56" y="330" width="520" height="220" rx="14" fill="#111827" stroke="#60a5fa"/>
+  <text x="84" y="374" fill="#bfdbfe" font-size="28" font-family="Inter,Arial,sans-serif">dp[i][j] = min split cost</text>
+  <text x="84" y="418" fill="#e5e7eb" font-size="22" font-family="monospace">dp[i][j] = min(dp[i][m] + dp[m+1][j])</text>
+  <text x="84" y="458" fill="#fde68a" font-size="22" font-family="Inter,Arial,sans-serif">m steps by (k-1)</text>
+
+  <rect x="624" y="330" width="520" height="220" rx="14" fill="#111827" stroke="#34d399"/>
+  <text x="652" y="374" fill="#bbf7d0" font-size="28" font-family="Inter,Arial,sans-serif">merge to one pile condition</text>
+  <text x="652" y="418" fill="#e5e7eb" font-size="22" font-family="monospace">if (len-1) % (k-1) == 0</text>
+  <text x="652" y="458" fill="#fca5a5" font-size="22" font-family="Inter,Arial,sans-serif">then + sum(i..j)</text>
+
+  <text x="56" y="596" fill="#cbd5e1" font-size="22" font-family="Inter,Arial,sans-serif">Author: Tom🦞</text>
+</svg>
