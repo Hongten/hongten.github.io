@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 1089 Duplicate Zeros diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .t{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#e2e8f0}
+      .muted{fill:#94a3b8;font-size:24px}
+      .title{font-size:44px;font-weight:700}
+      .label{font-size:24px;font-weight:600}
+      .cell{fill:#111827;stroke:#334155;stroke-width:2;rx:10}
+      .zero{fill:#7c3aed22;stroke:#a78bfa}
+      .num{font-size:30px;font-weight:700;text-anchor:middle;dominant-baseline:middle}
+      .arrow{stroke:#38bdf8;stroke-width:4;marker-end:url(#m)}
+      .badge{fill:#0b1220;stroke:#334155;stroke-width:2;rx:12}
+    </style>
+    <marker id="m" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#38bdf8"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <text x="60" y="78" class="t title">LeetCode 1089 · Duplicate Zeros</text>
+  <text x="60" y="116" class="t muted">Two-pass in-place backfill: count virtual length, then write from right to left</text>
+
+  <text x="70" y="190" class="t label">Original array</text>
+  <g transform="translate(60,210)">
+    <rect class="cell" x="0" y="0" width="120" height="76"/><text class="t num" x="60" y="38">1</text>
+    <rect class="cell zero" x="132" y="0" width="120" height="76"/><text class="t num" x="192" y="38">0</text>
+    <rect class="cell" x="264" y="0" width="120" height="76"/><text class="t num" x="324" y="38">2</text>
+    <rect class="cell" x="396" y="0" width="120" height="76"/><text class="t num" x="456" y="38">3</text>
+    <rect class="cell zero" x="528" y="0" width="120" height="76"/><text class="t num" x="588" y="38">0</text>
+    <rect class="cell" x="660" y="0" width="120" height="76"/><text class="t num" x="720" y="38">4</text>
+  </g>
+
+  <line x1="240" y1="320" x2="240" y2="390" class="arrow"/>
+  <line x1="637" y1="320" x2="637" y2="390" class="arrow"/>
+
+  <text x="70" y="455" class="t label">After duplicating zeros (trim to length n)</text>
+  <g transform="translate(60,475)">
+    <rect class="cell" x="0" y="0" width="120" height="76"/><text class="t num" x="60" y="38">1</text>
+    <rect class="cell zero" x="132" y="0" width="120" height="76"/><text class="t num" x="192" y="38">0</text>
+    <rect class="cell zero" x="264" y="0" width="120" height="76"/><text class="t num" x="324" y="38">0</text>
+    <rect class="cell" x="396" y="0" width="120" height="76"/><text class="t num" x="456" y="38">2</text>
+    <rect class="cell" x="528" y="0" width="120" height="76"/><text class="t num" x="588" y="38">3</text>
+    <rect class="cell zero" x="660" y="0" width="120" height="76"/><text class="t num" x="720" y="38">0</text>
+  </g>
+
+  <rect x="860" y="208" width="290" height="250" class="badge"/>
+  <text x="880" y="250" class="t label">Pointers</text>
+  <text x="880" y="290" class="t muted">i: original index (right → left)</text>
+  <text x="880" y="326" class="t muted">j: expanded index</text>
+  <text x="880" y="362" class="t muted">Write only if j &lt; n</text>
+  <text x="880" y="398" class="t muted">If arr[i] == 0, write twice</text>
+</svg>
