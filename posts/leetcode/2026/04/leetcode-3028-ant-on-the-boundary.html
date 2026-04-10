@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 3028: Ant on the Boundary (Prefix Sum Counting)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 3028 with prefix-sum insight, step-by-step explanation, pitfalls, and complete Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 3028: Ant on the Boundary (Prefix Sum Counting)" />
+  <meta property="og:description" content="English + 中文 explanation with prefix-position invariant, complexity, edge cases, and full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3028-ant-on-the-boundary.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3028-ant-on-the-boundary.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 3028: Ant on the Boundary (Prefix Sum Counting)</h1>
+      <div class="meta">2026-04-10 · LeetCode · Prefix Sum</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 3028</span><span class="tag">Simulation</span><span class="tag">Prefix Sum</span>
+
+      <p>Today we solve <strong>LeetCode 3028 - Ant on the Boundary</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/ant-on-the-boundary/" target="_blank" rel="noopener">https://leetcode.com/problems/ant-on-the-boundary/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-3028-20260410.svg" alt="LeetCode 3028 prefix-sum path where the ant returns to position zero multiple times" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>You are given an integer array <code>nums</code>. Starting from position <code>0</code>, an ant moves by each value in order. Count how many times the ant is exactly at position <code>0</code> after a move.</p>
+
+      <h3>Key Insight</h3>
+      <p>This is exactly a prefix-sum question. Let <code>pos</code> be the running sum of processed moves. Every time <code>pos == 0</code>, we found one return to the boundary.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Initialize <code>pos = 0</code>, <code>ans = 0</code>.<br/>
+         - For each <code>x</code> in <code>nums</code>, do <code>pos += x</code>.<br/>
+         - If <code>pos == 0</code>, increment <code>ans</code>.<br/>
+         - Return <code>ans</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>, where <code>n</code> is the length of <code>nums</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Only checking whether final position is zero (wrong; we need count of all visits).<br/>
+         - Counting the initial position before any move (not required).<br/>
+         - Forgetting negative values also move the ant and affect the prefix sum.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int returnToBoundaryCount(int[] nums) {
+        int pos = 0;
+        int ans = 0;
+        for (int x : nums) {
+            pos += x;
+            if (pos == 0) {
+                ans++;
+            }
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func returnToBoundaryCount(nums []int) int {
+    pos, ans := 0, 0
+    for _, x := range nums {
+        pos += x
+        if pos == 0 {
+            ans++
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int returnToBoundaryCount(vector&lt;int&gt;&amp; nums) {
+        int pos = 0, ans = 0;
+        for (int x : nums) {
+            pos += x;
+            if (pos == 0) {
+                ans++;
+            }
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def returnToBoundaryCount(self, nums: List[int]) -&gt; int:
+        pos = 0
+        ans = 0
+        for x in nums:
+            pos += x
+            if pos == 0:
+                ans += 1
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var returnToBoundaryCount = function(nums) {
+  let pos = 0;
+  let ans = 0;
+  for (const x of nums) {
+    pos += x;
+    if (pos === 0) {
+      ans++;
+    }
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定数组 <code>nums</code>，蚂蚁初始位置为 <code>0</code>，按顺序执行每一步位移。请统计：在每次移动之后，蚂蚁回到位置 <code>0</code> 的次数。</p>
+
+      <h3>核心思路</h3>
+      <p>本质是前缀和计数。用 <code>pos</code> 维护当前累计位置（即移动前缀和），每当 <code>pos == 0</code>，说明回到边界一次。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 初始化 <code>pos = 0</code>、<code>ans = 0</code>。<br/>
+         - 遍历 <code>nums</code> 中每个位移 <code>x</code>，执行 <code>pos += x</code>。<br/>
+         - 若 <code>pos == 0</code>，则 <code>ans++</code>。<br/>
+         - 遍历结束后返回 <code>ans</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 只判断最后位置是否为 0（错误，题目要的是过程中回到 0 的总次数）。<br/>
+         - 把初始位置 0 也算进答案（通常不算，必须是“移动之后”）。<br/>
+         - 忽略负数位移对累计位置的影响。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int returnToBoundaryCount(int[] nums) {
+        int pos = 0;
+        int ans = 0;
+        for (int x : nums) {
+            pos += x;
+            if (pos == 0) {
+                ans++;
+            }
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func returnToBoundaryCount(nums []int) int {
+    pos, ans := 0, 0
+    for _, x := range nums {
+        pos += x
+        if pos == 0 {
+            ans++
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int returnToBoundaryCount(vector&lt;int&gt;&amp; nums) {
+        int pos = 0, ans = 0;
+        for (int x : nums) {
+            pos += x;
+            if (pos == 0) {
+                ans++;
+            }
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def returnToBoundaryCount(self, nums: List[int]) -&gt; int:
+        pos = 0
+        ans = 0
+        for x in nums:
+            pos += x
+            if pos == 0:
+                ans += 1
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var returnToBoundaryCount = function(nums) {
+  let pos = 0;
+  let ans = 0;
+  for (const x of nums) {
+    pos += x;
+    if (pos === 0) {
+      ans++;
+    }
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
