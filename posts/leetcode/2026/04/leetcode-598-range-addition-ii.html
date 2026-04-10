@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 598: Range Addition II (Top-left Intersection Counting)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 598 using intersection of all operation rectangles, with complete Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 598: Range Addition II (Top-left Intersection Counting)" />
+  <meta property="og:description" content="English + 中文 explanation for why the answer is minA × minB, including full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-598-range-addition-ii.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-598-range-addition-ii.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 598: Range Addition II (Top-left Intersection Counting)</h1>
+      <div class="meta">2026-04-10 · LeetCode · Matrix / Math / Geometry</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 598</span><span class="tag">Matrix</span><span class="tag">Math</span><span class="tag">Geometry</span>
+
+      <p>Today we solve <strong>LeetCode 598 - Range Addition II</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/range-addition-ii/" target="_blank" rel="noopener">https://leetcode.com/problems/range-addition-ii/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-598-20260410.svg" alt="LeetCode 598 intersection of operation rectangles in top-left matrix area" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Start with an <code>m x n</code> matrix filled with <code>0</code>. For every operation <code>[a, b]</code>, increment all cells <code>M[i][j]</code> where <code>0 &lt;= i &lt; a</code> and <code>0 &lt;= j &lt; b</code>. After all operations, return how many cells contain the maximum value.</p>
+
+      <h3>Key Insight</h3>
+      <p>Each operation affects a top-left rectangle. Cells with the maximum value are exactly those covered by <strong>every</strong> operation, i.e., the intersection of all rectangles. Its size is:</p>
+      <p><code>minA * minB</code>, where <code>minA = min(a)</code>, <code>minB = min(b)</code> across all operations.</p>
+      <p>If there is no operation, every cell remains <code>0</code> and the maximum appears in all <code>m * n</code> cells.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Initialize <code>minA = m</code>, <code>minB = n</code>.<br/>
+         - For each operation <code>[a, b]</code>:<br/>
+         &nbsp;&nbsp;- <code>minA = min(minA, a)</code><br/>
+         &nbsp;&nbsp;- <code>minB = min(minB, b)</code><br/>
+         - Return <code>minA * minB</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Let <code>k</code> be number of operations.<br/>Time: <code>O(k)</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int maxCount(int m, int n, int[][] ops) {
+        int minA = m, minB = n;
+        for (int[] op : ops) {
+            minA = Math.min(minA, op[0]);
+            minB = Math.min(minB, op[1]);
+        }
+        return minA * minB;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func maxCount(m int, n int, ops [][]int) int {
+    minA, minB := m, n
+    for _, op := range ops {
+        if op[0] &lt; minA {
+            minA = op[0]
+        }
+        if op[1] &lt; minB {
+            minB = op[1]
+        }
+    }
+    return minA * minB
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int maxCount(int m, int n, vector&lt;vector&lt;int&gt;&gt;&amp; ops) {
+        int minA = m, minB = n;
+        for (const auto&amp; op : ops) {
+            minA = min(minA, op[0]);
+            minB = min(minB, op[1]);
+        }
+        return minA * minB;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def maxCount(self, m: int, n: int, ops: List[List[int]]) -&gt; int:
+        min_a, min_b = m, n
+        for a, b in ops:
+            min_a = min(min_a, a)
+            min_b = min(min_b, b)
+        return min_a * min_b</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var maxCount = function(m, n, ops) {
+  let minA = m, minB = n;
+  for (const [a, b] of ops) {
+    minA = Math.min(minA, a);
+    minB = Math.min(minB, b);
+  }
+  return minA * minB;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定一个初始全为 <code>0</code> 的 <code>m x n</code> 矩阵。每个操作 <code>[a, b]</code> 会把左上角子矩阵（行 <code>0..a-1</code>、列 <code>0..b-1</code>）全部加 <code>1</code>。最后返回矩阵中最大值出现的元素个数。</p>
+
+      <h3>核心思路</h3>
+      <p>每次都是更新左上角矩形。最终最大值只会出现在“被所有操作共同覆盖”的区域，也就是所有矩形的交集。交集尺寸为：</p>
+      <p><code>minA * minB</code>，其中 <code>minA</code> 是所有 <code>a</code> 的最小值，<code>minB</code> 是所有 <code>b</code> 的最小值。</p>
+      <p>若没有任何操作，整个矩阵都保持 0，最大值出现次数就是 <code>m * n</code>。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 初始化 <code>minA = m</code>，<code>minB = n</code>。<br/>
+         - 遍历每个操作 <code>[a, b]</code>：<br/>
+         &nbsp;&nbsp;- <code>minA = min(minA, a)</code><br/>
+         &nbsp;&nbsp;- <code>minB = min(minB, b)</code><br/>
+         - 返回 <code>minA * minB</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>设操作数为 <code>k</code>。<br/>时间复杂度：<code>O(k)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int maxCount(int m, int n, int[][] ops) {
+        int minA = m, minB = n;
+        for (int[] op : ops) {
+            minA = Math.min(minA, op[0]);
+            minB = Math.min(minB, op[1]);
+        }
+        return minA * minB;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func maxCount(m int, n int, ops [][]int) int {
+    minA, minB := m, n
+    for _, op := range ops {
+        if op[0] &lt; minA {
+            minA = op[0]
+        }
+        if op[1] &lt; minB {
+            minB = op[1]
+        }
+    }
+    return minA * minB
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int maxCount(int m, int n, vector&lt;vector&lt;int&gt;&gt;&amp; ops) {
+        int minA = m, minB = n;
+        for (const auto&amp; op : ops) {
+            minA = min(minA, op[0]);
+            minB = min(minB, op[1]);
+        }
+        return minA * minB;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def maxCount(self, m: int, n: int, ops: List[List[int]]) -&gt; int:
+        min_a, min_b = m, n
+        for a, b in ops:
+            min_a = min(min_a, a)
+            min_b = min(min_b, b)
+        return min_a * min_b</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var maxCount = function(m, n, ops) {
+  let minA = m, minB = n;
+  for (const [a, b] of ops) {
+    minA = Math.min(minA, a);
+    minB = Math.min(minB, b);
+  }
+  return minA * minB;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
