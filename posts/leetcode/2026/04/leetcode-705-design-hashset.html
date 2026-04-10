@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 705: Design HashSet (Separate Chaining with Fixed Buckets)</title>
+  <meta name="description" content="Interview-grade bilingual tutorial for LeetCode 705 using separate chaining hash set design, with full 5-language code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 705: Design HashSet (Separate Chaining with Fixed Buckets)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with bucket indexing, add/remove/contains logic, and complete Java/Go/C++/Python/JavaScript code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-705-design-hashset.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-705-design-hashset.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 705: Design HashSet (Separate Chaining with Fixed Buckets)</h1>
+      <div class="meta">2026-04-10 · LeetCode · Design / Hash Table</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 705</span><span class="tag">Design</span><span class="tag">Hash Table</span>
+
+      <p>Today we solve <strong>LeetCode 705 - Design HashSet</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/design-hashset/" target="_blank" rel="noopener">https://leetcode.com/problems/design-hashset/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-705-20260410.svg" alt="LeetCode 705 separate chaining hash set diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Design a HashSet without using built-in hash table libraries, supporting:
+      <code>add(key)</code>, <code>remove(key)</code>, and <code>contains(key)</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>Use a fixed number of buckets and map each key to <code>idx = key % bucketCount</code>.
+      Each bucket stores keys that hash to the same index (separate chaining), so collisions are handled by bucket-local search.</p>
+
+      <h3>Algorithm</h3>
+      <p>1) Initialize an array of empty buckets.<br/>
+         2) <code>add</code>: locate bucket; append key only if not already present.<br/>
+         3) <code>remove</code>: locate bucket; delete key if found.<br/>
+         4) <code>contains</code>: scan bucket and return whether key exists.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Average time per operation: <code>O(1)</code>.<br/>
+         Worst-case per operation (all keys collide): <code>O(n)</code>.<br/>
+         Space: <code>O(n + B)</code>, where <code>B</code> is bucket count.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">import java.util.*;
+
+class MyHashSet {
+    private static final int SIZE = 2069;
+    private final List&lt;Integer&gt;[] buckets;
+
+    public MyHashSet() {
+        buckets = new ArrayList[SIZE];
+        for (int i = 0; i &lt; SIZE; i++) buckets[i] = new ArrayList&lt;&gt;();
+    }
+
+    private int hash(int key) {
+        return key % SIZE;
+    }
+
+    public void add(int key) {
+        List&lt;Integer&gt; bucket = buckets[hash(key)];
+        for (int x : bucket) {
+            if (x == key) return;
+        }
+        bucket.add(key);
+    }
+
+    public void remove(int key) {
+        List&lt;Integer&gt; bucket = buckets[hash(key)];
+        for (int i = 0; i &lt; bucket.size(); i++) {
+            if (bucket.get(i) == key) {
+                bucket.remove(i);
+                return;
+            }
+        }
+    }
+
+    public boolean contains(int key) {
+        List&lt;Integer&gt; bucket = buckets[hash(key)];
+        for (int x : bucket) {
+            if (x == key) return true;
+        }
+        return false;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">type MyHashSet struct {
+	buckets [][]int
+}
+
+const size = 2069
+
+func Constructor() MyHashSet {
+	return MyHashSet{buckets: make([][]int, size)}
+}
+
+func (s *MyHashSet) hash(key int) int {
+	return key % size
+}
+
+func (s *MyHashSet) Add(key int) {
+	i := s.hash(key)
+	for _, x := range s.buckets[i] {
+		if x == key {
+			return
+		}
+	}
+	s.buckets[i] = append(s.buckets[i], key)
+}
+
+func (s *MyHashSet) Remove(key int) {
+	i := s.hash(key)
+	bucket := s.buckets[i]
+	for j, x := range bucket {
+		if x == key {
+			s.buckets[i] = append(bucket[:j], bucket[j+1:]...)
+			return
+		}
+	}
+}
+
+func (s *MyHashSet) Contains(key int) bool {
+	i := s.hash(key)
+	for _, x := range s.buckets[i] {
+		if x == key {
+			return true
+		}
+	}
+	return false
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class MyHashSet {
+private:
+    static const int SIZE = 2069;
+    vector&lt;vector&lt;int&gt;&gt; buckets;
+
+    int hash(int key) {
+        return key % SIZE;
+    }
+
+public:
+    MyHashSet() : buckets(SIZE) {}
+
+    void add(int key) {
+        auto&amp; bucket = buckets[hash(key)];
+        for (int x : bucket) {
+            if (x == key) return;
+        }
+        bucket.push_back(key);
+    }
+
+    void remove(int key) {
+        auto&amp; bucket = buckets[hash(key)];
+        for (int i = 0; i &lt; (int)bucket.size(); i++) {
+            if (bucket[i] == key) {
+                bucket.erase(bucket.begin() + i);
+                return;
+            }
+        }
+    }
+
+    bool contains(int key) {
+        auto&amp; bucket = buckets[hash(key)];
+        for (int x : bucket) {
+            if (x == key) return true;
+        }
+        return false;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class MyHashSet:
+    SIZE = 2069
+
+    def __init__(self):
+        self.buckets = [[] for _ in range(self.SIZE)]
+
+    def _hash(self, key: int) -> int:
+        return key % self.SIZE
+
+    def add(self, key: int) -> None:
+        bucket = self.buckets[self._hash(key)]
+        if key not in bucket:
+            bucket.append(key)
+
+    def remove(self, key: int) -> None:
+        bucket = self.buckets[self._hash(key)]
+        for i, x in enumerate(bucket):
+            if x == key:
+                bucket.pop(i)
+                return
+
+    def contains(self, key: int) -> bool:
+        bucket = self.buckets[self._hash(key)]
+        return key in bucket</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var MyHashSet = function() {
+  this.SIZE = 2069;
+  this.buckets = Array.from({ length: this.SIZE }, () => []);
+};
+
+MyHashSet.prototype.hash = function(key) {
+  return key % this.SIZE;
+};
+
+MyHashSet.prototype.add = function(key) {
+  const bucket = this.buckets[this.hash(key)];
+  for (const x of bucket) {
+    if (x === key) return;
+  }
+  bucket.push(key);
+};
+
+MyHashSet.prototype.remove = function(key) {
+  const bucket = this.buckets[this.hash(key)];
+  for (let i = 0; i < bucket.length; i++) {
+    if (bucket[i] === key) {
+      bucket.splice(i, 1);
+      return;
+    }
+  }
+};
+
+MyHashSet.prototype.contains = function(key) {
+  const bucket = this.buckets[this.hash(key)];
+  return bucket.includes(key);
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>不使用内置哈希表库，实现一个 HashSet，支持：
+      <code>add(key)</code>、<code>remove(key)</code>、<code>contains(key)</code>。</p>
+
+      <h3>核心思路</h3>
+      <p>使用固定数量桶（bucket），通过 <code>idx = key % bucketCount</code> 把 key 映射到桶。
+      每个桶保存发生冲突的 key（拉链法），操作时只在线性扫描当前桶。</p>
+
+      <h3>算法步骤</h3>
+      <p>1）初始化桶数组。<br/>
+         2）<code>add</code>：在对应桶中查重，未出现才加入。<br/>
+         3）<code>remove</code>：在对应桶中找到并删除 key。<br/>
+         4）<code>contains</code>：扫描对应桶，判断 key 是否存在。</p>
+
+      <h3>复杂度分析</h3>
+      <p>平均每次操作时间复杂度：<code>O(1)</code>。<br/>
+         最坏情况（全部冲突）：<code>O(n)</code>。<br/>
+         空间复杂度：<code>O(n + B)</code>，<code>B</code> 为桶数量。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">import java.util.*;
+
+class MyHashSet {
+    private static final int SIZE = 2069;
+    private final List&lt;Integer&gt;[] buckets;
+
+    public MyHashSet() {
+        buckets = new ArrayList[SIZE];
+        for (int i = 0; i &lt; SIZE; i++) buckets[i] = new ArrayList&lt;&gt;();
+    }
+
+    private int hash(int key) {
+        return key % SIZE;
+    }
+
+    public void add(int key) {
+        List&lt;Integer&gt; bucket = buckets[hash(key)];
+        for (int x : bucket) {
+            if (x == key) return;
+        }
+        bucket.add(key);
+    }
+
+    public void remove(int key) {
+        List&lt;Integer&gt; bucket = buckets[hash(key)];
+        for (int i = 0; i &lt; bucket.size(); i++) {
+            if (bucket.get(i) == key) {
+                bucket.remove(i);
+                return;
+            }
+        }
+    }
+
+    public boolean contains(int key) {
+        List&lt;Integer&gt; bucket = buckets[hash(key)];
+        for (int x : bucket) {
+            if (x == key) return true;
+        }
+        return false;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">type MyHashSet struct {
+	buckets [][]int
+}
+
+const size = 2069
+
+func Constructor() MyHashSet {
+	return MyHashSet{buckets: make([][]int, size)}
+}
+
+func (s *MyHashSet) hash(key int) int {
+	return key % size
+}
+
+func (s *MyHashSet) Add(key int) {
+	i := s.hash(key)
+	for _, x := range s.buckets[i] {
+		if x == key {
+			return
+		}
+	}
+	s.buckets[i] = append(s.buckets[i], key)
+}
+
+func (s *MyHashSet) Remove(key int) {
+	i := s.hash(key)
+	bucket := s.buckets[i]
+	for j, x := range bucket {
+		if x == key {
+			s.buckets[i] = append(bucket[:j], bucket[j+1:]...)
+			return
+		}
+	}
+}
+
+func (s *MyHashSet) Contains(key int) bool {
+	i := s.hash(key)
+	for _, x := range s.buckets[i] {
+		if x == key {
+			return true
+		}
+	}
+	return false
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class MyHashSet {
+private:
+    static const int SIZE = 2069;
+    vector&lt;vector&lt;int&gt;&gt; buckets;
+
+    int hash(int key) {
+        return key % SIZE;
+    }
+
+public:
+    MyHashSet() : buckets(SIZE) {}
+
+    void add(int key) {
+        auto&amp; bucket = buckets[hash(key)];
+        for (int x : bucket) {
+            if (x == key) return;
+        }
+        bucket.push_back(key);
+    }
+
+    void remove(int key) {
+        auto&amp; bucket = buckets[hash(key)];
+        for (int i = 0; i &lt; (int)bucket.size(); i++) {
+            if (bucket[i] == key) {
+                bucket.erase(bucket.begin() + i);
+                return;
+            }
+        }
+    }
+
+    bool contains(int key) {
+        auto&amp; bucket = buckets[hash(key)];
+        for (int x : bucket) {
+            if (x == key) return true;
+        }
+        return false;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class MyHashSet:
+    SIZE = 2069
+
+    def __init__(self):
+        self.buckets = [[] for _ in range(self.SIZE)]
+
+    def _hash(self, key: int) -> int:
+        return key % self.SIZE
+
+    def add(self, key: int) -> None:
+        bucket = self.buckets[self._hash(key)]
+        if key not in bucket:
+            bucket.append(key)
+
+    def remove(self, key: int) -> None:
+        bucket = self.buckets[self._hash(key)]
+        for i, x in enumerate(bucket):
+            if x == key:
+                bucket.pop(i)
+                return
+
+    def contains(self, key: int) -> bool:
+        bucket = self.buckets[self._hash(key)]
+        return key in bucket</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var MyHashSet = function() {
+  this.SIZE = 2069;
+  this.buckets = Array.from({ length: this.SIZE }, () => []);
+};
+
+MyHashSet.prototype.hash = function(key) {
+  return key % this.SIZE;
+};
+
+MyHashSet.prototype.add = function(key) {
+  const bucket = this.buckets[this.hash(key)];
+  for (const x of bucket) {
+    if (x === key) return;
+  }
+  bucket.push(key);
+};
+
+MyHashSet.prototype.remove = function(key) {
+  const bucket = this.buckets[this.hash(key)];
+  for (let i = 0; i < bucket.length; i++) {
+    if (bucket[i] === key) {
+      bucket.splice(i, 1);
+      return;
+    }
+  }
+};
+
+MyHashSet.prototype.contains = function(key) {
+  const bucket = this.buckets[this.hash(key)];
+  return bucket.includes(key);
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>

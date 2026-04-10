@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 705 Design HashSet diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .t{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#e2e8f0}
+      .m{font-size:24px;font-weight:700}
+      .s{font-size:18px;fill:#94a3b8}
+      .b{fill:#111827;stroke:#334155;stroke-width:2}
+      .k{fill:#38bdf8;font-size:16px;font-family:monospace}
+      .a{stroke:#22d3ee;stroke-width:3;marker-end:url(#arr)}
+    </style>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#22d3ee"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="70" class="t m">LeetCode 705 · Design HashSet</text>
+  <text x="60" y="105" class="t s">Bucket index = key % 7 (separate chaining)</text>
+
+  <g transform="translate(60,150)">
+    <rect class="b" x="0" y="0" width="220" height="360" rx="12"/>
+    <text x="20" y="36" class="t s">Buckets</text>
+    <g class="t" font-size="20" font-family="monospace">
+      <text x="20" y="80">0:</text><text x="20" y="120">1:</text><text x="20" y="160">2:</text><text x="20" y="200">3:</text>
+      <text x="20" y="240">4:</text><text x="20" y="280">5:</text><text x="20" y="320">6:</text>
+    </g>
+  </g>
+
+  <g transform="translate(340,150)">
+    <rect class="b" x="0" y="0" width="800" height="360" rx="12"/>
+    <text x="20" y="36" class="t s">Chains (collisions stay in same bucket)</text>
+
+    <rect class="b" x="40" y="58" width="120" height="34" rx="8"/><text x="82" y="81" class="k">14</text>
+    <rect class="b" x="180" y="58" width="120" height="34" rx="8"/><text x="220" y="81" class="k">21</text>
+
+    <rect class="b" x="40" y="178" width="120" height="34" rx="8"/><text x="86" y="201" class="k">3</text>
+    <rect class="b" x="180" y="178" width="120" height="34" rx="8"/><text x="226" y="201" class="k">10</text>
+
+    <rect class="b" x="40" y="298" width="120" height="34" rx="8"/><text x="86" y="321" class="k">6</text>
+    <rect class="b" x="180" y="298" width="120" height="34" rx="8"/><text x="226" y="321" class="k">13</text>
+
+    <line class="a" x1="160" y1="75" x2="180" y2="75"/>
+    <line class="a" x1="160" y1="195" x2="180" y2="195"/>
+    <line class="a" x1="160" y1="315" x2="180" y2="315"/>
+  </g>
+
+  <text x="60" y="575" class="t s">Operations: add(key), remove(key), contains(key) · Average O(1)</text>
+</svg>
