@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 3448 remainder DP diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .t{font-family:Arial,Helvetica,sans-serif;fill:#e2e8f0}
+      .m{font-size:28px;font-weight:700}
+      .s{font-size:20px}
+      .b{fill:#111827;stroke:#38bdf8;stroke-width:2;rx:12}
+      .a{stroke:#f59e0b;stroke-width:3;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <polygon points="0,0 8,4 0,8" fill="#f59e0b"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="90" class="t m">LeetCode 3448 · Count Substrings Divisible By Last Digit</text>
+  <text x="60" y="130" class="t s">For each divisor d=1..9, keep counts of remainders for substrings ending at current index.</text>
+
+  <rect x="90" y="190" width="290" height="160" class="b"/>
+  <text x="115" y="235" class="t s">Old state (for fixed d)</text>
+  <text x="115" y="275" class="t s">dp[d][r] = count</text>
+  <text x="115" y="315" class="t s">r in [0, d-1]</text>
+
+  <rect x="470" y="190" width="260" height="160" class="b"/>
+  <text x="495" y="235" class="t s">append digit x</text>
+  <text x="495" y="275" class="t s">newR = (r*10 + x) % d</text>
+  <text x="495" y="315" class="t s">plus single digit: x % d</text>
+
+  <rect x="820" y="190" width="290" height="160" class="b"/>
+  <text x="845" y="235" class="t s">New state</text>
+  <text x="845" y="275" class="t s">next[d][newR] += dp[d][r]</text>
+  <text x="845" y="315" class="t s">next[d][x%d] += 1</text>
+
+  <line x1="380" y1="270" x2="470" y2="270" class="a"/>
+  <line x1="730" y1="270" x2="820" y2="270" class="a"/>
+
+  <text x="60" y="430" class="t s">At index i, last digit is d = s[i]. If d != 0, add dp[d][0] to answer.</text>
+  <text x="60" y="470" class="t s">Total complexity: O(n * (1+2+...+9)) = O(45n), effectively linear.</text>
+</svg>
