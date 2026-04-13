@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 1332: Remove Palindromic Subsequences (Two-Step Character Set Insight)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 1332 with a proof-driven two-step strategy and complete Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 1332: Remove Palindromic Subsequences (Two-Step Character Set Insight)" />
+  <meta property="og:description" content="English + 中文 explanation with correctness proof, complexity analysis, pitfalls, and full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1332-remove-palindromic-subsequences.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1332-remove-palindromic-subsequences.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 1332: Remove Palindromic Subsequences (Two-Step Character Set Insight)</h1>
+      <div class="meta">2026-04-13 · LeetCode · String / Greedy / Proof</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 1332</span><span class="tag">String</span><span class="tag">Greedy</span>
+
+      <p>Today we solve <strong>LeetCode 1332 - Remove Palindromic Subsequences</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/remove-palindromic-subsequences/" target="_blank" rel="noopener">https://leetcode.com/problems/remove-palindromic-subsequences/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-1332-20260413.svg" alt="LeetCode 1332 diagram showing: if whole string is palindrome answer is 1, otherwise remove all a then all b answer is 2" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a string <code>s</code> containing only <code>'a'</code> and <code>'b'</code>, each move allows removing any palindromic <em>subsequence</em>. Return the minimum number of moves to delete the entire string.</p>
+
+      <h3>Key Insight</h3>
+      <p>Because subsequence is not required to be contiguous, all <code>'a'</code> characters form a subsequence, and all <code>'b'</code> characters form another subsequence. Each of them is a palindrome by itself (all same letters). Therefore the answer is never more than 2.</p>
+      <p>- If <code>s</code> is empty: answer is 0.<br/>
+         - If <code>s</code> itself is a palindrome: answer is 1 (remove all at once).<br/>
+         - Otherwise: answer is 2 (remove all <code>'a'</code> in one move, all <code>'b'</code> in one move).</p>
+
+      <h3>Algorithm</h3>
+      <p>- If <code>s.length() == 0</code>, return 0.<br/>
+         - Check whether <code>s</code> is palindrome with two pointers.<br/>
+         - If yes return 1, else return 2.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code> for palindrome check.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Mistaking subsequence as substring and overcomplicating with DP.<br/>
+         - Forgetting the input alphabet is only <code>a</code>/<code>b</code>, which enables the ≤2 conclusion.<br/>
+         - Not handling empty string correctly.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int removePalindromeSub(String s) {
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+        int i = 0, j = s.length() - 1;
+        while (i &lt; j) {
+            if (s.charAt(i) != s.charAt(j)) {
+                return 2;
+            }
+            i++;
+            j--;
+        }
+        return 1;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func removePalindromeSub(s string) int {
+    if len(s) == 0 {
+        return 0
+    }
+    i, j := 0, len(s)-1
+    for i &lt; j {
+        if s[i] != s[j] {
+            return 2
+        }
+        i++
+        j--
+    }
+    return 1
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int removePalindromeSub(string s) {
+        if (s.empty()) return 0;
+        int i = 0, j = (int)s.size() - 1;
+        while (i &lt; j) {
+            if (s[i] != s[j]) return 2;
+            ++i;
+            --j;
+        }
+        return 1;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def removePalindromeSub(self, s: str) -&gt; int:
+        if not s:
+            return 0
+        i, j = 0, len(s) - 1
+        while i &lt; j:
+            if s[i] != s[j]:
+                return 2
+            i += 1
+            j -= 1
+        return 1</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var removePalindromeSub = function(s) {
+  if (s.length === 0) {
+    return 0;
+  }
+  let i = 0, j = s.length - 1;
+  while (i &lt; j) {
+    if (s[i] !== s[j]) {
+      return 2;
+    }
+    i++;
+    j--;
+  }
+  return 1;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定仅由 <code>'a'</code> 和 <code>'b'</code> 组成的字符串 <code>s</code>。每一步可以删除任意一个回文<strong>子序列</strong>。求删空整个字符串的最少步数。</p>
+
+      <h3>核心思路</h3>
+      <p>关键在于“子序列”不要求连续：所有 <code>'a'</code> 可以一次删掉，所有 <code>'b'</code> 也可以一次删掉，它们各自天然是回文。因此答案最多是 2。</p>
+      <p>- 若 <code>s</code> 为空，答案 0。<br/>
+         - 若 <code>s</code> 本身是回文，答案 1。<br/>
+         - 否则答案 2（先删所有 <code>a</code>，再删所有 <code>b</code>，或反过来）。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 空串直接返回 0。<br/>
+         - 双指针判断是否为回文。<br/>
+         - 是回文返回 1；不是回文返回 2。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 把“子序列”当成“子串”，导致错误地设计复杂 DP。<br/>
+         - 忘记题目只含 <code>a</code>/<code>b</code> 两种字符这一强条件。<br/>
+         - 忽略空串边界。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int removePalindromeSub(String s) {
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+        int i = 0, j = s.length() - 1;
+        while (i &lt; j) {
+            if (s.charAt(i) != s.charAt(j)) {
+                return 2;
+            }
+            i++;
+            j--;
+        }
+        return 1;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func removePalindromeSub(s string) int {
+    if len(s) == 0 {
+        return 0
+    }
+    i, j := 0, len(s)-1
+    for i &lt; j {
+        if s[i] != s[j] {
+            return 2
+        }
+        i++
+        j--
+    }
+    return 1
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int removePalindromeSub(string s) {
+        if (s.empty()) return 0;
+        int i = 0, j = (int)s.size() - 1;
+        while (i &lt; j) {
+            if (s[i] != s[j]) return 2;
+            ++i;
+            --j;
+        }
+        return 1;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def removePalindromeSub(self, s: str) -&gt; int:
+        if not s:
+            return 0
+        i, j = 0, len(s) - 1
+        while i &lt; j:
+            if s[i] != s[j]:
+                return 2
+            i += 1
+            j -= 1
+        return 1</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var removePalindromeSub = function(s) {
+  if (s.length === 0) {
+    return 0;
+  }
+  let i = 0, j = s.length - 1;
+  while (i &lt; j) {
+    if (s[i] !== s[j]) {
+      return 2;
+    }
+    i++;
+    j--;
+  }
+  return 1;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
