@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 3136: Valid Word (Character Class + Vowel/Consonant Presence Check)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 3136 using character validation plus vowel/consonant presence tracking with full Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 3136: Valid Word (Character Class + Vowel/Consonant Presence Check)" />
+  <meta property="og:description" content="English + 中文 explanation with one-pass validation logic, complexity analysis, pitfalls, and complete 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3136-valid-word.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3136-valid-word.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 3136: Valid Word (Character Class + Vowel/Consonant Presence Check)</h1>
+      <div class="meta">2026-04-13 · LeetCode · String / Validation</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 3136</span><span class="tag">String</span><span class="tag">Validation</span>
+
+      <p>Today we solve <strong>LeetCode 3136 - Valid Word</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/valid-word/" target="_blank" rel="noopener">https://leetcode.com/problems/valid-word/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-3136-20260413.svg" alt="LeetCode 3136 valid word flow diagram with length, character class, vowel and consonant checks" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>A word is valid if it has at least 3 characters, contains only digits or English letters, and has at least one vowel and one consonant letter.</p>
+
+      <h3>Key Insight</h3>
+      <p>We can solve this in one pass: reject immediately for an invalid character, and track two booleans for vowel/consonant appearance among letters.</p>
+
+      <h3>Algorithm</h3>
+      <p>- If <code>word.length() &lt; 3</code>, return <code>false</code>.<br/>
+         - Scan each character <code>c</code>:<br/>
+         &nbsp;&nbsp;• if not alphanumeric, return <code>false</code>.<br/>
+         &nbsp;&nbsp;• if it is a letter, lowercase it and mark vowel or consonant.<br/>
+         - At the end, return <code>hasVowel &amp;&amp; hasConsonant</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Let <code>n</code> be word length.<br/>Time: <code>O(n)</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting that digits are allowed but do not count as vowels/consonants.<br/>
+         - Not handling uppercase vowels.<br/>
+         - Accepting symbols like <code>@</code> or <code>_</code>.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean isValid(String word) {
+        if (word.length() &lt; 3) return false;
+
+        boolean hasVowel = false;
+        boolean hasConsonant = false;
+
+        for (char c : word.toCharArray()) {
+            if (!Character.isLetterOrDigit(c)) return false;
+
+            if (Character.isLetter(c)) {
+                char x = Character.toLowerCase(c);
+                if (x == 'a' || x == 'e' || x == 'i' || x == 'o' || x == 'u') {
+                    hasVowel = true;
+                } else {
+                    hasConsonant = true;
+                }
+            }
+        }
+        return hasVowel &amp;&amp; hasConsonant;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func isValid(word string) bool {
+    if len(word) &lt; 3 {
+        return false
+    }
+
+    hasVowel, hasConsonant := false, false
+    isVowel := func(b byte) bool {
+        return b == 'a' || b == 'e' || b == 'i' || b == 'o' || b == 'u'
+    }
+
+    for i := 0; i &lt; len(word); i++ {
+        c := word[i]
+
+        isDigit := c &gt;= '0' &amp;&amp; c &lt;= '9'
+        isLower := c &gt;= 'a' &amp;&amp; c &lt;= 'z'
+        isUpper := c &gt;= 'A' &amp;&amp; c &lt;= 'Z'
+
+        if !(isDigit || isLower || isUpper) {
+            return false
+        }
+
+        if isLower || isUpper {
+            if isUpper {
+                c = c - 'A' + 'a'
+            }
+            if isVowel(c) {
+                hasVowel = true
+            } else {
+                hasConsonant = true
+            }
+        }
+    }
+
+    return hasVowel &amp;&amp; hasConsonant
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool isValid(string word) {
+        if (word.size() &lt; 3) return false;
+
+        bool hasVowel = false, hasConsonant = false;
+
+        for (char c : word) {
+            if (!isalnum(static_cast&lt;unsigned char&gt;(c))) return false;
+
+            if (isalpha(static_cast&lt;unsigned char&gt;(c))) {
+                char x = static_cast&lt;char&gt;(tolower(static_cast&lt;unsigned char&gt;(c)));
+                if (x == 'a' || x == 'e' || x == 'i' || x == 'o' || x == 'u') {
+                    hasVowel = true;
+                } else {
+                    hasConsonant = true;
+                }
+            }
+        }
+
+        return hasVowel &amp;&amp; hasConsonant;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def isValid(self, word: str) -&gt; bool:
+        if len(word) &lt; 3:
+            return False
+
+        has_vowel = False
+        has_consonant = False
+        vowels = set("aeiou")
+
+        for ch in word:
+            if not ch.isalnum():
+                return False
+            if ch.isalpha():
+                if ch.lower() in vowels:
+                    has_vowel = True
+                else:
+                    has_consonant = True
+
+        return has_vowel and has_consonant</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var isValid = function(word) {
+  if (word.length &lt; 3) return false;
+
+  let hasVowel = false;
+  let hasConsonant = false;
+  const vowels = new Set(['a', 'e', 'i', 'o', 'u']);
+
+  for (const ch of word) {
+    const isDigit = ch &gt;= '0' &amp;&amp; ch &lt;= '9';
+    const isLower = ch &gt;= 'a' &amp;&amp; ch &lt;= 'z';
+    const isUpper = ch &gt;= 'A' &amp;&amp; ch &lt;= 'Z';
+
+    if (!(isDigit || isLower || isUpper)) return false;
+
+    if (isLower || isUpper) {
+      const c = ch.toLowerCase();
+      if (vowels.has(c)) hasVowel = true;
+      else hasConsonant = true;
+    }
+  }
+
+  return hasVowel &amp;&amp; hasConsonant;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>一个单词要被判定为有效，需要同时满足：长度至少为 3；所有字符只能是数字或英文字母；并且至少包含一个元音字母和一个辅音字母。</p>
+
+      <h3>核心思路</h3>
+      <p>一次遍历即可完成判断：遇到非法字符立刻返回 <code>false</code>；对于字母字符，分别记录是否出现过元音和辅音。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 若 <code>word.length &lt; 3</code>，直接返回 <code>false</code>。<br/>
+         - 逐字符遍历：<br/>
+         &nbsp;&nbsp;• 若字符不是字母或数字，返回 <code>false</code>。<br/>
+         &nbsp;&nbsp;• 若是字母，转小写后判断是否元音并更新标记。<br/>
+         - 遍历结束后返回 <code>hasVowel &amp;&amp; hasConsonant</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>设字符串长度为 <code>n</code>。<br/>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 把数字误当作元音/辅音统计。<br/>
+         - 忽略大写元音（A/E/I/O/U）。<br/>
+         - 错误接受符号字符（如 <code>#</code>、<code>@</code>）。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean isValid(String word) {
+        if (word.length() &lt; 3) return false;
+
+        boolean hasVowel = false;
+        boolean hasConsonant = false;
+
+        for (char c : word.toCharArray()) {
+            if (!Character.isLetterOrDigit(c)) return false;
+
+            if (Character.isLetter(c)) {
+                char x = Character.toLowerCase(c);
+                if (x == 'a' || x == 'e' || x == 'i' || x == 'o' || x == 'u') {
+                    hasVowel = true;
+                } else {
+                    hasConsonant = true;
+                }
+            }
+        }
+        return hasVowel &amp;&amp; hasConsonant;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func isValid(word string) bool {
+    if len(word) &lt; 3 {
+        return false
+    }
+
+    hasVowel, hasConsonant := false, false
+    isVowel := func(b byte) bool {
+        return b == 'a' || b == 'e' || b == 'i' || b == 'o' || b == 'u'
+    }
+
+    for i := 0; i &lt; len(word); i++ {
+        c := word[i]
+
+        isDigit := c &gt;= '0' &amp;&amp; c &lt;= '9'
+        isLower := c &gt;= 'a' &amp;&amp; c &lt;= 'z'
+        isUpper := c &gt;= 'A' &amp;&amp; c &lt;= 'Z'
+
+        if !(isDigit || isLower || isUpper) {
+            return false
+        }
+
+        if isLower || isUpper {
+            if isUpper {
+                c = c - 'A' + 'a'
+            }
+            if isVowel(c) {
+                hasVowel = true
+            } else {
+                hasConsonant = true
+            }
+        }
+    }
+
+    return hasVowel &amp;&amp; hasConsonant
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool isValid(string word) {
+        if (word.size() &lt; 3) return false;
+
+        bool hasVowel = false, hasConsonant = false;
+
+        for (char c : word) {
+            if (!isalnum(static_cast&lt;unsigned char&gt;(c))) return false;
+
+            if (isalpha(static_cast&lt;unsigned char&gt;(c))) {
+                char x = static_cast&lt;char&gt;(tolower(static_cast&lt;unsigned char&gt;(c)));
+                if (x == 'a' || x == 'e' || x == 'i' || x == 'o' || x == 'u') {
+                    hasVowel = true;
+                } else {
+                    hasConsonant = true;
+                }
+            }
+        }
+
+        return hasVowel &amp;&amp; hasConsonant;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def isValid(self, word: str) -&gt; bool:
+        if len(word) &lt; 3:
+            return False
+
+        has_vowel = False
+        has_consonant = False
+        vowels = set("aeiou")
+
+        for ch in word:
+            if not ch.isalnum():
+                return False
+            if ch.isalpha():
+                if ch.lower() in vowels:
+                    has_vowel = True
+                else:
+                    has_consonant = True
+
+        return has_vowel and has_consonant</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var isValid = function(word) {
+  if (word.length &lt; 3) return false;
+
+  let hasVowel = false;
+  let hasConsonant = false;
+  const vowels = new Set(['a', 'e', 'i', 'o', 'u']);
+
+  for (const ch of word) {
+    const isDigit = ch &gt;= '0' &amp;&amp; ch &lt;= '9';
+    const isLower = ch &gt;= 'a' &amp;&amp; ch &lt;= 'z';
+    const isUpper = ch &gt;= 'A' &amp;&amp; ch &lt;= 'Z';
+
+    if (!(isDigit || isLower || isUpper)) return false;
+
+    if (isLower || isUpper) {
+      const c = ch.toLowerCase();
+      if (vowels.has(c)) hasVowel = true;
+      else hasConsonant = true;
+    }
+  }
+
+  return hasVowel &amp;&amp; hasConsonant;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
