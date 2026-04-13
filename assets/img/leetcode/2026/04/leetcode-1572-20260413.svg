@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .title { font: 700 44px 'Segoe UI', Arial, sans-serif; fill: #e2e8f0; }
+      .sub { font: 500 24px 'Segoe UI', Arial, sans-serif; fill: #93c5fd; }
+      .cell { fill: #0b1220; stroke: #334155; stroke-width: 2; }
+      .diagA { fill: #1d4ed8; }
+      .diagB { fill: #16a34a; }
+      .center { fill: #f59e0b; }
+      .num { font: 700 24px 'Consolas', monospace; fill: #e5e7eb; }
+      .note { font: 500 22px 'Segoe UI', Arial, sans-serif; fill: #cbd5e1; }
+    </style>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="80" class="title">LeetCode 1572 · Matrix Diagonal Sum</text>
+  <text x="60" y="118" class="sub">Primary + Secondary Diagonal, center counted once</text>
+
+  <g transform="translate(120,170)">
+    <rect class="cell diagA" x="0" y="0" width="90" height="90"/>
+    <rect class="cell" x="90" y="0" width="90" height="90"/>
+    <rect class="cell" x="180" y="0" width="90" height="90"/>
+    <rect class="cell" x="270" y="0" width="90" height="90"/>
+    <rect class="cell diagB" x="360" y="0" width="90" height="90"/>
+
+    <rect class="cell" x="0" y="90" width="90" height="90"/>
+    <rect class="cell diagA" x="90" y="90" width="90" height="90"/>
+    <rect class="cell" x="180" y="90" width="90" height="90"/>
+    <rect class="cell diagB" x="270" y="90" width="90" height="90"/>
+    <rect class="cell" x="360" y="90" width="90" height="90"/>
+
+    <rect class="cell" x="0" y="180" width="90" height="90"/>
+    <rect class="cell" x="90" y="180" width="90" height="90"/>
+    <rect class="cell center" x="180" y="180" width="90" height="90"/>
+    <rect class="cell" x="270" y="180" width="90" height="90"/>
+    <rect class="cell" x="360" y="180" width="90" height="90"/>
+
+    <rect class="cell" x="0" y="270" width="90" height="90"/>
+    <rect class="cell diagB" x="90" y="270" width="90" height="90"/>
+    <rect class="cell" x="180" y="270" width="90" height="90"/>
+    <rect class="cell diagA" x="270" y="270" width="90" height="90"/>
+    <rect class="cell" x="360" y="270" width="90" height="90"/>
+
+    <rect class="cell diagB" x="0" y="360" width="90" height="90"/>
+    <rect class="cell" x="90" y="360" width="90" height="90"/>
+    <rect class="cell" x="180" y="360" width="90" height="90"/>
+    <rect class="cell" x="270" y="360" width="90" height="90"/>
+    <rect class="cell diagA" x="360" y="360" width="90" height="90"/>
+
+    <text class="num" x="34" y="55">1</text><text class="num" x="214" y="55">3</text><text class="num" x="394" y="55">5</text>
+    <text class="num" x="124" y="145">7</text><text class="num" x="304" y="145">9</text>
+    <text class="num" x="214" y="235">11</text>
+    <text class="num" x="124" y="325">13</text><text class="num" x="304" y="325">15</text>
+    <text class="num" x="34" y="415">17</text><text class="num" x="394" y="415">19</text>
+  </g>
+
+  <text x="650" y="270" class="note">Blue = primary diagonal</text>
+  <text x="650" y="320" class="note">Green = secondary diagonal</text>
+  <text x="650" y="370" class="note">Orange center belongs to both</text>
+  <text x="650" y="420" class="note">Add once (deduplicate)</text>
+</svg>
