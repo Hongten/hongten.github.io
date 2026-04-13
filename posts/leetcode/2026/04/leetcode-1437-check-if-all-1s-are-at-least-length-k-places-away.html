@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 1437: Check If All 1's Are at Least Length K Places Away (Last-Seen Index Gap Check)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 1437 using last-seen index gap validation, with complete Java/Go/C++/Python/JavaScript code tabs in both EN and 中文 sections."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 1437: Check If All 1's Are at Least Length K Places Away (Last-Seen Index Gap Check)" />
+  <meta property="og:description" content="Detailed English + 中文 explanation with full 5-language code tabs and a distance-check diagram." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1437-check-if-all-1s-are-at-least-length-k-places-away.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1437-check-if-all-1s-are-at-least-length-k-places-away.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 1437: Check If All 1's Are at Least Length K Places Away (Last-Seen Index Gap Check)</h1>
+      <div class="meta">2026-04-13 · LeetCode · Array / Simulation</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 1437</span><span class="tag">Array</span><span class="tag">Greedy Scan</span>
+
+      <p>Today we solve <strong>LeetCode 1437 - Check If All 1's Are at Least Length K Places Away</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/check-if-all-1s-are-at-least-length-k-places-away/" target="_blank" rel="noopener">https://leetcode.com/problems/check-if-all-1s-are-at-least-length-k-places-away/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-1437-20260413.svg" alt="LeetCode 1437 last seen one index and gap check diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a binary array <code>nums</code> and an integer <code>k</code>, check whether every pair of <code>1</code>s is at least <code>k</code> positions apart.</p>
+
+      <h3>Key Insight</h3>
+      <p>We only need to remember the index of the previous <code>1</code>. When we see a new <code>1</code> at index <code>i</code>, the gap is <code>i - prev - 1</code> zeros between them.</p>
+      <p>If this gap is smaller than <code>k</code>, we can immediately return <code>false</code>; otherwise keep scanning.</p>
+
+      <h3>Algorithm</h3>
+      <p>1) Initialize <code>prev = -1</code> (no previous 1 yet).<br/>
+         2) Traverse array from left to right.<br/>
+         3) For each <code>nums[i] == 1</code>: if <code>prev != -1</code> and <code>i - prev - 1 &lt; k</code>, return <code>false</code>.<br/>
+         4) Set <code>prev = i</code> and continue.<br/>
+         5) If scan finishes, return <code>true</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Single pass over array: <code>O(n)</code> time.<br/>
+         Only one extra variable: <code>O(1)</code> space.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean kLengthApart(int[] nums, int k) {
+        int prev = -1;
+        for (int i = 0; i &lt; nums.length; i++) {
+            if (nums[i] == 1) {
+                if (prev != -1 &amp;&amp; i - prev - 1 &lt; k) {
+                    return false;
+                }
+                prev = i;
+            }
+        }
+        return true;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func kLengthApart(nums []int, k int) bool {
+    prev := -1
+    for i, v := range nums {
+        if v == 1 {
+            if prev != -1 &amp;&amp; i-prev-1 &lt; k {
+                return false
+            }
+            prev = i
+        }
+    }
+    return true
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool kLengthApart(vector&lt;int&gt;& nums, int k) {
+        int prev = -1;
+        for (int i = 0; i &lt; (int)nums.size(); ++i) {
+            if (nums[i] == 1) {
+                if (prev != -1 &amp;&amp; i - prev - 1 &lt; k) {
+                    return false;
+                }
+                prev = i;
+            }
+        }
+        return true;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def kLengthApart(self, nums: list[int], k: int) -> bool:
+        prev = -1
+        for i, v in enumerate(nums):
+            if v == 1:
+                if prev != -1 and i - prev - 1 &lt; k:
+                    return False
+                prev = i
+        return True</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var kLengthApart = function(nums, k) {
+  let prev = -1;
+  for (let i = 0; i &lt; nums.length; i++) {
+    if (nums[i] === 1) {
+      if (prev !== -1 &amp;&amp; i - prev - 1 &lt; k) {
+        return false;
+      }
+      prev = i;
+    }
+  }
+  return true;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定二进制数组 <code>nums</code> 和整数 <code>k</code>，判断所有 <code>1</code> 之间是否至少间隔 <code>k</code> 个位置（中间至少有 <code>k</code> 个 0）。</p>
+
+      <h3>核心思路</h3>
+      <p>只需要记录上一个 <code>1</code> 的位置 <code>prev</code>。当在位置 <code>i</code> 再次遇到 <code>1</code> 时，中间 0 的个数是 <code>i - prev - 1</code>。</p>
+      <p>若该值小于 <code>k</code>，立刻返回 <code>false</code>；否则继续扫描。</p>
+
+      <h3>算法步骤</h3>
+      <p>1）初始化 <code>prev = -1</code>，表示还没看到过 1。<br/>
+         2）从左到右遍历数组。<br/>
+         3）当 <code>nums[i] == 1</code> 时：若 <code>prev != -1</code> 且 <code>i - prev - 1 &lt; k</code>，返回 <code>false</code>。<br/>
+         4）更新 <code>prev = i</code>。<br/>
+         5）遍历结束仍未违规，返回 <code>true</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>一次线性扫描，时间复杂度 <code>O(n)</code>。<br/>
+         仅使用常数额外变量，空间复杂度 <code>O(1)</code>。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean kLengthApart(int[] nums, int k) {
+        int prev = -1;
+        for (int i = 0; i &lt; nums.length; i++) {
+            if (nums[i] == 1) {
+                if (prev != -1 &amp;&amp; i - prev - 1 &lt; k) {
+                    return false;
+                }
+                prev = i;
+            }
+        }
+        return true;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func kLengthApart(nums []int, k int) bool {
+    prev := -1
+    for i, v := range nums {
+        if v == 1 {
+            if prev != -1 &amp;&amp; i-prev-1 &lt; k {
+                return false
+            }
+            prev = i
+        }
+    }
+    return true
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool kLengthApart(vector&lt;int&gt;& nums, int k) {
+        int prev = -1;
+        for (int i = 0; i &lt; (int)nums.size(); ++i) {
+            if (nums[i] == 1) {
+                if (prev != -1 &amp;&amp; i - prev - 1 &lt; k) {
+                    return false;
+                }
+                prev = i;
+            }
+        }
+        return true;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def kLengthApart(self, nums: list[int], k: int) -> bool:
+        prev = -1
+        for i, v in enumerate(nums):
+            if v == 1:
+                if prev != -1 and i - prev - 1 &lt; k:
+                    return False
+                prev = i
+        return True</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var kLengthApart = function(nums, k) {
+  let prev = -1;
+  for (let i = 0; i &lt; nums.length; i++) {
+    if (nums[i] === 1) {
+      if (prev !== -1 &amp;&amp; i - prev - 1 &lt; k) {
+        return false;
+      }
+      prev = i;
+    }
+  }
+  return true;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
