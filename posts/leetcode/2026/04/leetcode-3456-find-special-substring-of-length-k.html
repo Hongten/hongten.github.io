@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 3456: Find Special Substring of Length K (Run-Length Boundary Check)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 3456 with full Java/Go/C++/Python/JavaScript code tabs in both English and Chinese sections."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 3456: Find Special Substring of Length K (Run-Length Boundary Check)" />
+  <meta property="og:description" content="Scan maximal equal-character runs and check whether any run length equals k." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3456-find-special-substring-of-length-k.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3456-find-special-substring-of-length-k.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 3456: Find Special Substring of Length K (Run-Length Boundary Check)</h1>
+      <div class="meta">2026-04-13 · LeetCode · String / Two Pointers</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 3456</span><span class="tag">String</span><span class="tag">Two Pointers</span>
+
+      <p>Today we solve <strong>LeetCode 3456 - Find Special Substring of Length K</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/find-special-substring-of-length-k/" target="_blank" rel="noopener">https://leetcode.com/problems/find-special-substring-of-length-k/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-3456-20260413.svg" alt="LeetCode 3456 run-length segments and exact length-k check" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a string <code>s</code> and integer <code>k</code>, determine whether there exists a substring of length exactly <code>k</code> that:</p>
+      <p>1) contains only one distinct character,<br/>2) if there is a character right before it, that character is different,<br/>3) if there is a character right after it, that character is different.</p>
+
+      <h3>Key Idea</h3>
+      <p>Conditions (2) and (3) mean the substring must be a <strong>maximal equal-character block</strong> (a full run), not a middle slice of a longer run. So we only need to scan runs and check whether any run length is exactly <code>k</code>.</p>
+
+      <h3>Algorithm</h3>
+      <p>Use two pointers:</p>
+      <p>1) Let <code>i</code> be run start.<br/>
+         2) Move <code>j</code> forward while <code>s[j] == s[i]</code>.<br/>
+         3) Run length is <code>j - i</code>. If it equals <code>k</code>, return <code>true</code>.<br/>
+         4) Set <code>i = j</code> and continue.<br/>
+         5) If no run length equals <code>k</code>, return <code>false</code>.</p>
+
+      <h3>Complexity</h3>
+      <p>Each character is visited once: <code>O(n)</code> time, <code>O(1)</code> extra space.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs"><div class="tab-list">
+        <button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button>
+      </div>
+      <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean hasSpecialSubstring(String s, int k) {
+        int n = s.length();
+        for (int i = 0; i &lt; n; ) {
+            int j = i;
+            while (j &lt; n &amp;&amp; s.charAt(j) == s.charAt(i)) j++;
+            if (j - i == k) return true;
+            i = j;
+        }
+        return false;
+    }
+}</code></pre></div>
+      <div class="tab-pane" data-tab="go"><pre><code class="language-go">func hasSpecialSubstring(s string, k int) bool {
+	n := len(s)
+	for i := 0; i &lt; n; {
+		j := i
+		for j &lt; n &amp;&amp; s[j] == s[i] {
+			j++
+		}
+		if j-i == k {
+			return true
+		}
+		i = j
+	}
+	return false
+}</code></pre></div>
+      <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool hasSpecialSubstring(string s, int k) {
+        int n = (int)s.size();
+        for (int i = 0; i &lt; n; ) {
+            int j = i;
+            while (j &lt; n &amp;&amp; s[j] == s[i]) j++;
+            if (j - i == k) return true;
+            i = j;
+        }
+        return false;
+    }
+};</code></pre></div>
+      <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def hasSpecialSubstring(self, s: str, k: int) -> bool:
+        n = len(s)
+        i = 0
+        while i &lt; n:
+            j = i
+            while j &lt; n and s[j] == s[i]:
+                j += 1
+            if j - i == k:
+                return True
+            i = j
+        return False</code></pre></div>
+      <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var hasSpecialSubstring = function(s, k) {
+  const n = s.length;
+  for (let i = 0; i &lt; n; ) {
+    let j = i;
+    while (j &lt; n &amp;&amp; s[j] === s[i]) j++;
+    if (j - i === k) return true;
+    i = j;
+  }
+  return false;
+};</code></pre></div></div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定字符串 <code>s</code> 和整数 <code>k</code>，判断是否存在一个长度恰好为 <code>k</code> 的子串，满足：</p>
+      <p>1）子串只包含一种字符；<br/>2）若子串左侧有字符，则该字符与子串字符不同；<br/>3）若子串右侧有字符，则该字符与子串字符不同。</p>
+
+      <h3>核心思路</h3>
+      <p>条件 2 和 3 本质上要求该子串是某个“连续相同字符段（run）”的完整片段，不能从更长的同字符段中间截取。因此只需枚举每段 run 的长度，看是否有长度等于 <code>k</code> 的 run。</p>
+
+      <h3>算法步骤</h3>
+      <p>双指针扫描：</p>
+      <p>1）<code>i</code> 指向当前 run 起点；<br/>
+         2）<code>j</code> 向右扩展，直到 <code>s[j] != s[i]</code> 或越界；<br/>
+         3）当前 run 长度为 <code>j - i</code>，若等于 <code>k</code> 直接返回 <code>true</code>；<br/>
+         4）令 <code>i = j</code> 继续下一段。<br/>
+         5）全部扫描完仍未命中，返回 <code>false</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>每个字符最多被访问一次，时间复杂度 <code>O(n)</code>，额外空间复杂度 <code>O(1)</code>。</p>
+
+      <h3>参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs"><div class="tab-list">
+        <button class="tab-btn active" data-tab="java-cn">Java</button><button class="tab-btn" data-tab="go-cn">Go</button><button class="tab-btn" data-tab="cpp-cn">C++</button><button class="tab-btn" data-tab="python-cn">Python</button><button class="tab-btn" data-tab="javascript-cn">JavaScript</button>
+      </div>
+      <div class="tab-pane active" data-tab="java-cn"><pre><code class="language-java">class Solution {
+    public boolean hasSpecialSubstring(String s, int k) {
+        int n = s.length();
+        for (int i = 0; i &lt; n; ) {
+            int j = i;
+            while (j &lt; n &amp;&amp; s.charAt(j) == s.charAt(i)) j++;
+            if (j - i == k) return true;
+            i = j;
+        }
+        return false;
+    }
+}</code></pre></div>
+      <div class="tab-pane" data-tab="go-cn"><pre><code class="language-go">func hasSpecialSubstring(s string, k int) bool {
+	n := len(s)
+	for i := 0; i &lt; n; {
+		j := i
+		for j &lt; n &amp;&amp; s[j] == s[i] {
+			j++
+		}
+		if j-i == k {
+			return true
+		}
+		i = j
+	}
+	return false
+}</code></pre></div>
+      <div class="tab-pane" data-tab="cpp-cn"><pre><code class="language-cpp">class Solution {
+public:
+    bool hasSpecialSubstring(string s, int k) {
+        int n = (int)s.size();
+        for (int i = 0; i &lt; n; ) {
+            int j = i;
+            while (j &lt; n &amp;&amp; s[j] == s[i]) j++;
+            if (j - i == k) return true;
+            i = j;
+        }
+        return false;
+    }
+};</code></pre></div>
+      <div class="tab-pane" data-tab="python-cn"><pre><code class="language-python">class Solution:
+    def hasSpecialSubstring(self, s: str, k: int) -> bool:
+        n = len(s)
+        i = 0
+        while i &lt; n:
+            j = i
+            while j &lt; n and s[j] == s[i]:
+                j += 1
+            if j - i == k:
+                return True
+            i = j
+        return False</code></pre></div>
+      <div class="tab-pane" data-tab="javascript-cn"><pre><code class="language-javascript">var hasSpecialSubstring = function(s, k) {
+  const n = s.length;
+  for (let i = 0; i &lt; n; ) {
+    let j = i;
+    while (j &lt; n &amp;&amp; s[j] === s[i]) j++;
+    if (j - i === k) return true;
+    i = j;
+  }
+  return false;
+};</code></pre></div></div>
+    </article>
+
+    <section class="card comments"><h2>Comments</h2>
+      <script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script>
+    </section>
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
