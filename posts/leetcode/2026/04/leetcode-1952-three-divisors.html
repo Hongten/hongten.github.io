@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 1952: Three Divisors (Prime-Square Characterization)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 1952 using the prime-square characterization, with full Java/Go/C++/Python/JavaScript code tabs in both English and Chinese sections."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 1952: Three Divisors (Prime-Square Characterization)" />
+  <meta property="og:description" content="English + 中文 explanation with math insight, complexity, pitfalls, and complete 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1952-three-divisors.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1952-three-divisors.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 1952: Three Divisors (Prime-Square Characterization)</h1>
+      <div class="meta">2026-04-13 · LeetCode · Math / Number Theory</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 1952</span><span class="tag">Math</span><span class="tag">Number Theory</span>
+
+      <p>Today we solve <strong>LeetCode 1952 - Three Divisors</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/three-divisors/" target="_blank" rel="noopener">https://leetcode.com/problems/three-divisors/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-1952-20260413.svg" alt="LeetCode 1952 diagram showing that numbers with exactly three divisors are squares of prime numbers" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given an integer <code>n</code>, return <code>true</code> if it has exactly three positive divisors; otherwise return <code>false</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>A number has exactly three divisors iff it is the square of a prime: divisors are <code>1</code>, <code>p</code>, and <code>p²</code>. So we only need to check whether <code>n</code> is a perfect square and whether its square root is prime.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Compute <code>r = floor(sqrt(n))</code>.<br/>
+         - If <code>r * r != n</code>, return <code>false</code>.<br/>
+         - Check whether <code>r</code> is prime by trial division up to <code>sqrt(r)</code>.<br/>
+         - Return that primality result.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(sqrt(sqrt(n)))</code> for primality test on <code>r</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Brute-forcing all divisors of <code>n</code>; this is unnecessary work.<br/>
+         - Forgetting that <code>1</code> is not prime.<br/>
+         - Floating-point precision concerns for very large values (safe here under problem constraints).</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean isThree(int n) {
+        int r = (int) Math.sqrt(n);
+        if (r * r != n) return false;
+        return isPrime(r);
+    }
+
+    private boolean isPrime(int x) {
+        if (x &lt; 2) return false;
+        for (int d = 2; d * d &lt;= x; d++) {
+            if (x % d == 0) return false;
+        }
+        return true;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func isThree(n int) bool {
+    r := int(math.Sqrt(float64(n)))
+    if r*r != n {
+        return false
+    }
+    return isPrime(r)
+}
+
+func isPrime(x int) bool {
+    if x &lt; 2 {
+        return false
+    }
+    for d := 2; d*d &lt;= x; d++ {
+        if x%d == 0 {
+            return false
+        }
+    }
+    return true
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool isThree(int n) {
+        int r = (int)std::sqrt(n);
+        if (r * r != n) return false;
+        return isPrime(r);
+    }
+
+private:
+    bool isPrime(int x) {
+        if (x &lt; 2) return false;
+        for (int d = 2; d * d &lt;= x; d++) {
+            if (x % d == 0) return false;
+        }
+        return true;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def isThree(self, n: int) -&gt; bool:
+        r = int(n ** 0.5)
+        if r * r != n:
+            return False
+        return self.is_prime(r)
+
+    def is_prime(self, x: int) -&gt; bool:
+        if x &lt; 2:
+            return False
+        d = 2
+        while d * d &lt;= x:
+            if x % d == 0:
+                return False
+            d += 1
+        return True</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var isThree = function(n) {
+  const r = Math.floor(Math.sqrt(n));
+  if (r * r !== n) return false;
+  return isPrime(r);
+};
+
+function isPrime(x) {
+  if (x &lt; 2) return false;
+  for (let d = 2; d * d &lt;= x; d++) {
+    if (x % d === 0) return false;
+  }
+  return true;
+}</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定整数 <code>n</code>，如果它恰好有 3 个正因数则返回 <code>true</code>，否则返回 <code>false</code>。</p>
+
+      <h3>核心思路</h3>
+      <p>一个数恰好有 3 个正因数，当且仅当它是某个质数的平方：因数正好是 <code>1</code>、<code>p</code>、<code>p²</code>。因此只需判断 <code>n</code> 是否为完全平方数，且平方根是否为质数。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 计算 <code>r = floor(sqrt(n))</code>。<br/>
+         - 若 <code>r * r != n</code>，直接返回 <code>false</code>。<br/>
+         - 判断 <code>r</code> 是否为质数（试除到 <code>sqrt(r)</code>）。<br/>
+         - 返回质数判断结果。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(sqrt(sqrt(n)))</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 直接枚举 <code>n</code> 的全部因数，计算量不必要。<br/>
+         - 忘记 <code>1</code> 不是质数。<br/>
+         - 在超大整数场景忽略浮点开方误差（本题约束下通常安全）。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean isThree(int n) {
+        int r = (int) Math.sqrt(n);
+        if (r * r != n) return false;
+        return isPrime(r);
+    }
+
+    private boolean isPrime(int x) {
+        if (x &lt; 2) return false;
+        for (int d = 2; d * d &lt;= x; d++) {
+            if (x % d == 0) return false;
+        }
+        return true;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func isThree(n int) bool {
+    r := int(math.Sqrt(float64(n)))
+    if r*r != n {
+        return false
+    }
+    return isPrime(r)
+}
+
+func isPrime(x int) bool {
+    if x &lt; 2 {
+        return false
+    }
+    for d := 2; d*d &lt;= x; d++ {
+        if x%d == 0 {
+            return false
+        }
+    }
+    return true
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool isThree(int n) {
+        int r = (int)std::sqrt(n);
+        if (r * r != n) return false;
+        return isPrime(r);
+    }
+
+private:
+    bool isPrime(int x) {
+        if (x &lt; 2) return false;
+        for (int d = 2; d * d &lt;= x; d++) {
+            if (x % d == 0) return false;
+        }
+        return true;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def isThree(self, n: int) -&gt; bool:
+        r = int(n ** 0.5)
+        if r * r != n:
+            return False
+        return self.is_prime(r)
+
+    def is_prime(self, x: int) -&gt; bool:
+        if x &lt; 2:
+            return False
+        d = 2
+        while d * d &lt;= x:
+            if x % d == 0:
+                return False
+            d += 1
+        return True</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var isThree = function(n) {
+  const r = Math.floor(Math.sqrt(n));
+  if (r * r !== n) return false;
+  return isPrime(r);
+};
+
+function isPrime(x) {
+  if (x &lt; 2) return false;
+  for (let d = 2; d * d &lt;= x; d++) {
+    if (x % d === 0) return false;
+  }
+  return true;
+}</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
