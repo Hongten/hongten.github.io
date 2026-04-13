@@ -1,0 +1,1070 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 3454: Separate Squares II (Line Sweep + Segment Tree for Union Area Split)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 3454 using y-axis sweep line and segment tree to split union area in half, with full Java/Go/C++/Python/JavaScript code tabs in both EN and 中文 sections."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 3454: Separate Squares II (Line Sweep + Segment Tree for Union Area Split)" />
+  <meta property="og:description" content="Detailed English + 中文 explanation with complete 5-language code tabs and a sweep-line area-balance diagram." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3454-separate-squares-ii.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3454-separate-squares-ii.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 3454: Separate Squares II (Line Sweep + Segment Tree for Union Area Split)</h1>
+      <div class="meta">2026-04-13 · LeetCode · Geometry / Sweep Line / Segment Tree</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 3454</span><span class="tag">Sweep Line</span><span class="tag">Segment Tree</span>
+
+      <p>Today we solve <strong>LeetCode 3454 - Separate Squares II</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/separate-squares-ii/" target="_blank" rel="noopener">https://leetcode.com/problems/separate-squares-ii/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-3454-20260413.svg" alt="LeetCode 3454 sweep line for union area split" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given axis-aligned squares <code>[x, y, l]</code>, define the area by the <strong>union</strong> of all squares (overlap counted once). Find the minimum horizontal line <code>Y</code> such that union area below <code>Y</code> equals union area above <code>Y</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>For union area, we should not sum each square independently. Instead, do a y-sweep:</p>
+      <p>1) Convert each square into two events: entering at <code>y</code>, leaving at <code>y+l</code> with x-interval <code>[x, x+l)</code>.<br/>
+         2) Between two consecutive y-levels, active x-union length is constant.<br/>
+         3) Strip area = <code>coveredX * deltaY</code>.</p>
+      <p>Using a segment tree over compressed x coordinates, we can maintain current covered x-length in <code>O(log n)</code> per event update.</p>
+
+      <h3>Algorithm</h3>
+      <p>1) Build events and x-coordinate compression.<br/>
+         2) Sweep once to compute total union area.<br/>
+         3) Sweep again and accumulate strip areas; when accumulated area reaches <code>total/2</code>, answer lies in current strip.<br/>
+         4) In that strip, covered x-length is constant, so solve linearly:<br/>
+         <code>ansY = y0 + (target - prefixArea) / coveredX</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Let <code>n</code> be number of squares, events = <code>2n</code>.<br/>
+         Time: <code>O(n log n)</code> (sorting + segment tree updates).<br/>
+         Space: <code>O(n)</code>.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">import java.util.*;
+
+class Solution {
+    static class Event {
+        long y, x1, x2;
+        int type;
+        Event(long y, long x1, long x2, int type) {
+            this.y = y; this.x1 = x1; this.x2 = x2; this.type = type;
+        }
+    }
+
+    static class SegTree {
+        int n;
+        int[] cover;
+        double[] len;
+        long[] xs;
+
+        SegTree(long[] xs) {
+            this.xs = xs;
+            this.n = xs.length - 1;
+            this.cover = new int[n * 4 + 5];
+            this.len = new double[n * 4 + 5];
+        }
+
+        void update(int idx, int l, int r, int ql, int qr, int delta) {
+            if (ql > r || qr < l) return;
+            if (ql <= l && r <= qr) {
+                cover[idx] += delta;
+                pushUp(idx, l, r);
+                return;
+            }
+            int mid = (l + r) >>> 1;
+            update(idx << 1, l, mid, ql, qr, delta);
+            update(idx << 1 | 1, mid + 1, r, ql, qr, delta);
+            pushUp(idx, l, r);
+        }
+
+        void pushUp(int idx, int l, int r) {
+            if (cover[idx] > 0) {
+                len[idx] = xs[r + 1] - xs[l];
+            } else if (l == r) {
+                len[idx] = 0;
+            } else {
+                len[idx] = len[idx << 1] + len[idx << 1 | 1];
+            }
+        }
+
+        double totalLen() { return n <= 0 ? 0.0 : len[1]; }
+    }
+
+    public double separateSquares(int[][] squares) {
+        List&lt;Event&gt; events = new ArrayList&lt;&gt;();
+        List&lt;Long&gt; xVals = new ArrayList&lt;&gt;();
+
+        for (int[] s : squares) {
+            long x = s[0], y = s[1], l = s[2];
+            long x2 = x + l, y2 = y + l;
+            events.add(new Event(y, x, x2, +1));
+            events.add(new Event(y2, x, x2, -1));
+            xVals.add(x);
+            xVals.add(x2);
+        }
+
+        Collections.sort(xVals);
+        long[] xs = xVals.stream().distinct().mapToLong(Long::longValue).toArray();
+        Map&lt;Long, Integer&gt; xi = new HashMap&lt;&gt;();
+        for (int i = 0; i &lt; xs.length; i++) xi.put(xs[i], i);
+
+        events.sort(Comparator.comparingLong(e -&gt; e.y));
+
+        double total = sweepArea(events, xs, xi, -1.0);
+        double target = total / 2.0;
+        return sweepArea(events, xs, xi, target);
+    }
+
+    private double sweepArea(List&lt;Event&gt; events, long[] xs, Map&lt;Long, Integer&gt; xi, double target) {
+        SegTree st = new SegTree(xs);
+        int m = events.size();
+        int i = 0;
+        long prevY = events.get(0).y;
+        double acc = 0.0;
+
+        while (i &lt; m) {
+            long y = events.get(i).y;
+            double covered = st.totalLen();
+            double strip = covered * (y - prevY);
+
+            if (target >= 0 && covered &gt; 0 && acc + strip >= target) {
+                return prevY + (target - acc) / covered;
+            }
+
+            acc += strip;
+
+            while (i &lt; m && events.get(i).y == y) {
+                Event e = events.get(i++);
+                int l = xi.get(e.x1), r = xi.get(e.x2) - 1;
+                if (l &lt;= r) st.update(1, 0, st.n - 1, l, r, e.type);
+            }
+            prevY = y;
+        }
+
+        return target &lt; 0 ? acc : prevY;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">import "sort"
+
+type Event struct {
+    y, x1, x2 int64
+    typ       int
+}
+
+type SegTree struct {
+    n     int
+    cover []int
+    length []float64
+    xs    []int64
+}
+
+func NewSegTree(xs []int64) *SegTree {
+    n := len(xs) - 1
+    return &SegTree{n: n, cover: make([]int, 4*n+5), length: make([]float64, 4*n+5), xs: xs}
+}
+
+func (st *SegTree) pushUp(idx, l, r int) {
+    if st.cover[idx] &gt; 0 {
+        st.length[idx] = float64(st.xs[r+1] - st.xs[l])
+    } else if l == r {
+        st.length[idx] = 0
+    } else {
+        st.length[idx] = st.length[idx*2] + st.length[idx*2+1]
+    }
+}
+
+func (st *SegTree) update(idx, l, r, ql, qr, delta int) {
+    if ql &gt; r || qr &lt; l {
+        return
+    }
+    if ql &lt;= l && r &lt;= qr {
+        st.cover[idx] += delta
+        st.pushUp(idx, l, r)
+        return
+    }
+    mid := (l + r) / 2
+    st.update(idx*2, l, mid, ql, qr, delta)
+    st.update(idx*2+1, mid+1, r, ql, qr, delta)
+    st.pushUp(idx, l, r)
+}
+
+func (st *SegTree) totalLen() float64 {
+    if st.n &lt;= 0 { return 0 }
+    return st.length[1]
+}
+
+func separateSquares(squares [][]int) float64 {
+    events := make([]Event, 0, len(squares)*2)
+    xVals := make([]int64, 0, len(squares)*2)
+
+    for _, s := range squares {
+        x, y, l := int64(s[0]), int64(s[1]), int64(s[2])
+        x2, y2 := x+l, y+l
+        events = append(events, Event{y, x, x2, 1}, Event{y2, x, x2, -1})
+        xVals = append(xVals, x, x2)
+    }
+
+    sort.Slice(xVals, func(i, j int) bool { return xVals[i] &lt; xVals[j] })
+    xs := make([]int64, 0, len(xVals))
+    for _, x := range xVals {
+        if len(xs) == 0 || xs[len(xs)-1] != x { xs = append(xs, x) }
+    }
+
+    xi := map[int64]int{}
+    for i, x := range xs { xi[x] = i }
+
+    sort.Slice(events, func(i, j int) bool { return events[i].y &lt; events[j].y })
+
+    total := sweep(events, xs, xi, -1)
+    return sweep(events, xs, xi, total/2.0)
+}
+
+func sweep(events []Event, xs []int64, xi map[int64]int, target float64) float64 {
+    st := NewSegTree(xs)
+    i, m := 0, len(events)
+    prevY := events[0].y
+    acc := 0.0
+
+    for i &lt; m {
+        y := events[i].y
+        covered := st.totalLen()
+        strip := covered * float64(y-prevY)
+
+        if target &gt;= 0 && covered &gt; 0 && acc+strip &gt;= target {
+            return float64(prevY) + (target-acc)/covered
+        }
+        acc += strip
+
+        for i &lt; m && events[i].y == y {
+            e := events[i]
+            i++
+            l, r := xi[e.x1], xi[e.x2]-1
+            if l &lt;= r {
+                st.update(1, 0, st.n-1, l, r, e.typ)
+            }
+        }
+        prevY = y
+    }
+
+    if target &lt; 0 { return acc }
+    return float64(prevY)
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+    struct Event {
+        long long y, x1, x2;
+        int type;
+        bool operator&lt;(const Event&amp; other) const { return y &lt; other.y; }
+    };
+
+    struct SegTree {
+        int n;
+        vector&lt;int&gt; cover;
+        vector&lt;double&gt; len;
+        vector&lt;long long&gt; xs;
+
+        SegTree(const vector&lt;long long&gt;&amp; x): xs(x) {
+            n = (int)xs.size() - 1;
+            cover.assign(4 * n + 5, 0);
+            len.assign(4 * n + 5, 0.0);
+        }
+
+        void pushUp(int idx, int l, int r) {
+            if (cover[idx] &gt; 0) len[idx] = (double)(xs[r + 1] - xs[l]);
+            else if (l == r) len[idx] = 0.0;
+            else len[idx] = len[idx * 2] + len[idx * 2 + 1];
+        }
+
+        void update(int idx, int l, int r, int ql, int qr, int delta) {
+            if (ql &gt; r || qr &lt; l) return;
+            if (ql &lt;= l && r &lt;= qr) {
+                cover[idx] += delta;
+                pushUp(idx, l, r);
+                return;
+            }
+            int mid = (l + r) / 2;
+            update(idx * 2, l, mid, ql, qr, delta);
+            update(idx * 2 + 1, mid + 1, r, ql, qr, delta);
+            pushUp(idx, l, r);
+        }
+
+        double totalLen() const { return n &lt;= 0 ? 0.0 : len[1]; }
+    };
+
+    double sweep(const vector&lt;Event&gt;&amp; events, const vector&lt;long long&gt;&amp; xs,
+                 unordered_map&lt;long long, int&gt;&amp; xi, double target) {
+        SegTree st(xs);
+        int i = 0, m = events.size();
+        long long prevY = events[0].y;
+        double acc = 0.0;
+
+        while (i &lt; m) {
+            long long y = events[i].y;
+            double covered = st.totalLen();
+            double strip = covered * (double)(y - prevY);
+
+            if (target &gt;= 0 &amp;&amp; covered &gt; 0 &amp;&amp; acc + strip &gt;= target) {
+                return (double)prevY + (target - acc) / covered;
+            }
+            acc += strip;
+
+            while (i &lt; m &amp;&amp; events[i].y == y) {
+                auto&amp; e = events[i++];
+                int l = xi[e.x1], r = xi[e.x2] - 1;
+                if (l &lt;= r) st.update(1, 0, st.n - 1, l, r, e.type);
+            }
+            prevY = y;
+        }
+
+        return target &lt; 0 ? acc : (double)prevY;
+    }
+
+public:
+    double separateSquares(vector&lt;vector&lt;int&gt;&gt;&amp; squares) {
+        vector&lt;Event&gt; events;
+        vector&lt;long long&gt; xVals;
+
+        for (auto&amp; s : squares) {
+            long long x = s[0], y = s[1], l = s[2];
+            long long x2 = x + l, y2 = y + l;
+            events.push_back({y, x, x2, +1});
+            events.push_back({y2, x, x2, -1});
+            xVals.push_back(x);
+            xVals.push_back(x2);
+        }
+
+        sort(xVals.begin(), xVals.end());
+        xVals.erase(unique(xVals.begin(), xVals.end()), xVals.end());
+
+        unordered_map&lt;long long, int&gt; xi;
+        for (int i = 0; i &lt; (int)xVals.size(); ++i) xi[xVals[i]] = i;
+
+        sort(events.begin(), events.end());
+
+        double total = sweep(events, xVals, xi, -1.0);
+        return sweep(events, xVals, xi, total / 2.0);
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">from typing import List
+
+class Solution:
+    def separateSquares(self, squares: List[List[int]]) -> float:
+        events = []
+        xs = []
+
+        for x, y, l in squares:
+            x2, y2 = x + l, y + l
+            events.append((y, x, x2, 1))
+            events.append((y2, x, x2, -1))
+            xs.extend([x, x2])
+
+        xs = sorted(set(xs))
+        xi = {x: i for i, x in enumerate(xs)}
+        events.sort()
+
+        n = len(xs) - 1
+        cover = [0] * (4 * max(1, n) + 5)
+        length = [0.0] * (4 * max(1, n) + 5)
+
+        def push_up(idx: int, l: int, r: int) -> None:
+            if cover[idx] &gt; 0:
+                length[idx] = xs[r + 1] - xs[l]
+            elif l == r:
+                length[idx] = 0.0
+            else:
+                length[idx] = length[idx * 2] + length[idx * 2 + 1]
+
+        def update(idx: int, l: int, r: int, ql: int, qr: int, delta: int) -> None:
+            if ql &gt; r or qr &lt; l:
+                return
+            if ql &lt;= l and r &lt;= qr:
+                cover[idx] += delta
+                push_up(idx, l, r)
+                return
+            mid = (l + r) // 2
+            update(idx * 2, l, mid, ql, qr, delta)
+            update(idx * 2 + 1, mid + 1, r, ql, qr, delta)
+            push_up(idx, l, r)
+
+        def total_len() -> float:
+            return 0.0 if n &lt;= 0 else length[1]
+
+        def sweep(target: float) -> float:
+            i = 0
+            m = len(events)
+            prev_y = events[0][0]
+            acc = 0.0
+
+            while i &lt; m:
+                y = events[i][0]
+                covered = total_len()
+                strip = covered * (y - prev_y)
+
+                if target &gt;= 0 and covered &gt; 0 and acc + strip &gt;= target:
+                    return prev_y + (target - acc) / covered
+
+                acc += strip
+
+                while i &lt; m and events[i][0] == y:
+                    _, x1, x2, typ = events[i]
+                    i += 1
+                    l, r = xi[x1], xi[x2] - 1
+                    if n &gt; 0 and l &lt;= r:
+                        update(1, 0, n - 1, l, r, typ)
+
+                prev_y = y
+
+            return acc if target &lt; 0 else float(prev_y)
+
+        total = sweep(-1.0)
+
+        # reset tree for second sweep
+        for i in range(len(cover)):
+            cover[i] = 0
+            length[i] = 0.0
+
+        return sweep(total / 2.0)</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var separateSquares = function(squares) {
+  const events = [];
+  const xVals = [];
+
+  for (const [x, y, l] of squares) {
+    const x2 = x + l, y2 = y + l;
+    events.push([y, x, x2, 1]);
+    events.push([y2, x, x2, -1]);
+    xVals.push(x, x2);
+  }
+
+  xVals.sort((a, b) => a - b);
+  const xs = [];
+  for (const x of xVals) {
+    if (xs.length === 0 || xs[xs.length - 1] !== x) xs.push(x);
+  }
+
+  const xi = new Map();
+  xs.forEach((x, i) => xi.set(x, i));
+  events.sort((a, b) => a[0] - b[0]);
+
+  const n = xs.length - 1;
+  const cover = new Array(4 * Math.max(1, n) + 5).fill(0);
+  const len = new Array(4 * Math.max(1, n) + 5).fill(0);
+
+  const pushUp = (idx, l, r) => {
+    if (cover[idx] &gt; 0) {
+      len[idx] = xs[r + 1] - xs[l];
+    } else if (l === r) {
+      len[idx] = 0;
+    } else {
+      len[idx] = len[idx * 2] + len[idx * 2 + 1];
+    }
+  };
+
+  const update = (idx, l, r, ql, qr, delta) => {
+    if (ql &gt; r || qr &lt; l) return;
+    if (ql &lt;= l && r &lt;= qr) {
+      cover[idx] += delta;
+      pushUp(idx, l, r);
+      return;
+    }
+    const mid = (l + r) >> 1;
+    update(idx * 2, l, mid, ql, qr, delta);
+    update(idx * 2 + 1, mid + 1, r, ql, qr, delta);
+    pushUp(idx, l, r);
+  };
+
+  const totalLen = () => (n &lt;= 0 ? 0 : len[1]);
+
+  const sweep = (target) => {
+    let i = 0;
+    let prevY = events[0][0];
+    let acc = 0;
+
+    while (i &lt; events.length) {
+      const y = events[i][0];
+      const covered = totalLen();
+      const strip = covered * (y - prevY);
+
+      if (target &gt;= 0 && covered &gt; 0 && acc + strip &gt;= target) {
+        return prevY + (target - acc) / covered;
+      }
+
+      acc += strip;
+
+      while (i &lt; events.length && events[i][0] === y) {
+        const [, x1, x2, typ] = events[i++];
+        const l = xi.get(x1), r = xi.get(x2) - 1;
+        if (n &gt; 0 && l &lt;= r) update(1, 0, n - 1, l, r, typ);
+      }
+
+      prevY = y;
+    }
+
+    return target &lt; 0 ? acc : prevY;
+  };
+
+  const total = sweep(-1);
+  cover.fill(0);
+  len.fill(0);
+  return sweep(total / 2);
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定多个轴对齐正方形 <code>[x, y, l]</code>，面积按<strong>并集</strong>计算（重叠只算一次）。要求找到最小水平线 <code>Y</code>，使得线下并集面积等于线上并集面积。</p>
+
+      <h3>核心思路</h3>
+      <p>这题和 I 最大区别是“重叠不能重复计数”，所以不能逐个正方形累加，要做扫描线：</p>
+      <p>1）每个正方形拆成两个 y 事件：<code>y</code> 进入、<code>y+l</code> 离开，对应 x 区间 <code>[x, x+l)</code>。<br/>
+         2）相邻两条事件 y 之间，当前被覆盖的 x 总长度不变。<br/>
+         3）这一条横向条带面积 = <code>coveredX * deltaY</code>。</p>
+      <p>用“x 坐标压缩 + 线段树维护覆盖长度”即可在 <code>O(log n)</code> 更新活跃区间。</p>
+
+      <h3>算法步骤</h3>
+      <p>1）构建事件并做 x 坐标离散化。<br/>
+         2）第一遍扫描得到并集总面积 <code>total</code>。<br/>
+         3）第二遍扫描累计面积，首次达到 <code>total/2</code> 时答案就在当前条带。<br/>
+         4）条带内覆盖长度恒定，直接线性插值：<br/>
+         <code>ansY = y0 + (target - prefixArea) / coveredX</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>设正方形数量为 <code>n</code>，事件数 <code>2n</code>。<br/>
+         时间复杂度：<code>O(n log n)</code>。<br/>
+         空间复杂度：<code>O(n)</code>。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">import java.util.*;
+
+class Solution {
+    static class Event {
+        long y, x1, x2;
+        int type;
+        Event(long y, long x1, long x2, int type) {
+            this.y = y; this.x1 = x1; this.x2 = x2; this.type = type;
+        }
+    }
+
+    static class SegTree {
+        int n;
+        int[] cover;
+        double[] len;
+        long[] xs;
+
+        SegTree(long[] xs) {
+            this.xs = xs;
+            this.n = xs.length - 1;
+            this.cover = new int[n * 4 + 5];
+            this.len = new double[n * 4 + 5];
+        }
+
+        void update(int idx, int l, int r, int ql, int qr, int delta) {
+            if (ql > r || qr < l) return;
+            if (ql <= l && r <= qr) {
+                cover[idx] += delta;
+                pushUp(idx, l, r);
+                return;
+            }
+            int mid = (l + r) >>> 1;
+            update(idx << 1, l, mid, ql, qr, delta);
+            update(idx << 1 | 1, mid + 1, r, ql, qr, delta);
+            pushUp(idx, l, r);
+        }
+
+        void pushUp(int idx, int l, int r) {
+            if (cover[idx] > 0) {
+                len[idx] = xs[r + 1] - xs[l];
+            } else if (l == r) {
+                len[idx] = 0;
+            } else {
+                len[idx] = len[idx << 1] + len[idx << 1 | 1];
+            }
+        }
+
+        double totalLen() { return n <= 0 ? 0.0 : len[1]; }
+    }
+
+    public double separateSquares(int[][] squares) {
+        List&lt;Event&gt; events = new ArrayList&lt;&gt;();
+        List&lt;Long&gt; xVals = new ArrayList&lt;&gt;();
+
+        for (int[] s : squares) {
+            long x = s[0], y = s[1], l = s[2];
+            long x2 = x + l, y2 = y + l;
+            events.add(new Event(y, x, x2, +1));
+            events.add(new Event(y2, x, x2, -1));
+            xVals.add(x);
+            xVals.add(x2);
+        }
+
+        Collections.sort(xVals);
+        long[] xs = xVals.stream().distinct().mapToLong(Long::longValue).toArray();
+        Map&lt;Long, Integer&gt; xi = new HashMap&lt;&gt;();
+        for (int i = 0; i &lt; xs.length; i++) xi.put(xs[i], i);
+
+        events.sort(Comparator.comparingLong(e -&gt; e.y));
+
+        double total = sweepArea(events, xs, xi, -1.0);
+        double target = total / 2.0;
+        return sweepArea(events, xs, xi, target);
+    }
+
+    private double sweepArea(List&lt;Event&gt; events, long[] xs, Map&lt;Long, Integer&gt; xi, double target) {
+        SegTree st = new SegTree(xs);
+        int m = events.size();
+        int i = 0;
+        long prevY = events.get(0).y;
+        double acc = 0.0;
+
+        while (i &lt; m) {
+            long y = events.get(i).y;
+            double covered = st.totalLen();
+            double strip = covered * (y - prevY);
+
+            if (target >= 0 && covered &gt; 0 && acc + strip >= target) {
+                return prevY + (target - acc) / covered;
+            }
+
+            acc += strip;
+
+            while (i &lt; m && events.get(i).y == y) {
+                Event e = events.get(i++);
+                int l = xi.get(e.x1), r = xi.get(e.x2) - 1;
+                if (l &lt;= r) st.update(1, 0, st.n - 1, l, r, e.type);
+            }
+            prevY = y;
+        }
+
+        return target &lt; 0 ? acc : prevY;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">import "sort"
+
+type Event struct {
+    y, x1, x2 int64
+    typ       int
+}
+
+type SegTree struct {
+    n     int
+    cover []int
+    length []float64
+    xs    []int64
+}
+
+func NewSegTree(xs []int64) *SegTree {
+    n := len(xs) - 1
+    return &SegTree{n: n, cover: make([]int, 4*n+5), length: make([]float64, 4*n+5), xs: xs}
+}
+
+func (st *SegTree) pushUp(idx, l, r int) {
+    if st.cover[idx] &gt; 0 {
+        st.length[idx] = float64(st.xs[r+1] - st.xs[l])
+    } else if l == r {
+        st.length[idx] = 0
+    } else {
+        st.length[idx] = st.length[idx*2] + st.length[idx*2+1]
+    }
+}
+
+func (st *SegTree) update(idx, l, r, ql, qr, delta int) {
+    if ql &gt; r || qr &lt; l {
+        return
+    }
+    if ql &lt;= l && r &lt;= qr {
+        st.cover[idx] += delta
+        st.pushUp(idx, l, r)
+        return
+    }
+    mid := (l + r) / 2
+    st.update(idx*2, l, mid, ql, qr, delta)
+    st.update(idx*2+1, mid+1, r, ql, qr, delta)
+    st.pushUp(idx, l, r)
+}
+
+func (st *SegTree) totalLen() float64 {
+    if st.n &lt;= 0 { return 0 }
+    return st.length[1]
+}
+
+func separateSquares(squares [][]int) float64 {
+    events := make([]Event, 0, len(squares)*2)
+    xVals := make([]int64, 0, len(squares)*2)
+
+    for _, s := range squares {
+        x, y, l := int64(s[0]), int64(s[1]), int64(s[2])
+        x2, y2 := x+l, y+l
+        events = append(events, Event{y, x, x2, 1}, Event{y2, x, x2, -1})
+        xVals = append(xVals, x, x2)
+    }
+
+    sort.Slice(xVals, func(i, j int) bool { return xVals[i] &lt; xVals[j] })
+    xs := make([]int64, 0, len(xVals))
+    for _, x := range xVals {
+        if len(xs) == 0 || xs[len(xs)-1] != x { xs = append(xs, x) }
+    }
+
+    xi := map[int64]int{}
+    for i, x := range xs { xi[x] = i }
+
+    sort.Slice(events, func(i, j int) bool { return events[i].y &lt; events[j].y })
+
+    total := sweep(events, xs, xi, -1)
+    return sweep(events, xs, xi, total/2.0)
+}
+
+func sweep(events []Event, xs []int64, xi map[int64]int, target float64) float64 {
+    st := NewSegTree(xs)
+    i, m := 0, len(events)
+    prevY := events[0].y
+    acc := 0.0
+
+    for i &lt; m {
+        y := events[i].y
+        covered := st.totalLen()
+        strip := covered * float64(y-prevY)
+
+        if target &gt;= 0 && covered &gt; 0 && acc+strip &gt;= target {
+            return float64(prevY) + (target-acc)/covered
+        }
+        acc += strip
+
+        for i &lt; m && events[i].y == y {
+            e := events[i]
+            i++
+            l, r := xi[e.x1], xi[e.x2]-1
+            if l &lt;= r {
+                st.update(1, 0, st.n-1, l, r, e.typ)
+            }
+        }
+        prevY = y
+    }
+
+    if target &lt; 0 { return acc }
+    return float64(prevY)
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+    struct Event {
+        long long y, x1, x2;
+        int type;
+        bool operator&lt;(const Event&amp; other) const { return y &lt; other.y; }
+    };
+
+    struct SegTree {
+        int n;
+        vector&lt;int&gt; cover;
+        vector&lt;double&gt; len;
+        vector&lt;long long&gt; xs;
+
+        SegTree(const vector&lt;long long&gt;&amp; x): xs(x) {
+            n = (int)xs.size() - 1;
+            cover.assign(4 * n + 5, 0);
+            len.assign(4 * n + 5, 0.0);
+        }
+
+        void pushUp(int idx, int l, int r) {
+            if (cover[idx] &gt; 0) len[idx] = (double)(xs[r + 1] - xs[l]);
+            else if (l == r) len[idx] = 0.0;
+            else len[idx] = len[idx * 2] + len[idx * 2 + 1];
+        }
+
+        void update(int idx, int l, int r, int ql, int qr, int delta) {
+            if (ql &gt; r || qr &lt; l) return;
+            if (ql &lt;= l && r &lt;= qr) {
+                cover[idx] += delta;
+                pushUp(idx, l, r);
+                return;
+            }
+            int mid = (l + r) / 2;
+            update(idx * 2, l, mid, ql, qr, delta);
+            update(idx * 2 + 1, mid + 1, r, ql, qr, delta);
+            pushUp(idx, l, r);
+        }
+
+        double totalLen() const { return n &lt;= 0 ? 0.0 : len[1]; }
+    };
+
+    double sweep(const vector&lt;Event&gt;&amp; events, const vector&lt;long long&gt;&amp; xs,
+                 unordered_map&lt;long long, int&gt;&amp; xi, double target) {
+        SegTree st(xs);
+        int i = 0, m = events.size();
+        long long prevY = events[0].y;
+        double acc = 0.0;
+
+        while (i &lt; m) {
+            long long y = events[i].y;
+            double covered = st.totalLen();
+            double strip = covered * (double)(y - prevY);
+
+            if (target &gt;= 0 &amp;&amp; covered &gt; 0 &amp;&amp; acc + strip &gt;= target) {
+                return (double)prevY + (target - acc) / covered;
+            }
+            acc += strip;
+
+            while (i &lt; m &amp;&amp; events[i].y == y) {
+                auto&amp; e = events[i++];
+                int l = xi[e.x1], r = xi[e.x2] - 1;
+                if (l &lt;= r) st.update(1, 0, st.n - 1, l, r, e.type);
+            }
+            prevY = y;
+        }
+
+        return target &lt; 0 ? acc : (double)prevY;
+    }
+
+public:
+    double separateSquares(vector&lt;vector&lt;int&gt;&gt;&amp; squares) {
+        vector&lt;Event&gt; events;
+        vector&lt;long long&gt; xVals;
+
+        for (auto&amp; s : squares) {
+            long long x = s[0], y = s[1], l = s[2];
+            long long x2 = x + l, y2 = y + l;
+            events.push_back({y, x, x2, +1});
+            events.push_back({y2, x, x2, -1});
+            xVals.push_back(x);
+            xVals.push_back(x2);
+        }
+
+        sort(xVals.begin(), xVals.end());
+        xVals.erase(unique(xVals.begin(), xVals.end()), xVals.end());
+
+        unordered_map&lt;long long, int&gt; xi;
+        for (int i = 0; i &lt; (int)xVals.size(); ++i) xi[xVals[i]] = i;
+
+        sort(events.begin(), events.end());
+
+        double total = sweep(events, xVals, xi, -1.0);
+        return sweep(events, xVals, xi, total / 2.0);
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">from typing import List
+
+class Solution:
+    def separateSquares(self, squares: List[List[int]]) -> float:
+        events = []
+        xs = []
+
+        for x, y, l in squares:
+            x2, y2 = x + l, y + l
+            events.append((y, x, x2, 1))
+            events.append((y2, x, x2, -1))
+            xs.extend([x, x2])
+
+        xs = sorted(set(xs))
+        xi = {x: i for i, x in enumerate(xs)}
+        events.sort()
+
+        n = len(xs) - 1
+        cover = [0] * (4 * max(1, n) + 5)
+        length = [0.0] * (4 * max(1, n) + 5)
+
+        def push_up(idx: int, l: int, r: int) -> None:
+            if cover[idx] &gt; 0:
+                length[idx] = xs[r + 1] - xs[l]
+            elif l == r:
+                length[idx] = 0.0
+            else:
+                length[idx] = length[idx * 2] + length[idx * 2 + 1]
+
+        def update(idx: int, l: int, r: int, ql: int, qr: int, delta: int) -> None:
+            if ql &gt; r or qr &lt; l:
+                return
+            if ql &lt;= l and r &lt;= qr:
+                cover[idx] += delta
+                push_up(idx, l, r)
+                return
+            mid = (l + r) // 2
+            update(idx * 2, l, mid, ql, qr, delta)
+            update(idx * 2 + 1, mid + 1, r, ql, qr, delta)
+            push_up(idx, l, r)
+
+        def total_len() -> float:
+            return 0.0 if n &lt;= 0 else length[1]
+
+        def sweep(target: float) -> float:
+            i = 0
+            m = len(events)
+            prev_y = events[0][0]
+            acc = 0.0
+
+            while i &lt; m:
+                y = events[i][0]
+                covered = total_len()
+                strip = covered * (y - prev_y)
+
+                if target &gt;= 0 and covered &gt; 0 and acc + strip &gt;= target:
+                    return prev_y + (target - acc) / covered
+
+                acc += strip
+
+                while i &lt; m and events[i][0] == y:
+                    _, x1, x2, typ = events[i]
+                    i += 1
+                    l, r = xi[x1], xi[x2] - 1
+                    if n &gt; 0 and l &lt;= r:
+                        update(1, 0, n - 1, l, r, typ)
+
+                prev_y = y
+
+            return acc if target &lt; 0 else float(prev_y)
+
+        total = sweep(-1.0)
+
+        # reset tree for second sweep
+        for i in range(len(cover)):
+            cover[i] = 0
+            length[i] = 0.0
+
+        return sweep(total / 2.0)</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var separateSquares = function(squares) {
+  const events = [];
+  const xVals = [];
+
+  for (const [x, y, l] of squares) {
+    const x2 = x + l, y2 = y + l;
+    events.push([y, x, x2, 1]);
+    events.push([y2, x, x2, -1]);
+    xVals.push(x, x2);
+  }
+
+  xVals.sort((a, b) => a - b);
+  const xs = [];
+  for (const x of xVals) {
+    if (xs.length === 0 || xs[xs.length - 1] !== x) xs.push(x);
+  }
+
+  const xi = new Map();
+  xs.forEach((x, i) => xi.set(x, i));
+  events.sort((a, b) => a[0] - b[0]);
+
+  const n = xs.length - 1;
+  const cover = new Array(4 * Math.max(1, n) + 5).fill(0);
+  const len = new Array(4 * Math.max(1, n) + 5).fill(0);
+
+  const pushUp = (idx, l, r) => {
+    if (cover[idx] &gt; 0) {
+      len[idx] = xs[r + 1] - xs[l];
+    } else if (l === r) {
+      len[idx] = 0;
+    } else {
+      len[idx] = len[idx * 2] + len[idx * 2 + 1];
+    }
+  };
+
+  const update = (idx, l, r, ql, qr, delta) => {
+    if (ql &gt; r || qr &lt; l) return;
+    if (ql &lt;= l && r &lt;= qr) {
+      cover[idx] += delta;
+      pushUp(idx, l, r);
+      return;
+    }
+    const mid = (l + r) >> 1;
+    update(idx * 2, l, mid, ql, qr, delta);
+    update(idx * 2 + 1, mid + 1, r, ql, qr, delta);
+    pushUp(idx, l, r);
+  };
+
+  const totalLen = () => (n &lt;= 0 ? 0 : len[1]);
+
+  const sweep = (target) => {
+    let i = 0;
+    let prevY = events[0][0];
+    let acc = 0;
+
+    while (i &lt; events.length) {
+      const y = events[i][0];
+      const covered = totalLen();
+      const strip = covered * (y - prevY);
+
+      if (target &gt;= 0 && covered &gt; 0 && acc + strip &gt;= target) {
+        return prevY + (target - acc) / covered;
+      }
+
+      acc += strip;
+
+      while (i &lt; events.length && events[i][0] === y) {
+        const [, x1, x2, typ] = events[i++];
+        const l = xi.get(x1), r = xi.get(x2) - 1;
+        if (n &gt; 0 && l &lt;= r) update(1, 0, n - 1, l, r, typ);
+      }
+
+      prevY = y;
+    }
+
+    return target &lt; 0 ? acc : prevY;
+  };
+
+  const total = sweep(-1);
+  cover.fill(0);
+  len.fill(0);
+  return sweep(total / 2);
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
