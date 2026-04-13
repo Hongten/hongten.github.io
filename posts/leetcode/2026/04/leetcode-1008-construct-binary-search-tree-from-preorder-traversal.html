@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 1008: Construct Binary Search Tree from Preorder Traversal (Bounded DFS on Preorder Stream)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 1008 using preorder index + upper bound recursion, with full Java/Go/C++/Python/JavaScript code tabs in both EN and 中文 sections."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 1008: Construct Binary Search Tree from Preorder Traversal (Bounded DFS on Preorder Stream)" />
+  <meta property="og:description" content="Detailed English + 中文 explanation with complete 5-language code tabs and a preorder-bound BST build diagram." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1008-construct-binary-search-tree-from-preorder-traversal.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1008-construct-binary-search-tree-from-preorder-traversal.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 1008: Construct Binary Search Tree from Preorder Traversal (Bounded DFS on Preorder Stream)</h1>
+      <div class="meta">2026-04-13 · LeetCode · Tree / BST / DFS</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 1008</span><span class="tag">BST</span><span class="tag">DFS</span>
+
+      <p>Today we solve <strong>LeetCode 1008 - Construct Binary Search Tree from Preorder Traversal</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/construct-binary-search-tree-from-preorder-traversal/" target="_blank" rel="noopener">https://leetcode.com/problems/construct-binary-search-tree-from-preorder-traversal/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-1008-20260413.svg" alt="LeetCode 1008 preorder stream bounded DFS BST construction diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given an array <code>preorder</code> that is guaranteed to be a valid preorder traversal of a BST, construct and return the BST root.</p>
+
+      <h3>Key Insight</h3>
+      <p>Preorder is <strong>root → left → right</strong>. If we scan preorder once with an index, each recursive call only needs an upper bound:</p>
+      <p>- If current value &gt; bound, it does not belong to this subtree.<br/>
+         - Otherwise create node, build left with bound=node.val, then build right with previous bound.</p>
+
+      <h3>Algorithm</h3>
+      <p>1) Keep global/index pointer <code>i</code> over preorder.<br/>
+         2) Define <code>build(bound)</code>.<br/>
+         3) If <code>i == n</code> or <code>preorder[i] &gt; bound</code>, return null.<br/>
+         4) Create node from <code>preorder[i++]</code>.<br/>
+         5) <code>node.left = build(node.val)</code>.<br/>
+         6) <code>node.right = build(bound)</code>.<br/>
+         7) Return node.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Each value is consumed once.<br/>
+         Time: <code>O(n)</code>.<br/>
+         Space: <code>O(h)</code> recursion stack, worst-case <code>O(n)</code>.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    private int i = 0;
+
+    public TreeNode bstFromPreorder(int[] preorder) {
+        return build(preorder, Integer.MAX_VALUE);
+    }
+
+    private TreeNode build(int[] preorder, int bound) {
+        if (i == preorder.length || preorder[i] > bound) return null;
+
+        TreeNode root = new TreeNode(preorder[i++]);
+        root.left = build(preorder, root.val);
+        root.right = build(preorder, bound);
+        return root;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func bstFromPreorder(preorder []int) *TreeNode {
+    i := 0
+    var build func(bound int) *TreeNode
+
+    build = func(bound int) *TreeNode {
+        if i == len(preorder) || preorder[i] > bound {
+            return nil
+        }
+
+        root := &TreeNode{Val: preorder[i]}
+        i++
+        root.Left = build(root.Val)
+        root.Right = build(bound)
+        return root
+    }
+
+    return build(int(^uint(0) >> 1))
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int i = 0;
+
+    TreeNode* bstFromPreorder(vector<int>& preorder) {
+        return build(preorder, INT_MAX);
+    }
+
+    TreeNode* build(vector<int>& preorder, int bound) {
+        if (i == (int)preorder.size() || preorder[i] > bound) return nullptr;
+
+        TreeNode* root = new TreeNode(preorder[i++]);
+        root->left = build(preorder, root->val);
+        root->right = build(preorder, bound);
+        return root;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def bstFromPreorder(self, preorder: List[int]) -> Optional[TreeNode]:
+        i = 0
+
+        def build(bound: int) -> Optional[TreeNode]:
+            nonlocal i
+            if i == len(preorder) or preorder[i] > bound:
+                return None
+
+            root = TreeNode(preorder[i])
+            i += 1
+            root.left = build(root.val)
+            root.right = build(bound)
+            return root
+
+        return build(float('inf'))</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var bstFromPreorder = function(preorder) {
+  let i = 0;
+
+  function build(bound) {
+    if (i === preorder.length || preorder[i] > bound) return null;
+
+    const root = new TreeNode(preorder[i++]);
+    root.left = build(root.val);
+    root.right = build(bound);
+    return root;
+  }
+
+  return build(Infinity);
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给你一个数组 <code>preorder</code>，它保证是某棵 BST 的前序遍历结果。请构造并返回该 BST 的根节点。</p>
+
+      <h3>核心思路</h3>
+      <p>前序遍历顺序是 <strong>根 → 左 → 右</strong>。使用一个全局下标顺序读取数组，并给递归函数传入“当前子树允许的最大值上界”。</p>
+      <p>- 若当前值大于上界，说明它不属于当前子树。<br/>
+         - 否则创建节点，先递归构建左子树（上界=当前节点值），再构建右子树（上界保持父级上界）。</p>
+
+      <h3>算法步骤</h3>
+      <p>1）维护下标 <code>i</code> 指向当前待处理前序值。<br/>
+         2）定义递归函数 <code>build(bound)</code>。<br/>
+         3）若 <code>i == n</code> 或 <code>preorder[i] &gt; bound</code>，返回空。<br/>
+         4）创建节点 <code>root = preorder[i++]</code>。<br/>
+         5）构建左子树：<code>root.left = build(root.val)</code>。<br/>
+         6）构建右子树：<code>root.right = build(bound)</code>。<br/>
+         7）返回 <code>root</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>每个元素只被消费一次。<br/>
+         时间复杂度：<code>O(n)</code>。<br/>
+         空间复杂度：递归栈 <code>O(h)</code>，最坏 <code>O(n)</code>。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    private int i = 0;
+
+    public TreeNode bstFromPreorder(int[] preorder) {
+        return build(preorder, Integer.MAX_VALUE);
+    }
+
+    private TreeNode build(int[] preorder, int bound) {
+        if (i == preorder.length || preorder[i] > bound) return null;
+
+        TreeNode root = new TreeNode(preorder[i++]);
+        root.left = build(preorder, root.val);
+        root.right = build(preorder, bound);
+        return root;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func bstFromPreorder(preorder []int) *TreeNode {
+    i := 0
+    var build func(bound int) *TreeNode
+
+    build = func(bound int) *TreeNode {
+        if i == len(preorder) || preorder[i] > bound {
+            return nil
+        }
+
+        root := &TreeNode{Val: preorder[i]}
+        i++
+        root.Left = build(root.Val)
+        root.Right = build(bound)
+        return root
+    }
+
+    return build(int(^uint(0) >> 1))
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int i = 0;
+
+    TreeNode* bstFromPreorder(vector<int>& preorder) {
+        return build(preorder, INT_MAX);
+    }
+
+    TreeNode* build(vector<int>& preorder, int bound) {
+        if (i == (int)preorder.size() || preorder[i] > bound) return nullptr;
+
+        TreeNode* root = new TreeNode(preorder[i++]);
+        root->left = build(preorder, root->val);
+        root->right = build(preorder, bound);
+        return root;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def bstFromPreorder(self, preorder: List[int]) -> Optional[TreeNode]:
+        i = 0
+
+        def build(bound: int) -> Optional[TreeNode]:
+            nonlocal i
+            if i == len(preorder) or preorder[i] > bound:
+                return None
+
+            root = TreeNode(preorder[i])
+            i += 1
+            root.left = build(root.val)
+            root.right = build(bound)
+            return root
+
+        return build(float('inf'))</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var bstFromPreorder = function(preorder) {
+  let i = 0;
+
+  function build(bound) {
+    if (i === preorder.length || preorder[i] > bound) return null;
+
+    const root = new TreeNode(preorder[i++]);
+    root.left = build(root.val);
+    root.right = build(bound);
+    return root;
+  }
+
+  return build(Infinity);
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
