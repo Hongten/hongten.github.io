@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 1014: Best Sightseeing Pair (Prefix Best of values[i] + i)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 1014 using running prefix best of values[i]+i, with complete Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 1014: Best Sightseeing Pair (Prefix Best of values[i] + i)" />
+  <meta property="og:description" content="English + 中文 explanation with greedy DP insight, complexity, pitfalls, and full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1014-best-sightseeing-pair.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1014-best-sightseeing-pair.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 1014: Best Sightseeing Pair (Prefix Best of values[i] + i)</h1>
+      <div class="meta">2026-04-14 · LeetCode · Array / Greedy / Dynamic Programming</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 1014</span><span class="tag">Array</span><span class="tag">Greedy</span>
+
+      <p>Today we solve <strong>LeetCode 1014 - Best Sightseeing Pair</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/best-sightseeing-pair/" target="_blank" rel="noopener">https://leetcode.com/problems/best-sightseeing-pair/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-1014-20260414.svg" alt="LeetCode 1014 diagram showing max of values[i] + i paired with values[j] - j" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given an array <code>values</code>, choose two indices <code>i &lt; j</code> to maximize <code>values[i] + values[j] + i - j</code>. Return that maximum score.</p>
+
+      <h3>Key Insight</h3>
+      <p>Rewrite the formula as <code>(values[i] + i) + (values[j] - j)</code>. While scanning <code>j</code> from left to right, we only need the best historical <code>values[i] + i</code> on the left. So we keep a running maximum and update answer in <code>O(1)</code> each step.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Initialize <code>bestLeft = values[0] + 0</code> and <code>ans = -inf</code>.<br/>
+         - For each <code>j</code> from <code>1</code> to <code>n-1</code>:<br/>
+         &nbsp;&nbsp;1) Try pair score: <code>bestLeft + values[j] - j</code> and update <code>ans</code>.<br/>
+         &nbsp;&nbsp;2) Update <code>bestLeft = max(bestLeft, values[j] + j)</code>.<br/>
+         - Return <code>ans</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Updating <code>bestLeft</code> before computing current <code>j</code> score (would allow <code>i = j</code>).<br/>
+         - Forgetting the <code>-j</code> part in the right contribution.<br/>
+         - Using brute force <code>O(n^2)</code> on large inputs.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int maxScoreSightseeingPair(int[] values) {
+        int bestLeft = values[0];
+        int ans = Integer.MIN_VALUE;
+
+        for (int j = 1; j &lt; values.length; j++) {
+            ans = Math.max(ans, bestLeft + values[j] - j);
+            bestLeft = Math.max(bestLeft, values[j] + j);
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func maxScoreSightseeingPair(values []int) int {
+    bestLeft := values[0]
+    ans := -1 &lt;&lt; 60
+
+    for j := 1; j &lt; len(values); j++ {
+        score := bestLeft + values[j] - j
+        if score &gt; ans {
+            ans = score
+        }
+        candidate := values[j] + j
+        if candidate &gt; bestLeft {
+            bestLeft = candidate
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int maxScoreSightseeingPair(vector&lt;int&gt;&amp; values) {
+        int bestLeft = values[0];
+        int ans = INT_MIN;
+
+        for (int j = 1; j &lt; (int)values.size(); ++j) {
+            ans = max(ans, bestLeft + values[j] - j);
+            bestLeft = max(bestLeft, values[j] + j);
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def maxScoreSightseeingPair(self, values: List[int]) -&gt; int:
+        best_left = values[0]
+        ans = -10**18
+
+        for j in range(1, len(values)):
+            ans = max(ans, best_left + values[j] - j)
+            best_left = max(best_left, values[j] + j)
+
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var maxScoreSightseeingPair = function(values) {
+  let bestLeft = values[0];
+  let ans = -Infinity;
+
+  for (let j = 1; j &lt; values.length; j++) {
+    ans = Math.max(ans, bestLeft + values[j] - j);
+    bestLeft = Math.max(bestLeft, values[j] + j);
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定数组 <code>values</code>，选择两个下标 <code>i &lt; j</code>，使得分数 <code>values[i] + values[j] + i - j</code> 最大，返回该最大值。</p>
+
+      <h3>核心思路</h3>
+      <p>将公式拆成 <code>(values[i] + i) + (values[j] - j)</code>。当我们从左到右枚举 <code>j</code> 时，只需要知道左侧最优的 <code>values[i] + i</code>。因此可以维护一个前缀最大值，做到每个位置 <code>O(1)</code> 更新答案。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 初始化 <code>bestLeft = values[0] + 0</code>，<code>ans = -inf</code>。<br/>
+         - 从 <code>j = 1</code> 扫描到 <code>n-1</code>：<br/>
+         &nbsp;&nbsp;1) 计算当前配对得分 <code>bestLeft + values[j] - j</code> 并更新 <code>ans</code>。<br/>
+         &nbsp;&nbsp;2) 用 <code>values[j] + j</code> 更新 <code>bestLeft</code>。<br/>
+         - 扫描结束后返回 <code>ans</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 先更新 <code>bestLeft</code> 再算当前 <code>j</code>，会错误地让 <code>i = j</code>。<br/>
+         - 漏掉右侧项中的 <code>-j</code>。<br/>
+         - 直接双重循环导致 <code>O(n^2)</code> 超时。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int maxScoreSightseeingPair(int[] values) {
+        int bestLeft = values[0];
+        int ans = Integer.MIN_VALUE;
+
+        for (int j = 1; j &lt; values.length; j++) {
+            ans = Math.max(ans, bestLeft + values[j] - j);
+            bestLeft = Math.max(bestLeft, values[j] + j);
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func maxScoreSightseeingPair(values []int) int {
+    bestLeft := values[0]
+    ans := -1 &lt;&lt; 60
+
+    for j := 1; j &lt; len(values); j++ {
+        score := bestLeft + values[j] - j
+        if score &gt; ans {
+            ans = score
+        }
+        candidate := values[j] + j
+        if candidate &gt; bestLeft {
+            bestLeft = candidate
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int maxScoreSightseeingPair(vector&lt;int&gt;&amp; values) {
+        int bestLeft = values[0];
+        int ans = INT_MIN;
+
+        for (int j = 1; j &lt; (int)values.size(); ++j) {
+            ans = max(ans, bestLeft + values[j] - j);
+            bestLeft = max(bestLeft, values[j] + j);
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def maxScoreSightseeingPair(self, values: List[int]) -&gt; int:
+        best_left = values[0]
+        ans = -10**18
+
+        for j in range(1, len(values)):
+            ans = max(ans, best_left + values[j] - j)
+            best_left = max(best_left, values[j] + j)
+
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var maxScoreSightseeingPair = function(values) {
+  let bestLeft = values[0];
+  let ans = -Infinity;
+
+  for (let j = 1; j &lt; values.length; j++) {
+    ans = Math.max(ans, bestLeft + values[j] - j);
+    bestLeft = Math.max(bestLeft, values[j] + j);
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>

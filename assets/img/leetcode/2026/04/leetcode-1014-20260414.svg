@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="420" viewBox="0 0 960 420">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="420" fill="url(#bg)"/>
+  <text x="40" y="58" fill="#e2e8f0" font-size="28" font-family="Arial">LeetCode 1014 - Best Sightseeing Pair</text>
+  <text x="40" y="95" fill="#93c5fd" font-size="22" font-family="Arial">score(i, j) = (values[i] + i) + (values[j] - j), i &lt; j</text>
+
+  <rect x="40" y="130" width="410" height="230" rx="12" fill="#111827" stroke="#334155"/>
+  <text x="60" y="165" fill="#f8fafc" font-size="20" font-family="Arial">Left side (prefix best)</text>
+  <text x="60" y="205" fill="#a7f3d0" font-size="28" font-family="monospace">bestLeft = max(values[i] + i)</text>
+  <text x="60" y="245" fill="#cbd5e1" font-size="18" font-family="Arial">Maintain while scanning j from left to right</text>
+
+  <rect x="510" y="130" width="410" height="230" rx="12" fill="#111827" stroke="#334155"/>
+  <text x="530" y="165" fill="#f8fafc" font-size="20" font-family="Arial">Current right index j</text>
+  <text x="530" y="205" fill="#fde68a" font-size="28" font-family="monospace">candidate = bestLeft + values[j] - j</text>
+  <text x="530" y="245" fill="#cbd5e1" font-size="18" font-family="Arial">Update answer, then refresh bestLeft</text>
+
+  <path d="M450 245 L510 245" stroke="#60a5fa" stroke-width="4" marker-end="url(#arrow)"/>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L6,3 z" fill="#60a5fa"/>
+    </marker>
+  </defs>
+</svg>
