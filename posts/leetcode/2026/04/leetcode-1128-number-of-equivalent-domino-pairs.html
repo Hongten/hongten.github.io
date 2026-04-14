@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 1128: Number of Equivalent Domino Pairs (Canonical Key Counting)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 1128 using canonical domino normalization and frequency counting with full 5-language code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 1128: Number of Equivalent Domino Pairs (Canonical Key Counting)" />
+  <meta property="og:description" content="English + 中文 explanation with normalization insight, counting formula, complexity, and complete Java/Go/C++/Python/JavaScript code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1128-number-of-equivalent-domino-pairs.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1128-number-of-equivalent-domino-pairs.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 1128: Number of Equivalent Domino Pairs (Canonical Key Counting)</h1>
+      <div class="meta">2026-04-14 · LeetCode · Array / Hash Counting</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 1128</span><span class="tag">Array</span><span class="tag">Hash Counting</span>
+
+      <p>Today we solve <strong>LeetCode 1128 - Number of Equivalent Domino Pairs</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/number-of-equivalent-domino-pairs/" target="_blank" rel="noopener">https://leetcode.com/problems/number-of-equivalent-domino-pairs/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-1128-20260414.svg" alt="LeetCode 1128 domino normalization and pair counting diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Each domino is <code>[a, b]</code>. Two dominoes are equivalent if one can be rotated to match the other, so <code>[1,2]</code> is equivalent to <code>[2,1]</code>. Return how many index pairs <code>(i, j)</code> with <code>i &lt; j</code> are equivalent.</p>
+
+      <h3>Key Insight</h3>
+      <p>Normalize every domino into a canonical order <code>(min(a,b), max(a,b))</code>. Then equivalent dominoes share the same key. If a key appears <code>k</code> times, it contributes <code>k * (k - 1) / 2</code> pairs.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Maintain a frequency map from canonical key to count.<br/>
+         - For each domino, normalize it and encode as <code>key = x * 10 + y</code> (values are 1..9).<br/>
+         - Before incrementing this key, add its current count to answer.<br/>
+         - Increment the key count and continue.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Let <code>n</code> be domino count.<br/>Time: <code>O(n)</code>.<br/>Space: <code>O(1)</code> to <code>O(100)</code> possible keys.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting to normalize, causing <code>[1,2]</code> and <code>[2,1]</code> to be counted separately.<br/>
+         - Computing combinations at the end is fine, but one-pass incremental counting is cleaner.<br/>
+         - Overcomplicating key encoding when value range is tiny.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int numEquivDominoPairs(int[][] dominoes) {
+        int[] freq = new int[100];
+        int ans = 0;
+        for (int[] d : dominoes) {
+            int x = Math.min(d[0], d[1]);
+            int y = Math.max(d[0], d[1]);
+            int key = x * 10 + y;
+            ans += freq[key];
+            freq[key]++;
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func numEquivDominoPairs(dominoes [][]int) int {
+    freq := make([]int, 100)
+    ans := 0
+    for _, d := range dominoes {
+        x, y := d[0], d[1]
+        if x &gt; y {
+            x, y = y, x
+        }
+        key := x*10 + y
+        ans += freq[key]
+        freq[key]++
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int numEquivDominoPairs(vector&lt;vector&lt;int&gt;&gt;&amp; dominoes) {
+        vector&lt;int&gt; freq(100, 0);
+        int ans = 0;
+        for (auto &amp;d : dominoes) {
+            int x = min(d[0], d[1]);
+            int y = max(d[0], d[1]);
+            int key = x * 10 + y;
+            ans += freq[key];
+            freq[key]++;
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def numEquivDominoPairs(self, dominoes: List[List[int]]) -&gt; int:
+        freq = [0] * 100
+        ans = 0
+        for a, b in dominoes:
+            x, y = (a, b) if a &lt;= b else (b, a)
+            key = x * 10 + y
+            ans += freq[key]
+            freq[key] += 1
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var numEquivDominoPairs = function(dominoes) {
+  const freq = new Array(100).fill(0);
+  let ans = 0;
+
+  for (const [a, b] of dominoes) {
+    const x = Math.min(a, b);
+    const y = Math.max(a, b);
+    const key = x * 10 + y;
+    ans += freq[key];
+    freq[key] += 1;
+  }
+
+  return ans;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>每个多米诺骨牌为 <code>[a, b]</code>。若旋转后可相同，则两张骨牌等价，因此 <code>[1,2]</code> 与 <code>[2,1]</code> 等价。请返回满足 <code>i &lt; j</code> 的等价下标对数量。</p>
+
+      <h3>核心思路</h3>
+      <p>把每张骨牌标准化成 <code>(min(a,b), max(a,b))</code>。标准化后等价骨牌一定映射到同一个 key。某个 key 出现 <code>k</code> 次，会贡献 <code>k * (k - 1) / 2</code> 对。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 用频次数组/哈希表记录每个标准 key 的出现次数。<br/>
+         - 遍历骨牌，先标准化，再编码 <code>key = x * 10 + y</code>。<br/>
+         - 当前 key 已出现 <code>c</code> 次时，新来一张可立刻新增 <code>c</code> 对。<br/>
+         - 然后将该 key 计数加一，继续遍历。</p>
+
+      <h3>复杂度分析</h3>
+      <p>设骨牌数量为 <code>n</code>。<br/>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>（最多约 100 个 key）。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 不做标准化，导致 <code>[1,2]</code> 与 <code>[2,1]</code> 被拆成两类。<br/>
+         - 先全统计再做组合也可以，但边遍历边累加更简洁。<br/>
+         - 忽略了题目给出的数值范围，写了不必要的复杂编码。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int numEquivDominoPairs(int[][] dominoes) {
+        int[] freq = new int[100];
+        int ans = 0;
+        for (int[] d : dominoes) {
+            int x = Math.min(d[0], d[1]);
+            int y = Math.max(d[0], d[1]);
+            int key = x * 10 + y;
+            ans += freq[key];
+            freq[key]++;
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func numEquivDominoPairs(dominoes [][]int) int {
+    freq := make([]int, 100)
+    ans := 0
+    for _, d := range dominoes {
+        x, y := d[0], d[1]
+        if x &gt; y {
+            x, y = y, x
+        }
+        key := x*10 + y
+        ans += freq[key]
+        freq[key]++
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int numEquivDominoPairs(vector&lt;vector&lt;int&gt;&gt;&amp; dominoes) {
+        vector&lt;int&gt; freq(100, 0);
+        int ans = 0;
+        for (auto &amp;d : dominoes) {
+            int x = min(d[0], d[1]);
+            int y = max(d[0], d[1]);
+            int key = x * 10 + y;
+            ans += freq[key];
+            freq[key]++;
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def numEquivDominoPairs(self, dominoes: List[List[int]]) -&gt; int:
+        freq = [0] * 100
+        ans = 0
+        for a, b in dominoes:
+            x, y = (a, b) if a &lt;= b else (b, a)
+            key = x * 10 + y
+            ans += freq[key]
+            freq[key] += 1
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var numEquivDominoPairs = function(dominoes) {
+  const freq = new Array(100).fill(0);
+  let ans = 0;
+
+  for (const [a, b] of dominoes) {
+    const x = Math.min(a, b);
+    const y = Math.max(a, b);
+    const key = x * 10 + y;
+    ans += freq[key];
+    freq[key] += 1;
+  }
+
+  return ans;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
