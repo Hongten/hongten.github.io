@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 1133: Largest Unique Number (Frequency Counting + Reverse Scan)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 1133 using frequency counting and reverse scan, with complete Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 1133: Largest Unique Number (Frequency Counting + Reverse Scan)" />
+  <meta property="og:description" content="English + 中文 explanation with counting insight, complexity, pitfalls, and full five-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1133-largest-unique-number.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1133-largest-unique-number.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 1133: Largest Unique Number (Frequency Counting + Reverse Scan)</h1>
+      <div class="meta">2026-04-14 · LeetCode · Array / Counting</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 1133</span><span class="tag">Array</span><span class="tag">Counting</span>
+
+      <p>Today we solve <strong>LeetCode 1133 - Largest Unique Number</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/largest-unique-number/" target="_blank" rel="noopener">https://leetcode.com/problems/largest-unique-number/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-1133-20260414.svg" alt="LeetCode 1133 diagram showing frequency counts and reverse scan to find largest value with count 1" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given an integer array <code>nums</code>, return the largest integer that appears exactly once. If no such integer exists, return <code>-1</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>The value range is small (<code>0..1000</code>), so counting frequency is very efficient. After counting, scan from <code>1000</code> down to <code>0</code>; the first number with frequency <code>1</code> is the answer.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Create <code>freq[1001]</code> initialized to 0.<br/>
+         - For each <code>x</code> in <code>nums</code>, increment <code>freq[x]</code>.<br/>
+         - Iterate <code>v</code> from <code>1000</code> down to <code>0</code>.<br/>
+         - If <code>freq[v] == 1</code>, return <code>v</code>.<br/>
+         - If none found, return <code>-1</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n + 1001)</code>, effectively <code>O(n)</code>.<br/>Space: <code>O(1001)</code>, effectively <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Returning the largest distinct value (count &gt;= 1) instead of largest unique value (count == 1).<br/>
+         - Sorting first (<code>O(n log n)</code>) when counting is simpler and faster here.<br/>
+         - Forgetting to return <code>-1</code> when no unique number exists.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int largestUniqueNumber(int[] nums) {
+        int[] freq = new int[1001];
+        for (int x : nums) {
+            freq[x]++;
+        }
+        for (int v = 1000; v >= 0; v--) {
+            if (freq[v] == 1) {
+                return v;
+            }
+        }
+        return -1;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func largestUniqueNumber(nums []int) int {
+    freq := make([]int, 1001)
+    for _, x := range nums {
+        freq[x]++
+    }
+    for v := 1000; v >= 0; v-- {
+        if freq[v] == 1 {
+            return v
+        }
+    }
+    return -1
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int largestUniqueNumber(vector&lt;int&gt;&amp; nums) {
+        vector&lt;int&gt; freq(1001, 0);
+        for (int x : nums) {
+            ++freq[x];
+        }
+        for (int v = 1000; v &gt;= 0; --v) {
+            if (freq[v] == 1) {
+                return v;
+            }
+        }
+        return -1;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def largestUniqueNumber(self, nums: List[int]) -&gt; int:
+        freq = [0] * 1001
+        for x in nums:
+            freq[x] += 1
+
+        for v in range(1000, -1, -1):
+            if freq[v] == 1:
+                return v
+        return -1</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var largestUniqueNumber = function(nums) {
+  const freq = new Array(1001).fill(0);
+  for (const x of nums) {
+    freq[x]++;
+  }
+  for (let v = 1000; v >= 0; v--) {
+    if (freq[v] === 1) {
+      return v;
+    }
+  }
+  return -1;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定整数数组 <code>nums</code>，返回只出现一次的最大整数；如果不存在只出现一次的数，返回 <code>-1</code>。</p>
+
+      <h3>核心思路</h3>
+      <p>题目数值范围是 <code>0..1000</code>，可以直接开一个大小为 1001 的计数数组。先统计频次，再从大到小扫描，第一个频次为 1 的数就是答案。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 创建 <code>freq[1001]</code> 并初始化为 0。<br/>
+         - 遍历 <code>nums</code>，执行 <code>freq[x]++</code>。<br/>
+         - 从 <code>1000</code> 递减到 <code>0</code>。<br/>
+         - 若 <code>freq[v] == 1</code>，立即返回 <code>v</code>。<br/>
+         - 扫描结束仍未找到则返回 <code>-1</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n + 1001)</code>，可视为 <code>O(n)</code>。<br/>空间复杂度：<code>O(1001)</code>，可视为 <code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 把“最大唯一值”误写成“最大不同值”（出现次数大于 1 也算）。<br/>
+         - 先排序再找，复杂度升到 <code>O(n log n)</code>，不必要。<br/>
+         - 没有唯一值时忘记返回 <code>-1</code>。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int largestUniqueNumber(int[] nums) {
+        int[] freq = new int[1001];
+        for (int x : nums) {
+            freq[x]++;
+        }
+        for (int v = 1000; v >= 0; v--) {
+            if (freq[v] == 1) {
+                return v;
+            }
+        }
+        return -1;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func largestUniqueNumber(nums []int) int {
+    freq := make([]int, 1001)
+    for _, x := range nums {
+        freq[x]++
+    }
+    for v := 1000; v >= 0; v-- {
+        if freq[v] == 1 {
+            return v
+        }
+    }
+    return -1
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int largestUniqueNumber(vector&lt;int&gt;&amp; nums) {
+        vector&lt;int&gt; freq(1001, 0);
+        for (int x : nums) {
+            ++freq[x];
+        }
+        for (int v = 1000; v &gt;= 0; --v) {
+            if (freq[v] == 1) {
+                return v;
+            }
+        }
+        return -1;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def largestUniqueNumber(self, nums: List[int]) -&gt; int:
+        freq = [0] * 1001
+        for x in nums:
+            freq[x] += 1
+
+        for v in range(1000, -1, -1):
+            if freq[v] == 1:
+                return v
+        return -1</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var largestUniqueNumber = function(nums) {
+  const freq = new Array(1001).fill(0);
+  for (const x of nums) {
+    freq[x]++;
+  }
+  for (let v = 1000; v >= 0; v--) {
+    if (freq[v] === 1) {
+      return v;
+    }
+  }
+  return -1;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
