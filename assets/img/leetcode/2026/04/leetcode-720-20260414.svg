@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 720 buildable prefix chain diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .title{font:700 46px 'Segoe UI',Arial,sans-serif; fill:#e2e8f0}
+      .sub{font:400 26px 'Segoe UI',Arial,sans-serif; fill:#94a3b8}
+      .box{fill:#111827; stroke:#38bdf8; stroke-width:3; rx:16}
+      .txt{font:700 34px 'Consolas','Menlo',monospace; fill:#f8fafc}
+      .note{font:500 24px 'Segoe UI',Arial,sans-serif; fill:#cbd5e1}
+      .ok{fill:#22c55e}
+      .bad{fill:#ef4444}
+      .arr{stroke:#38bdf8; stroke-width:4; marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#38bdf8"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="90" class="title">LeetCode 720 · Longest Word in Dictionary</text>
+  <text x="60" y="130" class="sub">Buildable prefix chain: each word needs its previous prefix in the set</text>
+
+  <rect x="80" y="220" width="130" height="80" class="box"/>
+  <text x="145" y="272" text-anchor="middle" class="txt">w</text>
+
+  <rect x="250" y="220" width="150" height="80" class="box"/>
+  <text x="325" y="272" text-anchor="middle" class="txt">wo</text>
+
+  <rect x="450" y="220" width="170" height="80" class="box"/>
+  <text x="535" y="272" text-anchor="middle" class="txt">wor</text>
+
+  <rect x="670" y="220" width="190" height="80" class="box"/>
+  <text x="765" y="272" text-anchor="middle" class="txt">worl</text>
+
+  <rect x="910" y="220" width="220" height="80" class="box"/>
+  <text x="1020" y="272" text-anchor="middle" class="txt">world</text>
+
+  <line x1="210" y1="260" x2="250" y2="260" class="arr"/>
+  <line x1="400" y1="260" x2="450" y2="260" class="arr"/>
+  <line x1="620" y1="260" x2="670" y2="260" class="arr"/>
+  <line x1="860" y1="260" x2="910" y2="260" class="arr"/>
+
+  <text x="80" y="380" class="note">✅ world is valid because all prefixes (w, wo, wor, worl) exist.</text>
+  <text x="80" y="430" class="note">❌ banana is invalid if prefix banan is missing.</text>
+  <text x="80" y="500" class="note">Sort lexicographically + set lookup gives clean O(n log n + totalChars).</text>
+</svg>
