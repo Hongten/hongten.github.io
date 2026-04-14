@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 2570: Merge Two 2D Arrays by Summing Values (Two Pointers on Sorted IDs)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 2570 with full Java/Go/C++/Python/JavaScript code tabs in both English and Chinese sections."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 2570: Merge Two 2D Arrays by Summing Values (Two Pointers on Sorted IDs)" />
+  <meta property="og:description" content="Walk two sorted id-value arrays with two pointers and merge by id while summing duplicate ids." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-2570-merge-two-2d-arrays-by-summing-values.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-2570-merge-two-2d-arrays-by-summing-values.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 2570: Merge Two 2D Arrays by Summing Values (Two Pointers on Sorted IDs)</h1>
+      <div class="meta">2026-04-14 · LeetCode · Array / Two Pointers / Merge</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 2570</span><span class="tag">Two Pointers</span><span class="tag">Merge</span>
+
+      <p>Today we solve <strong>LeetCode 2570 - Merge Two 2D Arrays by Summing Values</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/merge-two-2d-arrays-by-summing-values/" target="_blank" rel="noopener">https://leetcode.com/problems/merge-two-2d-arrays-by-summing-values/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-2570-20260414.svg" alt="LeetCode 2570 two-pointer merge flow for sorted id-value arrays" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Each array stores <code>[id, value]</code> pairs sorted by <code>id</code>. Merge them into one sorted array. If an <code>id</code> appears in both arrays, sum the values.</p>
+
+      <h3>Key Idea</h3>
+      <p>Because both arrays are already sorted by <code>id</code>, we can use a classic two-pointer merge (like merge step in merge sort).</p>
+      <p>Compare current ids:</p>
+      <p>1) smaller id goes directly to answer;<br/>
+         2) equal ids are merged by summing values;<br/>
+         3) append leftovers after one side is exhausted.</p>
+
+      <h3>Algorithm</h3>
+      <p>1) Set pointers <code>i = 0</code>, <code>j = 0</code>.<br/>
+         2) While both pointers are valid, compare <code>nums1[i][0]</code> and <code>nums2[j][0]</code>.<br/>
+         3) Push one merged pair to output and move pointer(s).<br/>
+         4) Append the remaining pairs from unfinished array.</p>
+
+      <h3>Complexity</h3>
+      <p>Time: <code>O(m + n)</code><br/>Space: <code>O(m + n)</code> for output (excluding required answer container).</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs"><div class="tab-list">
+        <button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button>
+      </div>
+      <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int[][] mergeArrays(int[][] nums1, int[][] nums2) {
+        int i = 0, j = 0;
+        java.util.List&lt;int[]&gt; out = new java.util.ArrayList&lt;&gt;();
+
+        while (i &lt; nums1.length &amp;&amp; j &lt; nums2.length) {
+            int id1 = nums1[i][0], id2 = nums2[j][0];
+            if (id1 == id2) {
+                out.add(new int[]{id1, nums1[i][1] + nums2[j][1]});
+                i++;
+                j++;
+            } else if (id1 &lt; id2) {
+                out.add(new int[]{id1, nums1[i][1]});
+                i++;
+            } else {
+                out.add(new int[]{id2, nums2[j][1]});
+                j++;
+            }
+        }
+
+        while (i &lt; nums1.length) out.add(new int[]{nums1[i][0], nums1[i++][1]});
+        while (j &lt; nums2.length) out.add(new int[]{nums2[j][0], nums2[j++][1]});
+
+        return out.toArray(new int[out.size()][]);
+    }
+}</code></pre></div>
+      <div class="tab-pane" data-tab="go"><pre><code class="language-go">func mergeArrays(nums1 [][]int, nums2 [][]int) [][]int {
+	i, j := 0, 0
+	out := make([][]int, 0, len(nums1)+len(nums2))
+
+	for i &lt; len(nums1) &amp;&amp; j &lt; len(nums2) {
+		id1, id2 := nums1[i][0], nums2[j][0]
+		if id1 == id2 {
+			out = append(out, []int{id1, nums1[i][1] + nums2[j][1]})
+			i++
+			j++
+		} else if id1 &lt; id2 {
+			out = append(out, []int{id1, nums1[i][1]})
+			i++
+		} else {
+			out = append(out, []int{id2, nums2[j][1]})
+			j++
+		}
+	}
+
+	for i &lt; len(nums1) {
+		out = append(out, []int{nums1[i][0], nums1[i][1]})
+		i++
+	}
+	for j &lt; len(nums2) {
+		out = append(out, []int{nums2[j][0], nums2[j][1]})
+		j++
+	}
+	return out
+}</code></pre></div>
+      <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; mergeArrays(vector&lt;vector&lt;int&gt;&gt;&amp; nums1, vector&lt;vector&lt;int&gt;&gt;&amp; nums2) {
+        int i = 0, j = 0;
+        vector&lt;vector&lt;int&gt;&gt; out;
+        out.reserve(nums1.size() + nums2.size());
+
+        while (i &lt; (int)nums1.size() &amp;&amp; j &lt; (int)nums2.size()) {
+            int id1 = nums1[i][0], id2 = nums2[j][0];
+            if (id1 == id2) {
+                out.push_back({id1, nums1[i][1] + nums2[j][1]});
+                ++i; ++j;
+            } else if (id1 &lt; id2) {
+                out.push_back({id1, nums1[i][1]});
+                ++i;
+            } else {
+                out.push_back({id2, nums2[j][1]});
+                ++j;
+            }
+        }
+
+        while (i &lt; (int)nums1.size()) out.push_back({nums1[i][0], nums1[i++][1]});
+        while (j &lt; (int)nums2.size()) out.push_back({nums2[j][0], nums2[j++][1]});
+
+        return out;
+    }
+};</code></pre></div>
+      <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def mergeArrays(self, nums1: List[List[int]], nums2: List[List[int]]) -&gt; List[List[int]]:
+        i = j = 0
+        out = []
+
+        while i &lt; len(nums1) and j &lt; len(nums2):
+            id1, id2 = nums1[i][0], nums2[j][0]
+            if id1 == id2:
+                out.append([id1, nums1[i][1] + nums2[j][1]])
+                i += 1
+                j += 1
+            elif id1 &lt; id2:
+                out.append([id1, nums1[i][1]])
+                i += 1
+            else:
+                out.append([id2, nums2[j][1]])
+                j += 1
+
+        while i &lt; len(nums1):
+            out.append(nums1[i])
+            i += 1
+        while j &lt; len(nums2):
+            out.append(nums2[j])
+            j += 1
+
+        return out</code></pre></div>
+      <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var mergeArrays = function(nums1, nums2) {
+  let i = 0, j = 0;
+  const out = [];
+
+  while (i &lt; nums1.length &amp;&amp; j &lt; nums2.length) {
+    const id1 = nums1[i][0], id2 = nums2[j][0];
+    if (id1 === id2) {
+      out.push([id1, nums1[i][1] + nums2[j][1]]);
+      i++;
+      j++;
+    } else if (id1 &lt; id2) {
+      out.push([id1, nums1[i][1]]);
+      i++;
+    } else {
+      out.push([id2, nums2[j][1]]);
+      j++;
+    }
+  }
+
+  while (i &lt; nums1.length) out.push(nums1[i++]);
+  while (j &lt; nums2.length) out.push(nums2[j++]);
+
+  return out;
+};</code></pre></div></div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给你两个按 <code>id</code> 升序排列的二维数组，每个元素是 <code>[id, value]</code>。需要把它们合并为一个按 <code>id</code> 升序的数组；若同一 <code>id</code> 同时出现，则把 value 相加。</p>
+
+      <h3>核心思路</h3>
+      <p>这题本质上就是“有序数组归并”。两个数组都已经按 <code>id</code> 排序，直接双指针线性扫描即可。</p>
+      <p>比较当前两个 id：</p>
+      <p>1）小的先进入答案；<br/>
+         2）相等时合并为一项并求和；<br/>
+         3）某一侧结束后，把另一侧剩余元素直接追加。</p>
+
+      <h3>算法步骤</h3>
+      <p>1）初始化 <code>i=0</code>、<code>j=0</code>。<br/>
+         2）循环比较 <code>nums1[i][0]</code> 与 <code>nums2[j][0]</code>。<br/>
+         3）根据大小关系写入一个结果对并移动对应指针。<br/>
+         4）循环结束后追加未处理完的一侧。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(m+n)</code><br/>空间复杂度：<code>O(m+n)</code>（输出数组本身）。</p>
+
+      <h3>参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs"><div class="tab-list">
+        <button class="tab-btn active" data-tab="java-cn">Java</button><button class="tab-btn" data-tab="go-cn">Go</button><button class="tab-btn" data-tab="cpp-cn">C++</button><button class="tab-btn" data-tab="python-cn">Python</button><button class="tab-btn" data-tab="javascript-cn">JavaScript</button>
+      </div>
+      <div class="tab-pane active" data-tab="java-cn"><pre><code class="language-java">class Solution {
+    public int[][] mergeArrays(int[][] nums1, int[][] nums2) {
+        int i = 0, j = 0;
+        java.util.List&lt;int[]&gt; out = new java.util.ArrayList&lt;&gt;();
+
+        while (i &lt; nums1.length &amp;&amp; j &lt; nums2.length) {
+            int id1 = nums1[i][0], id2 = nums2[j][0];
+            if (id1 == id2) {
+                out.add(new int[]{id1, nums1[i][1] + nums2[j][1]});
+                i++;
+                j++;
+            } else if (id1 &lt; id2) {
+                out.add(new int[]{id1, nums1[i][1]});
+                i++;
+            } else {
+                out.add(new int[]{id2, nums2[j][1]});
+                j++;
+            }
+        }
+
+        while (i &lt; nums1.length) out.add(new int[]{nums1[i][0], nums1[i++][1]});
+        while (j &lt; nums2.length) out.add(new int[]{nums2[j][0], nums2[j++][1]});
+
+        return out.toArray(new int[out.size()][]);
+    }
+}</code></pre></div>
+      <div class="tab-pane" data-tab="go-cn"><pre><code class="language-go">func mergeArrays(nums1 [][]int, nums2 [][]int) [][]int {
+	i, j := 0, 0
+	out := make([][]int, 0, len(nums1)+len(nums2))
+
+	for i &lt; len(nums1) &amp;&amp; j &lt; len(nums2) {
+		id1, id2 := nums1[i][0], nums2[j][0]
+		if id1 == id2 {
+			out = append(out, []int{id1, nums1[i][1] + nums2[j][1]})
+			i++
+			j++
+		} else if id1 &lt; id2 {
+			out = append(out, []int{id1, nums1[i][1]})
+			i++
+		} else {
+			out = append(out, []int{id2, nums2[j][1]})
+			j++
+		}
+	}
+
+	for i &lt; len(nums1) {
+		out = append(out, []int{nums1[i][0], nums1[i][1]})
+		i++
+	}
+	for j &lt; len(nums2) {
+		out = append(out, []int{nums2[j][0], nums2[j][1]})
+		j++
+	}
+	return out
+}</code></pre></div>
+      <div class="tab-pane" data-tab="cpp-cn"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; mergeArrays(vector&lt;vector&lt;int&gt;&gt;&amp; nums1, vector&lt;vector&lt;int&gt;&gt;&amp; nums2) {
+        int i = 0, j = 0;
+        vector&lt;vector&lt;int&gt;&gt; out;
+        out.reserve(nums1.size() + nums2.size());
+
+        while (i &lt; (int)nums1.size() &amp;&amp; j &lt; (int)nums2.size()) {
+            int id1 = nums1[i][0], id2 = nums2[j][0];
+            if (id1 == id2) {
+                out.push_back({id1, nums1[i][1] + nums2[j][1]});
+                ++i; ++j;
+            } else if (id1 &lt; id2) {
+                out.push_back({id1, nums1[i][1]});
+                ++i;
+            } else {
+                out.push_back({id2, nums2[j][1]});
+                ++j;
+            }
+        }
+
+        while (i &lt; (int)nums1.size()) out.push_back({nums1[i][0], nums1[i++][1]});
+        while (j &lt; (int)nums2.size()) out.push_back({nums2[j][0], nums2[j++][1]});
+
+        return out;
+    }
+};</code></pre></div>
+      <div class="tab-pane" data-tab="python-cn"><pre><code class="language-python">class Solution:
+    def mergeArrays(self, nums1: List[List[int]], nums2: List[List[int]]) -&gt; List[List[int]]:
+        i = j = 0
+        out = []
+
+        while i &lt; len(nums1) and j &lt; len(nums2):
+            id1, id2 = nums1[i][0], nums2[j][0]
+            if id1 == id2:
+                out.append([id1, nums1[i][1] + nums2[j][1]])
+                i += 1
+                j += 1
+            elif id1 &lt; id2:
+                out.append([id1, nums1[i][1]])
+                i += 1
+            else:
+                out.append([id2, nums2[j][1]])
+                j += 1
+
+        while i &lt; len(nums1):
+            out.append(nums1[i])
+            i += 1
+        while j &lt; len(nums2):
+            out.append(nums2[j])
+            j += 1
+
+        return out</code></pre></div>
+      <div class="tab-pane" data-tab="javascript-cn"><pre><code class="language-javascript">var mergeArrays = function(nums1, nums2) {
+  let i = 0, j = 0;
+  const out = [];
+
+  while (i &lt; nums1.length &amp;&amp; j &lt; nums2.length) {
+    const id1 = nums1[i][0], id2 = nums2[j][0];
+    if (id1 === id2) {
+      out.push([id1, nums1[i][1] + nums2[j][1]]);
+      i++;
+      j++;
+    } else if (id1 &lt; id2) {
+      out.push([id1, nums1[i][1]]);
+      i++;
+    } else {
+      out.push([id2, nums2[j][1]]);
+      j++;
+    }
+  }
+
+  while (i &lt; nums1.length) out.push(nums1[i++]);
+  while (j &lt; nums2.length) out.push(nums2[j++]);
+
+  return out;
+};</code></pre></div></div>
+    </article>
+
+    <section class="card comments"><h2>Comments</h2>
+      <script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script>
+    </section>
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
