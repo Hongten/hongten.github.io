@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1020"/>
+      <stop offset="100%" stop-color="#16213e"/>
+    </linearGradient>
+    <style>
+      .title{font:700 42px 'Segoe UI',Arial,sans-serif;fill:#f8fafc}
+      .sub{font:500 26px 'Segoe UI',Arial,sans-serif;fill:#cbd5e1}
+      .txt{font:500 24px 'Segoe UI',Arial,sans-serif;fill:#e2e8f0}
+      .mini{font:500 20px 'Segoe UI',Arial,sans-serif;fill:#93c5fd}
+      .box{fill:#1e293b;stroke:#475569;stroke-width:2;rx:10}
+      .hl{fill:#f59e0b}
+      .arr{stroke:#38bdf8;stroke-width:4;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#38bdf8"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="80" class="title">LeetCode 907 · Sum of Subarray Minimums</text>
+  <text x="60" y="120" class="sub">Monotonic Stack Contribution Counting</text>
+
+  <g transform="translate(70,180)">
+    <rect class="box" x="0" y="0" width="90" height="90"/><text class="txt" x="36" y="56">3</text>
+    <rect class="box hl" x="100" y="0" width="90" height="90"/><text class="txt" x="136" y="56" fill="#0f172a">1</text>
+    <rect class="box" x="200" y="0" width="90" height="90"/><text class="txt" x="236" y="56">2</text>
+    <rect class="box" x="300" y="0" width="90" height="90"/><text class="txt" x="336" y="56">4</text>
+    <text class="mini" x="90" y="130">prev less index = -1</text>
+    <text class="mini" x="90" y="160">next less or equal index = 4</text>
+    <text class="mini" x="90" y="190">left = 2, right = 3, contribution = 1×2×3</text>
+  </g>
+
+  <line class="arr" x1="170" y1="330" x2="620" y2="330"/>
+  <text x="650" y="338" class="txt">Contribution Formula:</text>
+  <text x="650" y="378" class="sub">arr[i] × (i-prevLess) × (nextLessOrEqual-i)</text>
+  <text x="60" y="580" class="mini">Use &lt; on left boundary and &lt;= on right boundary to avoid duplicate counting.</text>
+</svg>
