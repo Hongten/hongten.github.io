@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 1018: Binary Prefix Divisible By 5 (Rolling Modulo State Machine)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 1018 using rolling modulo on binary prefixes, with full Java/Go/C++/Python/JavaScript code tabs in both English and Chinese sections."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 1018: Binary Prefix Divisible By 5 (Rolling Modulo State Machine)" />
+  <meta property="og:description" content="Track current prefix value modulo 5 while scanning bits, and check whether each prefix remainder is 0." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1018-binary-prefix-divisible-by-5.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1018-binary-prefix-divisible-by-5.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 1018: Binary Prefix Divisible By 5 (Rolling Modulo State Machine)</h1>
+      <div class="meta">2026-04-15 · LeetCode · Array / Math / Prefix</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 1018</span><span class="tag">Rolling Mod</span><span class="tag">Prefix</span>
+
+      <p>Today we solve <strong>LeetCode 1018 - Binary Prefix Divisible By 5</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/binary-prefix-divisible-by-5/" target="_blank" rel="noopener">https://leetcode.com/problems/binary-prefix-divisible-by-5/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-1018-20260415.svg" alt="LeetCode 1018 rolling modulo diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a binary array <code>nums</code>, define each prefix <code>nums[0..i]</code> as a binary number. Return a boolean array where index <code>i</code> is <code>true</code> if that prefix value is divisible by 5.</p>
+
+      <h3>Key Idea</h3>
+      <p>We do <strong>not</strong> need the full prefix value (it can be huge). Only track remainder modulo 5:</p>
+      <p><code>rem = (rem * 2 + bit) % 5</code></p>
+      <p>If <code>rem == 0</code>, current prefix is divisible by 5.</p>
+
+      <h3>Algorithm</h3>
+      <p>1) Initialize <code>rem = 0</code>.<br/>
+         2) Scan each bit in <code>nums</code>.<br/>
+         3) Update <code>rem = (rem * 2 + bit) % 5</code>.<br/>
+         4) Append <code>(rem == 0)</code> into answer.</p>
+
+      <h3>Complexity</h3>
+      <p>Time complexity is <code>O(n)</code>, space complexity is <code>O(1)</code> extra (excluding output array).</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs"><div class="tab-list">
+        <button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button>
+      </div>
+      <div class="tab-pane active" data-tab="java"><pre><code class="language-java">import java.util.*;
+
+class Solution {
+    public List&lt;Boolean&gt; prefixesDivBy5(int[] nums) {
+        List&lt;Boolean&gt; ans = new ArrayList&lt;&gt;(nums.length);
+        int rem = 0;
+        for (int bit : nums) {
+            rem = ((rem &lt;&lt; 1) + bit) % 5;
+            ans.add(rem == 0);
+        }
+        return ans;
+    }
+}</code></pre></div>
+      <div class="tab-pane" data-tab="go"><pre><code class="language-go">func prefixesDivBy5(nums []int) []bool {
+	ans := make([]bool, len(nums))
+	rem := 0
+	for i, bit := range nums {
+		rem = ((rem &lt;&lt; 1) + bit) % 5
+		ans[i] = rem == 0
+	}
+	return ans
+}</code></pre></div>
+      <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;bool&gt; prefixesDivBy5(vector&lt;int&gt;&amp; nums) {
+        vector&lt;bool&gt; ans;
+        ans.reserve(nums.size());
+        int rem = 0;
+        for (int bit : nums) {
+            rem = ((rem &lt;&lt; 1) + bit) % 5;
+            ans.push_back(rem == 0);
+        }
+        return ans;
+    }
+};</code></pre></div>
+      <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def prefixesDivBy5(self, nums):
+        ans = []
+        rem = 0
+        for bit in nums:
+            rem = ((rem &lt;&lt; 1) + bit) % 5
+            ans.append(rem == 0)
+        return ans</code></pre></div>
+      <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var prefixesDivBy5 = function(nums) {
+  const ans = new Array(nums.length);
+  let rem = 0;
+  for (let i = 0; i &lt; nums.length; i++) {
+    rem = ((rem &lt;&lt; 1) + nums[i]) % 5;
+    ans[i] = rem === 0;
+  }
+  return ans;
+};</code></pre></div></div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定二进制数组 <code>nums</code>，把每个前缀 <code>nums[0..i]</code> 视为二进制整数。若该前缀能被 5 整除，则答案数组在 <code>i</code> 位置为 <code>true</code>。</p>
+
+      <h3>核心思路</h3>
+      <p>前缀数值会越来越大，不必真的算出完整整数，只维护“对 5 取模”的余数即可。</p>
+      <p>状态转移：</p>
+      <p><code>rem = (rem * 2 + bit) % 5</code></p>
+      <p>当 <code>rem == 0</code> 时，当前前缀可以被 5 整除。</p>
+
+      <h3>算法步骤</h3>
+      <p>1）初始化 <code>rem = 0</code>。<br/>
+         2）遍历每个比特 <code>bit</code>。<br/>
+         3）更新余数 <code>rem = (rem * 2 + bit) % 5</code>。<br/>
+         4）把 <code>rem == 0</code> 加入结果数组。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度 <code>O(n)</code>，额外空间复杂度 <code>O(1)</code>（不含输出结果）。</p>
+
+      <h3>参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs"><div class="tab-list">
+        <button class="tab-btn active" data-tab="java-cn">Java</button><button class="tab-btn" data-tab="go-cn">Go</button><button class="tab-btn" data-tab="cpp-cn">C++</button><button class="tab-btn" data-tab="python-cn">Python</button><button class="tab-btn" data-tab="javascript-cn">JavaScript</button>
+      </div>
+      <div class="tab-pane active" data-tab="java-cn"><pre><code class="language-java">import java.util.*;
+
+class Solution {
+    public List&lt;Boolean&gt; prefixesDivBy5(int[] nums) {
+        List&lt;Boolean&gt; ans = new ArrayList&lt;&gt;(nums.length);
+        int rem = 0;
+        for (int bit : nums) {
+            rem = ((rem &lt;&lt; 1) + bit) % 5;
+            ans.add(rem == 0);
+        }
+        return ans;
+    }
+}</code></pre></div>
+      <div class="tab-pane" data-tab="go-cn"><pre><code class="language-go">func prefixesDivBy5(nums []int) []bool {
+	ans := make([]bool, len(nums))
+	rem := 0
+	for i, bit := range nums {
+		rem = ((rem &lt;&lt; 1) + bit) % 5
+		ans[i] = rem == 0
+	}
+	return ans
+}</code></pre></div>
+      <div class="tab-pane" data-tab="cpp-cn"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;bool&gt; prefixesDivBy5(vector&lt;int&gt;&amp; nums) {
+        vector&lt;bool&gt; ans;
+        ans.reserve(nums.size());
+        int rem = 0;
+        for (int bit : nums) {
+            rem = ((rem &lt;&lt; 1) + bit) % 5;
+            ans.push_back(rem == 0);
+        }
+        return ans;
+    }
+};</code></pre></div>
+      <div class="tab-pane" data-tab="python-cn"><pre><code class="language-python">class Solution:
+    def prefixesDivBy5(self, nums):
+        ans = []
+        rem = 0
+        for bit in nums:
+            rem = ((rem &lt;&lt; 1) + bit) % 5
+            ans.append(rem == 0)
+        return ans</code></pre></div>
+      <div class="tab-pane" data-tab="javascript-cn"><pre><code class="language-javascript">var prefixesDivBy5 = function(nums) {
+  const ans = new Array(nums.length);
+  let rem = 0;
+  for (let i = 0; i &lt; nums.length; i++) {
+    rem = ((rem &lt;&lt; 1) + nums[i]) % 5;
+    ans[i] = rem === 0;
+  }
+  return ans;
+};</code></pre></div></div>
+    </article>
+
+    <section class="card comments"><h2>Comments</h2>
+      <script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script>
+    </section>
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
