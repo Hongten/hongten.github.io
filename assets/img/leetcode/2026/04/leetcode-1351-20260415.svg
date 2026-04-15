@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">LeetCode 1351 staircase scan diagram</title>
+  <desc id="desc">Top-right staircase scan for counting negatives in a row and column sorted matrix.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0b1020"/>
+      <stop offset="100%" stop-color="#172554"/>
+    </linearGradient>
+    <style>
+      .t{font-family:Arial,Helvetica,sans-serif;fill:#e2e8f0}
+      .p{fill:#22c55e}.n{fill:#ef4444}.g{fill:none;stroke:#94a3b8;stroke-width:2}
+      .a{fill:none;stroke:#f59e0b;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+    </style>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="90" class="t" font-size="44" font-weight="700">LeetCode 1351 · Top-Right Staircase Scan</text>
+  <text x="60" y="130" class="t" font-size="26">Negative at (r,c) ⇒ add all cells below in that column: m - r</text>
+
+  <g transform="translate(140,180)">
+    <rect width="540" height="360" class="g"/>
+    <g class="g">
+      <line x1="108" y1="0" x2="108" y2="360"/><line x1="216" y1="0" x2="216" y2="360"/>
+      <line x1="324" y1="0" x2="324" y2="360"/><line x1="432" y1="0" x2="432" y2="360"/>
+      <line x1="0" y1="90" x2="540" y2="90"/><line x1="0" y1="180" x2="540" y2="180"/>
+      <line x1="0" y1="270" x2="540" y2="270"/>
+    </g>
+    <g font-size="30" font-family="monospace" text-anchor="middle" dominant-baseline="middle">
+      <text x="54" y="45" class="p">10</text><text x="162" y="45" class="p">5</text><text x="270" y="45" class="p">0</text><text x="378" y="45" class="n">-3</text><text x="486" y="45" class="n">-5</text>
+      <text x="54" y="135" class="p">8</text><text x="162" y="135" class="p">3</text><text x="270" y="45" class="p"></text><text x="270" y="135" class="n">-1</text><text x="378" y="135" class="n">-4</text><text x="486" y="135" class="n">-7</text>
+      <text x="54" y="225" class="p">6</text><text x="162" y="225" class="p">1</text><text x="270" y="225" class="n">-2</text><text x="378" y="225" class="n">-6</text><text x="486" y="225" class="n">-9</text>
+      <text x="54" y="315" class="p">4</text><text x="162" y="315" class="n">-1</text><text x="270" y="315" class="n">-3</text><text x="378" y="315" class="n">-8</text><text x="486" y="315" class="n">-10</text>
+    </g>
+    <path d="M486 45 L378 45 L378 135 L270 135 L270 225 L162 225 L162 315" class="a"/>
+    <circle cx="486" cy="45" r="10" fill="#f59e0b"/>
+  </g>
+
+  <text x="760" y="260" class="t" font-size="30" font-weight="700">Movement rule</text>
+  <text x="760" y="305" class="t" font-size="24">• current &lt; 0 : add (m-r), move left</text>
+  <text x="760" y="342" class="t" font-size="24">• current ≥ 0 : move down</text>
+  <text x="760" y="390" class="t" font-size="24">Total moves ≤ m + n ⇒ O(m+n)</text>
+</svg>
