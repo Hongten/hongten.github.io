@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 3459 V-shaped diagonal segment diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1220"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="56" y="90" fill="#e5e7eb" font-size="46" font-family="Inter,Arial,sans-serif" font-weight="700">LeetCode 3459 · Longest V-Shaped Diagonal Segment</text>
+  <text x="56" y="132" fill="#93c5fd" font-size="27" font-family="Inter,Arial,sans-serif">Start at 1 → follow 2,0,2,0... → at most one clockwise diagonal turn</text>
+
+  <rect x="56" y="170" width="1088" height="390" rx="20" fill="#1f2937" stroke="#374151"/>
+
+  <!-- grid -->
+  <g transform="translate(120,220)">
+    <rect x="0" y="0" width="420" height="280" fill="#0f172a" stroke="#334155"/>
+    <g stroke="#334155" stroke-width="1">
+      <line x1="60" y1="0" x2="60" y2="280"/><line x1="120" y1="0" x2="120" y2="280"/><line x1="180" y1="0" x2="180" y2="280"/><line x1="240" y1="0" x2="240" y2="280"/><line x1="300" y1="0" x2="300" y2="280"/><line x1="360" y1="0" x2="360" y2="280"/>
+      <line x1="0" y1="56" x2="420" y2="56"/><line x1="0" y1="112" x2="420" y2="112"/><line x1="0" y1="168" x2="420" y2="168"/><line x1="0" y1="224" x2="420" y2="224"/>
+    </g>
+
+    <!-- path cells -->
+    <circle cx="90" cy="196" r="23" fill="#22c55e"/>
+    <text x="82" y="204" fill="#04120a" font-size="24" font-family="monospace" font-weight="700">1</text>
+
+    <circle cx="150" cy="140" r="23" fill="#f59e0b"/>
+    <text x="142" y="148" fill="#201208" font-size="24" font-family="monospace" font-weight="700">2</text>
+
+    <circle cx="210" cy="84" r="23" fill="#38bdf8"/>
+    <text x="202" y="92" fill="#04131a" font-size="24" font-family="monospace" font-weight="700">0</text>
+
+    <circle cx="270" cy="140" r="23" fill="#f59e0b"/>
+    <text x="262" y="148" fill="#201208" font-size="24" font-family="monospace" font-weight="700">2</text>
+
+    <circle cx="330" cy="196" r="23" fill="#38bdf8"/>
+    <text x="322" y="204" fill="#04131a" font-size="24" font-family="monospace" font-weight="700">0</text>
+
+    <!-- arrows -->
+    <path d="M 107 180 L 133 156" stroke="#f59e0b" stroke-width="5" fill="none" marker-end="url(#arrow)"/>
+    <path d="M 167 124 L 193 100" stroke="#f59e0b" stroke-width="5" fill="none" marker-end="url(#arrow)"/>
+    <path d="M 227 100 L 253 124" stroke="#f59e0b" stroke-width="5" fill="none" marker-end="url(#arrow)"/>
+    <path d="M 287 156 L 313 180" stroke="#f59e0b" stroke-width="5" fill="none" marker-end="url(#arrow)"/>
+
+    <text x="220" y="46" fill="#fbbf24" font-size="18" font-family="Inter,Arial,sans-serif">clockwise turn here ↷</text>
+  </g>
+
+  <g transform="translate(610,235)">
+    <text x="0" y="0" fill="#e5e7eb" font-size="30" font-family="Inter,Arial,sans-serif" font-weight="700">State DP / Memo Key</text>
+    <text x="0" y="48" fill="#cbd5e1" font-size="24" font-family="Consolas,Monaco,monospace">(r, c, dir, turned, nextVal)</text>
+
+    <text x="0" y="106" fill="#93c5fd" font-size="24" font-family="Inter,Arial,sans-serif">Transitions:</text>
+    <text x="24" y="146" fill="#e5e7eb" font-size="22" font-family="Inter,Arial,sans-serif">• straight in same diagonal</text>
+    <text x="24" y="184" fill="#e5e7eb" font-size="22" font-family="Inter,Arial,sans-serif">• one clockwise turn (if not used)</text>
+
+    <text x="0" y="248" fill="#86efac" font-size="24" font-family="Inter,Arial,sans-serif">Time: O(nm) · Space: O(nm)</text>
+    <text x="0" y="300" fill="#fda4af" font-size="22" font-family="Inter,Arial,sans-serif">Author: Tom🦞</text>
+  </g>
+</svg>
