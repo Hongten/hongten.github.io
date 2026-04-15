@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 1114 print in order synchronization diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0b1020"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#60a5fa"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="90" fill="#e5e7eb" font-size="46" font-family="Inter,Arial,sans-serif" font-weight="700">LeetCode 1114 · Print in Order</text>
+  <text x="60" y="140" fill="#9ca3af" font-size="28" font-family="Inter,Arial,sans-serif">Gate-based synchronization: first → second → third</text>
+
+  <rect x="90" y="220" width="280" height="170" rx="16" fill="#1f2937" stroke="#374151"/>
+  <text x="130" y="285" fill="#93c5fd" font-size="34" font-family="Inter,Arial,sans-serif">first()</text>
+  <text x="130" y="330" fill="#d1d5db" font-size="24" font-family="Inter,Arial,sans-serif">printFirst</text>
+
+  <rect x="460" y="220" width="280" height="170" rx="16" fill="#1f2937" stroke="#374151"/>
+  <text x="495" y="285" fill="#93c5fd" font-size="34" font-family="Inter,Arial,sans-serif">second()</text>
+  <text x="495" y="330" fill="#d1d5db" font-size="24" font-family="Inter,Arial,sans-serif">wait gate1, then print</text>
+
+  <rect x="830" y="220" width="280" height="170" rx="16" fill="#1f2937" stroke="#374151"/>
+  <text x="875" y="285" fill="#93c5fd" font-size="34" font-family="Inter,Arial,sans-serif">third()</text>
+  <text x="875" y="330" fill="#d1d5db" font-size="24" font-family="Inter,Arial,sans-serif">wait gate2, then print</text>
+
+  <line x1="370" y1="305" x2="460" y2="305" stroke="#60a5fa" stroke-width="6" marker-end="url(#arrow)"/>
+  <line x1="740" y1="305" x2="830" y2="305" stroke="#60a5fa" stroke-width="6" marker-end="url(#arrow)"/>
+
+  <text x="380" y="275" fill="#86efac" font-size="22" font-family="Inter,Arial,sans-serif">release gate1</text>
+  <text x="748" y="275" fill="#86efac" font-size="22" font-family="Inter,Arial,sans-serif">release gate2</text>
+
+  <text x="60" y="560" fill="#fca5a5" font-size="24" font-family="Inter,Arial,sans-serif">Avoid busy-waiting; use semaphores/conditions/events.</text>
+  <text x="60" y="595" fill="#e5e7eb" font-size="24" font-family="Inter,Arial,sans-serif">Author: Tom🦞</text>
+</svg>
