@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 186: Reverse Words in a String II (In-Place Two-Reversal)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 186 using in-place reverse-all then reverse-each-word strategy with complete Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 186: Reverse Words in a String II (In-Place Two-Reversal)" />
+  <meta property="og:description" content="English + 中文 explanation with in-place string transformation insight, complexity, pitfalls, and full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-186-reverse-words-in-a-string-ii.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-186-reverse-words-in-a-string-ii.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 186: Reverse Words in a String II (In-Place Two-Reversal)</h1>
+      <div class="meta">2026-04-16 · LeetCode · String / Two Pointers</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 186</span><span class="tag">String</span><span class="tag">Two Pointers</span>
+
+      <p>Today we solve <strong>LeetCode 186 - Reverse Words in a String II</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/reverse-words-in-a-string-ii/" target="_blank" rel="noopener">https://leetcode.com/problems/reverse-words-in-a-string-ii/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-186-20260416.svg" alt="LeetCode 186 in-place reversal diagram showing full reverse then per-word reverse" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a character array <code>s</code>, reverse the order of words <strong>in-place</strong>. A word is separated by a single space, and the array does not have leading/trailing spaces.</p>
+
+      <h3>Key Insight</h3>
+      <p>Do two reversals: first reverse the entire array, then reverse each word segment individually. This keeps space usage <code>O(1)</code> while restoring each word's character order.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Reverse the whole array <code>s[0..n-1]</code>.<br/>
+         - Scan with pointer <code>i</code>; for each word range <code>[i, j-1]</code>, reverse that range.<br/>
+         - Move to the next word after the space and continue until end.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code> (each character swapped a constant number of times).<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting to reverse the last word after loop.<br/>
+         - Off-by-one when handling word end at the array boundary.<br/>
+         - Accidentally allocating a new string/array, violating in-place requirement.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public void reverseWords(char[] s) {
+        reverse(s, 0, s.length - 1);
+        int n = s.length;
+        int i = 0;
+        while (i &lt; n) {
+            int j = i;
+            while (j &lt; n &amp;&amp; s[j] != ' ') {
+                j++;
+            }
+            reverse(s, i, j - 1);
+            i = j + 1;
+        }
+    }
+
+    private void reverse(char[] s, int l, int r) {
+        while (l &lt; r) {
+            char tmp = s[l];
+            s[l] = s[r];
+            s[r] = tmp;
+            l++;
+            r--;
+        }
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func reverseWords(s []byte) {
+    reverse(s, 0, len(s)-1)
+    n := len(s)
+    i := 0
+    for i &lt; n {
+        j := i
+        for j &lt; n &amp;&amp; s[j] != ' ' {
+            j++
+        }
+        reverse(s, i, j-1)
+        i = j + 1
+    }
+}
+
+func reverse(s []byte, l, r int) {
+    for l &lt; r {
+        s[l], s[r] = s[r], s[l]
+        l++
+        r--
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    void reverseWords(vector&lt;char&gt;&amp; s) {
+        reverseRange(s, 0, (int)s.size() - 1);
+        int n = (int)s.size();
+        int i = 0;
+        while (i &lt; n) {
+            int j = i;
+            while (j &lt; n &amp;&amp; s[j] != ' ') j++;
+            reverseRange(s, i, j - 1);
+            i = j + 1;
+        }
+    }
+
+private:
+    void reverseRange(vector&lt;char&gt;&amp; s, int l, int r) {
+        while (l &lt; r) {
+            swap(s[l++], s[r--]);
+        }
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def reverseWords(self, s: List[str]) -&gt; None:
+        def rev(l: int, r: int) -&gt; None:
+            while l &lt; r:
+                s[l], s[r] = s[r], s[l]
+                l += 1
+                r -= 1
+
+        n = len(s)
+        rev(0, n - 1)
+
+        i = 0
+        while i &lt; n:
+            j = i
+            while j &lt; n and s[j] != ' ':
+                j += 1
+            rev(i, j - 1)
+            i = j + 1</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var reverseWords = function(s) {
+  reverse(s, 0, s.length - 1);
+  let i = 0;
+  while (i &lt; s.length) {
+    let j = i;
+    while (j &lt; s.length &amp;&amp; s[j] !== ' ') {
+      j++;
+    }
+    reverse(s, i, j - 1);
+    i = j + 1;
+  }
+};
+
+function reverse(s, l, r) {
+  while (l &lt; r) {
+    const tmp = s[l];
+    s[l] = s[r];
+    s[r] = tmp;
+    l++;
+    r--;
+  }
+}</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给你一个字符数组 <code>s</code>，要求<strong>原地</strong>反转单词顺序。单词之间由单个空格分隔，且没有首尾空格。</p>
+
+      <h3>核心思路</h3>
+      <p>两次反转：先整体反转数组，再逐个单词区间反转。这样最终单词顺序被反过来，同时每个单词内部字符顺序也恢复正确。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 先反转区间 <code>[0, n-1]</code>。<br/>
+         - 用双指针找到每个单词区间 <code>[i, j-1]</code>，并原地反转。<br/>
+         - 跳过空格继续处理下一个单词，直到结束。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>（每个字符被交换常数次）。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 循环结束时漏掉最后一个单词的反转。<br/>
+         - 单词右边界处理成 <code>j</code> 而不是 <code>j - 1</code>。<br/>
+         - 新建字符串导致不满足原地修改要求。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public void reverseWords(char[] s) {
+        reverse(s, 0, s.length - 1);
+        int n = s.length;
+        int i = 0;
+        while (i &lt; n) {
+            int j = i;
+            while (j &lt; n &amp;&amp; s[j] != ' ') {
+                j++;
+            }
+            reverse(s, i, j - 1);
+            i = j + 1;
+        }
+    }
+
+    private void reverse(char[] s, int l, int r) {
+        while (l &lt; r) {
+            char tmp = s[l];
+            s[l] = s[r];
+            s[r] = tmp;
+            l++;
+            r--;
+        }
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func reverseWords(s []byte) {
+    reverse(s, 0, len(s)-1)
+    n := len(s)
+    i := 0
+    for i &lt; n {
+        j := i
+        for j &lt; n &amp;&amp; s[j] != ' ' {
+            j++
+        }
+        reverse(s, i, j-1)
+        i = j + 1
+    }
+}
+
+func reverse(s []byte, l, r int) {
+    for l &lt; r {
+        s[l], s[r] = s[r], s[l]
+        l++
+        r--
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    void reverseWords(vector&lt;char&gt;&amp; s) {
+        reverseRange(s, 0, (int)s.size() - 1);
+        int n = (int)s.size();
+        int i = 0;
+        while (i &lt; n) {
+            int j = i;
+            while (j &lt; n &amp;&amp; s[j] != ' ') j++;
+            reverseRange(s, i, j - 1);
+            i = j + 1;
+        }
+    }
+
+private:
+    void reverseRange(vector&lt;char&gt;&amp; s, int l, int r) {
+        while (l &lt; r) {
+            swap(s[l++], s[r--]);
+        }
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def reverseWords(self, s: List[str]) -&gt; None:
+        def rev(l: int, r: int) -&gt; None:
+            while l &lt; r:
+                s[l], s[r] = s[r], s[l]
+                l += 1
+                r -= 1
+
+        n = len(s)
+        rev(0, n - 1)
+
+        i = 0
+        while i &lt; n:
+            j = i
+            while j &lt; n and s[j] != ' ':
+                j += 1
+            rev(i, j - 1)
+            i = j + 1</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var reverseWords = function(s) {
+  reverse(s, 0, s.length - 1);
+  let i = 0;
+  while (i &lt; s.length) {
+    let j = i;
+    while (j &lt; s.length &amp;&amp; s[j] !== ' ') {
+      j++;
+    }
+    reverse(s, i, j - 1);
+    i = j + 1;
+  }
+};
+
+function reverse(s, l, r) {
+  while (l &lt; r) {
+    const tmp = s[l];
+    s[l] = s[r];
+    s[r] = tmp;
+    l++;
+    r--;
+  }
+}</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
