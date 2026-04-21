@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 1304: Find N Unique Integers Sum up to Zero (Symmetric Pair Construction)</title>
+  <meta name="description" content="Bilingual interview-grade tutorial for LeetCode 1304 using symmetric positive-negative pair construction with complete 5-language code tabs in both EN/CN sections."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 1304: Find N Unique Integers Sum up to Zero (Symmetric Pair Construction)" />
+  <meta property="og:description" content="Detailed English + 中文 guide with construction idea, complexity, pitfalls, and full multi-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1304-find-n-unique-integers-sum-up-to-zero.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1304-find-n-unique-integers-sum-up-to-zero.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 1304: Find N Unique Integers Sum up to Zero (Symmetric Pair Construction)</h1>
+      <div class="meta">2026-04-21 · LeetCode · Array / Math / Constructive</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 1304</span><span class="tag">Array</span><span class="tag">Math</span>
+
+      <p>Today we solve <strong>LeetCode 1304 - Find N Unique Integers Sum up to Zero</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/find-n-unique-integers-sum-up-to-zero/" target="_blank" rel="noopener">https://leetcode.com/problems/find-n-unique-integers-sum-up-to-zero/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-1304-20260421.svg" alt="LeetCode 1304 symmetric positive and negative pairs plus optional zero" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given an integer <code>n</code>, return any array containing <code>n</code> distinct integers whose sum is exactly zero.</p>
+
+      <h3>Key Insight</h3>
+      <p>Use symmetry: for every positive value <code>i</code>, include <code>-i</code>. Each pair contributes zero. If <code>n</code> is odd, append one <code>0</code>.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>Randomly generating distinct numbers and checking sums is unnecessary and inefficient. The pair construction gives a deterministic O(n) solution directly.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Initialize an empty result list.<br/>
+         2) For <code>i</code> from <code>1</code> to <code>n/2</code>, append <code>i</code> and <code>-i</code>.<br/>
+         3) If <code>n</code> is odd, append <code>0</code>.<br/>
+         4) Return the list.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(n)</code> for output.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting to add <code>0</code> when <code>n</code> is odd.<br/>
+         - Accidentally reusing values and breaking uniqueness.<br/>
+         - Off-by-one in loop bounds.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int[] sumZero(int n) {
+        int[] ans = new int[n];
+        int idx = 0;
+        for (int i = 1; i &lt;= n / 2; i++) {
+            ans[idx++] = i;
+            ans[idx++] = -i;
+        }
+        if ((n &amp; 1) == 1) ans[idx] = 0;
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func sumZero(n int) []int {
+    ans := make([]int, 0, n)
+    for i := 1; i &lt;= n/2; i++ {
+        ans = append(ans, i, -i)
+    }
+    if n%2 == 1 {
+        ans = append(ans, 0)
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; sumZero(int n) {
+        vector&lt;int&gt; ans;
+        ans.reserve(n);
+        for (int i = 1; i &lt;= n / 2; i++) {
+            ans.push_back(i);
+            ans.push_back(-i);
+        }
+        if (n % 2 == 1) ans.push_back(0);
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def sumZero(self, n: int) -&gt; List[int]:
+        ans = []
+        for i in range(1, n // 2 + 1):
+            ans.append(i)
+            ans.append(-i)
+        if n % 2 == 1:
+            ans.append(0)
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var sumZero = function(n) {
+  const ans = [];
+  for (let i = 1; i &lt;= Math.floor(n / 2); i++) {
+    ans.push(i);
+    ans.push(-i);
+  }
+  if (n % 2 === 1) ans.push(0);
+  return ans;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定整数 <code>n</code>，返回任意一个长度为 <code>n</code>、元素互不相同且总和为 0 的整数数组。</p>
+
+      <h3>核心思路</h3>
+      <p>利用对称性构造。每加入一个正数 <code>i</code>，就加入对应的 <code>-i</code>，这一对的和就是 0。若 <code>n</code> 为奇数，再补一个 <code>0</code> 即可。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>随机挑数并反复校验“是否重复、和是否为 0”会增加不必要复杂度。直接构造更稳定且线性时间完成。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）初始化答案数组。<br/>
+         2）遍历 <code>i = 1..n/2</code>，每次加入 <code>i</code> 和 <code>-i</code>。<br/>
+         3）如果 <code>n</code> 为奇数，追加 <code>0</code>。<br/>
+         4）返回答案。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(n)</code>（输出数组）。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 奇数长度时忘记补 <code>0</code>。<br/>
+         - 构造过程中出现重复数字。<br/>
+         - 循环边界写错导致个数不等于 <code>n</code>。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int[] sumZero(int n) {
+        int[] ans = new int[n];
+        int idx = 0;
+        for (int i = 1; i &lt;= n / 2; i++) {
+            ans[idx++] = i;
+            ans[idx++] = -i;
+        }
+        if ((n &amp; 1) == 1) ans[idx] = 0;
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func sumZero(n int) []int {
+    ans := make([]int, 0, n)
+    for i := 1; i &lt;= n/2; i++ {
+        ans = append(ans, i, -i)
+    }
+    if n%2 == 1 {
+        ans = append(ans, 0)
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; sumZero(int n) {
+        vector&lt;int&gt; ans;
+        ans.reserve(n);
+        for (int i = 1; i &lt;= n / 2; i++) {
+            ans.push_back(i);
+            ans.push_back(-i);
+        }
+        if (n % 2 == 1) ans.push_back(0);
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def sumZero(self, n: int) -&gt; List[int]:
+        ans = []
+        for i in range(1, n // 2 + 1):
+            ans.append(i)
+            ans.append(-i)
+        if n % 2 == 1:
+            ans.append(0)
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var sumZero = function(n) {
+  const ans = [];
+  for (let i = 1; i &lt;= Math.floor(n / 2); i++) {
+    ans.push(i);
+    ans.push(-i);
+  }
+  if (n % 2 === 1) ans.push(0);
+  return ans;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
