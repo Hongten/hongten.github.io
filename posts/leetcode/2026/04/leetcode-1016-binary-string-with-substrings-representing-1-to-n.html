@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 1016: Binary String With Substrings Representing 1 To N (Enumerate + Binary Membership Check)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 1016 using descending integer-to-binary membership checks, with full Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 1016: Binary String With Substrings Representing 1 To N (Enumerate + Binary Membership Check)" />
+  <meta property="og:description" content="English + 中文 explanation with pruning idea, complexity, pitfalls, and full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1016-binary-string-with-substrings-representing-1-to-n.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1016-binary-string-with-substrings-representing-1-to-n.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 1016: Binary String With Substrings Representing 1 To N (Enumerate + Binary Membership Check)</h1>
+      <div class="meta">2026-04-21 · LeetCode · String / Enumeration</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 1016</span><span class="tag">String</span><span class="tag">Enumeration</span>
+
+      <p>Today we solve <strong>LeetCode 1016 - Binary String With Substrings Representing 1 To N</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/binary-string-with-substrings-representing-1-to-n/" target="_blank" rel="noopener">https://leetcode.com/problems/binary-string-with-substrings-representing-1-to-n/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-1016-20260421.svg" alt="LeetCode 1016 checks whether each binary value from 1 to n appears as a substring" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a binary string <code>s</code> and an integer <code>n</code>, return <code>true</code> if for every integer <code>x</code> in <code>[1, n]</code>, the binary representation of <code>x</code> appears as a substring of <code>s</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>Directly enumerate integers and test membership with <code>contains</code>. Checking in descending order gives earlier failure for missing long patterns and is simple to implement reliably.</p>
+
+      <h3>Algorithm</h3>
+      <p>- For <code>x</code> from <code>n</code> down to <code>1</code>:<br/>
+         &nbsp;&nbsp;• Convert <code>x</code> to binary string <code>b</code>.<br/>
+         &nbsp;&nbsp;• If <code>s</code> does not contain <code>b</code>, return <code>false</code>.<br/>
+         - If all numbers pass, return <code>true</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Let <code>m = s.length()</code>.<br/>We perform <code>n</code> substring checks, each up to <code>O(m)</code> in typical implementations, so overall about <code>O(n·m)</code>.<br/>Extra space: <code>O(log n)</code> for temporary binary string.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting to include <code>1</code> in the checked range.<br/>
+         - Using decimal string instead of binary string.<br/>
+         - Iterating only over bit-length boundaries and missing values inside each range.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean queryString(String s, int n) {
+        for (int x = n; x &gt;= 1; x--) {
+            String b = Integer.toBinaryString(x);
+            if (!s.contains(b)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">import "strconv"
+
+func queryString(s string, n int) bool {
+    for x := n; x &gt;= 1; x-- {
+        b := strconv.FormatInt(int64(x), 2)
+        if !contains(s, b) {
+            return false
+        }
+    }
+    return true
+}
+
+func contains(s, t string) bool {
+    return len(t) == 0 || (len(s) &gt;= len(t) &amp;&amp; indexOf(s, t) != -1)
+}
+
+func indexOf(s, t string) int {
+    for i := 0; i+len(t) &lt;= len(s); i++ {
+        if s[i:i+len(t)] == t {
+            return i
+        }
+    }
+    return -1
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool queryString(string s, int n) {
+        for (int x = n; x &gt;= 1; --x) {
+            string b;
+            int v = x;
+            while (v &gt; 0) {
+                b.push_back((v &amp; 1) + '0');
+                v &gt;&gt;= 1;
+            }
+            reverse(b.begin(), b.end());
+            if (s.find(b) == string::npos) {
+                return false;
+            }
+        }
+        return true;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def queryString(self, s: str, n: int) -&gt; bool:
+        for x in range(n, 0, -1):
+            b = bin(x)[2:]
+            if b not in s:
+                return False
+        return True</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var queryString = function(s, n) {
+  for (let x = n; x &gt;= 1; x--) {
+    const b = x.toString(2);
+    if (!s.includes(b)) {
+      return false;
+    }
+  }
+  return true;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定二进制字符串 <code>s</code> 和整数 <code>n</code>，如果区间 <code>[1, n]</code> 内每个整数的二进制表示都能在 <code>s</code> 中找到子串，则返回 <code>true</code>，否则返回 <code>false</code>。</p>
+
+      <h3>核心思路</h3>
+      <p>最稳妥的方法就是“枚举数字 + 二进制转字符串 + 子串判断”。从大到小检查通常更容易提前失败，逻辑也最直观。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 从 <code>x = n</code> 递减到 <code>1</code>：<br/>
+         &nbsp;&nbsp;• 将 <code>x</code> 转成二进制字符串 <code>b</code>。<br/>
+         &nbsp;&nbsp;• 若 <code>b</code> 不是 <code>s</code> 的子串，立即返回 <code>false</code>。<br/>
+         - 若全部命中，返回 <code>true</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>设 <code>m = s.length()</code>。<br/>需要做 <code>n</code> 次子串判断，整体约为 <code>O(n·m)</code>。<br/>额外空间约为 <code>O(log n)</code>（用于临时二进制字符串）。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 检查区间时漏掉 <code>1</code>。<br/>
+         - 把数字转成十进制字符串而不是二进制。<br/>
+         - 只按位数分段检查，导致遗漏中间值。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean queryString(String s, int n) {
+        for (int x = n; x &gt;= 1; x--) {
+            String b = Integer.toBinaryString(x);
+            if (!s.contains(b)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">import "strconv"
+
+func queryString(s string, n int) bool {
+    for x := n; x &gt;= 1; x-- {
+        b := strconv.FormatInt(int64(x), 2)
+        if !contains(s, b) {
+            return false
+        }
+    }
+    return true
+}
+
+func contains(s, t string) bool {
+    return len(t) == 0 || (len(s) &gt;= len(t) &amp;&amp; indexOf(s, t) != -1)
+}
+
+func indexOf(s, t string) int {
+    for i := 0; i+len(t) &lt;= len(s); i++ {
+        if s[i:i+len(t)] == t {
+            return i
+        }
+    }
+    return -1
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool queryString(string s, int n) {
+        for (int x = n; x &gt;= 1; --x) {
+            string b;
+            int v = x;
+            while (v &gt; 0) {
+                b.push_back((v &amp; 1) + '0');
+                v &gt;&gt;= 1;
+            }
+            reverse(b.begin(), b.end());
+            if (s.find(b) == string::npos) {
+                return false;
+            }
+        }
+        return true;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def queryString(self, s: str, n: int) -&gt; bool:
+        for x in range(n, 0, -1):
+            b = bin(x)[2:]
+            if b not in s:
+                return False
+        return True</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var queryString = function(s, n) {
+  for (let x = n; x &gt;= 1; x--) {
+    const b = x.toString(2);
+    if (!s.includes(b)) {
+      return false;
+    }
+  }
+  return true;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
