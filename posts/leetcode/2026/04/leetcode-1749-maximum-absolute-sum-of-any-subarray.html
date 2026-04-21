@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 1749: Maximum Absolute Sum of Any Subarray (Dual Kadane for Max/Min)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 1749 using dual Kadane to track maximum and minimum subarray sums, with complete Java/Go/C++/Python/JavaScript tabs in both EN and 中文 sections."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 1749: Maximum Absolute Sum of Any Subarray (Dual Kadane for Max/Min)" />
+  <meta property="og:description" content="English + 中文 explanation with insight, complexity, pitfalls, and full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1749-maximum-absolute-sum-of-any-subarray.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1749-maximum-absolute-sum-of-any-subarray.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 1749: Maximum Absolute Sum of Any Subarray (Dual Kadane for Max/Min)</h1>
+      <div class="meta">2026-04-21 · LeetCode · Array / Prefix Sum / Kadane</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 1749</span><span class="tag">Kadane</span><span class="tag">Prefix Sum</span>
+
+      <p>Today we solve <strong>LeetCode 1749 - Maximum Absolute Sum of Any Subarray</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/maximum-absolute-sum-of-any-subarray/" target="_blank" rel="noopener">https://leetcode.com/problems/maximum-absolute-sum-of-any-subarray/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-1749-20260421.svg" alt="LeetCode 1749 dual Kadane tracks max and min subarray sums" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given an integer array <code>nums</code>, return the largest absolute value of any subarray sum.</p>
+
+      <h3>Key Insight</h3>
+      <p>The answer is <code>max(maxSubarraySum, -minSubarraySum)</code>. So in one pass, track both the best positive subarray sum and the most negative subarray sum.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Use Kadane twice at the same time:<br/>
+         - <code>maxEnding</code>: max subarray sum ending at current index.<br/>
+         - <code>minEnding</code>: min subarray sum ending at current index.<br/>
+         - Update global <code>bestMax</code> and <code>bestMin</code> each step.<br/>
+         - Return <code>max(bestMax, -bestMin)</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Tracking only maximum subarray sum, but forgetting the minimum one.<br/>
+         - Returning <code>abs(totalSum)</code>, which is not the same as best subarray absolute sum.<br/>
+         - Incorrect initialization causing all-negative or all-positive arrays to fail.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int maxAbsoluteSum(int[] nums) {
+        int maxEnding = 0, minEnding = 0;
+        int bestMax = 0, bestMin = 0;
+
+        for (int x : nums) {
+            maxEnding = Math.max(x, maxEnding + x);
+            minEnding = Math.min(x, minEnding + x);
+            bestMax = Math.max(bestMax, maxEnding);
+            bestMin = Math.min(bestMin, minEnding);
+        }
+
+        return Math.max(bestMax, -bestMin);
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func maxAbsoluteSum(nums []int) int {
+    maxEnding, minEnding := 0, 0
+    bestMax, bestMin := 0, 0
+
+    for _, x := range nums {
+        if maxEnding+x > x {
+            maxEnding = maxEnding + x
+        } else {
+            maxEnding = x
+        }
+
+        if minEnding+x < x {
+            minEnding = minEnding + x
+        } else {
+            minEnding = x
+        }
+
+        if maxEnding > bestMax {
+            bestMax = maxEnding
+        }
+        if minEnding < bestMin {
+            bestMin = minEnding
+        }
+    }
+
+    if bestMax > -bestMin {
+        return bestMax
+    }
+    return -bestMin
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int maxAbsoluteSum(vector&lt;int&gt;&amp; nums) {
+        int maxEnding = 0, minEnding = 0;
+        int bestMax = 0, bestMin = 0;
+
+        for (int x : nums) {
+            maxEnding = max(x, maxEnding + x);
+            minEnding = min(x, minEnding + x);
+            bestMax = max(bestMax, maxEnding);
+            bestMin = min(bestMin, minEnding);
+        }
+
+        return max(bestMax, -bestMin);
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def maxAbsoluteSum(self, nums: list[int]) -&gt; int:
+        max_ending = min_ending = 0
+        best_max = best_min = 0
+
+        for x in nums:
+            max_ending = max(x, max_ending + x)
+            min_ending = min(x, min_ending + x)
+            best_max = max(best_max, max_ending)
+            best_min = min(best_min, min_ending)
+
+        return max(best_max, -best_min)</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var maxAbsoluteSum = function(nums) {
+  let maxEnding = 0, minEnding = 0;
+  let bestMax = 0, bestMin = 0;
+
+  for (const x of nums) {
+    maxEnding = Math.max(x, maxEnding + x);
+    minEnding = Math.min(x, minEnding + x);
+    bestMax = Math.max(bestMax, maxEnding);
+    bestMin = Math.min(bestMin, minEnding);
+  }
+
+  return Math.max(bestMax, -bestMin);
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定整数数组 <code>nums</code>，返回任意子数组和的绝对值最大值。</p>
+
+      <h3>核心思路</h3>
+      <p>答案等于 <code>max(最大子数组和, 最小子数组和的相反数)</code>。因此一趟遍历里同时维护“最大连续和”和“最小连续和”即可。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 同步进行两套 Kadane：<br/>
+         - <code>maxEnding</code>：以当前位置结尾的最大子数组和。<br/>
+         - <code>minEnding</code>：以当前位置结尾的最小子数组和。<br/>
+         - 每步更新全局 <code>bestMax</code> 与 <code>bestMin</code>。<br/>
+         - 最终返回 <code>max(bestMax, -bestMin)</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 只求最大子数组和，漏掉最小子数组和。<br/>
+         - 错把 <code>abs(totalSum)</code> 当答案。<br/>
+         - 初始化不当导致全正或全负数组结果错误。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int maxAbsoluteSum(int[] nums) {
+        int maxEnding = 0, minEnding = 0;
+        int bestMax = 0, bestMin = 0;
+
+        for (int x : nums) {
+            maxEnding = Math.max(x, maxEnding + x);
+            minEnding = Math.min(x, minEnding + x);
+            bestMax = Math.max(bestMax, maxEnding);
+            bestMin = Math.min(bestMin, minEnding);
+        }
+
+        return Math.max(bestMax, -bestMin);
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func maxAbsoluteSum(nums []int) int {
+    maxEnding, minEnding := 0, 0
+    bestMax, bestMin := 0, 0
+
+    for _, x := range nums {
+        if maxEnding+x > x {
+            maxEnding = maxEnding + x
+        } else {
+            maxEnding = x
+        }
+
+        if minEnding+x < x {
+            minEnding = minEnding + x
+        } else {
+            minEnding = x
+        }
+
+        if maxEnding > bestMax {
+            bestMax = maxEnding
+        }
+        if minEnding < bestMin {
+            bestMin = minEnding
+        }
+    }
+
+    if bestMax > -bestMin {
+        return bestMax
+    }
+    return -bestMin
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int maxAbsoluteSum(vector&lt;int&gt;&amp; nums) {
+        int maxEnding = 0, minEnding = 0;
+        int bestMax = 0, bestMin = 0;
+
+        for (int x : nums) {
+            maxEnding = max(x, maxEnding + x);
+            minEnding = min(x, minEnding + x);
+            bestMax = max(bestMax, maxEnding);
+            bestMin = min(bestMin, minEnding);
+        }
+
+        return max(bestMax, -bestMin);
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def maxAbsoluteSum(self, nums: list[int]) -&gt; int:
+        max_ending = min_ending = 0
+        best_max = best_min = 0
+
+        for x in nums:
+            max_ending = max(x, max_ending + x)
+            min_ending = min(x, min_ending + x)
+            best_max = max(best_max, max_ending)
+            best_min = min(best_min, min_ending)
+
+        return max(best_max, -best_min)</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var maxAbsoluteSum = function(nums) {
+  let maxEnding = 0, minEnding = 0;
+  let bestMax = 0, bestMin = 0;
+
+  for (const x of nums) {
+    maxEnding = Math.max(x, maxEnding + x);
+    minEnding = Math.min(x, minEnding + x);
+    bestMax = Math.max(bestMax, maxEnding);
+    bestMin = Math.min(bestMin, minEnding);
+  }
+
+  return Math.max(bestMax, -bestMin);
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
