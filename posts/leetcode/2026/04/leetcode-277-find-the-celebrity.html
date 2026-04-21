@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 277: Find the Celebrity (Candidate Elimination + Verification)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 277 using linear candidate elimination and full verification with complete Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 277: Find the Celebrity (Candidate Elimination + Verification)" />
+  <meta property="og:description" content="English + 中文 explanation with elimination proof, complexity analysis, pitfalls, and full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-277-find-the-celebrity.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-277-find-the-celebrity.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 277: Find the Celebrity (Candidate Elimination + Verification)</h1>
+      <div class="meta">2026-04-21 · LeetCode · Graph / Elimination</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 277</span><span class="tag">Two Pointers</span><span class="tag">Graph</span>
+
+      <p>Today we solve <strong>LeetCode 277 - Find the Celebrity</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/find-the-celebrity/" target="_blank" rel="noopener">https://leetcode.com/problems/find-the-celebrity/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-277-20260421.svg" alt="LeetCode 277 elimination diagram showing celebrity candidate filtering then verification" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>There are <code>n</code> people labeled <code>0..n-1</code>. A celebrity is known by everyone else and knows nobody. You can only call <code>knows(a, b)</code>. Return the celebrity index, or <code>-1</code> if none exists.</p>
+
+      <h3>Key Insight</h3>
+      <p>In one pass, we can eliminate impossible candidates. If <code>knows(cand, i)</code> is true, <code>cand</code> cannot be celebrity, so set <code>cand = i</code>. Otherwise <code>i</code> cannot be celebrity. After this pass, only one candidate remains, then verify it.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Start <code>cand = 0</code>.<br/>
+         - For <code>i = 1..n-1</code>: if <code>knows(cand, i)</code>, update <code>cand = i</code>.<br/>
+         - Verify candidate: for every <code>j != cand</code>, require <code>knows(cand, j) == false</code> and <code>knows(j, cand) == true</code>.<br/>
+         - If any check fails return <code>-1</code>, otherwise return <code>cand</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code> calls to <code>knows</code> (about <code>3n</code>).<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Doing only elimination but skipping final verification.<br/>
+         - Checking only one condition in verification.<br/>
+         - Forgetting to skip <code>j == cand</code>.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">/* The knows API is defined in the parent class Relation.
+      boolean knows(int a, int b); */
+
+public class Solution extends Relation {
+    public int findCelebrity(int n) {
+        int cand = 0;
+        for (int i = 1; i &lt; n; i++) {
+            if (knows(cand, i)) {
+                cand = i;
+            }
+        }
+
+        for (int j = 0; j &lt; n; j++) {
+            if (j == cand) continue;
+            if (knows(cand, j) || !knows(j, cand)) {
+                return -1;
+            }
+        }
+        return cand;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">/* The knows API is defined for you.
+   func knows(a int, b int) bool */
+
+func findCelebrity(n int) int {
+    cand := 0
+    for i := 1; i &lt; n; i++ {
+        if knows(cand, i) {
+            cand = i
+        }
+    }
+
+    for j := 0; j &lt; n; j++ {
+        if j == cand {
+            continue
+        }
+        if knows(cand, j) || !knows(j, cand) {
+            return -1
+        }
+    }
+    return cand
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">/* The knows API is defined for you.
+      bool knows(int a, int b); */
+
+class Solution {
+public:
+    int findCelebrity(int n) {
+        int cand = 0;
+        for (int i = 1; i &lt; n; ++i) {
+            if (knows(cand, i)) {
+                cand = i;
+            }
+        }
+
+        for (int j = 0; j &lt; n; ++j) {
+            if (j == cand) continue;
+            if (knows(cand, j) || !knows(j, cand)) {
+                return -1;
+            }
+        }
+        return cand;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python"># The knows API is already defined for you.
+# def knows(a: int, b: int) -&gt; bool:
+
+class Solution:
+    def findCelebrity(self, n: int) -&gt; int:
+        cand = 0
+        for i in range(1, n):
+            if knows(cand, i):
+                cand = i
+
+        for j in range(n):
+            if j == cand:
+                continue
+            if knows(cand, j) or not knows(j, cand):
+                return -1
+        return cand</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {number} n
+ * @return {number}
+ */
+var solution = function(knows) {
+  return function(n) {
+    let cand = 0;
+    for (let i = 1; i &lt; n; i++) {
+      if (knows(cand, i)) {
+        cand = i;
+      }
+    }
+
+    for (let j = 0; j &lt; n; j++) {
+      if (j === cand) continue;
+      if (knows(cand, j) || !knows(j, cand)) {
+        return -1;
+      }
+    }
+    return cand;
+  };
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>有 <code>n</code> 个人，编号 <code>0..n-1</code>。名人满足：所有其他人都认识他，并且他谁也不认识。你只能通过 <code>knows(a, b)</code> 查询关系。返回名人编号，不存在则返回 <code>-1</code>。</p>
+
+      <h3>核心思路</h3>
+      <p>先做候选人淘汰。若 <code>knows(cand, i)</code> 为真，说明 <code>cand</code> 不可能是名人，候选改成 <code>i</code>；否则 <code>i</code> 不可能是名人。一次遍历后只剩一个候选，再做严格验真。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 初始化 <code>cand = 0</code>。<br/>
+         - 遍历 <code>i = 1..n-1</code>：若 <code>knows(cand, i)</code>，则 <code>cand = i</code>。<br/>
+         - 对每个 <code>j != cand</code> 校验两条：<code>knows(cand, j)</code> 必须为假，<code>knows(j, cand)</code> 必须为真。<br/>
+         - 任一条件失败返回 <code>-1</code>，全部通过返回 <code>cand</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>（<code>knows</code> 调用数量约为 <code>3n</code>）。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 只做候选淘汰，不做最终验真。<br/>
+         - 验证时只检查“别人认识候选”或只检查“候选不认识别人”其中一条。<br/>
+         - 忘记跳过 <code>j == cand</code>。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">/* The knows API is defined in the parent class Relation.
+      boolean knows(int a, int b); */
+
+public class Solution extends Relation {
+    public int findCelebrity(int n) {
+        int cand = 0;
+        for (int i = 1; i &lt; n; i++) {
+            if (knows(cand, i)) {
+                cand = i;
+            }
+        }
+
+        for (int j = 0; j &lt; n; j++) {
+            if (j == cand) continue;
+            if (knows(cand, j) || !knows(j, cand)) {
+                return -1;
+            }
+        }
+        return cand;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">/* The knows API is defined for you.
+   func knows(a int, b int) bool */
+
+func findCelebrity(n int) int {
+    cand := 0
+    for i := 1; i &lt; n; i++ {
+        if knows(cand, i) {
+            cand = i
+        }
+    }
+
+    for j := 0; j &lt; n; j++ {
+        if j == cand {
+            continue
+        }
+        if knows(cand, j) || !knows(j, cand) {
+            return -1
+        }
+    }
+    return cand
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">/* The knows API is defined for you.
+      bool knows(int a, int b); */
+
+class Solution {
+public:
+    int findCelebrity(int n) {
+        int cand = 0;
+        for (int i = 1; i &lt; n; ++i) {
+            if (knows(cand, i)) {
+                cand = i;
+            }
+        }
+
+        for (int j = 0; j &lt; n; ++j) {
+            if (j == cand) continue;
+            if (knows(cand, j) || !knows(j, cand)) {
+                return -1;
+            }
+        }
+        return cand;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python"># The knows API is already defined for you.
+# def knows(a: int, b: int) -&gt; bool:
+
+class Solution:
+    def findCelebrity(self, n: int) -&gt; int:
+        cand = 0
+        for i in range(1, n):
+            if knows(cand, i):
+                cand = i
+
+        for j in range(n):
+            if j == cand:
+                continue
+            if knows(cand, j) or not knows(j, cand):
+                return -1
+        return cand</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {number} n
+ * @return {number}
+ */
+var solution = function(knows) {
+  return function(n) {
+    let cand = 0;
+    for (let i = 1; i &lt; n; i++) {
+      if (knows(cand, i)) {
+        cand = i;
+      }
+    }
+
+    for (let j = 0; j &lt; n; j++) {
+      if (j === cand) continue;
+      if (knows(cand, j) || !knows(j, cand)) {
+        return -1;
+      }
+    }
+    return cand;
+  };
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
