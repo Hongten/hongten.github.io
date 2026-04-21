@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 762: Prime Number of Set Bits in Binary Representation (Bit Count + Prime Lookup)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 762 using bit counting and prime-set lookup, with full Java/Go/C++/Python/JavaScript tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 762: Prime Number of Set Bits in Binary Representation (Bit Count + Prime Lookup)" />
+  <meta property="og:description" content="English + 中文 explanation with popcount and prime membership optimization, plus complete 5-language tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-762-prime-number-of-set-bits-in-binary-representation.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-762-prime-number-of-set-bits-in-binary-representation.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 762: Prime Number of Set Bits in Binary Representation (Bit Count + Prime Lookup)</h1>
+      <div class="meta">2026-04-21 · LeetCode · Bit Manipulation / Math</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 762</span><span class="tag">Bit Manipulation</span><span class="tag">Math</span>
+
+      <p>Today we solve <strong>LeetCode 762 - Prime Number of Set Bits in Binary Representation</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/prime-number-of-set-bits-in-binary-representation/" target="_blank" rel="noopener">https://leetcode.com/problems/prime-number-of-set-bits-in-binary-representation/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-762-20260421.svg" alt="LeetCode 762 diagram showing counting set bits for each number and checking if bit count is prime" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given two integers <code>left</code> and <code>right</code>, count how many integers in <code>[left, right]</code> have a prime number of set bits in their binary representation.</p>
+
+      <h3>Key Insight</h3>
+      <p>For values up to <code>10^6</code>, the number of set bits is at most 20. So we only need to check whether popcount is in a tiny prime set: <code>{2,3,5,7,11,13,17,19}</code>.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Initialize a prime lookup set for possible popcount values.<br/>
+         - Iterate <code>x</code> from <code>left</code> to <code>right</code>.<br/>
+         - Compute popcount of <code>x</code>.<br/>
+         - If popcount is prime, increment answer.<br/>
+         - Return answer.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Let <code>n = right - left + 1</code>.<br/>Time: <code>O(n * log M)</code> with bit-operations (or near <code>O(n)</code> using builtin popcount), where <code>M = right</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int countPrimeSetBits(int left, int right) {
+        int ans = 0;
+        for (int x = left; x &lt;= right; x++) {
+            int bits = Integer.bitCount(x);
+            if (isPrime(bits)) ans++;
+        }
+        return ans;
+    }
+
+    private boolean isPrime(int x) {
+        return x == 2 || x == 3 || x == 5 || x == 7 ||
+               x == 11 || x == 13 || x == 17 || x == 19;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func countPrimeSetBits(left int, right int) int {
+    ans := 0
+    for x := left; x &lt;= right; x++ {
+        bits := bitsCount(x)
+        if isPrime(bits) {
+            ans++
+        }
+    }
+    return ans
+}
+
+func bitsCount(x int) int {
+    c := 0
+    for x &gt; 0 {
+        x &amp;= x - 1
+        c++
+    }
+    return c
+}
+
+func isPrime(x int) bool {
+    switch x {
+    case 2, 3, 5, 7, 11, 13, 17, 19:
+        return true
+    default:
+        return false
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int countPrimeSetBits(int left, int right) {
+        int ans = 0;
+        for (int x = left; x &lt;= right; ++x) {
+            int bits = __builtin_popcount(x);
+            if (isPrime(bits)) ++ans;
+        }
+        return ans;
+    }
+
+private:
+    bool isPrime(int x) {
+        return x == 2 || x == 3 || x == 5 || x == 7 ||
+               x == 11 || x == 13 || x == 17 || x == 19;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def countPrimeSetBits(self, left: int, right: int) -&gt; int:
+        primes = {2, 3, 5, 7, 11, 13, 17, 19}
+        ans = 0
+        for x in range(left, right + 1):
+            bits = x.bit_count()
+            if bits in primes:
+                ans += 1
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var countPrimeSetBits = function(left, right) {
+  const primes = new Set([2, 3, 5, 7, 11, 13, 17, 19]);
+
+  const bitCount = (x) =&gt; {
+    let c = 0;
+    while (x &gt; 0) {
+      x &amp;= (x - 1);
+      c++;
+    }
+    return c;
+  };
+
+  let ans = 0;
+  for (let x = left; x &lt;= right; x++) {
+    if (primes.has(bitCount(x))) ans++;
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定整数 <code>left</code> 和 <code>right</code>，统计区间 <code>[left, right]</code> 中有多少个数字，其二进制表示里 1 的个数是质数。</p>
+
+      <h3>核心思路</h3>
+      <p>在本题数据范围内，数字的二进制 1 的数量最大不超过 20。只要判断 popcount 是否属于固定质数集合 <code>{2,3,5,7,11,13,17,19}</code> 即可。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 先准备一个“位数为质数”的查找集合。<br/>
+         - 遍历 <code>x</code> 从 <code>left</code> 到 <code>right</code>。<br/>
+         - 计算 <code>x</code> 的二进制 1 的数量。<br/>
+         - 若该数量为质数，答案加一。<br/>
+         - 最终返回统计值。</p>
+
+      <h3>复杂度分析</h3>
+      <p>设 <code>n = right - left + 1</code>。<br/>时间复杂度：<code>O(n * log M)</code>（位运算计数），若使用内建 popcount 可近似看作 <code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int countPrimeSetBits(int left, int right) {
+        int ans = 0;
+        for (int x = left; x &lt;= right; x++) {
+            int bits = Integer.bitCount(x);
+            if (isPrime(bits)) ans++;
+        }
+        return ans;
+    }
+
+    private boolean isPrime(int x) {
+        return x == 2 || x == 3 || x == 5 || x == 7 ||
+               x == 11 || x == 13 || x == 17 || x == 19;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func countPrimeSetBits(left int, right int) int {
+    ans := 0
+    for x := left; x &lt;= right; x++ {
+        bits := bitsCount(x)
+        if isPrime(bits) {
+            ans++
+        }
+    }
+    return ans
+}
+
+func bitsCount(x int) int {
+    c := 0
+    for x &gt; 0 {
+        x &amp;= x - 1
+        c++
+    }
+    return c
+}
+
+func isPrime(x int) bool {
+    switch x {
+    case 2, 3, 5, 7, 11, 13, 17, 19:
+        return true
+    default:
+        return false
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int countPrimeSetBits(int left, int right) {
+        int ans = 0;
+        for (int x = left; x &lt;= right; ++x) {
+            int bits = __builtin_popcount(x);
+            if (isPrime(bits)) ++ans;
+        }
+        return ans;
+    }
+
+private:
+    bool isPrime(int x) {
+        return x == 2 || x == 3 || x == 5 || x == 7 ||
+               x == 11 || x == 13 || x == 17 || x == 19;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def countPrimeSetBits(self, left: int, right: int) -&gt; int:
+        primes = {2, 3, 5, 7, 11, 13, 17, 19}
+        ans = 0
+        for x in range(left, right + 1):
+            bits = x.bit_count()
+            if bits in primes:
+                ans += 1
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var countPrimeSetBits = function(left, right) {
+  const primes = new Set([2, 3, 5, 7, 11, 13, 17, 19]);
+
+  const bitCount = (x) =&gt; {
+    let c = 0;
+    while (x &gt; 0) {
+      x &amp;= (x - 1);
+      c++;
+    }
+    return c;
+  };
+
+  let ans = 0;
+  for (let x = left; x &lt;= right; x++) {
+    if (primes.has(bitCount(x))) ans++;
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
