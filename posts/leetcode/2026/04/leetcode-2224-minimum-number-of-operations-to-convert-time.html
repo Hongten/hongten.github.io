@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 2224: Minimum Number of Operations to Convert Time (Greedy by 60/15/5/1)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 2224 using greedy subtraction with step sizes 60, 15, 5, and 1, including complete 5-language code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 2224: Minimum Number of Operations to Convert Time (Greedy by 60/15/5/1)" />
+  <meta property="og:description" content="English + 中文 explanation with proof intuition, complexity, pitfalls, and complete Java/Go/C++/Python/JavaScript tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-2224-minimum-number-of-operations-to-convert-time.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-2224-minimum-number-of-operations-to-convert-time.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 2224: Minimum Number of Operations to Convert Time (Greedy by 60/15/5/1)</h1>
+      <div class="meta">2026-04-21 · LeetCode · Greedy / Time Parsing</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 2224</span><span class="tag">Greedy</span><span class="tag">String</span>
+
+      <p>Today we solve <strong>LeetCode 2224 - Minimum Number of Operations to Convert Time</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/minimum-number-of-operations-to-convert-time/" target="_blank" rel="noopener">https://leetcode.com/problems/minimum-number-of-operations-to-convert-time/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-2224-20260421.svg" alt="LeetCode 2224 greedy timeline subtracting 60, 15, 5, and 1 minutes" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given two times <code>current</code> and <code>correct</code> in <code>HH:MM</code> format, you can increase current time by <code>1</code>, <code>5</code>, <code>15</code>, or <code>60</code> minutes per operation. Return the minimum number of operations needed to reach <code>correct</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>After converting both times into total minutes, the problem becomes making up a non-negative difference <code>diff</code> using coin values <code>[60, 15, 5, 1]</code>. This set is canonical, so always taking the largest possible step is optimal.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Parse <code>current</code> and <code>correct</code> into minutes.<br/>
+         - Compute <code>diff = correctMin - currentMin</code>.<br/>
+         - For each step in <code>[60, 15, 5, 1]</code>, add <code>diff / step</code> to answer and set <code>diff %= step</code>.<br/>
+         - Return the accumulated answer.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(1)</code> (only 4 step sizes).<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Parsing hour/minute incorrectly from string.<br/>
+         - Forgetting that operations only increase time (problem guarantees reachable target in same day order).<br/>
+         - Simulating minute-by-minute instead of direct greedy counting.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int convertTime(String current, String correct) {
+        int diff = toMinutes(correct) - toMinutes(current);
+        int[] steps = {60, 15, 5, 1};
+        int ans = 0;
+        for (int step : steps) {
+            ans += diff / step;
+            diff %= step;
+        }
+        return ans;
+    }
+
+    private int toMinutes(String t) {
+        int h = Integer.parseInt(t.substring(0, 2));
+        int m = Integer.parseInt(t.substring(3, 5));
+        return h * 60 + m;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func convertTime(current string, correct string) int {
+    diff := toMinutes(correct) - toMinutes(current)
+    steps := []int{60, 15, 5, 1}
+    ans := 0
+    for _, step := range steps {
+        ans += diff / step
+        diff %= step
+    }
+    return ans
+}
+
+func toMinutes(t string) int {
+    h := int(t[0]-'0')*10 + int(t[1]-'0')
+    m := int(t[3]-'0')*10 + int(t[4]-'0')
+    return h*60 + m
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int convertTime(string current, string correct) {
+        int diff = toMinutes(correct) - toMinutes(current);
+        vector&lt;int&gt; steps{60, 15, 5, 1};
+        int ans = 0;
+        for (int step : steps) {
+            ans += diff / step;
+            diff %= step;
+        }
+        return ans;
+    }
+
+private:
+    int toMinutes(const string&amp; t) {
+        int h = (t[0] - '0') * 10 + (t[1] - '0');
+        int m = (t[3] - '0') * 10 + (t[4] - '0');
+        return h * 60 + m;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def convertTime(self, current: str, correct: str) -&gt; int:
+        def to_minutes(t: str) -&gt; int:
+            h = int(t[:2])
+            m = int(t[3:])
+            return h * 60 + m
+
+        diff = to_minutes(correct) - to_minutes(current)
+        ans = 0
+        for step in (60, 15, 5, 1):
+            ans += diff // step
+            diff %= step
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var convertTime = function(current, correct) {
+  const toMinutes = (t) =&gt; {
+    const h = Number(t.slice(0, 2));
+    const m = Number(t.slice(3, 5));
+    return h * 60 + m;
+  };
+
+  let diff = toMinutes(correct) - toMinutes(current);
+  let ans = 0;
+  for (const step of [60, 15, 5, 1]) {
+    ans += Math.floor(diff / step);
+    diff %= step;
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定两个 <code>HH:MM</code> 格式时间 <code>current</code> 与 <code>correct</code>。每次操作可把当前时间增加 <code>1</code>、<code>5</code>、<code>15</code> 或 <code>60</code> 分钟，求最少操作次数。</p>
+
+      <h3>核心思路</h3>
+      <p>把时间转换为“总分钟数”后，问题变成用面额 <code>[60, 15, 5, 1]</code> 凑出差值 <code>diff</code>。由于这些步长满足贪心最优性质，每次优先使用最大步长即可得到最少次数。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 将 <code>current</code>、<code>correct</code> 解析为分钟数。<br/>
+         - 计算差值 <code>diff = correctMin - currentMin</code>。<br/>
+         - 依次处理 <code>60, 15, 5, 1</code>：累加 <code>diff / step</code>，再令 <code>diff %= step</code>。<br/>
+         - 累加结果即答案。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(1)</code>（固定 4 种步长）。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 时间字符串切片位置写错。<br/>
+         - 忘记题目是“只允许增加时间”。<br/>
+         - 用逐分钟模拟，导致实现冗长且不必要。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int convertTime(String current, String correct) {
+        int diff = toMinutes(correct) - toMinutes(current);
+        int[] steps = {60, 15, 5, 1};
+        int ans = 0;
+        for (int step : steps) {
+            ans += diff / step;
+            diff %= step;
+        }
+        return ans;
+    }
+
+    private int toMinutes(String t) {
+        int h = Integer.parseInt(t.substring(0, 2));
+        int m = Integer.parseInt(t.substring(3, 5));
+        return h * 60 + m;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func convertTime(current string, correct string) int {
+    diff := toMinutes(correct) - toMinutes(current)
+    steps := []int{60, 15, 5, 1}
+    ans := 0
+    for _, step := range steps {
+        ans += diff / step
+        diff %= step
+    }
+    return ans
+}
+
+func toMinutes(t string) int {
+    h := int(t[0]-'0')*10 + int(t[1]-'0')
+    m := int(t[3]-'0')*10 + int(t[4]-'0')
+    return h*60 + m
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int convertTime(string current, string correct) {
+        int diff = toMinutes(correct) - toMinutes(current);
+        vector&lt;int&gt; steps{60, 15, 5, 1};
+        int ans = 0;
+        for (int step : steps) {
+            ans += diff / step;
+            diff %= step;
+        }
+        return ans;
+    }
+
+private:
+    int toMinutes(const string&amp; t) {
+        int h = (t[0] - '0') * 10 + (t[1] - '0');
+        int m = (t[3] - '0') * 10 + (t[4] - '0');
+        return h * 60 + m;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def convertTime(self, current: str, correct: str) -&gt; int:
+        def to_minutes(t: str) -&gt; int:
+            h = int(t[:2])
+            m = int(t[3:])
+            return h * 60 + m
+
+        diff = to_minutes(correct) - to_minutes(current)
+        ans = 0
+        for step in (60, 15, 5, 1):
+            ans += diff // step
+            diff %= step
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var convertTime = function(current, correct) {
+  const toMinutes = (t) =&gt; {
+    const h = Number(t.slice(0, 2));
+    const m = Number(t.slice(3, 5));
+    return h * 60 + m;
+  };
+
+  let diff = toMinutes(correct) - toMinutes(current);
+  let ans = 0;
+  for (const step of [60, 15, 5, 1]) {
+    ans += Math.floor(diff / step);
+    diff %= step;
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
