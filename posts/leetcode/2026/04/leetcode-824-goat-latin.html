@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 824: Goat Latin (Word Transform + Suffix Growth)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 824 using per-word vowel/consonant transform with index-based 'a' suffix growth, with full Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 824: Goat Latin (Word Transform + Suffix Growth)" />
+  <meta property="og:description" content="English + 中文 explanation with transformation rules, complexity, pitfalls, and complete 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-824-goat-latin.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-824-goat-latin.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 824: Goat Latin (Word Transform + Suffix Growth)</h1>
+      <div class="meta">2026-04-22 · LeetCode · String / Simulation</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 824</span><span class="tag">String</span><span class="tag">Simulation</span>
+
+      <p>Today we solve <strong>LeetCode 824 - Goat Latin</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/goat-latin/" target="_blank" rel="noopener">https://leetcode.com/problems/goat-latin/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-824-20260422.svg" alt="LeetCode 824 Goat Latin transformation flow with vowel/consonant handling and growing a-suffix" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a sentence of words separated by single spaces, convert each word to Goat Latin: if it starts with a vowel, append <code>"ma"</code>; otherwise move first letter to end then append <code>"ma"</code>. Also append <code>i</code> copies of <code>'a'</code> for the <code>i</code>-th word (1-indexed).</p>
+
+      <h3>Key Insight</h3>
+      <p>This is direct simulation. For each word, perform one local transformation, then add a suffix that grows with index. A set of vowels makes first-character checks clean and case-insensitive.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Split sentence by spaces into words.<br/>
+         - For each word at index <code>i</code> (starting from 1):<br/>
+         &nbsp;&nbsp;• If first char is vowel, keep word unchanged; else rotate first char to the end.<br/>
+         &nbsp;&nbsp;• Append <code>"ma"</code> and then <code>"a"</code> repeated <code>i</code> times.<br/>
+         - Join transformed words with single spaces.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Let <code>n</code> be sentence length and <code>k</code> be word count.<br/>Time: <code>O(n + k^2)</code> in the strict suffix-building model (because total appended <code>'a'</code> count is <code>1+...+k</code>).<br/>Space: <code>O(n + k^2)</code> for output.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting uppercase vowels like <code>'A'</code>.<br/>
+         - Starting suffix count from 0 instead of 1.<br/>
+         - Accidentally removing spaces or adding trailing spaces.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public String toGoatLatin(String sentence) {
+        String[] words = sentence.split(" ");
+        String vowels = "aeiouAEIOU";
+        StringBuilder ans = new StringBuilder();
+
+        for (int i = 0; i &lt; words.length; i++) {
+            String w = words[i];
+            if (vowels.indexOf(w.charAt(0)) &gt;= 0) {
+                ans.append(w);
+            } else {
+                ans.append(w.substring(1)).append(w.charAt(0));
+            }
+            ans.append("ma");
+            for (int j = 0; j &lt;= i; j++) ans.append('a');
+            if (i + 1 &lt; words.length) ans.append(' ');
+        }
+        return ans.toString();
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func toGoatLatin(sentence string) string {
+    words := strings.Split(sentence, " ")
+    isVowel := func(ch byte) bool {
+        switch ch {
+        case 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U':
+            return true
+        default:
+            return false
+        }
+    }
+
+    var b strings.Builder
+    for i, w := range words {
+        if isVowel(w[0]) {
+            b.WriteString(w)
+        } else {
+            b.WriteString(w[1:])
+            b.WriteByte(w[0])
+        }
+        b.WriteString("ma")
+        b.WriteString(strings.Repeat("a", i+1))
+        if i+1 &lt; len(words) {
+            b.WriteByte(' ')
+        }
+    }
+    return b.String()
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    string toGoatLatin(string sentence) {
+        unordered_set&lt;char&gt; vowels = {'a','e','i','o','u','A','E','I','O','U'};
+        stringstream ss(sentence);
+        string word, ans;
+        int idx = 1;
+
+        while (ss &gt;&gt; word) {
+            string cur;
+            if (vowels.count(word[0])) {
+                cur = word;
+            } else {
+                cur = word.substr(1) + word[0];
+            }
+            cur += "ma";
+            cur += string(idx, 'a');
+            if (!ans.empty()) ans += ' ';
+            ans += cur;
+            idx++;
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def toGoatLatin(self, sentence: str) -&gt; str:
+        vowels = set("aeiouAEIOU")
+        words = sentence.split(" ")
+        out = []
+
+        for i, w in enumerate(words, 1):
+            if w[0] in vowels:
+                cur = w
+            else:
+                cur = w[1:] + w[0]
+            cur += "ma" + ("a" * i)
+            out.append(cur)
+
+        return " ".join(out)</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var toGoatLatin = function(sentence) {
+  const vowels = new Set(['a','e','i','o','u','A','E','I','O','U']);
+  const words = sentence.split(' ');
+  const out = [];
+
+  for (let i = 0; i &lt; words.length; i++) {
+    const w = words[i];
+    let cur;
+    if (vowels.has(w[0])) {
+      cur = w;
+    } else {
+      cur = w.slice(1) + w[0];
+    }
+    cur += 'ma' + 'a'.repeat(i + 1);
+    out.push(cur);
+  }
+
+  return out.join(' ');
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定一个由单个空格分隔的英文句子，需要将每个单词转换为 Goat Latin：若单词首字母是元音，直接在末尾加 <code>"ma"</code>；否则把首字母移到末尾再加 <code>"ma"</code>。另外第 <code>i</code> 个单词还要再追加 <code>i</code> 个 <code>'a'</code>（从 1 开始计数）。</p>
+
+      <h3>核心思路</h3>
+      <p>这是纯模拟题。逐个单词执行“首字母规则 + 固定后缀 + 递增长度后缀”即可。用元音集合判断首字母，能同时覆盖大小写。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 按空格切分句子得到单词数组。<br/>
+         - 遍历第 <code>i</code> 个单词（<code>i</code> 从 1 开始）：<br/>
+         &nbsp;&nbsp;• 若首字母是元音，保持原样；否则把首字母挪到末尾。<br/>
+         &nbsp;&nbsp;• 追加 <code>"ma"</code>，再追加 <code>i</code> 个 <code>'a'</code>。<br/>
+         - 最后用单空格拼接所有结果。</p>
+
+      <h3>复杂度分析</h3>
+      <p>设句子长度为 <code>n</code>，单词数为 <code>k</code>。<br/>时间复杂度：<code>O(n + k^2)</code>（后缀 <code>'a'</code> 总追加量为 <code>1+...+k</code>）。<br/>空间复杂度：<code>O(n + k^2)</code>（输出字符串占用）。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 忘记把大写元音也当作元音处理。<br/>
+         - 把后缀计数从 0 开始导致答案少一个 <code>'a'</code>。<br/>
+         - 拼接时多空格或少空格。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public String toGoatLatin(String sentence) {
+        String[] words = sentence.split(" ");
+        String vowels = "aeiouAEIOU";
+        StringBuilder ans = new StringBuilder();
+
+        for (int i = 0; i &lt; words.length; i++) {
+            String w = words[i];
+            if (vowels.indexOf(w.charAt(0)) &gt;= 0) {
+                ans.append(w);
+            } else {
+                ans.append(w.substring(1)).append(w.charAt(0));
+            }
+            ans.append("ma");
+            for (int j = 0; j &lt;= i; j++) ans.append('a');
+            if (i + 1 &lt; words.length) ans.append(' ');
+        }
+        return ans.toString();
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func toGoatLatin(sentence string) string {
+    words := strings.Split(sentence, " ")
+    isVowel := func(ch byte) bool {
+        switch ch {
+        case 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U':
+            return true
+        default:
+            return false
+        }
+    }
+
+    var b strings.Builder
+    for i, w := range words {
+        if isVowel(w[0]) {
+            b.WriteString(w)
+        } else {
+            b.WriteString(w[1:])
+            b.WriteByte(w[0])
+        }
+        b.WriteString("ma")
+        b.WriteString(strings.Repeat("a", i+1))
+        if i+1 &lt; len(words) {
+            b.WriteByte(' ')
+        }
+    }
+    return b.String()
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    string toGoatLatin(string sentence) {
+        unordered_set&lt;char&gt; vowels = {'a','e','i','o','u','A','E','I','O','U'};
+        stringstream ss(sentence);
+        string word, ans;
+        int idx = 1;
+
+        while (ss &gt;&gt; word) {
+            string cur;
+            if (vowels.count(word[0])) {
+                cur = word;
+            } else {
+                cur = word.substr(1) + word[0];
+            }
+            cur += "ma";
+            cur += string(idx, 'a');
+            if (!ans.empty()) ans += ' ';
+            ans += cur;
+            idx++;
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def toGoatLatin(self, sentence: str) -&gt; str:
+        vowels = set("aeiouAEIOU")
+        words = sentence.split(" ")
+        out = []
+
+        for i, w in enumerate(words, 1):
+            if w[0] in vowels:
+                cur = w
+            else:
+                cur = w[1:] + w[0]
+            cur += "ma" + ("a" * i)
+            out.append(cur)
+
+        return " ".join(out)</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var toGoatLatin = function(sentence) {
+  const vowels = new Set(['a','e','i','o','u','A','E','I','O','U']);
+  const words = sentence.split(' ');
+  const out = [];
+
+  for (let i = 0; i &lt; words.length; i++) {
+    const w = words[i];
+    let cur;
+    if (vowels.has(w[0])) {
+      cur = w;
+    } else {
+      cur = w.slice(1) + w[0];
+    }
+    cur += 'ma' + 'a'.repeat(i + 1);
+    out.push(cur);
+  }
+
+  return out.join(' ');
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
