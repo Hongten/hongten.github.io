@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 563 binary tree tilt diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1020"/>
+      <stop offset="100%" stop-color="#111a33"/>
+    </linearGradient>
+    <style>
+      .title{font:700 42px 'Segoe UI',Arial,sans-serif;fill:#eaf0ff}
+      .sub{font:400 22px 'Segoe UI',Arial,sans-serif;fill:#b8c4e6}
+      .node{fill:#1e2b52;stroke:#80a1ff;stroke-width:2}
+      .edge{stroke:#6f88d8;stroke-width:3}
+      .val{font:700 26px 'Segoe UI',Arial,sans-serif;fill:#ffffff;text-anchor:middle;dominant-baseline:middle}
+      .note{font:600 22px 'Segoe UI',Arial,sans-serif;fill:#f7d58b}
+      .math{font:600 24px 'Consolas','Courier New',monospace;fill:#9fe6b8}
+    </style>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <text x="60" y="80" class="title">LeetCode 563: Binary Tree Tilt</text>
+  <text x="60" y="118" class="sub">Postorder: subtree sums → local tilt → global accumulation</text>
+
+  <line x1="600" y1="210" x2="420" y2="320" class="edge"/>
+  <line x1="600" y1="210" x2="780" y2="320" class="edge"/>
+  <line x1="420" y1="320" x2="330" y2="430" class="edge"/>
+  <line x1="420" y1="320" x2="510" y2="430" class="edge"/>
+
+  <circle cx="600" cy="210" r="42" class="node"/><text x="600" y="210" class="val">4</text>
+  <circle cx="420" cy="320" r="42" class="node"/><text x="420" y="320" class="val">2</text>
+  <circle cx="780" cy="320" r="42" class="node"/><text x="780" y="320" class="val">9</text>
+  <circle cx="330" cy="430" r="42" class="node"/><text x="330" y="430" class="val">3</text>
+  <circle cx="510" cy="430" r="42" class="node"/><text x="510" y="430" class="val">5</text>
+
+  <text x="860" y="210" class="note">leftSum(root)=2+3+5=10</text>
+  <text x="860" y="245" class="note">rightSum(root)=9</text>
+  <text x="860" y="280" class="math">tilt(root)=|10-9|=1</text>
+
+  <text x="60" y="520" class="note">Node 2: tilt = |3 - 5| = 2</text>
+  <text x="60" y="555" class="note">Node 4: tilt = |10 - 9| = 1</text>
+  <text x="60" y="590" class="math">Total tilt = 2 + 1 + 0 + 0 + 0 = 3</text>
+</svg>
