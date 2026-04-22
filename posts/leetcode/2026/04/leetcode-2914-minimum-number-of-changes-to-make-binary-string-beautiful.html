@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 2914: Minimum Number of Changes to Make Binary String Beautiful (Pair Greedy)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 2914 using pair-wise greedy counting, with complete Java/Go/C++/Python/JavaScript code tabs in both English and 中文 sections."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 2914: Minimum Number of Changes to Make Binary String Beautiful (Pair Greedy)" />
+  <meta property="og:description" content="English + 中文 explanation, diagram, complexity and full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-2914-minimum-number-of-changes-to-make-binary-string-beautiful.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-2914-minimum-number-of-changes-to-make-binary-string-beautiful.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 2914: Minimum Number of Changes to Make Binary String Beautiful (Pair Greedy)</h1>
+      <div class="meta">2026-04-22 · LeetCode · String / Greedy</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 2914</span><span class="tag">String</span><span class="tag">Greedy</span>
+
+      <p>Today we solve <strong>LeetCode 2914 - Minimum Number of Changes to Make Binary String Beautiful</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/minimum-number-of-changes-to-make-binary-string-beautiful/" target="_blank" rel="noopener">https://leetcode.com/problems/minimum-number-of-changes-to-make-binary-string-beautiful/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-2914-20260422.svg" alt="LeetCode 2914 pair-by-pair mismatch counting diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>You are given a binary string <code>s</code> of even length. A string is beautiful if every block of length 2 is either <code>00</code> or <code>11</code>. Return the minimum number of character changes needed.</p>
+
+      <h3>Key Insight</h3>
+      <p>Each pair <code>s[i], s[i+1]</code> is independent. If the two bits are equal, no change is needed. If they are different (<code>01</code> or <code>10</code>), exactly one change is required.</p>
+
+      <h3>Algorithm</h3>
+      <p>Scan the string in steps of 2. Count how many pairs have different bits. That count is the answer.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code><br/>Space: <code>O(1)</code></p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int minChanges(String s) {
+        int ans = 0;
+        for (int i = 0; i &lt; s.length(); i += 2) {
+            if (s.charAt(i) != s.charAt(i + 1)) {
+                ans++;
+            }
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func minChanges(s string) int {
+    ans := 0
+    for i := 0; i &lt; len(s); i += 2 {
+        if s[i] != s[i+1] {
+            ans++
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int minChanges(string s) {
+        int ans = 0;
+        for (int i = 0; i &lt; (int)s.size(); i += 2) {
+            if (s[i] != s[i + 1]) ans++;
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def minChanges(self, s: str) -&gt; int:
+        ans = 0
+        for i in range(0, len(s), 2):
+            if s[i] != s[i + 1]:
+                ans += 1
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var minChanges = function(s) {
+  let ans = 0;
+  for (let i = 0; i &lt; s.length; i += 2) {
+    if (s[i] !== s[i + 1]) ans++;
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给你一个长度为偶数的二进制字符串 <code>s</code>。当每个长度为 2 的块都为 <code>00</code> 或 <code>11</code> 时，字符串是美丽的。求最少修改次数。</p>
+
+      <h3>核心思路</h3>
+      <p>每个长度为 2 的块彼此独立。若两位相同，不用改；若不同（<code>01</code> 或 <code>10</code>），必须改 1 位即可达成目标。</p>
+
+      <h3>算法步骤</h3>
+      <p>每次跳 2 位遍历，统计 <code>s[i] != s[i+1]</code> 的对数，统计值就是答案。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code><br/>空间复杂度：<code>O(1)</code></p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int minChanges(String s) {
+        int ans = 0;
+        for (int i = 0; i &lt; s.length(); i += 2) {
+            if (s.charAt(i) != s.charAt(i + 1)) {
+                ans++;
+            }
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func minChanges(s string) int {
+    ans := 0
+    for i := 0; i &lt; len(s); i += 2 {
+        if s[i] != s[i+1] {
+            ans++
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int minChanges(string s) {
+        int ans = 0;
+        for (int i = 0; i &lt; (int)s.size(); i += 2) {
+            if (s[i] != s[i + 1]) ans++;
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def minChanges(self, s: str) -&gt; int:
+        ans = 0
+        for i in range(0, len(s), 2):
+            if s[i] != s[i + 1]:
+                ans += 1
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var minChanges = function(s) {
+  let ans = 0;
+  for (let i = 0; i &lt; s.length; i += 2) {
+    if (s[i] !== s[i + 1]) ans++;
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
