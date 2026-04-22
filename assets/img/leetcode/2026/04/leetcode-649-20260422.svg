@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 649 two queues simulation">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0b1220"/>
+      <stop offset="100%" stop-color="#1f2937"/>
+    </linearGradient>
+    <style>
+      .title{font:700 44px 'Segoe UI',Arial,sans-serif;fill:#f8fafc}
+      .sub{font:500 26px 'Segoe UI',Arial,sans-serif;fill:#cbd5e1}
+      .lab{font:700 24px 'Segoe UI',Arial,sans-serif;fill:#e2e8f0}
+      .txt{font:600 20px 'Segoe UI',Arial,sans-serif;fill:#f8fafc}
+      .small{font:500 18px 'Segoe UI',Arial,sans-serif;fill:#94a3b8}
+    </style>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="60" y="90" class="title">LeetCode 649, Dota2 Senate</text>
+  <text x="60" y="130" class="sub">Two Queues + Cyclic Index Simulation</text>
+
+  <rect x="60" y="180" width="500" height="150" rx="16" fill="#1d4ed8" opacity="0.9"/>
+  <text x="90" y="225" class="lab">Radiant Queue (R)</text>
+  <text x="90" y="270" class="txt">[0, 3, 6] → pop 0, push 0+n</text>
+  <text x="90" y="305" class="small">survivor comes back in next round</text>
+
+  <rect x="640" y="180" width="500" height="150" rx="16" fill="#dc2626" opacity="0.9"/>
+  <text x="670" y="225" class="lab">Dire Queue (D)</text>
+  <text x="670" y="270" class="txt">[1, 2, 5] → pop 1 (banned)</text>
+  <text x="670" y="305" class="small">smaller index acts first</text>
+
+  <path d="M560 255 L640 255" stroke="#f8fafc" stroke-width="4" marker-end="url(#arrow)"/>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#f8fafc" />
+    </marker>
+  </defs>
+
+  <rect x="170" y="390" width="860" height="150" rx="16" fill="#111827" stroke="#334155"/>
+  <text x="210" y="445" class="txt">while rq and dq: compare front indices r and d</text>
+  <text x="210" y="480" class="txt">if r &lt; d: rq.push(r+n), else dq.push(d+n)</text>
+  <text x="210" y="515" class="txt">one queue empty → winner party</text>
+</svg>
