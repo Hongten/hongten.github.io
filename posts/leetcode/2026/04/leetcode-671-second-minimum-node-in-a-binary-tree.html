@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 671: Second Minimum Node In a Binary Tree (DFS Candidate Pruning)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 671 using DFS candidate pruning to find the second distinct minimum in a special binary tree, with complete Java/Go/C++/Python/JavaScript tabs in both EN and 中文 sections."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 671: Second Minimum Node In a Binary Tree (DFS Candidate Pruning)" />
+  <meta property="og:description" content="English + 中文 explanation with complexity, pitfalls, and complete 5-language tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-671-second-minimum-node-in-a-binary-tree.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-671-second-minimum-node-in-a-binary-tree.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 671: Second Minimum Node In a Binary Tree (DFS Candidate Pruning)</h1>
+      <div class="meta">2026-04-23 · LeetCode · Binary Tree / DFS</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 671</span><span class="tag">DFS</span><span class="tag">Binary Tree</span>
+
+      <p>Today we solve <strong>LeetCode 671 - Second Minimum Node In a Binary Tree</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/second-minimum-node-in-a-binary-tree/" target="_blank" rel="noopener">https://leetcode.com/problems/second-minimum-node-in-a-binary-tree/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-671-20260423.svg" alt="LeetCode 671 special binary tree where root is minimum and DFS finds second distinct minimum" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>In this special binary tree, each node either has two children or none, and if a node has children then <code>node.val = min(left.val, right.val)</code>. Find the second smallest distinct value in the tree, or return <code>-1</code> if it does not exist.</p>
+
+      <h3>Key Insight</h3>
+      <p>The root value is always the global minimum. So we only need the smallest value strictly greater than <code>root.val</code>. During DFS:
+      <br/>- if <code>node.val == rootMin</code>, continue exploring children;
+      <br/>- if <code>node.val &gt; rootMin</code>, it is a candidate for second minimum.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Set <code>base = root.val</code> and <code>ans = +∞</code>.<br/>
+         - DFS each node:<br/>
+         &nbsp;&nbsp;• if node is null, return;<br/>
+         &nbsp;&nbsp;• if <code>base &lt; node.val &lt; ans</code>, update <code>ans</code>;<br/>
+         &nbsp;&nbsp;• if <code>node.val == base</code>, continue DFS on children.<br/>
+         - Return <code>ans</code> if updated, else <code>-1</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code> in worst case.<br/>Space: <code>O(h)</code> recursion stack, where <code>h</code> is tree height.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting that second minimum must be <em>distinct</em> from root value.<br/>
+         - Returning the first value larger than root without scanning all branches.<br/>
+         - Not handling the "all values equal" case, which should return <code>-1</code>.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    private long ans;
+    private int base;
+
+    public int findSecondMinimumValue(TreeNode root) {
+        base = root.val;
+        ans = Long.MAX_VALUE;
+        dfs(root);
+        return ans == Long.MAX_VALUE ? -1 : (int) ans;
+    }
+
+    private void dfs(TreeNode node) {
+        if (node == null) return;
+        if (node.val &gt; base &amp;&amp; node.val &lt; ans) {
+            ans = node.val;
+            return;
+        }
+        if (node.val == base) {
+            dfs(node.left);
+            dfs(node.right);
+        }
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func findSecondMinimumValue(root *TreeNode) int {
+    base := root.Val
+    ans := int64(1&lt;&lt;62 - 1)
+
+    var dfs func(*TreeNode)
+    dfs = func(node *TreeNode) {
+        if node == nil {
+            return
+        }
+        if node.Val &gt; base &amp;&amp; int64(node.Val) &lt; ans {
+            ans = int64(node.Val)
+            return
+        }
+        if node.Val == base {
+            dfs(node.Left)
+            dfs(node.Right)
+        }
+    }
+
+    dfs(root)
+    if ans == int64(1&lt;&lt;62-1) {
+        return -1
+    }
+    return int(ans)
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    long long ans;
+    int base;
+
+    int findSecondMinimumValue(TreeNode* root) {
+        base = root-&gt;val;
+        ans = LLONG_MAX;
+        dfs(root);
+        return ans == LLONG_MAX ? -1 : (int)ans;
+    }
+
+    void dfs(TreeNode* node) {
+        if (!node) return;
+        if (node-&gt;val &gt; base &amp;&amp; node-&gt;val &lt; ans) {
+            ans = node-&gt;val;
+            return;
+        }
+        if (node-&gt;val == base) {
+            dfs(node-&gt;left);
+            dfs(node-&gt;right);
+        }
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def findSecondMinimumValue(self, root: Optional[TreeNode]) -&gt; int:
+        base = root.val
+        ans = float('inf')
+
+        def dfs(node: Optional[TreeNode]) -&gt; None:
+            nonlocal ans
+            if not node:
+                return
+            if base &lt; node.val &lt; ans:
+                ans = node.val
+                return
+            if node.val == base:
+                dfs(node.left)
+                dfs(node.right)
+
+        dfs(root)
+        return -1 if ans == float('inf') else int(ans)</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var findSecondMinimumValue = function(root) {
+  const base = root.val;
+  let ans = Number.POSITIVE_INFINITY;
+
+  const dfs = (node) =&gt; {
+    if (!node) return;
+    if (node.val &gt; base &amp;&amp; node.val &lt; ans) {
+      ans = node.val;
+      return;
+    }
+    if (node.val === base) {
+      dfs(node.left);
+      dfs(node.right);
+    }
+  };
+
+  dfs(root);
+  return Number.isFinite(ans) ? ans : -1;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>这棵特殊二叉树满足：每个节点要么有两个子节点要么没有，并且若有子节点则 <code>node.val = min(left.val, right.val)</code>。请返回树中第二小的<strong>不同值</strong>，若不存在返回 <code>-1</code>。</p>
+
+      <h3>核心思路</h3>
+      <p>根节点一定是全局最小值。因此目标是找“严格大于根值”的最小候选。DFS 时：
+      <br/>- 若 <code>node.val == base</code>，继续向下搜索；
+      <br/>- 若 <code>node.val &gt; base</code>，它是候选第二小值。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 记录 <code>base = root.val</code>，并令 <code>ans = +∞</code>。<br/>
+         - 深度优先遍历节点：<br/>
+         &nbsp;&nbsp;• 空节点直接返回；<br/>
+         &nbsp;&nbsp;• 若 <code>base &lt; node.val &lt; ans</code>，更新 <code>ans</code>；<br/>
+         &nbsp;&nbsp;• 若 <code>node.val == base</code>，继续遍历左右子树。<br/>
+         - 遍历结束后，若 <code>ans</code> 未更新则返回 <code>-1</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>（最坏遍历所有节点）。<br/>空间复杂度：<code>O(h)</code>（递归栈高度）。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 忽略“不同值”要求，把根值重复计入答案。<br/>
+         - 只看局部就返回，未遍历完所有可能更小的候选。<br/>
+         - 全树值都相同的情况应返回 <code>-1</code>。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    private long ans;
+    private int base;
+
+    public int findSecondMinimumValue(TreeNode root) {
+        base = root.val;
+        ans = Long.MAX_VALUE;
+        dfs(root);
+        return ans == Long.MAX_VALUE ? -1 : (int) ans;
+    }
+
+    private void dfs(TreeNode node) {
+        if (node == null) return;
+        if (node.val &gt; base &amp;&amp; node.val &lt; ans) {
+            ans = node.val;
+            return;
+        }
+        if (node.val == base) {
+            dfs(node.left);
+            dfs(node.right);
+        }
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func findSecondMinimumValue(root *TreeNode) int {
+    base := root.Val
+    ans := int64(1&lt;&lt;62 - 1)
+
+    var dfs func(*TreeNode)
+    dfs = func(node *TreeNode) {
+        if node == nil {
+            return
+        }
+        if node.Val &gt; base &amp;&amp; int64(node.Val) &lt; ans {
+            ans = int64(node.Val)
+            return
+        }
+        if node.Val == base {
+            dfs(node.Left)
+            dfs(node.Right)
+        }
+    }
+
+    dfs(root)
+    if ans == int64(1&lt;&lt;62-1) {
+        return -1
+    }
+    return int(ans)
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    long long ans;
+    int base;
+
+    int findSecondMinimumValue(TreeNode* root) {
+        base = root-&gt;val;
+        ans = LLONG_MAX;
+        dfs(root);
+        return ans == LLONG_MAX ? -1 : (int)ans;
+    }
+
+    void dfs(TreeNode* node) {
+        if (!node) return;
+        if (node-&gt;val &gt; base &amp;&amp; node-&gt;val &lt; ans) {
+            ans = node-&gt;val;
+            return;
+        }
+        if (node-&gt;val == base) {
+            dfs(node-&gt;left);
+            dfs(node-&gt;right);
+        }
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def findSecondMinimumValue(self, root: Optional[TreeNode]) -&gt; int:
+        base = root.val
+        ans = float('inf')
+
+        def dfs(node: Optional[TreeNode]) -&gt; None:
+            nonlocal ans
+            if not node:
+                return
+            if base &lt; node.val &lt; ans:
+                ans = node.val
+                return
+            if node.val == base:
+                dfs(node.left)
+                dfs(node.right)
+
+        dfs(root)
+        return -1 if ans == float('inf') else int(ans)</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var findSecondMinimumValue = function(root) {
+  const base = root.val;
+  let ans = Number.POSITIVE_INFINITY;
+
+  const dfs = (node) =&gt; {
+    if (!node) return;
+    if (node.val &gt; base &amp;&amp; node.val &lt; ans) {
+      ans = node.val;
+      return;
+    }
+    if (node.val === base) {
+      dfs(node.left);
+      dfs(node.right);
+    }
+  };
+
+  dfs(root);
+  return Number.isFinite(ans) ? ans : -1;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
