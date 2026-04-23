@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 1175: Prime Arrangements (Sieve + Factorial Mod)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 1175 using prime counting by sieve and factorial multiplication under modulo, with full Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 1175: Prime Arrangements (Sieve + Factorial Mod)" />
+  <meta property="og:description" content="English + 中文 explanation with counting idea, complexity, pitfalls, and complete 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1175-prime-arrangements.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1175-prime-arrangements.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 1175: Prime Arrangements (Sieve + Factorial Mod)</h1>
+      <div class="meta">2026-04-23 · LeetCode · Math / Combinatorics / Sieve</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 1175</span><span class="tag">Math</span><span class="tag">Combinatorics</span>
+
+      <p>Today we solve <strong>LeetCode 1175 - Prime Arrangements</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/prime-arrangements/" target="_blank" rel="noopener">https://leetcode.com/problems/prime-arrangements/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-1175-20260423.svg" alt="LeetCode 1175 prime arrangements with p! times (n-p)! under modulo" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given <code>n</code>, arrange numbers from <code>1</code> to <code>n</code> so that prime numbers occupy prime indices (1-indexed). Return the number of valid permutations modulo <code>1e9+7</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>If there are <code>p</code> primes in <code>[1..n]</code>, then there are exactly <code>p</code> prime positions and <code>n-p</code> non-prime positions. So the answer is:</p>
+      <p><code>p! * (n - p)! (mod 1e9+7)</code>.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Use sieve to count primes <= <code>n</code> as <code>p</code>.<br/>
+         - Compute factorial <code>p!</code> modulo <code>MOD</code>.<br/>
+         - Compute factorial <code>(n-p)!</code> modulo <code>MOD</code>.<br/>
+         - Multiply both modulo <code>MOD</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n log log n)</code> (sieve dominates).<br/>Space: <code>O(n)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting indices are 1-based in the statement.<br/>
+         - Overflow when multiplying factorials without modulo each step.<br/>
+         - Counting primes incorrectly for small values like <code>n = 1</code> or <code>n = 2</code>.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    private static final long MOD = 1_000_000_007L;
+
+    public int numPrimeArrangements(int n) {
+        int p = countPrimes(n);
+        long ans = fact(p) * fact(n - p) % MOD;
+        return (int) ans;
+    }
+
+    private int countPrimes(int n) {
+        if (n &lt; 2) return 0;
+        boolean[] isPrime = new boolean[n + 1];
+        java.util.Arrays.fill(isPrime, true);
+        isPrime[0] = false;
+        isPrime[1] = false;
+        for (int i = 2; i * i &lt;= n; i++) {
+            if (isPrime[i]) {
+                for (int j = i * i; j &lt;= n; j += i) {
+                    isPrime[j] = false;
+                }
+            }
+        }
+        int cnt = 0;
+        for (int i = 2; i &lt;= n; i++) if (isPrime[i]) cnt++;
+        return cnt;
+    }
+
+    private long fact(int x) {
+        long res = 1L;
+        for (int i = 2; i &lt;= x; i++) {
+            res = (res * i) % MOD;
+        }
+        return res;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">const MOD int64 = 1_000_000_007
+
+func numPrimeArrangements(n int) int {
+    p := countPrimes(n)
+    ans := fact(p) * fact(n-p) % MOD
+    return int(ans)
+}
+
+func countPrimes(n int) int {
+    if n &lt; 2 {
+        return 0
+    }
+    isPrime := make([]bool, n+1)
+    for i := 0; i &lt;= n; i++ {
+        isPrime[i] = true
+    }
+    isPrime[0], isPrime[1] = false, false
+    for i := 2; i*i &lt;= n; i++ {
+        if isPrime[i] {
+            for j := i * i; j &lt;= n; j += i {
+                isPrime[j] = false
+            }
+        }
+    }
+    cnt := 0
+    for i := 2; i &lt;= n; i++ {
+        if isPrime[i] {
+            cnt++
+        }
+    }
+    return cnt
+}
+
+func fact(x int) int64 {
+    res := int64(1)
+    for i := 2; i &lt;= x; i++ {
+        res = res * int64(i) % MOD
+    }
+    return res
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    static constexpr long long MOD = 1'000'000'007LL;
+
+    int numPrimeArrangements(int n) {
+        int p = countPrimes(n);
+        long long ans = fact(p) * fact(n - p) % MOD;
+        return (int)ans;
+    }
+
+private:
+    int countPrimes(int n) {
+        if (n &lt; 2) return 0;
+        vector&lt;bool&gt; isPrime(n + 1, true);
+        isPrime[0] = false;
+        isPrime[1] = false;
+        for (int i = 2; i * i &lt;= n; ++i) {
+            if (isPrime[i]) {
+                for (int j = i * i; j &lt;= n; j += i) {
+                    isPrime[j] = false;
+                }
+            }
+        }
+        int cnt = 0;
+        for (int i = 2; i &lt;= n; ++i) {
+            if (isPrime[i]) ++cnt;
+        }
+        return cnt;
+    }
+
+    long long fact(int x) {
+        long long res = 1;
+        for (int i = 2; i &lt;= x; ++i) {
+            res = (res * i) % MOD;
+        }
+        return res;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    MOD = 1_000_000_007
+
+    def numPrimeArrangements(self, n: int) -&gt; int:
+        p = self.count_primes(n)
+        return (self.fact(p) * self.fact(n - p)) % self.MOD
+
+    def count_primes(self, n: int) -&gt; int:
+        if n &lt; 2:
+            return 0
+        is_prime = [True] * (n + 1)
+        is_prime[0] = is_prime[1] = False
+        i = 2
+        while i * i &lt;= n:
+            if is_prime[i]:
+                j = i * i
+                while j &lt;= n:
+                    is_prime[j] = False
+                    j += i
+            i += 1
+        return sum(is_prime[2:])
+
+    def fact(self, x: int) -&gt; int:
+        res = 1
+        for i in range(2, x + 1):
+            res = (res * i) % self.MOD
+        return res</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">const MOD = 1000000007n;
+
+var numPrimeArrangements = function(n) {
+  const p = countPrimes(n);
+  const ans = (fact(p) * fact(n - p)) % MOD;
+  return Number(ans);
+};
+
+function countPrimes(n) {
+  if (n &lt; 2) return 0;
+  const isPrime = new Array(n + 1).fill(true);
+  isPrime[0] = false;
+  isPrime[1] = false;
+  for (let i = 2; i * i &lt;= n; i++) {
+    if (isPrime[i]) {
+      for (let j = i * i; j &lt;= n; j += i) {
+        isPrime[j] = false;
+      }
+    }
+  }
+  let cnt = 0;
+  for (let i = 2; i &lt;= n; i++) {
+    if (isPrime[i]) cnt++;
+  }
+  return cnt;
+}
+
+function fact(x) {
+  let res = 1n;
+  for (let i = 2; i &lt;= x; i++) {
+    res = (res * BigInt(i)) % MOD;
+  }
+  return res;
+}</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定 <code>n</code>，将 <code>1..n</code> 排列，使得所有质数都出现在质数下标位置（下标从 1 开始）。返回满足条件的排列数，对 <code>1e9+7</code> 取模。</p>
+
+      <h3>核心思路</h3>
+      <p>设 <code>[1..n]</code> 中质数个数为 <code>p</code>。那么质数位置也正好有 <code>p</code> 个，非质数位置有 <code>n-p</code> 个。答案就是：</p>
+      <p><code>p! * (n - p)! (mod 1e9+7)</code>。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 用筛法统计 <code>1..n</code> 的质数数量 <code>p</code>。<br/>
+         - 计算 <code>p!</code>（每步取模）。<br/>
+         - 计算 <code>(n-p)!</code>（每步取模）。<br/>
+         - 两者相乘后再次取模得到结果。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n log log n)</code>（筛法主导）。<br/>空间复杂度：<code>O(n)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 忘记题目下标是 1-based。<br/>
+         - 阶乘乘法不及时取模导致溢出。<br/>
+         - 小规模输入（如 <code>n=1</code>、<code>n=2</code>）的质数计数写错。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    private static final long MOD = 1_000_000_007L;
+
+    public int numPrimeArrangements(int n) {
+        int p = countPrimes(n);
+        long ans = fact(p) * fact(n - p) % MOD;
+        return (int) ans;
+    }
+
+    private int countPrimes(int n) {
+        if (n &lt; 2) return 0;
+        boolean[] isPrime = new boolean[n + 1];
+        java.util.Arrays.fill(isPrime, true);
+        isPrime[0] = false;
+        isPrime[1] = false;
+        for (int i = 2; i * i &lt;= n; i++) {
+            if (isPrime[i]) {
+                for (int j = i * i; j &lt;= n; j += i) {
+                    isPrime[j] = false;
+                }
+            }
+        }
+        int cnt = 0;
+        for (int i = 2; i &lt;= n; i++) if (isPrime[i]) cnt++;
+        return cnt;
+    }
+
+    private long fact(int x) {
+        long res = 1L;
+        for (int i = 2; i &lt;= x; i++) {
+            res = (res * i) % MOD;
+        }
+        return res;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">const MOD int64 = 1_000_000_007
+
+func numPrimeArrangements(n int) int {
+    p := countPrimes(n)
+    ans := fact(p) * fact(n-p) % MOD
+    return int(ans)
+}
+
+func countPrimes(n int) int {
+    if n &lt; 2 {
+        return 0
+    }
+    isPrime := make([]bool, n+1)
+    for i := 0; i &lt;= n; i++ {
+        isPrime[i] = true
+    }
+    isPrime[0], isPrime[1] = false, false
+    for i := 2; i*i &lt;= n; i++ {
+        if isPrime[i] {
+            for j := i * i; j &lt;= n; j += i {
+                isPrime[j] = false
+            }
+        }
+    }
+    cnt := 0
+    for i := 2; i &lt;= n; i++ {
+        if isPrime[i] {
+            cnt++
+        }
+    }
+    return cnt
+}
+
+func fact(x int) int64 {
+    res := int64(1)
+    for i := 2; i &lt;= x; i++ {
+        res = res * int64(i) % MOD
+    }
+    return res
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    static constexpr long long MOD = 1'000'000'007LL;
+
+    int numPrimeArrangements(int n) {
+        int p = countPrimes(n);
+        long long ans = fact(p) * fact(n - p) % MOD;
+        return (int)ans;
+    }
+
+private:
+    int countPrimes(int n) {
+        if (n &lt; 2) return 0;
+        vector&lt;bool&gt; isPrime(n + 1, true);
+        isPrime[0] = false;
+        isPrime[1] = false;
+        for (int i = 2; i * i &lt;= n; ++i) {
+            if (isPrime[i]) {
+                for (int j = i * i; j &lt;= n; j += i) {
+                    isPrime[j] = false;
+                }
+            }
+        }
+        int cnt = 0;
+        for (int i = 2; i &lt;= n; ++i) {
+            if (isPrime[i]) ++cnt;
+        }
+        return cnt;
+    }
+
+    long long fact(int x) {
+        long long res = 1;
+        for (int i = 2; i &lt;= x; ++i) {
+            res = (res * i) % MOD;
+        }
+        return res;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    MOD = 1_000_000_007
+
+    def numPrimeArrangements(self, n: int) -&gt; int:
+        p = self.count_primes(n)
+        return (self.fact(p) * self.fact(n - p)) % self.MOD
+
+    def count_primes(self, n: int) -&gt; int:
+        if n &lt; 2:
+            return 0
+        is_prime = [True] * (n + 1)
+        is_prime[0] = is_prime[1] = False
+        i = 2
+        while i * i &lt;= n:
+            if is_prime[i]:
+                j = i * i
+                while j &lt;= n:
+                    is_prime[j] = False
+                    j += i
+            i += 1
+        return sum(is_prime[2:])
+
+    def fact(self, x: int) -&gt; int:
+        res = 1
+        for i in range(2, x + 1):
+            res = (res * i) % self.MOD
+        return res</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">const MOD = 1000000007n;
+
+var numPrimeArrangements = function(n) {
+  const p = countPrimes(n);
+  const ans = (fact(p) * fact(n - p)) % MOD;
+  return Number(ans);
+};
+
+function countPrimes(n) {
+  if (n &lt; 2) return 0;
+  const isPrime = new Array(n + 1).fill(true);
+  isPrime[0] = false;
+  isPrime[1] = false;
+  for (let i = 2; i * i &lt;= n; i++) {
+    if (isPrime[i]) {
+      for (let j = i * i; j &lt;= n; j += i) {
+        isPrime[j] = false;
+      }
+    }
+  }
+  let cnt = 0;
+  for (let i = 2; i &lt;= n; i++) {
+    if (isPrime[i]) cnt++;
+  }
+  return cnt;
+}
+
+function fact(x) {
+  let res = 1n;
+  for (let i = 2; i &lt;= x; i++) {
+    res = (res * BigInt(i)) % MOD;
+  }
+  return res;
+}</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
