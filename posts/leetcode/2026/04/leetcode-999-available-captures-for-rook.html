@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 999: Available Captures for Rook (Directional Scan)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 999 using four-direction scan from the rook, with full Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 999: Available Captures for Rook (Directional Scan)" />
+  <meta property="og:description" content="English + 中文 explanation with board traversal insight, complexity, pitfalls, and full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-999-available-captures-for-rook.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-999-available-captures-for-rook.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 999: Available Captures for Rook (Directional Scan)</h1>
+      <div class="meta">2026-04-23 · LeetCode · Matrix / Simulation</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 999</span><span class="tag">Matrix</span><span class="tag">Simulation</span>
+
+      <p>Today we solve <strong>LeetCode 999 - Available Captures for Rook</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/available-captures-for-rook/" target="_blank" rel="noopener">https://leetcode.com/problems/available-captures-for-rook/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-999-20260423.svg" alt="LeetCode 999 rook directional scan diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given an 8x8 chessboard, count how many pawns a rook can capture in one move. The rook moves in four directions, stops at bishops, and can capture at most one pawn per direction.</p>
+
+      <h3>Key Insight</h3>
+      <p>After locating the rook, we only need to scan four straight lines (up, down, left, right). In each direction, the first non-empty square decides the result: bishop blocks, pawn adds one capture, otherwise keep moving.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Find rook position <code>R</code>.<br/>
+         - For each direction, step cell by cell until out of board.<br/>
+         - If bishop <code>B</code> appears: stop this direction.<br/>
+         - If pawn <code>p</code> appears: count +1 and stop this direction.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Board size is fixed (8x8).<br/>Time: <code>O(64)</code>.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting to stop after first pawn in a direction.<br/>
+         - Letting rook move through bishop.<br/>
+         - Not handling rook location correctly before scanning.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int numRookCaptures(char[][] board) {
+        int rx = -1, ry = -1;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (board[i][j] == 'R') {
+                    rx = i;
+                    ry = j;
+                }
+            }
+        }
+
+        int ans = 0;
+        int[][] dirs = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        for (int[] d : dirs) {
+            int x = rx + d[0], y = ry + d[1];
+            while (x >= 0 && x < 8 && y >= 0 && y < 8) {
+                if (board[x][y] == 'B') break;
+                if (board[x][y] == 'p') {
+                    ans++;
+                    break;
+                }
+                x += d[0];
+                y += d[1];
+            }
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func numRookCaptures(board [][]byte) int {
+    rx, ry := -1, -1
+    for i := 0; i < 8; i++ {
+        for j := 0; j < 8; j++ {
+            if board[i][j] == 'R' {
+                rx, ry = i, j
+            }
+        }
+    }
+
+    ans := 0
+    dirs := [][2]int{{-1, 0}, {1, 0}, {0, -1}, {0, 1}}
+    for _, d := range dirs {
+        x, y := rx+d[0], ry+d[1]
+        for x >= 0 && x < 8 && y >= 0 && y < 8 {
+            if board[x][y] == 'B' {
+                break
+            }
+            if board[x][y] == 'p' {
+                ans++
+                break
+            }
+            x += d[0]
+            y += d[1]
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int numRookCaptures(vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+        int rx = -1, ry = -1;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (board[i][j] == 'R') {
+                    rx = i;
+                    ry = j;
+                }
+            }
+        }
+
+        int ans = 0;
+        int dirs[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        for (auto&amp; d : dirs) {
+            int x = rx + d[0], y = ry + d[1];
+            while (x >= 0 &amp;&amp; x < 8 &amp;&amp; y >= 0 &amp;&amp; y < 8) {
+                if (board[x][y] == 'B') break;
+                if (board[x][y] == 'p') {
+                    ans++;
+                    break;
+                }
+                x += d[0];
+                y += d[1];
+            }
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def numRookCaptures(self, board: List[List[str]]) -> int:
+        rx = ry = -1
+        for i in range(8):
+            for j in range(8):
+                if board[i][j] == 'R':
+                    rx, ry = i, j
+
+        ans = 0
+        for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            x, y = rx + dx, ry + dy
+            while 0 <= x < 8 and 0 <= y < 8:
+                if board[x][y] == 'B':
+                    break
+                if board[x][y] == 'p':
+                    ans += 1
+                    break
+                x += dx
+                y += dy
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {character[][]} board
+ * @return {number}
+ */
+var numRookCaptures = function(board) {
+  let rx = -1, ry = -1;
+  for (let i = 0; i < 8; i++) {
+    for (let j = 0; j < 8; j++) {
+      if (board[i][j] === 'R') {
+        rx = i;
+        ry = j;
+      }
+    }
+  }
+
+  let ans = 0;
+  const dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+  for (const [dx, dy] of dirs) {
+    let x = rx + dx, y = ry + dy;
+    while (x >= 0 && x < 8 && y >= 0 && y < 8) {
+      if (board[x][y] === 'B') break;
+      if (board[x][y] === 'p') {
+        ans++;
+        break;
+      }
+      x += dx;
+      y += dy;
+    }
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给你一个 8x8 的棋盘，统计车 <code>R</code> 一步内最多能吃掉多少个兵 <code>p</code>。车可以沿四个方向直线移动，遇到象 <code>B</code> 会被阻挡，每个方向最多吃到一个兵。</p>
+
+      <h3>核心思路</h3>
+      <p>先找到车的位置，然后分别向上、下、左、右做直线扫描。每个方向遇到的第一个非空格子决定结果，遇到象就停止，遇到兵就计数并停止。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 先定位 <code>R</code> 的坐标。<br/>
+         - 对四个方向逐格前进，直到越界。<br/>
+         - 遇到 <code>B</code>：当前方向结束。<br/>
+         - 遇到 <code>p</code>：答案加一并结束当前方向。</p>
+
+      <h3>复杂度分析</h3>
+      <p>棋盘大小固定为 8x8。<br/>时间复杂度：<code>O(64)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 某方向吃到兵后没有停止，导致重复计数。<br/>
+         - 让车错误穿过象。<br/>
+         - 没先正确找到车的位置就开始扫描。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int numRookCaptures(char[][] board) {
+        int rx = -1, ry = -1;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (board[i][j] == 'R') {
+                    rx = i;
+                    ry = j;
+                }
+            }
+        }
+
+        int ans = 0;
+        int[][] dirs = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        for (int[] d : dirs) {
+            int x = rx + d[0], y = ry + d[1];
+            while (x >= 0 && x < 8 && y >= 0 && y < 8) {
+                if (board[x][y] == 'B') break;
+                if (board[x][y] == 'p') {
+                    ans++;
+                    break;
+                }
+                x += d[0];
+                y += d[1];
+            }
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func numRookCaptures(board [][]byte) int {
+    rx, ry := -1, -1
+    for i := 0; i < 8; i++ {
+        for j := 0; j < 8; j++ {
+            if board[i][j] == 'R' {
+                rx, ry = i, j
+            }
+        }
+    }
+
+    ans := 0
+    dirs := [][2]int{{-1, 0}, {1, 0}, {0, -1}, {0, 1}}
+    for _, d := range dirs {
+        x, y := rx+d[0], ry+d[1]
+        for x >= 0 && x < 8 && y >= 0 && y < 8 {
+            if board[x][y] == 'B' {
+                break
+            }
+            if board[x][y] == 'p' {
+                ans++
+                break
+            }
+            x += d[0]
+            y += d[1]
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int numRookCaptures(vector&lt;vector&lt;char&gt;&gt;&amp; board) {
+        int rx = -1, ry = -1;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (board[i][j] == 'R') {
+                    rx = i;
+                    ry = j;
+                }
+            }
+        }
+
+        int ans = 0;
+        int dirs[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        for (auto&amp; d : dirs) {
+            int x = rx + d[0], y = ry + d[1];
+            while (x >= 0 &amp;&amp; x < 8 &amp;&amp; y >= 0 &amp;&amp; y < 8) {
+                if (board[x][y] == 'B') break;
+                if (board[x][y] == 'p') {
+                    ans++;
+                    break;
+                }
+                x += d[0];
+                y += d[1];
+            }
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def numRookCaptures(self, board: List[List[str]]) -> int:
+        rx = ry = -1
+        for i in range(8):
+            for j in range(8):
+                if board[i][j] == 'R':
+                    rx, ry = i, j
+
+        ans = 0
+        for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            x, y = rx + dx, ry + dy
+            while 0 <= x < 8 and 0 <= y < 8:
+                if board[x][y] == 'B':
+                    break
+                if board[x][y] == 'p':
+                    ans += 1
+                    break
+                x += dx
+                y += dy
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {character[][]} board
+ * @return {number}
+ */
+var numRookCaptures = function(board) {
+  let rx = -1, ry = -1;
+  for (let i = 0; i < 8; i++) {
+    for (let j = 0; j < 8; j++) {
+      if (board[i][j] === 'R') {
+        rx = i;
+        ry = j;
+      }
+    }
+  }
+
+  let ans = 0;
+  const dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+  for (const [dx, dy] of dirs) {
+    let x = rx + dx, y = ry + dy;
+    while (x >= 0 && x < 8 && y >= 0 && y < 8) {
+      if (board[x][y] === 'B') break;
+      if (board[x][y] === 'p') {
+        ans++;
+        break;
+      }
+      x += dx;
+      y += dy;
+    }
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
