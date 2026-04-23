@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 2027: Minimum Moves to Convert String (Greedy Triple-Cover Scan)</title>
+  <meta name="description" content="Bilingual walkthrough for LeetCode 2027 using greedy left-to-right triple-cover scanning with complete Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 2027: Minimum Moves to Convert String (Greedy Triple-Cover Scan)" />
+  <meta property="og:description" content="English + 中文 explanation with greedy insight, complexity, pitfalls, and full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-2027-minimum-moves-to-convert-string.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-2027-minimum-moves-to-convert-string.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 2027: Minimum Moves to Convert String (Greedy Triple-Cover Scan)</h1>
+      <div class="meta">2026-04-23 · LeetCode · String / Greedy</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 2027</span><span class="tag">String</span><span class="tag">Greedy</span>
+
+      <p>Today we solve <strong>LeetCode 2027 - Minimum Moves to Convert String</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/minimum-moves-to-convert-string/" target="_blank" rel="noopener">https://leetcode.com/problems/minimum-moves-to-convert-string/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-2027-20260423.svg" alt="LeetCode 2027 greedy diagram showing each move covering three consecutive characters" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a string <code>s</code> containing <code>X</code> and <code>O</code>, one move can pick any index and convert that character and the next two characters to <code>O</code>. Return the minimum number of moves to turn the whole string into all <code>O</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>When we see an <code>X</code> at position <code>i</code>, any optimal solution must cover it. The best greedy choice is to do one move starting at <code>i</code>, which converts <code>i, i+1, i+2</code>. Then we skip those three positions.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Scan from left to right with index <code>i</code>.<br/>
+         - If <code>s[i] == 'X'</code>, increase answer by 1 and do <code>i += 3</code>.<br/>
+         - Otherwise do <code>i += 1</code>.<br/>
+         - End when <code>i</code> reaches string length.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>, each character visited at most once.<br/>Space: <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Trying DP/backtracking although greedy is enough.<br/>
+         - Forgetting to jump by 3 after consuming an <code>X</code>.<br/>
+         - Overthinking boundary, because move naturally handles tail with available indices.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int minimumMoves(String s) {
+        int moves = 0;
+        for (int i = 0; i &lt; s.length();) {
+            if (s.charAt(i) == 'X') {
+                moves++;
+                i += 3;
+            } else {
+                i++;
+            }
+        }
+        return moves;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func minimumMoves(s string) int {
+    moves := 0
+    for i := 0; i &lt; len(s); {
+        if s[i] == 'X' {
+            moves++
+            i += 3
+        } else {
+            i++
+        }
+    }
+    return moves
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int minimumMoves(string s) {
+        int moves = 0;
+        for (int i = 0; i &lt; (int)s.size();) {
+            if (s[i] == 'X') {
+                ++moves;
+                i += 3;
+            } else {
+                ++i;
+            }
+        }
+        return moves;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def minimumMoves(self, s: str) -&gt; int:
+        moves = 0
+        i = 0
+        while i &lt; len(s):
+            if s[i] == 'X':
+                moves += 1
+                i += 3
+            else:
+                i += 1
+        return moves</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var minimumMoves = function(s) {
+  let moves = 0;
+  for (let i = 0; i &lt; s.length; ) {
+    if (s[i] === 'X') {
+      moves++;
+      i += 3;
+    } else {
+      i++;
+    }
+  }
+  return moves;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定仅由 <code>X</code> 和 <code>O</code> 组成的字符串 <code>s</code>。一次操作可选择任意位置，把该位置及后面两个位置都变成 <code>O</code>。求把整串变成全 <code>O</code> 的最少操作次数。</p>
+
+      <h3>核心思路</h3>
+      <p>从左到右扫描，遇到第一个 <code>X</code> 时必须覆盖它。贪心地从当前位置执行一次操作最优，因为这次操作正好能覆盖连续 3 个字符，然后索引直接跳过这 3 位。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 用指针 <code>i</code> 从左到右遍历。<br/>
+         - 若 <code>s[i] == 'X'</code>，答案加 1，并执行 <code>i += 3</code>。<br/>
+         - 否则执行 <code>i += 1</code>。<br/>
+         - 遍历结束返回答案。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>，每个字符最多访问一次。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 把问题做成 DP 或回溯，复杂化了。<br/>
+         - 命中 <code>X</code> 后忘记跳 3 步。<br/>
+         - 对结尾边界过度担心，按规则扫描即可正确处理。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int minimumMoves(String s) {
+        int moves = 0;
+        for (int i = 0; i &lt; s.length();) {
+            if (s.charAt(i) == 'X') {
+                moves++;
+                i += 3;
+            } else {
+                i++;
+            }
+        }
+        return moves;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func minimumMoves(s string) int {
+    moves := 0
+    for i := 0; i &lt; len(s); {
+        if s[i] == 'X' {
+            moves++
+            i += 3
+        } else {
+            i++
+        }
+    }
+    return moves
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int minimumMoves(string s) {
+        int moves = 0;
+        for (int i = 0; i &lt; (int)s.size();) {
+            if (s[i] == 'X') {
+                ++moves;
+                i += 3;
+            } else {
+                ++i;
+            }
+        }
+        return moves;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def minimumMoves(self, s: str) -&gt; int:
+        moves = 0
+        i = 0
+        while i &lt; len(s):
+            if s[i] == 'X':
+                moves += 1
+                i += 3
+            else:
+                i += 1
+        return moves</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var minimumMoves = function(s) {
+  let moves = 0;
+  for (let i = 0; i &lt; s.length; ) {
+    if (s[i] === 'X') {
+      moves++;
+      i += 3;
+    } else {
+      i++;
+    }
+  }
+  return moves;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
