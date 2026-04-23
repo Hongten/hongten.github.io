@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-label="LeetCode 1091 shortest path BFS diagram">
+  <defs>
+    <style>
+      .title { font: 700 36px 'Segoe UI', Arial, sans-serif; fill: #e6edf3; }
+      .subtitle { font: 500 20px 'Segoe UI', Arial, sans-serif; fill: #9fb3c8; }
+      .cell { stroke: #2f3f52; stroke-width: 2; }
+      .free { fill: #1f2a36; }
+      .block { fill: #5b2b3a; }
+      .start { fill: #1f6feb; }
+      .end { fill: #238636; }
+      .txt { font: 600 20px 'Segoe UI', Arial, sans-serif; fill: #e6edf3; }
+      .path { fill: none; stroke: #f2cc60; stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; }
+      .note { font: 500 20px 'Segoe UI', Arial, sans-serif; fill: #c9d1d9; }
+      .bg { fill: #0d1117; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1200" height="680" rx="24"/>
+
+  <text class="title" x="60" y="70">LeetCode 1091 · Shortest Path in Binary Matrix</text>
+  <text class="subtitle" x="60" y="105">8-direction BFS, first reach of target = shortest path length</text>
+
+  <g transform="translate(120,160)">
+    <rect class="cell start" x="0" y="0" width="90" height="90" rx="12"/>
+    <rect class="cell free" x="100" y="0" width="90" height="90" rx="12"/>
+    <rect class="cell block" x="200" y="0" width="90" height="90" rx="12"/>
+    <rect class="cell free" x="300" y="0" width="90" height="90" rx="12"/>
+
+    <rect class="cell block" x="0" y="100" width="90" height="90" rx="12"/>
+    <rect class="cell free" x="100" y="100" width="90" height="90" rx="12"/>
+    <rect class="cell free" x="200" y="100" width="90" height="90" rx="12"/>
+    <rect class="cell block" x="300" y="100" width="90" height="90" rx="12"/>
+
+    <rect class="cell free" x="0" y="200" width="90" height="90" rx="12"/>
+    <rect class="cell block" x="100" y="200" width="90" height="90" rx="12"/>
+    <rect class="cell free" x="200" y="200" width="90" height="90" rx="12"/>
+    <rect class="cell free" x="300" y="200" width="90" height="90" rx="12"/>
+
+    <rect class="cell free" x="0" y="300" width="90" height="90" rx="12"/>
+    <rect class="cell free" x="100" y="300" width="90" height="90" rx="12"/>
+    <rect class="cell free" x="200" y="300" width="90" height="90" rx="12"/>
+    <rect class="cell end" x="300" y="300" width="90" height="90" rx="12"/>
+
+    <path class="path" d="M45 45 L145 145 L245 145 L245 245 L345 345"/>
+
+    <text class="txt" x="33" y="55">S</text>
+    <text class="txt" x="332" y="355">T</text>
+
+    <text class="txt" x="230" y="58">1</text>
+    <text class="txt" x="30" y="158">1</text>
+    <text class="txt" x="330" y="158">1</text>
+    <text class="txt" x="130" y="258">1</text>
+  </g>
+
+  <g transform="translate(610,180)">
+    <text class="note" x="0" y="0">BFS layering example:</text>
+    <text class="note" x="0" y="42">• Level 1: (0,0)</text>
+    <text class="note" x="0" y="84">• Level 2: reachable neighbors in 8 dirs</text>
+    <text class="note" x="0" y="126">• Continue until (n-1,n-1) appears</text>
+    <text class="note" x="0" y="168">• Returned level count = shortest path length</text>
+    <text class="note" x="0" y="230">Blocked cell = 1, Walkable cell = 0</text>
+    <text class="note" x="0" y="272">Mark visited when enqueueing to avoid duplicates</text>
+  </g>
+</svg>
