@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 2578: Split With Minimum Sum (Sorted Digits + Alternating Build)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 2578 using sorted digits and alternating construction, with full Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 2578: Split With Minimum Sum (Sorted Digits + Alternating Build)" />
+  <meta property="og:description" content="English + 中文 explanation with greedy insight, complexity, pitfalls, and full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-2578-split-with-minimum-sum.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-2578-split-with-minimum-sum.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 2578: Split With Minimum Sum (Sorted Digits + Alternating Build)</h1>
+      <div class="meta">2026-04-23 · LeetCode · Greedy / Sorting</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 2578</span><span class="tag">Greedy</span><span class="tag">Sorting</span>
+
+      <p>Today we solve <strong>LeetCode 2578 - Split With Minimum Sum</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/split-with-minimum-sum/" target="_blank" rel="noopener">https://leetcode.com/problems/split-with-minimum-sum/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-2578-20260423.svg" alt="LeetCode 2578 split digits alternating build diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a positive integer <code>num</code>, split its digits into two new integers <code>num1</code> and <code>num2</code> such that every digit is used exactly once and <code>num1 + num2</code> is minimized.</p>
+
+      <h3>Key Insight</h3>
+      <p>To minimize the final sum, smaller digits should be placed in higher positions first, and the two numbers should stay balanced in length. So we sort digits ascending, then distribute alternately to <code>num1</code> and <code>num2</code>.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Convert <code>num</code> to digit list and sort ascending.<br/>
+         - Iterate sorted digits by index.<br/>
+         - Even index digit goes to <code>num1</code>, odd index digit goes to <code>num2</code>.<br/>
+         - Return <code>num1 + num2</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Let <code>d</code> be number of digits.<br/>Time: <code>O(d log d)</code> due to sorting.<br/>Space: <code>O(d)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Appending digits without sorting first.<br/>
+         - Putting too many small digits into only one number.<br/>
+         - Confusing alternating by value instead of by sorted position.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">import java.util.*;
+
+class Solution {
+    public int splitNum(int num) {
+        char[] chars = String.valueOf(num).toCharArray();
+        Arrays.sort(chars);
+
+        int a = 0, b = 0;
+        for (int i = 0; i < chars.length; i++) {
+            int d = chars[i] - '0';
+            if ((i & 1) == 0) a = a * 10 + d;
+            else b = b * 10 + d;
+        }
+        return a + b;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">import "sort"
+
+func splitNum(num int) int {
+    digits := []int{}
+    for num > 0 {
+        digits = append(digits, num%10)
+        num /= 10
+    }
+    sort.Ints(digits)
+
+    a, b := 0, 0
+    for i, d := range digits {
+        if i%2 == 0 {
+            a = a*10 + d
+        } else {
+            b = b*10 + d
+        }
+    }
+    return a + b
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int splitNum(int num) {
+        vector&lt;int&gt; digits;
+        while (num &gt; 0) {
+            digits.push_back(num % 10);
+            num /= 10;
+        }
+        sort(digits.begin(), digits.end());
+
+        int a = 0, b = 0;
+        for (int i = 0; i &lt; (int)digits.size(); i++) {
+            if (i % 2 == 0) a = a * 10 + digits[i];
+            else b = b * 10 + digits[i];
+        }
+        return a + b;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def splitNum(self, num: int) -> int:
+        digits = sorted(map(int, str(num)))
+        a = b = 0
+        for i, d in enumerate(digits):
+            if i % 2 == 0:
+                a = a * 10 + d
+            else:
+                b = b * 10 + d
+        return a + b</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {number} num
+ * @return {number}
+ */
+var splitNum = function(num) {
+  const digits = String(num).split('').map(Number).sort((a, b) => a - b);
+  let a = 0, b = 0;
+  for (let i = 0; i < digits.length; i++) {
+    if (i % 2 === 0) a = a * 10 + digits[i];
+    else b = b * 10 + digits[i];
+  }
+  return a + b;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给你一个正整数 <code>num</code>，把它的所有数字拆分到两个新整数 <code>num1</code>、<code>num2</code> 中，每个数字必须且只能使用一次，使得 <code>num1 + num2</code> 最小。</p>
+
+      <h3>核心思路</h3>
+      <p>要让和尽量小，小数字应优先放到更高位，同时两边位数尽量均衡。做法是先排序，再按顺序交替放入 <code>num1</code> 和 <code>num2</code>。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 提取所有数字并升序排序。<br/>
+         - 遍历排序后的数字。<br/>
+         - 偶数下标放入 <code>num1</code>，奇数下标放入 <code>num2</code>。<br/>
+         - 返回 <code>num1 + num2</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>设数字位数为 <code>d</code>。<br/>时间复杂度：<code>O(d log d)</code>（排序）。<br/>空间复杂度：<code>O(d)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 未排序就直接拼接。<br/>
+         - 把小数字集中到一个数，导致另一数位权过大。<br/>
+         - 没按排序后位置交替分配。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">import java.util.*;
+
+class Solution {
+    public int splitNum(int num) {
+        char[] chars = String.valueOf(num).toCharArray();
+        Arrays.sort(chars);
+
+        int a = 0, b = 0;
+        for (int i = 0; i < chars.length; i++) {
+            int d = chars[i] - '0';
+            if ((i & 1) == 0) a = a * 10 + d;
+            else b = b * 10 + d;
+        }
+        return a + b;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">import "sort"
+
+func splitNum(num int) int {
+    digits := []int{}
+    for num > 0 {
+        digits = append(digits, num%10)
+        num /= 10
+    }
+    sort.Ints(digits)
+
+    a, b := 0, 0
+    for i, d := range digits {
+        if i%2 == 0 {
+            a = a*10 + d
+        } else {
+            b = b*10 + d
+        }
+    }
+    return a + b
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int splitNum(int num) {
+        vector&lt;int&gt; digits;
+        while (num &gt; 0) {
+            digits.push_back(num % 10);
+            num /= 10;
+        }
+        sort(digits.begin(), digits.end());
+
+        int a = 0, b = 0;
+        for (int i = 0; i &lt; (int)digits.size(); i++) {
+            if (i % 2 == 0) a = a * 10 + digits[i];
+            else b = b * 10 + digits[i];
+        }
+        return a + b;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def splitNum(self, num: int) -> int:
+        digits = sorted(map(int, str(num)))
+        a = b = 0
+        for i, d in enumerate(digits):
+            if i % 2 == 0:
+                a = a * 10 + d
+            else:
+                b = b * 10 + d
+        return a + b</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {number} num
+ * @return {number}
+ */
+var splitNum = function(num) {
+  const digits = String(num).split('').map(Number).sort((a, b) => a - b);
+  let a = 0, b = 0;
+  for (let i = 0; i < digits.length; i++) {
+    if (i % 2 === 0) a = a * 10 + digits[i];
+    else b = b * 10 + digits[i];
+  }
+  return a + b;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
