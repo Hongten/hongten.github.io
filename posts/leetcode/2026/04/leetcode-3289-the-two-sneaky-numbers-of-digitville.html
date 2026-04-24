@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 3289: The Two Sneaky Numbers of Digitville (XOR Split by Lowbit)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 3289 using XOR partition to recover the two duplicated numbers in linear time and O(1) extra space."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 3289: The Two Sneaky Numbers of Digitville (XOR Split by Lowbit)" />
+  <meta property="og:description" content="English + 中文 explanation with XOR insight, complexity, pitfalls, and full Java/Go/C++/Python/JavaScript code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3289-the-two-sneaky-numbers-of-digitville.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3289-the-two-sneaky-numbers-of-digitville.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 3289: The Two Sneaky Numbers of Digitville (XOR Split by Lowbit)</h1>
+      <div class="meta">2026-04-24 · LeetCode · Bit Manipulation / XOR</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 3289</span><span class="tag">Bit Manipulation</span><span class="tag">XOR</span>
+
+      <p>Today we solve <strong>LeetCode 3289 - The Two Sneaky Numbers of Digitville</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/the-two-sneaky-numbers-of-digitville/" target="_blank" rel="noopener">https://leetcode.com/problems/the-two-sneaky-numbers-of-digitville/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-3289-20260424.svg" alt="LeetCode 3289 diagram showing XOR of all numbers and partition by lowbit to recover the two sneaky numbers" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>In Digitville, numbers are expected to be exactly <code>0..n-1</code>, but two numbers appear one extra time. Return these two duplicated numbers.</p>
+
+      <h3>Key Insight</h3>
+      <p>XOR all values in <code>nums</code> and all numbers in <code>0..n-1</code>. Pairs cancel, leaving <code>x ^ y</code>, where <code>x</code> and <code>y</code> are the two sneaky numbers. Use the lowest set bit to split all values into two groups, then XOR inside each group to recover <code>x</code> and <code>y</code>.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Let <code>n = nums.length - 2</code>.<br/>
+         - Compute <code>mix = XOR(nums) ^ XOR(0..n-1)</code>.<br/>
+         - Extract separator bit <code>lowbit = mix &amp; -mix</code>.<br/>
+         - Partition both <code>nums</code> and <code>0..n-1</code> by <code>lowbit</code> and XOR per group.<br/>
+         - The two group XOR results are the two sneaky numbers.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(1)</code> extra.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting that <code>n = nums.length - 2</code>.<br/>
+         - Only partitioning <code>nums</code> but not <code>0..n-1</code>.<br/>
+         - Returning sorted order when problem allows any order, causing unnecessary work.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int[] getSneakyNumbers(int[] nums) {
+        int n = nums.length - 2;
+        int mix = 0;
+
+        for (int v : nums) mix ^= v;
+        for (int i = 0; i &lt; n; i++) mix ^= i;
+
+        int lowbit = mix &amp; -mix;
+        int a = 0, b = 0;
+
+        for (int v : nums) {
+            if ((v &amp; lowbit) == 0) a ^= v;
+            else b ^= v;
+        }
+        for (int i = 0; i &lt; n; i++) {
+            if ((i &amp; lowbit) == 0) a ^= i;
+            else b ^= i;
+        }
+
+        return new int[]{a, b};
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func getSneakyNumbers(nums []int) []int {
+    n := len(nums) - 2
+    mix := 0
+
+    for _, v := range nums {
+        mix ^= v
+    }
+    for i := 0; i &lt; n; i++ {
+        mix ^= i
+    }
+
+    lowbit := mix &amp; -mix
+    a, b := 0, 0
+
+    for _, v := range nums {
+        if v&amp;lowbit == 0 {
+            a ^= v
+        } else {
+            b ^= v
+        }
+    }
+    for i := 0; i &lt; n; i++ {
+        if i&amp;lowbit == 0 {
+            a ^= i
+        } else {
+            b ^= i
+        }
+    }
+
+    return []int{a, b}
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; getSneakyNumbers(vector&lt;int&gt;&amp; nums) {
+        int n = (int)nums.size() - 2;
+        int mix = 0;
+
+        for (int v : nums) mix ^= v;
+        for (int i = 0; i &lt; n; ++i) mix ^= i;
+
+        int lowbit = mix &amp; -mix;
+        int a = 0, b = 0;
+
+        for (int v : nums) {
+            if ((v &amp; lowbit) == 0) a ^= v;
+            else b ^= v;
+        }
+        for (int i = 0; i &lt; n; ++i) {
+            if ((i &amp; lowbit) == 0) a ^= i;
+            else b ^= i;
+        }
+
+        return {a, b};
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def getSneakyNumbers(self, nums: List[int]) -&gt; List[int]:
+        n = len(nums) - 2
+        mix = 0
+
+        for v in nums:
+            mix ^= v
+        for i in range(n):
+            mix ^= i
+
+        lowbit = mix &amp; -mix
+        a = b = 0
+
+        for v in nums:
+            if v &amp; lowbit == 0:
+                a ^= v
+            else:
+                b ^= v
+
+        for i in range(n):
+            if i &amp; lowbit == 0:
+                a ^= i
+            else:
+                b ^= i
+
+        return [a, b]</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var getSneakyNumbers = function(nums) {
+  const n = nums.length - 2;
+  let mix = 0;
+
+  for (const v of nums) mix ^= v;
+  for (let i = 0; i &lt; n; i++) mix ^= i;
+
+  const lowbit = mix &amp; -mix;
+  let a = 0, b = 0;
+
+  for (const v of nums) {
+    if ((v &amp; lowbit) === 0) a ^= v;
+    else b ^= v;
+  }
+  for (let i = 0; i &lt; n; i++) {
+    if ((i &amp; lowbit) === 0) a ^= i;
+    else b ^= i;
+  }
+
+  return [a, b];
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>Digitville 原本应该包含 <code>0..n-1</code> 各一次，但有两个数字各多出现了一次。请找出这两个“偷偷混进来”的数字。</p>
+
+      <h3>核心思路</h3>
+      <p>将 <code>nums</code> 以及 <code>0..n-1</code> 全部异或后，成对数字会抵消，剩下 <code>x ^ y</code>（两个答案）。取最低位的 1 作为分组位，把所有数分到两组分别异或，最终得到 <code>x</code> 与 <code>y</code>。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 令 <code>n = nums.length - 2</code>。<br/>
+         - 计算 <code>mix = XOR(nums) ^ XOR(0..n-1)</code>。<br/>
+         - 取 <code>lowbit = mix &amp; -mix</code>。<br/>
+         - 按 <code>lowbit</code> 将 <code>nums</code> 与 <code>0..n-1</code> 同时分组并分别异或。<br/>
+         - 两组异或结果就是两个 sneaky numbers。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code> 额外空间。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 把 <code>n</code> 写成 <code>nums.length</code> 导致范围错误。<br/>
+         - 只处理了 <code>nums</code> 的分组异或，漏掉 <code>0..n-1</code> 的分组异或。<br/>
+         - 题目允许任意顺序时还额外排序，徒增开销。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int[] getSneakyNumbers(int[] nums) {
+        int n = nums.length - 2;
+        int mix = 0;
+
+        for (int v : nums) mix ^= v;
+        for (int i = 0; i &lt; n; i++) mix ^= i;
+
+        int lowbit = mix &amp; -mix;
+        int a = 0, b = 0;
+
+        for (int v : nums) {
+            if ((v &amp; lowbit) == 0) a ^= v;
+            else b ^= v;
+        }
+        for (int i = 0; i &lt; n; i++) {
+            if ((i &amp; lowbit) == 0) a ^= i;
+            else b ^= i;
+        }
+
+        return new int[]{a, b};
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func getSneakyNumbers(nums []int) []int {
+    n := len(nums) - 2
+    mix := 0
+
+    for _, v := range nums {
+        mix ^= v
+    }
+    for i := 0; i &lt; n; i++ {
+        mix ^= i
+    }
+
+    lowbit := mix &amp; -mix
+    a, b := 0, 0
+
+    for _, v := range nums {
+        if v&amp;lowbit == 0 {
+            a ^= v
+        } else {
+            b ^= v
+        }
+    }
+    for i := 0; i &lt; n; i++ {
+        if i&amp;lowbit == 0 {
+            a ^= i
+        } else {
+            b ^= i
+        }
+    }
+
+    return []int{a, b}
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; getSneakyNumbers(vector&lt;int&gt;&amp; nums) {
+        int n = (int)nums.size() - 2;
+        int mix = 0;
+
+        for (int v : nums) mix ^= v;
+        for (int i = 0; i &lt; n; ++i) mix ^= i;
+
+        int lowbit = mix &amp; -mix;
+        int a = 0, b = 0;
+
+        for (int v : nums) {
+            if ((v &amp; lowbit) == 0) a ^= v;
+            else b ^= v;
+        }
+        for (int i = 0; i &lt; n; ++i) {
+            if ((i &amp; lowbit) == 0) a ^= i;
+            else b ^= i;
+        }
+
+        return {a, b};
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def getSneakyNumbers(self, nums: List[int]) -&gt; List[int]:
+        n = len(nums) - 2
+        mix = 0
+
+        for v in nums:
+            mix ^= v
+        for i in range(n):
+            mix ^= i
+
+        lowbit = mix &amp; -mix
+        a = b = 0
+
+        for v in nums:
+            if v &amp; lowbit == 0:
+                a ^= v
+            else:
+                b ^= v
+
+        for i in range(n):
+            if i &amp; lowbit == 0:
+                a ^= i
+            else:
+                b ^= i
+
+        return [a, b]</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var getSneakyNumbers = function(nums) {
+  const n = nums.length - 2;
+  let mix = 0;
+
+  for (const v of nums) mix ^= v;
+  for (let i = 0; i &lt; n; i++) mix ^= i;
+
+  const lowbit = mix &amp; -mix;
+  let a = 0, b = 0;
+
+  for (const v of nums) {
+    if ((v &amp; lowbit) === 0) a ^= v;
+    else b ^= v;
+  }
+  for (let i = 0; i &lt; n; i++) {
+    if ((i &amp; lowbit) === 0) a ^= i;
+    else b ^= i;
+  }
+
+  return [a, b];
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
