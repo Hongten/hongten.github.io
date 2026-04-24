@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 3120: Count the Number of Special Characters I (Lower/Upper Presence Check)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 3120 using lowercase-uppercase presence arrays, with full Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 3120: Count the Number of Special Characters I (Lower/Upper Presence Check)" />
+  <meta property="og:description" content="English + 中文 explanation with counting insight, complexity, pitfalls, and full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3120-count-the-number-of-special-characters-i.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3120-count-the-number-of-special-characters-i.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 3120: Count the Number of Special Characters I (Lower/Upper Presence Check)</h1>
+      <div class="meta">2026-04-24 · LeetCode · String / Counting</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 3120</span><span class="tag">String</span><span class="tag">Counting</span>
+
+      <p>Today we solve <strong>LeetCode 3120 - Count the Number of Special Characters I</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/count-the-number-of-special-characters-i/" target="_blank" rel="noopener">https://leetcode.com/problems/count-the-number-of-special-characters-i/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-3120-20260424.svg" alt="LeetCode 3120 lowercase uppercase presence diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a string <code>word</code>, a letter is called special if both lowercase and uppercase forms appear in the string. Return how many letters are special.</p>
+
+      <h3>Key Insight</h3>
+      <p>There are only 26 English letters. We can scan once, mark whether each lowercase letter appears and whether each uppercase letter appears, then count indices where both are true.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Create two boolean arrays of size 26: <code>lower</code> and <code>upper</code>.<br/>
+         - For each character in <code>word</code>, mark the corresponding array.<br/>
+         - Iterate from <code>0..25</code>, count positions where both arrays are true.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Let <code>n</code> be the string length.<br/>Time: <code>O(n + 26)</code> = <code>O(n)</code>.<br/>Space: <code>O(26 + 26)</code> = <code>O(1)</code>.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting uppercase/lowercase index conversion.<br/>
+         - Counting duplicated letters multiple times instead of once per alphabet letter.<br/>
+         - Using expensive per-letter scans repeatedly.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int numberOfSpecialChars(String word) {
+        boolean[] lower = new boolean[26];
+        boolean[] upper = new boolean[26];
+
+        for (char c : word.toCharArray()) {
+            if (c >= 'a' &amp;&amp; c &lt;= 'z') {
+                lower[c - 'a'] = true;
+            } else if (c >= 'A' &amp;&amp; c &lt;= 'Z') {
+                upper[c - 'A'] = true;
+            }
+        }
+
+        int ans = 0;
+        for (int i = 0; i &lt; 26; i++) {
+            if (lower[i] &amp;&amp; upper[i]) {
+                ans++;
+            }
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func numberOfSpecialChars(word string) int {
+    lower := make([]bool, 26)
+    upper := make([]bool, 26)
+
+    for _, c := range word {
+        if c >= 'a' &amp;&amp; c &lt;= 'z' {
+            lower[c-'a'] = true
+        } else if c >= 'A' &amp;&amp; c &lt;= 'Z' {
+            upper[c-'A'] = true
+        }
+    }
+
+    ans := 0
+    for i := 0; i &lt; 26; i++ {
+        if lower[i] &amp;&amp; upper[i] {
+            ans++
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int numberOfSpecialChars(string word) {
+        vector&lt;bool&gt; lower(26, false), upper(26, false);
+
+        for (char c : word) {
+            if (c &gt;= 'a' &amp;&amp; c &lt;= 'z') {
+                lower[c - 'a'] = true;
+            } else if (c &gt;= 'A' &amp;&amp; c &lt;= 'Z') {
+                upper[c - 'A'] = true;
+            }
+        }
+
+        int ans = 0;
+        for (int i = 0; i &lt; 26; i++) {
+            if (lower[i] &amp;&amp; upper[i]) {
+                ans++;
+            }
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def numberOfSpecialChars(self, word: str) -> int:
+        lower = [False] * 26
+        upper = [False] * 26
+
+        for c in word:
+            if 'a' &lt;= c &lt;= 'z':
+                lower[ord(c) - ord('a')] = True
+            elif 'A' &lt;= c &lt;= 'Z':
+                upper[ord(c) - ord('A')] = True
+
+        ans = 0
+        for i in range(26):
+            if lower[i] and upper[i]:
+                ans += 1
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {string} word
+ * @return {number}
+ */
+var numberOfSpecialChars = function(word) {
+  const lower = new Array(26).fill(false);
+  const upper = new Array(26).fill(false);
+
+  for (const ch of word) {
+    if (ch >= 'a' &amp;&amp; ch &lt;= 'z') {
+      lower[ch.charCodeAt(0) - 97] = true;
+    } else if (ch >= 'A' &amp;&amp; ch &lt;= 'Z') {
+      upper[ch.charCodeAt(0) - 65] = true;
+    }
+  }
+
+  let ans = 0;
+  for (let i = 0; i &lt; 26; i++) {
+    if (lower[i] &amp;&amp; upper[i]) {
+      ans++;
+    }
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定字符串 <code>word</code>，如果某个字母的小写和大写都在字符串中出现，则该字母是 special。返回 special 字母的数量。</p>
+
+      <h3>核心思路</h3>
+      <p>英文字母只有 26 个。一次遍历分别记录每个字母的小写是否出现、大写是否出现，最后统计同时出现的下标数量即可。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 准备两个长度为 26 的布尔数组：<code>lower</code> 与 <code>upper</code>。<br/>
+         - 遍历 <code>word</code>，按字符类型更新对应数组。<br/>
+         - 再遍历 <code>0..25</code>，若 <code>lower[i]</code> 和 <code>upper[i]</code> 同时为真则计数。</p>
+
+      <h3>复杂度分析</h3>
+      <p>设字符串长度为 <code>n</code>。<br/>时间复杂度：<code>O(n + 26)</code>，即 <code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 大小写转换时下标偏移写错。<br/>
+         - 把同一个字母重复计数多次，而不是按字母种类计数。<br/>
+         - 对每个字母重复扫描字符串导致额外开销。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int numberOfSpecialChars(String word) {
+        boolean[] lower = new boolean[26];
+        boolean[] upper = new boolean[26];
+
+        for (char c : word.toCharArray()) {
+            if (c >= 'a' &amp;&amp; c &lt;= 'z') {
+                lower[c - 'a'] = true;
+            } else if (c >= 'A' &amp;&amp; c &lt;= 'Z') {
+                upper[c - 'A'] = true;
+            }
+        }
+
+        int ans = 0;
+        for (int i = 0; i &lt; 26; i++) {
+            if (lower[i] &amp;&amp; upper[i]) {
+                ans++;
+            }
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func numberOfSpecialChars(word string) int {
+    lower := make([]bool, 26)
+    upper := make([]bool, 26)
+
+    for _, c := range word {
+        if c >= 'a' &amp;&amp; c &lt;= 'z' {
+            lower[c-'a'] = true
+        } else if c >= 'A' &amp;&amp; c &lt;= 'Z' {
+            upper[c-'A'] = true
+        }
+    }
+
+    ans := 0
+    for i := 0; i &lt; 26; i++ {
+        if lower[i] &amp;&amp; upper[i] {
+            ans++
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int numberOfSpecialChars(string word) {
+        vector&lt;bool&gt; lower(26, false), upper(26, false);
+
+        for (char c : word) {
+            if (c &gt;= 'a' &amp;&amp; c &lt;= 'z') {
+                lower[c - 'a'] = true;
+            } else if (c &gt;= 'A' &amp;&amp; c &lt;= 'Z') {
+                upper[c - 'A'] = true;
+            }
+        }
+
+        int ans = 0;
+        for (int i = 0; i &lt; 26; i++) {
+            if (lower[i] &amp;&amp; upper[i]) {
+                ans++;
+            }
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def numberOfSpecialChars(self, word: str) -> int:
+        lower = [False] * 26
+        upper = [False] * 26
+
+        for c in word:
+            if 'a' &lt;= c &lt;= 'z':
+                lower[ord(c) - ord('a')] = True
+            elif 'A' &lt;= c &lt;= 'Z':
+                upper[ord(c) - ord('A')] = True
+
+        ans = 0
+        for i in range(26):
+            if lower[i] and upper[i]:
+                ans += 1
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {string} word
+ * @return {number}
+ */
+var numberOfSpecialChars = function(word) {
+  const lower = new Array(26).fill(false);
+  const upper = new Array(26).fill(false);
+
+  for (const ch of word) {
+    if (ch >= 'a' &amp;&amp; ch &lt;= 'z') {
+      lower[ch.charCodeAt(0) - 97] = true;
+    } else if (ch >= 'A' &amp;&amp; ch &lt;= 'Z') {
+      upper[ch.charCodeAt(0) - 65] = true;
+    }
+  }
+
+  let ans = 0;
+  for (let i = 0; i &lt; 26; i++) {
+    if (lower[i] &amp;&amp; upper[i]) {
+      ans++;
+    }
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
