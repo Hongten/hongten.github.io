@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 629: K Inverse Pairs Array (DP + Prefix Sum Optimization)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 629 using dynamic programming with prefix-sum optimization, with full Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 629: K Inverse Pairs Array (DP + Prefix Sum Optimization)" />
+  <meta property="og:description" content="English + 中文 explanation with state transition, prefix-sum optimization, complexity, pitfalls, and full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-629-k-inverse-pairs-array.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-629-k-inverse-pairs-array.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 629: K Inverse Pairs Array (DP + Prefix Sum Optimization)</h1>
+      <div class="meta">2026-04-24 · LeetCode · Dynamic Programming / Prefix Sum</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 629</span><span class="tag">Dynamic Programming</span><span class="tag">Prefix Sum</span>
+
+      <p>Today we solve <strong>LeetCode 629 - K Inverse Pairs Array</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/k-inverse-pairs-array/" target="_blank" rel="noopener">https://leetcode.com/problems/k-inverse-pairs-array/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-629-20260424.svg" alt="LeetCode 629 DP transition and prefix sum optimization diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Count how many permutations of numbers <code>1..n</code> have exactly <code>k</code> inverse pairs, and return the result modulo <code>1e9+7</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>Let <code>dp[i][j]</code> be the number of arrays built from <code>1..i</code> with exactly <code>j</code> inverse pairs. When inserting <code>i</code> into an array of length <code>i-1</code>, it can add from <code>0</code> to <code>i-1</code> new inverse pairs.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>Brute force permutation generation is impossible for large <code>n</code>. A direct DP transition sums up to <code>i</code> terms per state, giving <code>O(n*k*n)</code>. Prefix sums reduce each transition to <code>O(1)</code>.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>- State: <code>dp[i][j]</code>.<br/>
+         - Transition: <code>dp[i][j] = sum(dp[i-1][j-x])</code> for <code>x in [0, min(j, i-1)]</code>.<br/>
+         - Use prefix-sum form:<br/>
+         <code>dp[i][j] = dp[i][j-1] + dp[i-1][j] - (j&gt;=i ? dp[i-1][j-i] : 0)</code>.<br/>
+         - Apply modulo normalization at each step.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n*k)</code>.<br/>Space: <code>O(k)</code> with rolling array.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Forgetting modulo after subtraction, causing negative values.<br/>
+         - Using non-rolling 2D DP unnecessarily.<br/>
+         - Not capping impossible <code>k</code> values (max inverse pairs is <code>n*(n-1)/2</code>).</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    private static final int MOD = 1_000_000_007;
+
+    public int kInversePairs(int n, int k) {
+        if (k > n * (n - 1) / 2) return 0;
+
+        int[] prev = new int[k + 1];
+        prev[0] = 1;
+
+        for (int i = 1; i <= n; i++) {
+            int[] curr = new int[k + 1];
+            curr[0] = 1;
+            for (int j = 1; j <= k; j++) {
+                long val = curr[j - 1] + prev[j];
+                if (j >= i) val -= prev[j - i];
+                val %= MOD;
+                if (val < 0) val += MOD;
+                curr[j] = (int) val;
+            }
+            prev = curr;
+        }
+
+        return prev[k];
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func kInversePairs(n int, k int) int {
+    const mod = 1_000_000_007
+    if k > n*(n-1)/2 {
+        return 0
+    }
+
+    prev := make([]int, k+1)
+    prev[0] = 1
+
+    for i := 1; i <= n; i++ {
+        curr := make([]int, k+1)
+        curr[0] = 1
+        for j := 1; j <= k; j++ {
+            val := curr[j-1] + prev[j]
+            if j >= i {
+                val -= prev[j-i]
+            }
+            val %= mod
+            if val < 0 {
+                val += mod
+            }
+            curr[j] = val
+        }
+        prev = curr
+    }
+
+    return prev[k]
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int kInversePairs(int n, int k) {
+        const int MOD = 1'000'000'007;
+        if (k > n * (n - 1) / 2) return 0;
+
+        vector&lt;int&gt; prev(k + 1, 0);
+        prev[0] = 1;
+
+        for (int i = 1; i <= n; ++i) {
+            vector&lt;int&gt; curr(k + 1, 0);
+            curr[0] = 1;
+            for (int j = 1; j <= k; ++j) {
+                long long val = (long long)curr[j - 1] + prev[j];
+                if (j >= i) val -= prev[j - i];
+                val %= MOD;
+                if (val < 0) val += MOD;
+                curr[j] = (int)val;
+            }
+            prev.swap(curr);
+        }
+
+        return prev[k];
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def kInversePairs(self, n: int, k: int) -> int:
+        MOD = 1_000_000_007
+        if k > n * (n - 1) // 2:
+            return 0
+
+        prev = [0] * (k + 1)
+        prev[0] = 1
+
+        for i in range(1, n + 1):
+            curr = [0] * (k + 1)
+            curr[0] = 1
+            for j in range(1, k + 1):
+                val = curr[j - 1] + prev[j]
+                if j >= i:
+                    val -= prev[j - i]
+                curr[j] = val % MOD
+            prev = curr
+
+        return prev[k]</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {number} n
+ * @param {number} k
+ * @return {number}
+ */
+var kInversePairs = function(n, k) {
+  const MOD = 1000000007;
+  if (k > (n * (n - 1)) / 2) return 0;
+
+  let prev = new Array(k + 1).fill(0);
+  prev[0] = 1;
+
+  for (let i = 1; i <= n; i++) {
+    const curr = new Array(k + 1).fill(0);
+    curr[0] = 1;
+    for (let j = 1; j <= k; j++) {
+      let val = curr[j - 1] + prev[j];
+      if (j >= i) val -= prev[j - i];
+      val %= MOD;
+      if (val < 0) val += MOD;
+      curr[j] = val;
+    }
+    prev = curr;
+  }
+
+  return prev[k];
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>统计由 <code>1..n</code> 组成的排列中，恰好包含 <code>k</code> 个逆序对的方案数，结果对 <code>1e9+7</code> 取模。</p>
+
+      <h3>核心思路</h3>
+      <p>定义 <code>dp[i][j]</code> 为使用数字 <code>1..i</code> 且逆序对数量为 <code>j</code> 的方案数。把数字 <code>i</code> 插入长度 <code>i-1</code> 的排列时，会新增 <code>0..i-1</code> 个逆序对。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>直接枚举排列不可行。朴素 DP 每个状态再枚举插入位置会变成 <code>O(n*k*n)</code>。使用前缀和优化后，每个状态可 <code>O(1)</code> 转移。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>- 状态：<code>dp[i][j]</code>。<br/>
+         - 转移：<code>dp[i][j] = sum(dp[i-1][j-x])</code>，其中 <code>x ∈ [0, min(j, i-1)]</code>。<br/>
+         - 前缀和化简为：<br/>
+         <code>dp[i][j] = dp[i][j-1] + dp[i-1][j] - (j&gt;=i ? dp[i-1][j-i] : 0)</code>。<br/>
+         - 每一步都做取模并处理负数。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n*k)</code>。<br/>空间复杂度：<code>O(k)</code>（滚动数组）。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 做减法后没有补模，导致负数。<br/>
+         - 不使用滚动数组，空间开销过大。<br/>
+         - 没有提前判断不可能的 <code>k</code>（最大逆序对是 <code>n*(n-1)/2</code>）。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    private static final int MOD = 1_000_000_007;
+
+    public int kInversePairs(int n, int k) {
+        if (k > n * (n - 1) / 2) return 0;
+
+        int[] prev = new int[k + 1];
+        prev[0] = 1;
+
+        for (int i = 1; i <= n; i++) {
+            int[] curr = new int[k + 1];
+            curr[0] = 1;
+            for (int j = 1; j <= k; j++) {
+                long val = curr[j - 1] + prev[j];
+                if (j >= i) val -= prev[j - i];
+                val %= MOD;
+                if (val < 0) val += MOD;
+                curr[j] = (int) val;
+            }
+            prev = curr;
+        }
+
+        return prev[k];
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func kInversePairs(n int, k int) int {
+    const mod = 1_000_000_007
+    if k > n*(n-1)/2 {
+        return 0
+    }
+
+    prev := make([]int, k+1)
+    prev[0] = 1
+
+    for i := 1; i <= n; i++ {
+        curr := make([]int, k+1)
+        curr[0] = 1
+        for j := 1; j <= k; j++ {
+            val := curr[j-1] + prev[j]
+            if j >= i {
+                val -= prev[j-i]
+            }
+            val %= mod
+            if val < 0 {
+                val += mod
+            }
+            curr[j] = val
+        }
+        prev = curr
+    }
+
+    return prev[k]
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int kInversePairs(int n, int k) {
+        const int MOD = 1'000'000'007;
+        if (k > n * (n - 1) / 2) return 0;
+
+        vector&lt;int&gt; prev(k + 1, 0);
+        prev[0] = 1;
+
+        for (int i = 1; i <= n; ++i) {
+            vector&lt;int&gt; curr(k + 1, 0);
+            curr[0] = 1;
+            for (int j = 1; j <= k; ++j) {
+                long long val = (long long)curr[j - 1] + prev[j];
+                if (j >= i) val -= prev[j - i];
+                val %= MOD;
+                if (val < 0) val += MOD;
+                curr[j] = (int)val;
+            }
+            prev.swap(curr);
+        }
+
+        return prev[k];
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def kInversePairs(self, n: int, k: int) -> int:
+        MOD = 1_000_000_007
+        if k > n * (n - 1) // 2:
+            return 0
+
+        prev = [0] * (k + 1)
+        prev[0] = 1
+
+        for i in range(1, n + 1):
+            curr = [0] * (k + 1)
+            curr[0] = 1
+            for j in range(1, k + 1):
+                val = curr[j - 1] + prev[j]
+                if j >= i:
+                    val -= prev[j - i]
+                curr[j] = val % MOD
+            prev = curr
+
+        return prev[k]</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {number} n
+ * @param {number} k
+ * @return {number}
+ */
+var kInversePairs = function(n, k) {
+  const MOD = 1000000007;
+  if (k > (n * (n - 1)) / 2) return 0;
+
+  let prev = new Array(k + 1).fill(0);
+  prev[0] = 1;
+
+  for (let i = 1; i <= n; i++) {
+    const curr = new Array(k + 1).fill(0);
+    curr[0] = 1;
+    for (let j = 1; j <= k; j++) {
+      let val = curr[j - 1] + prev[j];
+      if (j >= i) val -= prev[j - i];
+      val %= MOD;
+      if (val < 0) val += MOD;
+      curr[j] = val;
+    }
+    prev = curr;
+  }
+
+  return prev[k];
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>

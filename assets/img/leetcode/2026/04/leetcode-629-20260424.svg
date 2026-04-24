@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="LeetCode 629 DP and prefix sum optimization diagram">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="52" y="86" fill="#e2e8f0" font-size="44" font-family="Inter,Arial,sans-serif" font-weight="700">LeetCode 629 · K Inverse Pairs Array</text>
+  <text x="52" y="132" fill="#93c5fd" font-size="27" font-family="Inter,Arial,sans-serif">dp[i][j] = ways for 1..i with exactly j inverse pairs</text>
+
+  <rect x="52" y="172" width="1096" height="396" rx="18" fill="#111827" stroke="#334155"/>
+
+  <rect x="86" y="214" width="490" height="310" rx="14" fill="#0b1220" stroke="#475569"/>
+  <text x="108" y="255" fill="#f8fafc" font-size="24" font-family="Inter,Arial,sans-serif">Transition (insert i):</text>
+  <text x="108" y="298" fill="#a7f3d0" font-size="23" font-family="JetBrains Mono,Consolas,monospace">dp[i][j] = Σ dp[i-1][j-x]</text>
+  <text x="108" y="334" fill="#cbd5e1" font-size="21" font-family="Inter,Arial,sans-serif">x from 0 to min(j, i-1)</text>
+  <text x="108" y="388" fill="#fcd34d" font-size="22" font-family="JetBrains Mono,Consolas,monospace">=> prefix window over dp[i-1][*]</text>
+  <text x="108" y="432" fill="#86efac" font-size="22" font-family="JetBrains Mono,Consolas,monospace">O(n*k) instead of O(n*k*n)</text>
+
+  <rect x="624" y="214" width="490" height="310" rx="14" fill="#0b1220" stroke="#475569"/>
+  <text x="646" y="255" fill="#f8fafc" font-size="24" font-family="Inter,Arial,sans-serif">Prefix-sum form:</text>
+  <text x="646" y="300" fill="#93c5fd" font-size="20" font-family="JetBrains Mono,Consolas,monospace">dp[i][j] = dp[i][j-1] + dp[i-1][j]</text>
+  <text x="646" y="335" fill="#93c5fd" font-size="20" font-family="JetBrains Mono,Consolas,monospace">           - (j&gt;=i ? dp[i-1][j-i] : 0)</text>
+  <text x="646" y="385" fill="#fca5a5" font-size="21" font-family="Inter,Arial,sans-serif">Remember modulo normalization</text>
+  <text x="646" y="425" fill="#e2e8f0" font-size="21" font-family="Inter,Arial,sans-serif">Use rolling array to keep O(k) space</text>
+
+  <text x="906" y="552" fill="#86efac" font-size="24" font-family="Inter,Arial,sans-serif">Author: Tom🦞</text>
+</svg>
