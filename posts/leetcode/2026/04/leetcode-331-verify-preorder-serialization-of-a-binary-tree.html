@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 331: Verify Preorder Serialization of a Binary Tree (Slot Counting)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 331 using slot counting on preorder serialization, with full Java/Go/C++/Python/JavaScript code tabs in both English and Chinese sections."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 331: Verify Preorder Serialization of a Binary Tree (Slot Counting)" />
+  <meta property="og:description" content="English + 中文 explanation with slot invariant, algorithm, pitfalls, and complete 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-331-verify-preorder-serialization-of-a-binary-tree.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-331-verify-preorder-serialization-of-a-binary-tree.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 331: Verify Preorder Serialization of a Binary Tree (Slot Counting)</h1>
+      <div class="meta">2026-04-24 · LeetCode · Tree / String / Greedy</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 331</span><span class="tag">Tree</span><span class="tag">Greedy</span>
+
+      <p>Today we solve <strong>LeetCode 331 - Verify Preorder Serialization of a Binary Tree</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/verify-preorder-serialization-of-a-binary-tree/" target="_blank" rel="noopener">https://leetcode.com/problems/verify-preorder-serialization-of-a-binary-tree/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-331-20260424.svg" alt="LeetCode 331 slot counting diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given a comma-separated preorder serialization where null nodes are represented by <code>#</code>, determine whether it can represent a valid binary tree, without rebuilding the tree.</p>
+
+      <h3>Key Insight</h3>
+      <p>Track how many child slots are available. Start with one slot for the root. Every token consumes one slot. A non-null node creates two new child slots, so net change is <code>+1</code>. A null node creates none, so net change is <code>-1</code>. Slots must never go negative, and must end at exactly zero.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Initialize <code>slots = 1</code>.<br/>
+         - For each token in preorder:<br/>
+         &nbsp;&nbsp;1) Consume one slot: <code>slots--</code>.<br/>
+         &nbsp;&nbsp;2) If <code>slots &lt; 0</code>, invalid.<br/>
+         &nbsp;&nbsp;3) If token is not <code>#</code>, add two slots: <code>slots += 2</code>.<br/>
+         - Valid iff final <code>slots == 0</code>.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Let <code>n</code> be the number of tokens.<br/>Time: <code>O(n)</code>.<br/>Space: <code>O(1)</code> extra.</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Only checking final slot count, but forgetting intermediate negative slots.<br/>
+         - Trying to build an explicit tree, which is unnecessary.<br/>
+         - Mishandling single token input like <code>#</code> (which is valid).</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean isValidSerialization(String preorder) {
+        int slots = 1;
+        String[] nodes = preorder.split(",");
+
+        for (String node : nodes) {
+            slots--;
+            if (slots < 0) return false;
+            if (!node.equals("#")) {
+                slots += 2;
+            }
+        }
+        return slots == 0;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func isValidSerialization(preorder string) bool {
+    slots := 1
+    nodes := strings.Split(preorder, ",")
+
+    for _, node := range nodes {
+        slots--
+        if slots < 0 {
+            return false
+        }
+        if node != "#" {
+            slots += 2
+        }
+    }
+    return slots == 0
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool isValidSerialization(string preorder) {
+        int slots = 1;
+        string token;
+        stringstream ss(preorder);
+
+        while (getline(ss, token, ',')) {
+            slots--;
+            if (slots < 0) return false;
+            if (token != "#") {
+                slots += 2;
+            }
+        }
+        return slots == 0;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def isValidSerialization(self, preorder: str) -> bool:
+        slots = 1
+        for node in preorder.split(','):
+            slots -= 1
+            if slots < 0:
+                return False
+            if node != '#':
+                slots += 2
+        return slots == 0</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {string} preorder
+ * @return {boolean}
+ */
+var isValidSerialization = function(preorder) {
+  let slots = 1;
+  const nodes = preorder.split(',');
+
+  for (const node of nodes) {
+    slots -= 1;
+    if (slots < 0) return false;
+    if (node !== '#') {
+      slots += 2;
+    }
+  }
+  return slots === 0;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定一串逗号分隔的二叉树前序序列化字符串，空节点用 <code>#</code> 表示。要求在<strong>不重建树</strong>的情况下判断该序列是否有效。</p>
+
+      <h3>核心思路</h3>
+      <p>用“槽位（slot）”表示还可以放多少个节点。初始有 1 个槽位（根节点位置）。每读到一个节点都会占用 1 个槽位。若是非空节点，还会额外提供 2 个子槽位，因此净变化是 <code>+1</code>；若是 <code>#</code>，净变化是 <code>-1</code>。过程中槽位不能为负，最后必须正好为 0。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 初始化 <code>slots = 1</code>。<br/>
+         - 按逗号遍历每个 token：<br/>
+         &nbsp;&nbsp;1) 先消耗一个槽位：<code>slots--</code>。<br/>
+         &nbsp;&nbsp;2) 若 <code>slots &lt; 0</code>，立即判无效。<br/>
+         &nbsp;&nbsp;3) 若 token 不是 <code>#</code>，补充两个子槽位：<code>slots += 2</code>。<br/>
+         - 遍历结束后，<code>slots == 0</code> 才是有效序列。</p>
+
+      <h3>复杂度分析</h3>
+      <p>设 token 数量为 <code>n</code>。<br/>时间复杂度：<code>O(n)</code>。<br/>额外空间复杂度：<code>O(1)</code>。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 只检查最后是否为 0，但没有检查中途是否出现负数。<br/>
+         - 误以为必须真的构建二叉树。<br/>
+         - 忽略输入仅为 <code>#</code> 的情况（这是合法空树）。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean isValidSerialization(String preorder) {
+        int slots = 1;
+        String[] nodes = preorder.split(",");
+
+        for (String node : nodes) {
+            slots--;
+            if (slots < 0) return false;
+            if (!node.equals("#")) {
+                slots += 2;
+            }
+        }
+        return slots == 0;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func isValidSerialization(preorder string) bool {
+    slots := 1
+    nodes := strings.Split(preorder, ",")
+
+    for _, node := range nodes {
+        slots--
+        if slots < 0 {
+            return false
+        }
+        if node != "#" {
+            slots += 2
+        }
+    }
+    return slots == 0
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool isValidSerialization(string preorder) {
+        int slots = 1;
+        string token;
+        stringstream ss(preorder);
+
+        while (getline(ss, token, ',')) {
+            slots--;
+            if (slots < 0) return false;
+            if (token != "#") {
+                slots += 2;
+            }
+        }
+        return slots == 0;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def isValidSerialization(self, preorder: str) -> bool:
+        slots = 1
+        for node in preorder.split(','):
+            slots -= 1
+            if slots < 0:
+                return False
+            if node != '#':
+                slots += 2
+        return slots == 0</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {string} preorder
+ * @return {boolean}
+ */
+var isValidSerialization = function(preorder) {
+  let slots = 1;
+  const nodes = preorder.split(',');
+
+  for (const node of nodes) {
+    slots -= 1;
+    if (slots < 0) return false;
+    if (node !== '#') {
+      slots += 2;
+    }
+  }
+  return slots === 0;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
