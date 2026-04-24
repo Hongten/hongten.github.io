@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 3146: Permutation Difference between Two Strings (Index Map + Absolute Distance Sum)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 3146 using index mapping and absolute distance summation, including full Java/Go/C++/Python/JavaScript code tabs."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 3146: Permutation Difference between Two Strings (Index Map + Absolute Distance Sum)" />
+  <meta property="og:description" content="English + 中文 explanation with complete 5-language code tabs and a positional mapping diagram." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3146-permutation-difference-between-two-strings.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3146-permutation-difference-between-two-strings.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 3146: Permutation Difference between Two Strings (Index Map + Absolute Distance Sum)</h1>
+      <div class="meta">2026-04-24 · LeetCode · String / Hash Map</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 3146</span><span class="tag">String</span><span class="tag">Hash Map</span>
+
+      <p>Today we solve <strong>LeetCode 3146 - Permutation Difference between Two Strings</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/permutation-difference-between-two-strings/" target="_blank" rel="noopener">https://leetcode.com/problems/permutation-difference-between-two-strings/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-3146-20260424.svg" alt="LeetCode 3146 diagram mapping each character position in s and t and summing absolute index differences" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Given two strings <code>s</code> and <code>t</code>, both permutations of the same unique letters, return the sum of <code>|posS(c) - posT(c)|</code> over every character <code>c</code>.</p>
+
+      <h3>Key Insight</h3>
+      <p>Store each character's index in <code>s</code> first. Then scan <code>t</code>, and for each character add the absolute difference between current index in <code>t</code> and mapped index in <code>s</code>.</p>
+
+      <h3>Algorithm</h3>
+      <p>- Build map/array <code>pos</code> from character to index in <code>s</code>.<br/>
+         - Iterate through <code>t</code> with index <code>i</code>.<br/>
+         - Add <code>abs(pos[t[i]] - i)</code> to answer.<br/>
+         - Return total sum.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(1)</code> (fixed alphabet) or <code>O(n)</code> in generic mapping.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int findPermutationDifference(String s, String t) {
+        int[] pos = new int[26];
+        for (int i = 0; i &lt; s.length(); i++) {
+            pos[s.charAt(i) - 'a'] = i;
+        }
+
+        int ans = 0;
+        for (int i = 0; i &lt; t.length(); i++) {
+            ans += Math.abs(pos[t.charAt(i) - 'a'] - i);
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func findPermutationDifference(s string, t string) int {
+    pos := make([]int, 26)
+    for i := 0; i &lt; len(s); i++ {
+        pos[s[i]-'a'] = i
+    }
+
+    ans := 0
+    for i := 0; i &lt; len(t); i++ {
+        d := pos[t[i]-'a'] - i
+        if d &lt; 0 {
+            d = -d
+        }
+        ans += d
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int findPermutationDifference(string s, string t) {
+        vector&lt;int&gt; pos(26);
+        for (int i = 0; i &lt; (int)s.size(); ++i) {
+            pos[s[i] - 'a'] = i;
+        }
+
+        int ans = 0;
+        for (int i = 0; i &lt; (int)t.size(); ++i) {
+            ans += abs(pos[t[i] - 'a'] - i);
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def findPermutationDifference(self, s: str, t: str) -&gt; int:
+        pos = {ch: i for i, ch in enumerate(s)}
+        return sum(abs(pos[ch] - i) for i, ch in enumerate(t))</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var findPermutationDifference = function(s, t) {
+  const pos = new Array(26).fill(0);
+  for (let i = 0; i &lt; s.length; i++) {
+    pos[s.charCodeAt(i) - 97] = i;
+  }
+
+  let ans = 0;
+  for (let i = 0; i &lt; t.length; i++) {
+    ans += Math.abs(pos[t.charCodeAt(i) - 97] - i);
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定两个字符串 <code>s</code> 和 <code>t</code>，它们由同一组互不重复字符组成（互为排列）。要求计算所有字符位置差绝对值之和：<code>|posS(c) - posT(c)|</code>。</p>
+
+      <h3>核心思路</h3>
+      <p>先记录每个字符在 <code>s</code> 中的位置，再遍历 <code>t</code>，把当前下标与 <code>s</code> 中对应下标做绝对值差并累加即可。</p>
+
+      <h3>算法步骤</h3>
+      <p>- 用数组/哈希表记录字符在 <code>s</code> 中的位置。<br/>
+         - 遍历 <code>t</code> 的每个字符和下标 <code>i</code>。<br/>
+         - 累加 <code>abs(pos[t[i]] - i)</code>。<br/>
+         - 返回总和。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>（固定小写字母表）或一般映射下 <code>O(n)</code>。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int findPermutationDifference(String s, String t) {
+        int[] pos = new int[26];
+        for (int i = 0; i &lt; s.length(); i++) {
+            pos[s.charAt(i) - 'a'] = i;
+        }
+
+        int ans = 0;
+        for (int i = 0; i &lt; t.length(); i++) {
+            ans += Math.abs(pos[t.charAt(i) - 'a'] - i);
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func findPermutationDifference(s string, t string) int {
+    pos := make([]int, 26)
+    for i := 0; i &lt; len(s); i++ {
+        pos[s[i]-'a'] = i
+    }
+
+    ans := 0
+    for i := 0; i &lt; len(t); i++ {
+        d := pos[t[i]-'a'] - i
+        if d &lt; 0 {
+            d = -d
+        }
+        ans += d
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int findPermutationDifference(string s, string t) {
+        vector&lt;int&gt; pos(26);
+        for (int i = 0; i &lt; (int)s.size(); ++i) {
+            pos[s[i] - 'a'] = i;
+        }
+
+        int ans = 0;
+        for (int i = 0; i &lt; (int)t.size(); ++i) {
+            ans += abs(pos[t[i] - 'a'] - i);
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def findPermutationDifference(self, s: str, t: str) -&gt; int:
+        pos = {ch: i for i, ch in enumerate(s)}
+        return sum(abs(pos[ch] - i) for i, ch in enumerate(t))</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var findPermutationDifference = function(s, t) {
+  const pos = new Array(26).fill(0);
+  for (let i = 0; i &lt; s.length; i++) {
+    pos[s.charCodeAt(i) - 97] = i;
+  }
+
+  let ans = 0;
+  for (let i = 0; i &lt; t.length; i++) {
+    ans += Math.abs(pos[t.charCodeAt(i) - 97] - i);
+  }
+  return ans;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
