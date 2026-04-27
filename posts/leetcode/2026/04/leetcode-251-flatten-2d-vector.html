@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 251: Flatten 2D Vector (Row/Col Pointer Iterator)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 251 with full Java/Go/C++/Python/JavaScript code tabs in both English and Chinese sections."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 251: Flatten 2D Vector (Row/Col Pointer Iterator)" />
+  <meta property="og:description" content="Implement a 2D vector iterator using row/column pointers with lazy skipping of empty rows." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-251-flatten-2d-vector.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-251-flatten-2d-vector.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 251: Flatten 2D Vector (Row/Col Pointer Iterator)</h1>
+      <div class="meta">2026-04-27 · LeetCode · Design / Iterator / Array</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 251</span><span class="tag">Design</span><span class="tag">Iterator</span>
+
+      <p>Today we solve <strong>LeetCode 251 - Flatten 2D Vector</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/flatten-2d-vector/" target="_blank" rel="noopener">https://leetcode.com/problems/flatten-2d-vector/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-251-20260427.svg" alt="LeetCode 251 flatten 2d vector iterator with row and col pointers" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>Design an iterator over a 2D integer vector. Implement <code>next()</code> to return the next element and <code>hasNext()</code> to tell whether elements remain.</p>
+
+      <h3>Key Idea</h3>
+      <p>Maintain two pointers: <code>r</code> for row, <code>c</code> for column. Before reading, advance <code>r</code> while current row is exhausted (or empty), and reset <code>c = 0</code> when moving to the next row.</p>
+
+      <h3>Algorithm</h3>
+      <p>1) Keep <code>vec</code>, <code>r</code>, <code>c</code>.<br/>
+         2) Helper <code>advance()</code>: while <code>r &lt; rows</code> and <code>c &gt;= vec[r].length</code>, do <code>r++</code>, <code>c=0</code>.<br/>
+         3) <code>hasNext()</code> calls <code>advance()</code> then checks <code>r &lt; rows</code>.<br/>
+         4) <code>next()</code> calls <code>hasNext()</code>, returns <code>vec[r][c++]</code>.</p>
+
+      <h3>Complexity</h3>
+      <p>Amortized <code>O(1)</code> per operation, because each row and element is skipped or visited at most once. Space complexity <code>O(1)</code> extra.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs"><div class="tab-list">
+        <button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button>
+      </div>
+      <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Vector2D {
+    private final int[][] vec;
+    private int r = 0, c = 0;
+
+    public Vector2D(int[][] vec) {
+        this.vec = vec;
+    }
+
+    private void advance() {
+        while (r &lt; vec.length && c &gt;= vec[r].length) {
+            r++;
+            c = 0;
+        }
+    }
+
+    public int next() {
+        if (!hasNext()) throw new RuntimeException("No more elements");
+        return vec[r][c++];
+    }
+
+    public boolean hasNext() {
+        advance();
+        return r &lt; vec.length;
+    }
+}</code></pre></div>
+      <div class="tab-pane" data-tab="go"><pre><code class="language-go">type Vector2D struct {
+	vec [][]int
+	r, c int
+}
+
+func Constructor(vec [][]int) Vector2D {
+	return Vector2D{vec: vec}
+}
+
+func (it *Vector2D) advance() {
+	for it.r &lt; len(it.vec) && it.c &gt;= len(it.vec[it.r]) {
+		it.r++
+		it.c = 0
+	}
+}
+
+func (it *Vector2D) Next() int {
+	if !it.HasNext() {
+		panic("No more elements")
+	}
+	v := it.vec[it.r][it.c]
+	it.c++
+	return v
+}
+
+func (it *Vector2D) HasNext() bool {
+	it.advance()
+	return it.r &lt; len(it.vec)
+}</code></pre></div>
+      <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Vector2D {
+private:
+    vector&lt;vector&lt;int&gt;&gt; vec;
+    int r = 0, c = 0;
+
+    void advance() {
+        while (r &lt; (int)vec.size() && c &gt;= (int)vec[r].size()) {
+            r++;
+            c = 0;
+        }
+    }
+
+public:
+    Vector2D(vector&lt;vector&lt;int&gt;&gt;& v) : vec(v) {}
+
+    int next() {
+        if (!hasNext()) throw runtime_error("No more elements");
+        return vec[r][c++];
+    }
+
+    bool hasNext() {
+        advance();
+        return r &lt; (int)vec.size();
+    }
+};</code></pre></div>
+      <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Vector2D:
+    def __init__(self, vec):
+        self.vec = vec
+        self.r = 0
+        self.c = 0
+
+    def _advance(self):
+        while self.r &lt; len(self.vec) and self.c &gt;= len(self.vec[self.r]):
+            self.r += 1
+            self.c = 0
+
+    def next(self) -> int:
+        if not self.hasNext():
+            raise Exception("No more elements")
+        val = self.vec[self.r][self.c]
+        self.c += 1
+        return val
+
+    def hasNext(self) -> bool:
+        self._advance()
+        return self.r &lt; len(self.vec)</code></pre></div>
+      <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var Vector2D = function(vec) {
+  this.vec = vec;
+  this.r = 0;
+  this.c = 0;
+};
+
+Vector2D.prototype.advance = function() {
+  while (this.r &lt; this.vec.length && this.c &gt;= this.vec[this.r].length) {
+    this.r++;
+    this.c = 0;
+  }
+};
+
+Vector2D.prototype.hasNext = function() {
+  this.advance();
+  return this.r &lt; this.vec.length;
+};
+
+Vector2D.prototype.next = function() {
+  if (!this.hasNext()) throw new Error("No more elements");
+  return this.vec[this.r][this.c++];
+};</code></pre></div></div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>实现一个二维整数数组的迭代器，支持 <code>next()</code> 返回下一个元素，<code>hasNext()</code> 判断是否还有元素。</p>
+
+      <h3>核心思路</h3>
+      <p>用两个指针：<code>r</code> 表示行，<code>c</code> 表示列。每次访问前先清理空位，如果当前行已读完就移动到下一行并把列重置为 0，因此可以自动跳过空行。</p>
+
+      <h3>算法步骤</h3>
+      <p>1）维护 <code>vec</code>、<code>r</code>、<code>c</code>。<br/>
+         2）实现 <code>advance()</code>：当 <code>r</code> 未越界且 <code>c</code> 已到当前行末尾时，执行 <code>r++</code>、<code>c=0</code>。<br/>
+         3）<code>hasNext()</code> 先调用 <code>advance()</code>，再判断 <code>r &lt; rows</code>。<br/>
+         4）<code>next()</code> 先确保有元素，再返回 <code>vec[r][c++]</code>。</p>
+
+      <h3>复杂度分析</h3>
+      <p>均摊时间复杂度 <code>O(1)</code>，因为每个元素只访问一次、每一行最多跳过一次。额外空间复杂度 <code>O(1)</code>。</p>
+
+      <h3>参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs"><div class="tab-list">
+        <button class="tab-btn active" data-tab="java-cn">Java</button><button class="tab-btn" data-tab="go-cn">Go</button><button class="tab-btn" data-tab="cpp-cn">C++</button><button class="tab-btn" data-tab="python-cn">Python</button><button class="tab-btn" data-tab="javascript-cn">JavaScript</button>
+      </div>
+      <div class="tab-pane active" data-tab="java-cn"><pre><code class="language-java">class Vector2D {
+    private final int[][] vec;
+    private int r = 0, c = 0;
+
+    public Vector2D(int[][] vec) {
+        this.vec = vec;
+    }
+
+    private void advance() {
+        while (r &lt; vec.length && c &gt;= vec[r].length) {
+            r++;
+            c = 0;
+        }
+    }
+
+    public int next() {
+        if (!hasNext()) throw new RuntimeException("No more elements");
+        return vec[r][c++];
+    }
+
+    public boolean hasNext() {
+        advance();
+        return r &lt; vec.length;
+    }
+}</code></pre></div>
+      <div class="tab-pane" data-tab="go-cn"><pre><code class="language-go">type Vector2D struct {
+	vec [][]int
+	r, c int
+}
+
+func Constructor(vec [][]int) Vector2D {
+	return Vector2D{vec: vec}
+}
+
+func (it *Vector2D) advance() {
+	for it.r &lt; len(it.vec) && it.c &gt;= len(it.vec[it.r]) {
+		it.r++
+		it.c = 0
+	}
+}
+
+func (it *Vector2D) Next() int {
+	if !it.HasNext() {
+		panic("No more elements")
+	}
+	v := it.vec[it.r][it.c]
+	it.c++
+	return v
+}
+
+func (it *Vector2D) HasNext() bool {
+	it.advance()
+	return it.r &lt; len(it.vec)
+}</code></pre></div>
+      <div class="tab-pane" data-tab="cpp-cn"><pre><code class="language-cpp">class Vector2D {
+private:
+    vector&lt;vector&lt;int&gt;&gt; vec;
+    int r = 0, c = 0;
+
+    void advance() {
+        while (r &lt; (int)vec.size() && c &gt;= (int)vec[r].size()) {
+            r++;
+            c = 0;
+        }
+    }
+
+public:
+    Vector2D(vector&lt;vector&lt;int&gt;&gt;& v) : vec(v) {}
+
+    int next() {
+        if (!hasNext()) throw runtime_error("No more elements");
+        return vec[r][c++];
+    }
+
+    bool hasNext() {
+        advance();
+        return r &lt; (int)vec.size();
+    }
+};</code></pre></div>
+      <div class="tab-pane" data-tab="python-cn"><pre><code class="language-python">class Vector2D:
+    def __init__(self, vec):
+        self.vec = vec
+        self.r = 0
+        self.c = 0
+
+    def _advance(self):
+        while self.r &lt; len(self.vec) and self.c &gt;= len(self.vec[self.r]):
+            self.r += 1
+            self.c = 0
+
+    def next(self) -> int:
+        if not self.hasNext():
+            raise Exception("No more elements")
+        val = self.vec[self.r][self.c]
+        self.c += 1
+        return val
+
+    def hasNext(self) -> bool:
+        self._advance()
+        return self.r &lt; len(self.vec)</code></pre></div>
+      <div class="tab-pane" data-tab="javascript-cn"><pre><code class="language-javascript">var Vector2D = function(vec) {
+  this.vec = vec;
+  this.r = 0;
+  this.c = 0;
+};
+
+Vector2D.prototype.advance = function() {
+  while (this.r &lt; this.vec.length && this.c &gt;= this.vec[this.r].length) {
+    this.r++;
+    this.c = 0;
+  }
+};
+
+Vector2D.prototype.hasNext = function() {
+  this.advance();
+  return this.r &lt; this.vec.length;
+};
+
+Vector2D.prototype.next = function() {
+  if (!this.hasNext()) throw new Error("No more elements");
+  return this.vec[this.r][this.c++];
+};</code></pre></div></div>
+    </article>
+
+    <section class="card comments"><h2>Comments</h2>
+      <script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script>
+    </section>
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
