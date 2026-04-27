@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 2716: Minimize String Length (Unique Characters Count)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 2716 using unique character counting with full Java/Go/C++/Python/JavaScript code tabs in both sections."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 2716: Minimize String Length (Unique Characters Count)" />
+  <meta property="og:description" content="English + 中文 explanation with set-based invariant, correctness intuition, complexity, and full multi-language implementations." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-2716-minimize-string-length.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-2716-minimize-string-length.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag("js", new Date());
+    gtag("config", "G-B0HR07V6F4");
+  </script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a>
+      <div class="menu">
+        <a href="../../../../index.html">Home</a>
+        <a href="../../../../about.html">About</a>
+      </div>
+    </nav>
+
+    <article class="card article">
+      <h1>LeetCode 2716: Minimize String Length (Unique Characters Count)</h1>
+      <div class="meta">2026-04-27 · LeetCode · String / Hash Set</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 2716</span><span class="tag">String</span><span class="tag">Hash Set</span>
+
+      <p>Today we solve <strong>LeetCode 2716 - Minimize String Length</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/minimize-string-length/" target="_blank" rel="noopener">https://leetcode.com/problems/minimize-string-length/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-2716-20260427.svg" alt="LeetCode 2716 unique characters after deletions diagram" />
+
+      <h2>English</h2>
+      <h3>Problem Summary</h3>
+      <p>You may repeatedly delete one character from any pair of equal characters in string <code>s</code>. Return the minimum possible length after all valid deletions.</p>
+
+      <h3>Key Insight</h3>
+      <p>Each distinct character can be reduced to exactly one remaining copy, but cannot disappear completely. So the final minimum length equals the number of distinct characters in <code>s</code>.</p>
+
+      <h3>Brute Force and Limitations</h3>
+      <p>A simulation that repeatedly finds duplicate pairs and deletes one character is unnecessary and inefficient. It adds bookkeeping and can degrade toward quadratic behavior.</p>
+
+      <h3>Optimal Algorithm Steps</h3>
+      <p>1) Create a set (or 26-boolean array).<br/>2) Scan each character in <code>s</code> and mark it as seen.<br/>3) Return the number of seen characters.</p>
+
+      <h3>Complexity Analysis</h3>
+      <p>Time: <code>O(n)</code>.<br/>Space: <code>O(1)</code> (bounded by 26 lowercase letters).</p>
+
+      <h3>Common Pitfalls</h3>
+      <p>- Misreading operation as deleting both equal characters.<br/>- Trying greedy deletion simulation instead of counting distinct letters.<br/>- Ignoring that one copy of each distinct letter must remain.</p>
+
+      <h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int minimizedStringLength(String s) {
+        boolean[] seen = new boolean[26];
+        int cnt = 0;
+        for (int i = 0; i &lt; s.length(); i++) {
+            int idx = s.charAt(i) - 'a';
+            if (!seen[idx]) {
+                seen[idx] = true;
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func minimizedStringLength(s string) int {
+    seen := make([]bool, 26)
+    cnt := 0
+    for _, ch := range s {
+        idx := ch - 'a'
+        if !seen[idx] {
+            seen[idx] = true
+            cnt++
+        }
+    }
+    return cnt
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int minimizedStringLength(string s) {
+        vector&lt;bool&gt; seen(26, false);
+        int cnt = 0;
+        for (char c : s) {
+            int idx = c - 'a';
+            if (!seen[idx]) {
+                seen[idx] = true;
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def minimizedStringLength(self, s: str) -&gt; int:
+        return len(set(s))</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {string} s
+ * @return {number}
+ */
+var minimizedStringLength = function(s) {
+  const seen = new Set();
+  for (const ch of s) seen.add(ch);
+  return seen.size;
+};</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <h3>题目概述</h3>
+      <p>给定字符串 <code>s</code>，你可以对任意一对相同字符执行操作：删除其中一个字符。求最终能得到的最小字符串长度。</p>
+
+      <h3>核心思路</h3>
+      <p>每种不同字符最多只能被删到剩 1 个，不能全部删光。因此最小长度正好等于字符串中不同字符的个数。</p>
+
+      <h3>暴力解法与不足</h3>
+      <p>如果按“不断找重复并删除”去模拟，会有很多无意义操作与状态维护，复杂度也更差。</p>
+
+      <h3>最优算法步骤</h3>
+      <p>1）准备集合（或 26 位布尔数组）。<br/>2）遍历字符串，把出现过的字符标记为已见。<br/>3）返回已见字符数量。</p>
+
+      <h3>复杂度分析</h3>
+      <p>时间复杂度：<code>O(n)</code>。<br/>空间复杂度：<code>O(1)</code>（小写字母最多 26 种）。</p>
+
+      <h3>常见陷阱</h3>
+      <p>- 误以为一次操作会删掉两个相同字符。<br/>- 走模拟删除路线，代码复杂还慢。<br/>- 忽略“每种字符最终至少保留一个”的本质约束。</p>
+
+      <h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button>
+          <button class="tab-btn" data-tab="go">Go</button>
+          <button class="tab-btn" data-tab="cpp">C++</button>
+          <button class="tab-btn" data-tab="python">Python</button>
+          <button class="tab-btn" data-tab="javascript">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int minimizedStringLength(String s) {
+        boolean[] seen = new boolean[26];
+        int cnt = 0;
+        for (int i = 0; i &lt; s.length(); i++) {
+            int idx = s.charAt(i) - 'a';
+            if (!seen[idx]) {
+                seen[idx] = true;
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func minimizedStringLength(s string) int {
+    seen := make([]bool, 26)
+    cnt := 0
+    for _, ch := range s {
+        idx := ch - 'a'
+        if !seen[idx] {
+            seen[idx] = true
+            cnt++
+        }
+    }
+    return cnt
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int minimizedStringLength(string s) {
+        vector&lt;bool&gt; seen(26, false);
+        int cnt = 0;
+        for (char c : s) {
+            int idx = c - 'a';
+            if (!seen[idx]) {
+                seen[idx] = true;
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def minimizedStringLength(self, s: str) -&gt; int:
+        return len(set(s))</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {string} s
+ * @return {number}
+ */
+var minimizedStringLength = function(s) {
+  const seen = new Set();
+  for (const ch of s) seen.add(ch);
+  return seen.size;
+};</code></pre></div>
+      </div>
+    </article>
+
+    <section class="card comments">
+      <h2>Comments</h2>
+      <script src="https://giscus.app/client.js"
+              data-repo="Hongten/hongten.github.io"
+              data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM="
+              data-category="General"
+              data-category-id="DIC_kwDOCtbRLc4C3nAV"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="top"
+              data-theme="transparent_dark"
+              data-lang="en"
+              crossorigin="anonymous"
+              async>
+      </script>
+    </section>
+
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
