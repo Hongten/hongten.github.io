@@ -1,0 +1,96 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LeetCode 1590: Make Sum Divisible by P (Prefix Mod + Earliest Index Map)</title><meta name="description" content="Bilingual tutorial for LeetCode 1590 with prefix modulo + hash map, full code tabs in both English and 中文 sections."/>
+<link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-1590-make-sum-divisible-by-p.html" />
+<link rel="stylesheet" href="../../../../assets/style.css" /><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" /></head>
+<body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav>
+<article class="card article"><h1>LeetCode 1590: Make Sum Divisible by P (Prefix Mod + Earliest Index Map)</h1><div class="meta">2026-04-28 · LeetCode · Prefix Sum / Hash Map</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 1590</span><span class="tag">Prefix Mod</span>
+<p>Today we solve <strong>LeetCode 1590 - Make Sum Divisible by P</strong>.</p><p><strong>Source:</strong> <a href="https://leetcode.com/problems/make-sum-divisible-by-p/" target="_blank" rel="noopener">https://leetcode.com/problems/make-sum-divisible-by-p/</a></p>
+<img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-1590-20260428.svg" alt="LeetCode 1590 prefix modulo hash map diagram" />
+<h2>English</h2><h3>Problem Summary</h3><p>Remove the shortest non-empty subarray so the remaining sum is divisible by <code>p</code>.</p><h3>Key Insight</h3><p>If <code>need = total % p</code>, we need a subarray with modulo <code>need</code>. Using prefix mod, for current <code>pre</code>, find previous <code>target = (pre - need + p) % p</code>.</p>
+<h3>Complexity</h3><p>Time: <code>O(n)</code>, Space: <code>O(min(n,p))</code>.</p><h3>Reference Implementations (Java / Python)</h3>
+<div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="python">Python</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int minSubarray(int[] nums, int p) {
+        long total = 0;
+        for (int x : nums) total += x;
+        int need = (int)(total % p);
+        if (need == 0) return 0;
+
+        Map<Integer, Integer> last = new HashMap<>();
+        last.put(0, -1);
+        long pre = 0;
+        int ans = nums.length;
+
+        for (int i = 0; i < nums.length; i++) {
+            pre = (pre + nums[i]) % p;
+            int cur = (int) pre;
+            int target = (cur - need + p) % p;
+            if (last.containsKey(target)) {
+                ans = Math.min(ans, i - last.get(target));
+            }
+            last.put(cur, i);
+        }
+        return ans == nums.length ? -1 : ans;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def minSubarray(self, nums: list[int], p: int) -> int:
+        need = sum(nums) % p
+        if need == 0:
+            return 0
+
+        last = {0: -1}
+        pre = 0
+        ans = len(nums)
+
+        for i, x in enumerate(nums):
+            pre = (pre + x) % p
+            target = (pre - need) % p
+            if target in last:
+                ans = min(ans, i - last[target])
+            last[pre] = i
+
+        return -1 if ans == len(nums) else ans</code></pre></div></div>
+<h2>中文</h2><h3>题目概述</h3><p>删除一个最短的非空子数组，使剩余元素总和可以被 <code>p</code> 整除。</p><h3>核心思路</h3><p>设 <code>need = total % p</code>，目标是找到子数组模值为 <code>need</code>。用前缀和取模 + 哈希表记录下标，对当前位置前缀模 <code>pre</code>，需要找 <code>target=(pre-need+p)%p</code> 的最早/已记录位置来更新最短长度。</p>
+<h3>复杂度</h3><p>时间 <code>O(n)</code>，空间 <code>O(min(n,p))</code>。</p><h3>多语言参考实现（Java / Python）</h3>
+<div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="python">Python</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int minSubarray(int[] nums, int p) {
+        long total = 0;
+        for (int x : nums) total += x;
+        int need = (int)(total % p);
+        if (need == 0) return 0;
+
+        Map<Integer, Integer> last = new HashMap<>();
+        last.put(0, -1);
+        long pre = 0;
+        int ans = nums.length;
+
+        for (int i = 0; i < nums.length; i++) {
+            pre = (pre + nums[i]) % p;
+            int cur = (int) pre;
+            int target = (cur - need + p) % p;
+            if (last.containsKey(target)) {
+                ans = Math.min(ans, i - last.get(target));
+            }
+            last.put(cur, i);
+        }
+        return ans == nums.length ? -1 : ans;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def minSubarray(self, nums: list[int], p: int) -> int:
+        need = sum(nums) % p
+        if need == 0:
+            return 0
+
+        last = {0: -1}
+        pre = 0
+        ans = len(nums)
+
+        for i, x in enumerate(nums):
+            pre = (pre + x) % p
+            target = (pre - need) % p
+            if target in last:
+                ans = min(ans, i - last[target])
+            last[pre] = i
+
+        return -1 if ans == len(nums) else ans</code></pre></div></div></article>
+<section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section>
+<footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
