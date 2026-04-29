@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LeetCode 3471: Find the Largest Almost Missing Integer (Frequency in Length-k Windows)</title>
+<meta name="description" content="Bilingual solution for LeetCode 3471 using window-level counting to find the largest value appearing in exactly one length-k subarray."/>
+<link rel="stylesheet" href="../../../../assets/style.css" />
+<link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" /></head>
+<body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav>
+<article class="card article"><h1>LeetCode 3471: Find the Largest Almost Missing Integer (Frequency in Length-k Windows)</h1>
+<div class="meta">2026-04-29 · LeetCode · Array / Hash Map</div><div class="author-line">Author: Tom🦞</div>
+<span class="tag">LeetCode 3471</span><span class="tag">Array</span><span class="tag">Hash Map</span>
+<p><strong>Source:</strong> <a href="https://leetcode.com/problems/find-the-largest-almost-missing-integer/" target="_blank" rel="noopener">https://leetcode.com/problems/find-the-largest-almost-missing-integer/</a></p>
+<img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-3471-20260429.svg" alt="LeetCode 3471 window counting diagram" />
+<h2>English</h2><p>Count how many length-k windows contain each value, then pick the largest value whose count is exactly 1.</p>
+<div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div>
+<div class="tab-pane active" data-tab="java"><pre><code class="language-java">import java.util.*;
+class Solution {
+    public int largestInteger(int[] nums, int k) {
+        Map&lt;Integer, Integer&gt; cnt = new HashMap&lt;&gt;();
+        int n = nums.length;
+        for (int i = 0; i + k &lt;= n; i++) {
+            Set&lt;Integer&gt; seen = new HashSet&lt;&gt;();
+            for (int j = i; j &lt; i + k; j++) seen.add(nums[j]);
+            for (int v : seen) cnt.put(v, cnt.getOrDefault(v, 0) + 1);
+        }
+        int ans = -1;
+        for (var e : cnt.entrySet()) if (e.getValue() == 1) ans = Math.max(ans, e.getKey());
+        return ans;
+    }
+}</code></pre></div>
+<div class="tab-pane" data-tab="go"><pre><code class="language-go">func largestInteger(nums []int, k int) int {
+    cnt := map[int]int{}
+    n := len(nums)
+    for i := 0; i+k &lt;= n; i++ {
+        seen := map[int]bool{}
+        for j := i; j &lt; i+k; j++ { seen[nums[j]] = true }
+        for v := range seen { cnt[v]++ }
+    }
+    ans := -1
+    for v, c := range cnt { if c == 1 &amp;&amp; v &gt; ans { ans = v } }
+    return ans
+}</code></pre></div>
+<div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">int largestInteger(vector&lt;int&gt;&amp; nums, int k) {
+    unordered_map&lt;int,int&gt; cnt;
+    int n = nums.size();
+    for (int i = 0; i + k &lt;= n; i++) {
+        unordered_set&lt;int&gt; seen;
+        for (int j = i; j &lt; i + k; j++) seen.insert(nums[j]);
+        for (int v : seen) cnt[v]++;
+    }
+    int ans = -1;
+    for (auto &amp;[v, c] : cnt) if (c == 1) ans = max(ans, v);
+    return ans;
+}</code></pre></div>
+<div class="tab-pane" data-tab="python"><pre><code class="language-python">def largestInteger(nums: list[int], k: int) -> int:
+    from collections import defaultdict
+    cnt = defaultdict(int)
+    n = len(nums)
+    for i in range(n - k + 1):
+        seen = set(nums[i:i+k])
+        for v in seen:
+            cnt[v] += 1
+    ans = -1
+    for v, c in cnt.items():
+        if c == 1:
+            ans = max(ans, v)
+    return ans</code></pre></div>
+<div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">function largestInteger(nums, k) {
+  const cnt = new Map();
+  for (let i = 0; i + k &lt;= nums.length; i++) {
+    const seen = new Set();
+    for (let j = i; j &lt; i + k; j++) seen.add(nums[j]);
+    for (const v of seen) cnt.set(v, (cnt.get(v) || 0) + 1);
+  }
+  let ans = -1;
+  for (const [v, c] of cnt) if (c === 1) ans = Math.max(ans, v);
+  return ans;
+}</code></pre></div></div>
+<h2>中文</h2><p>统计每个数字出现在多少个长度为 k 的子数组中，最后取“恰好出现于 1 个窗口”的最大值。</p>
+<div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div>
+<div class="tab-pane active" data-tab="java"><pre><code class="language-java">import java.util.*;
+class Solution {
+    public int largestInteger(int[] nums, int k) {
+        Map&lt;Integer, Integer&gt; cnt = new HashMap&lt;&gt;();
+        int n = nums.length;
+        for (int i = 0; i + k &lt;= n; i++) {
+            Set&lt;Integer&gt; seen = new HashSet&lt;&gt;();
+            for (int j = i; j &lt; i + k; j++) seen.add(nums[j]);
+            for (int v : seen) cnt.put(v, cnt.getOrDefault(v, 0) + 1);
+        }
+        int ans = -1;
+        for (var e : cnt.entrySet()) if (e.getValue() == 1) ans = Math.max(ans, e.getKey());
+        return ans;
+    }
+}</code></pre></div>
+<div class="tab-pane" data-tab="go"><pre><code class="language-go">func largestInteger(nums []int, k int) int {
+    cnt := map[int]int{}
+    n := len(nums)
+    for i := 0; i+k &lt;= n; i++ {
+        seen := map[int]bool{}
+        for j := i; j &lt; i+k; j++ { seen[nums[j]] = true }
+        for v := range seen { cnt[v]++ }
+    }
+    ans := -1
+    for v, c := range cnt { if c == 1 &amp;&amp; v &gt; ans { ans = v } }
+    return ans
+}</code></pre></div>
+<div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">int largestInteger(vector&lt;int&gt;&amp; nums, int k) {
+    unordered_map&lt;int,int&gt; cnt;
+    int n = nums.size();
+    for (int i = 0; i + k &lt;= n; i++) {
+        unordered_set&lt;int&gt; seen;
+        for (int j = i; j &lt; i + k; j++) seen.insert(nums[j]);
+        for (int v : seen) cnt[v]++;
+    }
+    int ans = -1;
+    for (auto &amp;[v, c] : cnt) if (c == 1) ans = max(ans, v);
+    return ans;
+}</code></pre></div>
+<div class="tab-pane" data-tab="python"><pre><code class="language-python">def largestInteger(nums: list[int], k: int) -> int:
+    from collections import defaultdict
+    cnt = defaultdict(int)
+    n = len(nums)
+    for i in range(n - k + 1):
+        seen = set(nums[i:i+k])
+        for v in seen:
+            cnt[v] += 1
+    ans = -1
+    for v, c in cnt.items():
+        if c == 1:
+            ans = max(ans, v)
+    return ans</code></pre></div>
+<div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">function largestInteger(nums, k) {
+  const cnt = new Map();
+  for (let i = 0; i + k &lt;= nums.length; i++) {
+    const seen = new Set();
+    for (let j = i; j &lt; i + k; j++) seen.add(nums[j]);
+    for (const v of seen) cnt.set(v, (cnt.get(v) || 0) + 1);
+  }
+  let ans = -1;
+  for (const [v, c] of cnt) if (c === 1) ans = Math.max(ans, v);
+  return ans;
+}</code></pre></div></div>
+</article><section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section>
+<footer><a href="../../../../index.html">← Back to home</a></footer></main>
+<script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
