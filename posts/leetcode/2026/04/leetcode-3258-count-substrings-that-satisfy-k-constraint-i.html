@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 3258: Count Substrings That Satisfy K-Constraint I (Brute Force + Early Break)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 3258 using O(n^2) expansion with zero/one counters and constraint pruning, with full Java/Go/C++/Python/JavaScript tabs."/>
+  <meta property="og:type" content="article" /><meta property="og:title" content="LeetCode 3258: Count Substrings That Satisfy K-Constraint I (Brute Force + Early Break)" />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3258-count-substrings-that-satisfy-k-constraint-i.html" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3258-count-substrings-that-satisfy-k-constraint-i.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" /><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav>
+<article class="card article"><h1>LeetCode 3258: Count Substrings That Satisfy K-Constraint I (Brute Force + Early Break)</h1><div class="meta">2026-04-29 · LeetCode · String / Counting</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 3258</span><span class="tag">String</span><span class="tag">Counting</span>
+<p>Today we solve <strong>LeetCode 3258 - Count Substrings That Satisfy K-Constraint I</strong>.</p>
+<p><strong>Source:</strong> <a href="https://leetcode.com/problems/count-substrings-that-satisfy-k-constraint-i/" target="_blank" rel="noopener">https://leetcode.com/problems/count-substrings-that-satisfy-k-constraint-i/</a></p>
+<img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-3258-20260429.svg" alt="LeetCode 3258 substring expansion with zero and one counters" />
+<h2>English</h2><h3>Problem Summary</h3><p>For a binary string <code>s</code> and integer <code>k</code>, count substrings where the number of <code>0</code>s is at most <code>k</code> or the number of <code>1</code>s is at most <code>k</code>.</p>
+<h3>Key Insight</h3><p>As we expand a substring from each left boundary, counts of zeros and ones only increase. A substring becomes invalid only when <code>zero &gt; k</code> and <code>one &gt; k</code>. Once invalid, extending further cannot recover validity, so we can break early.</p>
+<h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+<div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div>
+<div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int countKConstraintSubstrings(String s, int k) {
+        int n = s.length(), ans = 0;
+        for (int i = 0; i < n; i++) {
+            int zero = 0, one = 0;
+            for (int j = i; j < n; j++) {
+                if (s.charAt(j) == '0') zero++; else one++;
+                if (zero > k && one > k) break;
+                ans++;
+            }
+        }
+        return ans;
+    }
+}</code></pre></div>
+<div class="tab-pane" data-tab="go"><pre><code class="language-go">func countKConstraintSubstrings(s string, k int) int {
+    n, ans := len(s), 0
+    for i := 0; i < n; i++ {
+        zero, one := 0, 0
+        for j := i; j < n; j++ {
+            if s[j] == '0' { zero++ } else { one++ }
+            if zero > k && one > k { break }
+            ans++
+        }
+    }
+    return ans
+}</code></pre></div>
+<div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int countKConstraintSubstrings(string s, int k) {
+        int n = s.size(), ans = 0;
+        for (int i = 0; i < n; i++) {
+            int zero = 0, one = 0;
+            for (int j = i; j < n; j++) {
+                if (s[j] == '0') zero++; else one++;
+                if (zero > k && one > k) break;
+                ans++;
+            }
+        }
+        return ans;
+    }
+};</code></pre></div>
+<div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def countKConstraintSubstrings(self, s: str, k: int) -> int:
+        n, ans = len(s), 0
+        for i in range(n):
+            zero = one = 0
+            for j in range(i, n):
+                if s[j] == '0':
+                    zero += 1
+                else:
+                    one += 1
+                if zero > k and one > k:
+                    break
+                ans += 1
+        return ans</code></pre></div>
+<div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {string} s
+ * @param {number} k
+ * @return {number}
+ */
+var countKConstraintSubstrings = function(s, k) {
+  const n = s.length;
+  let ans = 0;
+  for (let i = 0; i < n; i++) {
+    let zero = 0, one = 0;
+    for (let j = i; j < n; j++) {
+      if (s[j] === '0') zero++; else one++;
+      if (zero > k && one > k) break;
+      ans++;
+    }
+  }
+  return ans;
+};</code></pre></div></div>
+<h2>中文</h2><h3>题目概述</h3><p>给定二进制字符串 <code>s</code> 和整数 <code>k</code>，统计满足条件的子串数量，条件是：子串中 <code>0</code> 的个数不超过 <code>k</code>，或者 <code>1</code> 的个数不超过 <code>k</code>。</p>
+<h3>核心思路</h3><p>固定左端点，向右扩展并维护 <code>zero</code>/<code>one</code> 计数。只有在 <code>zero &gt; k</code> 且 <code>one &gt; k</code> 时才不合法。由于继续扩展只会让计数更大，一旦不合法即可提前停止当前左端点。</p>
+<h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+<div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div>
+<div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int countKConstraintSubstrings(String s, int k) {
+        int n = s.length(), ans = 0;
+        for (int i = 0; i < n; i++) {
+            int zero = 0, one = 0;
+            for (int j = i; j < n; j++) {
+                if (s.charAt(j) == '0') zero++; else one++;
+                if (zero > k && one > k) break;
+                ans++;
+            }
+        }
+        return ans;
+    }
+}</code></pre></div>
+<div class="tab-pane" data-tab="go"><pre><code class="language-go">func countKConstraintSubstrings(s string, k int) int {
+    n, ans := len(s), 0
+    for i := 0; i < n; i++ {
+        zero, one := 0, 0
+        for j := i; j < n; j++ {
+            if s[j] == '0' { zero++ } else { one++ }
+            if zero > k && one > k { break }
+            ans++
+        }
+    }
+    return ans
+}</code></pre></div>
+<div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int countKConstraintSubstrings(string s, int k) {
+        int n = s.size(), ans = 0;
+        for (int i = 0; i < n; i++) {
+            int zero = 0, one = 0;
+            for (int j = i; j < n; j++) {
+                if (s[j] == '0') zero++; else one++;
+                if (zero > k && one > k) break;
+                ans++;
+            }
+        }
+        return ans;
+    }
+};</code></pre></div>
+<div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def countKConstraintSubstrings(self, s: str, k: int) -> int:
+        n, ans = len(s), 0
+        for i in range(n):
+            zero = one = 0
+            for j in range(i, n):
+                if s[j] == '0':
+                    zero += 1
+                else:
+                    one += 1
+                if zero > k and one > k:
+                    break
+                ans += 1
+        return ans</code></pre></div>
+<div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {string} s
+ * @param {number} k
+ * @return {number}
+ */
+var countKConstraintSubstrings = function(s, k) {
+  const n = s.length;
+  let ans = 0;
+  for (let i = 0; i < n; i++) {
+    let zero = 0, one = 0;
+    for (let j = i; j < n; j++) {
+      if (s[j] === '0') zero++; else one++;
+      if (zero > k && one > k) break;
+      ans++;
+    }
+  }
+  return ans;
+};</code></pre></div></div></article>
+<section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section>
+<footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
