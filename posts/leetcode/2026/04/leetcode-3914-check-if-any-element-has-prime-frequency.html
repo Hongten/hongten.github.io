@@ -1,0 +1,165 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>LeetCode 3914: Check if Any Element Has Prime Frequency (Hash Map + Prime Test)</title><meta name="description" content="Bilingual tutorial for LeetCode 3914 using frequency counting and prime checking, with full Java/Go/C++/Python/JavaScript code tabs."/><link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3914-check-if-any-element-has-prime-frequency.html" /><link rel="stylesheet" href="../../../../assets/style.css" /><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" /></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav><article class="card article"><h1>LeetCode 3914: Check if Any Element Has Prime Frequency (Hash Map + Prime Test)</h1><div class="meta">2026-04-30 · LeetCode · Hash Map / Math</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 3914</span><span class="tag">Hash Map</span><p><strong>Source:</strong> <a href="https://leetcode.com/problems/check-if-any-element-has-prime-frequency/" target="_blank" rel="noopener">https://leetcode.com/problems/check-if-any-element-has-prime-frequency/</a></p><p>Count each value first, then test whether any frequency is a prime number (>= 2 and divisible only by 1 and itself).</p><img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-3914-20260430.svg" alt="LeetCode 3914 frequency map and prime check diagram" /><h2>English</h2><p>Build a frequency map. For each count, run a primality test up to sqrt(count). If any count is prime, return true; otherwise false.</p><h3>Complexity</h3><p>Time <code>O(n + u*sqrt(f))</code>, space <code>O(u)</code>, where <code>u</code> is distinct values and <code>f</code> is a frequency value.</p><h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean checkPrimeFrequency(int[] nums) {
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int x : nums) freq.put(x, freq.getOrDefault(x, 0) + 1);
+        for (int c : freq.values()) {
+            if (isPrime(c)) return true;
+        }
+        return false;
+    }
+
+    private boolean isPrime(int x) {
+        if (x < 2) return false;
+        for (int d = 2; d * d <= x; d++) {
+            if (x % d == 0) return false;
+        }
+        return true;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">func checkPrimeFrequency(nums []int) bool {
+    freq := map[int]int{}
+    for _, x := range nums { freq[x]++ }
+    for _, c := range freq {
+        if isPrime(c) { return true }
+    }
+    return false
+}
+
+func isPrime(x int) bool {
+    if x < 2 { return false }
+    for d := 2; d*d <= x; d++ {
+        if x%d == 0 { return false }
+    }
+    return true
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool checkPrimeFrequency(vector<int>& nums) {
+        unordered_map<int,int> freq;
+        for (int x : nums) freq[x]++;
+        for (auto &kv : freq) {
+            if (isPrime(kv.second)) return true;
+        }
+        return false;
+    }
+
+    bool isPrime(int x) {
+        if (x < 2) return false;
+        for (int d = 2; d * d <= x; d++) {
+            if (x % d == 0) return false;
+        }
+        return true;
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def checkPrimeFrequency(self, nums: List[int]) -> bool:
+        from collections import Counter
+        freq = Counter(nums)
+        for c in freq.values():
+            if self.is_prime(c):
+                return True
+        return False
+
+    def is_prime(self, x: int) -> bool:
+        if x < 2:
+            return False
+        d = 2
+        while d * d <= x:
+            if x % d == 0:
+                return False
+            d += 1
+        return True</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">function checkPrimeFrequency(nums) {
+  const freq = new Map();
+  for (const x of nums) freq.set(x, (freq.get(x) || 0) + 1);
+  for (const c of freq.values()) {
+    if (isPrime(c)) return true;
+  }
+  return false;
+}
+
+function isPrime(x) {
+  if (x < 2) return false;
+  for (let d = 2; d * d <= x; d++) {
+    if (x % d === 0) return false;
+  }
+  return true;
+}</code></pre></div></div><h2>中文</h2><p>先统计每个数出现次数，再判断是否存在某个出现次数是质数。质数判断只需试除到 <code>sqrt(count)</code>。</p><h3>复杂度</h3><p>时间复杂度 <code>O(n + u*sqrt(f))</code>，空间复杂度 <code>O(u)</code>。</p><h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean checkPrimeFrequency(int[] nums) {
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int x : nums) freq.put(x, freq.getOrDefault(x, 0) + 1);
+        for (int c : freq.values()) {
+            if (isPrime(c)) return true;
+        }
+        return false;
+    }
+
+    private boolean isPrime(int x) {
+        if (x < 2) return false;
+        for (int d = 2; d * d <= x; d++) {
+            if (x % d == 0) return false;
+        }
+        return true;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">func checkPrimeFrequency(nums []int) bool {
+    freq := map[int]int{}
+    for _, x := range nums { freq[x]++ }
+    for _, c := range freq {
+        if isPrime(c) { return true }
+    }
+    return false
+}
+
+func isPrime(x int) bool {
+    if x < 2 { return false }
+    for d := 2; d*d <= x; d++ {
+        if x%d == 0 { return false }
+    }
+    return true
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool checkPrimeFrequency(vector<int>& nums) {
+        unordered_map<int,int> freq;
+        for (int x : nums) freq[x]++;
+        for (auto &kv : freq) {
+            if (isPrime(kv.second)) return true;
+        }
+        return false;
+    }
+
+    bool isPrime(int x) {
+        if (x < 2) return false;
+        for (int d = 2; d * d <= x; d++) {
+            if (x % d == 0) return false;
+        }
+        return true;
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def checkPrimeFrequency(self, nums: List[int]) -> bool:
+        from collections import Counter
+        freq = Counter(nums)
+        for c in freq.values():
+            if self.is_prime(c):
+                return True
+        return False
+
+    def is_prime(self, x: int) -> bool:
+        if x < 2:
+            return False
+        d = 2
+        while d * d <= x:
+            if x % d == 0:
+                return False
+            d += 1
+        return True</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">function checkPrimeFrequency(nums) {
+  const freq = new Map();
+  for (const x of nums) freq.set(x, (freq.get(x) || 0) + 1);
+  for (const c of freq.values()) {
+    if (isPrime(c)) return true;
+  }
+  return false;
+}
+
+function isPrime(x) {
+  if (x < 2) return false;
+  for (let d = 2; d * d <= x; d++) {
+    if (x % d === 0) return false;
+  }
+  return true;
+}</code></pre></div></div><p><a href="../../../../index.html">← Back to Home</a></p></article><section class="card"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="hongten/hongten.github.io" data-repo-id="R_kgDOPJ5n3Q" data-category="General" data-category-id="DIC_kwDOPJ5n3c4CtM4b" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="preferred_color_scheme" data-lang="en" crossorigin="anonymous" async></script></section></main><script src="../../../../assets/app.js"></script><script src="../../../../assets/code-tools.js"></script></body></html>
