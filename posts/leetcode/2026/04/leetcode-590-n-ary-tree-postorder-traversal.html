@@ -1,0 +1,245 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LeetCode 590: N-ary Tree Postorder Traversal (Iterative Reverse Preorder)</title><meta name="description" content="Bilingual tutorial for LeetCode 590 using iterative stack traversal with reverse output and full code tabs."/>
+<link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-590-n-ary-tree-postorder-traversal.html" /><link rel="stylesheet" href="../../../../assets/style.css" /><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" /></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav><article class="card article">
+<h1>LeetCode 590: N-ary Tree Postorder Traversal (Iterative Reverse Preorder)</h1><div class="meta">2026-04-30 · LeetCode · Tree / Stack</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 590</span><span class="tag">Tree</span><span class="tag">Stack</span>
+<p>We need postorder (children first, root last) for an N-ary tree. A clean iterative trick is root-first traversal plus reverse.</p><p><strong>Source:</strong> <a href="https://leetcode.com/problems/n-ary-tree-postorder-traversal/" target="_blank" rel="noopener">https://leetcode.com/problems/n-ary-tree-postorder-traversal/</a></p>
+<img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-590-20260430.svg" alt="LeetCode 590 iterative reverse preorder idea diagram" />
+<h2>English</h2><p>Use a stack to visit nodes in root-then-children order, append values, then reverse the result. This converts modified preorder into postorder efficiently.</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div>
+<div class="tab-pane active" data-tab="java"><pre><code class="language-java">/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List&lt;Node&gt; children;
+}
+*/
+class Solution {
+    public List&lt;Integer&gt; postorder(Node root) {
+        List&lt;Integer&gt; ans = new ArrayList&lt;&gt;();
+        if (root == null) return ans;
+        Deque&lt;Node&gt; st = new ArrayDeque&lt;&gt;();
+        st.push(root);
+        while (!st.isEmpty()) {
+            Node cur = st.pop();
+            ans.add(cur.val);
+            if (cur.children != null) {
+                for (Node child : cur.children) {
+                    st.push(child);
+                }
+            }
+        }
+        Collections.reverse(ans);
+        return ans;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">/*
+// Definition for a Node.
+type Node struct {
+    Val int
+    Children []*Node
+}
+*/
+func postorder(root *Node) []int {
+    if root == nil {
+        return []int{}
+    }
+    stack := []*Node{root}
+    ans := make([]int, 0)
+    for len(stack) &gt; 0 {
+        n := len(stack)-1
+        cur := stack[n]
+        stack = stack[:n]
+        ans = append(ans, cur.Val)
+        for _, child := range cur.Children {
+            stack = append(stack, child)
+        }
+    }
+    for l, r := 0, len(ans)-1; l &lt; r; l, r = l+1, r-1 {
+        ans[l], ans[r] = ans[r], ans[l]
+    }
+    return ans
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">/*
+class Node {
+public:
+    int val;
+    vector&lt;Node*&gt; children;
+};
+*/
+class Solution {
+public:
+    vector&lt;int&gt; postorder(Node* root) {
+        if (!root) return {};
+        vector&lt;int&gt; ans;
+        stack&lt;Node*&gt; st;
+        st.push(root);
+        while (!st.empty()) {
+            Node* cur = st.top(); st.pop();
+            ans.push_back(cur-&gt;val);
+            for (Node* child : cur-&gt;children) st.push(child);
+        }
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">&quot;&quot;&quot;# Definition for a Node.
+class Node:
+    def __init__(self, val=None, children=None):
+        self.val = val
+        self.children = children
+&quot;&quot;&quot;
+from typing import List
+
+class Solution:
+    def postorder(self, root: &#x27;Node&#x27;) -&gt; List[int]:
+        if not root:
+            return []
+        stack = [root]
+        ans = []
+        while stack:
+            cur = stack.pop()
+            ans.append(cur.val)
+            if cur.children:
+                stack.extend(cur.children)
+        return ans[::-1]
+</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * // Definition for a Node.
+ * function Node(val,children) {
+ *    this.val = val;
+ *    this.children = children;
+ * }
+ */
+/**
+ * @param {Node|null} root
+ * @return {number[]}
+ */
+var postorder = function(root) {
+  if (!root) return [];
+  const stack = [root];
+  const ans = [];
+  while (stack.length) {
+    const cur = stack.pop();
+    ans.push(cur.val);
+    if (cur.children) {
+      for (const ch of cur.children) stack.push(ch);
+    }
+  }
+  ans.reverse();
+  return ans;
+};</code></pre></div></div>
+<h2>中文</h2><p>后序遍历要求“先子节点，后根节点”。这里用栈先做“根优先”遍历，把访问结果记录后整体反转，即可得到后序序列。</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div>
+<div class="tab-pane active" data-tab="java"><pre><code class="language-java">/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List&lt;Node&gt; children;
+}
+*/
+class Solution {
+    public List&lt;Integer&gt; postorder(Node root) {
+        List&lt;Integer&gt; ans = new ArrayList&lt;&gt;();
+        if (root == null) return ans;
+        Deque&lt;Node&gt; st = new ArrayDeque&lt;&gt;();
+        st.push(root);
+        while (!st.isEmpty()) {
+            Node cur = st.pop();
+            ans.add(cur.val);
+            if (cur.children != null) {
+                for (Node child : cur.children) {
+                    st.push(child);
+                }
+            }
+        }
+        Collections.reverse(ans);
+        return ans;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">/*
+// Definition for a Node.
+type Node struct {
+    Val int
+    Children []*Node
+}
+*/
+func postorder(root *Node) []int {
+    if root == nil {
+        return []int{}
+    }
+    stack := []*Node{root}
+    ans := make([]int, 0)
+    for len(stack) &gt; 0 {
+        n := len(stack)-1
+        cur := stack[n]
+        stack = stack[:n]
+        ans = append(ans, cur.Val)
+        for _, child := range cur.Children {
+            stack = append(stack, child)
+        }
+    }
+    for l, r := 0, len(ans)-1; l &lt; r; l, r = l+1, r-1 {
+        ans[l], ans[r] = ans[r], ans[l]
+    }
+    return ans
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">/*
+class Node {
+public:
+    int val;
+    vector&lt;Node*&gt; children;
+};
+*/
+class Solution {
+public:
+    vector&lt;int&gt; postorder(Node* root) {
+        if (!root) return {};
+        vector&lt;int&gt; ans;
+        stack&lt;Node*&gt; st;
+        st.push(root);
+        while (!st.empty()) {
+            Node* cur = st.top(); st.pop();
+            ans.push_back(cur-&gt;val);
+            for (Node* child : cur-&gt;children) st.push(child);
+        }
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">&quot;&quot;&quot;# Definition for a Node.
+class Node:
+    def __init__(self, val=None, children=None):
+        self.val = val
+        self.children = children
+&quot;&quot;&quot;
+from typing import List
+
+class Solution:
+    def postorder(self, root: &#x27;Node&#x27;) -&gt; List[int]:
+        if not root:
+            return []
+        stack = [root]
+        ans = []
+        while stack:
+            cur = stack.pop()
+            ans.append(cur.val)
+            if cur.children:
+                stack.extend(cur.children)
+        return ans[::-1]
+</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * // Definition for a Node.
+ * function Node(val,children) {
+ *    this.val = val;
+ *    this.children = children;
+ * }
+ */
+/**
+ * @param {Node|null} root
+ * @return {number[]}
+ */
+var postorder = function(root) {
+  if (!root) return [];
+  const stack = [root];
+  const ans = [];
+  while (stack.length) {
+    const cur = stack.pop();
+    ans.push(cur.val);
+    if (cur.children) {
+      for (const ch of cur.children) stack.push(ch);
+    }
+  }
+  ans.reverse();
+  return ans;
+};</code></pre></div></div>
+</article><section class="card comments"><h2>Comments</h2></section><footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
