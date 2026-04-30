@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 307: Range Sum Query - Mutable (Fenwick Tree)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 307 using Fenwick Tree for mutable range sum queries with O(log n) update/query."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 307: Range Sum Query - Mutable (Fenwick Tree)" />
+  <meta property="og:description" content="English + 中文 solution with Fenwick tree insight and full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/04/leetcode-307-range-sum-query-mutable.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav>
+<article class="card article"><h1>LeetCode 307: Range Sum Query - Mutable (Fenwick Tree)</h1><div class="meta">2026-04-30 · LeetCode · Data Structure / Fenwick Tree</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 307</span><span class="tag">Fenwick Tree</span><span class="tag">Prefix Sum</span>
+<p>Today we solve <strong>LeetCode 307 - Range Sum Query - Mutable</strong>.</p>
+<p><strong>Source:</strong> <a href="https://leetcode.com/problems/range-sum-query-mutable/" target="_blank" rel="noopener">https://leetcode.com/problems/range-sum-query-mutable/</a></p>
+<img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-307-20260430.svg" alt="LeetCode 307 Fenwick tree update and prefix query diagram" />
+<h2>English</h2><h3>Problem Summary</h3><p>Design a data structure that supports updating an element and querying range sum repeatedly.</p>
+<h3>Key Insight</h3><p>Use a Fenwick Tree (Binary Indexed Tree) to store prefix contributions. Both point update and prefix sum query become <code>O(log n)</code>.</p>
+<h3>Algorithm</h3><p>Store original values in <code>nums</code>. On update, compute <code>delta = val - nums[i]</code>, then add delta through Fenwick indices. Range sum is <code>prefix(right+1)-prefix(left)</code>.</p>
+<h3>Complexity</h3><p>Update: <code>O(log n)</code>, SumRange: <code>O(log n)</code>, Space: <code>O(n)</code>.</p>
+<h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+<div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div>
+<div class="tab-pane active" data-tab="java"><pre><code class="language-java">class NumArray {
+    private final int[] bit;
+    private final int[] nums;
+    private final int n;
+    public NumArray(int[] nums) {
+        this.n = nums.length;
+        this.nums = nums.clone();
+        this.bit = new int[n + 1];
+        for (int i = 0; i < n; i++) add(i + 1, nums[i]);
+    }
+    private void add(int i, int delta){ for(; i <= n; i += i & -i) bit[i] += delta; }
+    private int prefix(int i){ int s=0; for(; i>0; i -= i & -i) s += bit[i]; return s; }
+    public void update(int index, int val){ int d = val - nums[index]; nums[index] = val; add(index + 1, d); }
+    public int sumRange(int left, int right){ return prefix(right + 1) - prefix(left); }
+}</code></pre></div>
+<div class="tab-pane" data-tab="go"><pre><code class="language-go">type NumArray struct { bit, nums []int; n int }
+func Constructor(nums []int) NumArray {
+    na := NumArray{bit: make([]int, len(nums)+1), nums: append([]int{}, nums...), n: len(nums)}
+    for i,v := range nums { na.add(i+1, v) }
+    return na
+}
+func (na *NumArray) add(i, d int){ for i <= na.n { na.bit[i] += d; i += i & -i } }
+func (na *NumArray) prefix(i int) int { s:=0; for i>0 { s += na.bit[i]; i -= i & -i }; return s }
+func (na *NumArray) Update(index int, val int) { d := val - na.nums[index]; na.nums[index]=val; na.add(index+1,d) }
+func (na *NumArray) SumRange(left int, right int) int { return na.prefix(right+1)-na.prefix(left) }</code></pre></div>
+<div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class NumArray {
+    vector<int> bit, nums; int n;
+    void add(int i,int d){ for(; i<=n; i+=i&-i) bit[i]+=d; }
+    int prefix(int i){ int s=0; for(; i>0; i-=i&-i) s+=bit[i]; return s; }
+public:
+    NumArray(vector<int>& a): bit(a.size()+1), nums(a), n((int)a.size()) { for(int i=0;i<n;i++) add(i+1,a[i]); }
+    void update(int index, int val){ int d=val-nums[index]; nums[index]=val; add(index+1,d); }
+    int sumRange(int l,int r){ return prefix(r+1)-prefix(l); }
+};</code></pre></div>
+<div class="tab-pane" data-tab="python"><pre><code class="language-python">class NumArray:
+    def __init__(self, nums):
+        self.n = len(nums)
+        self.nums = nums[:]
+        self.bit = [0] * (self.n + 1)
+        for i, v in enumerate(nums, 1):
+            self._add(i, v)
+    def _add(self, i, d):
+        while i <= self.n:
+            self.bit[i] += d
+            i += i & -i
+    def _prefix(self, i):
+        s = 0
+        while i > 0:
+            s += self.bit[i]
+            i -= i & -i
+        return s
+    def update(self, index, val):
+        d = val - self.nums[index]
+        self.nums[index] = val
+        self._add(index + 1, d)
+    def sumRange(self, left, right):
+        return self._prefix(right + 1) - self._prefix(left)</code></pre></div>
+<div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var NumArray = function(nums) {
+  this.n = nums.length; this.nums = nums.slice(); this.bit = new Array(this.n + 1).fill(0);
+  for (let i = 0; i < this.n; i++) this._add(i + 1, nums[i]);
+};
+NumArray.prototype._add = function(i, d){ while (i <= this.n) { this.bit[i] += d; i += i & -i; } };
+NumArray.prototype._prefix = function(i){ let s = 0; while (i > 0) { s += this.bit[i]; i -= i & -i; } return s; };
+NumArray.prototype.update = function(index, val){ const d = val - this.nums[index]; this.nums[index] = val; this._add(index + 1, d); };
+NumArray.prototype.sumRange = function(left, right){ return this._prefix(right + 1) - this._prefix(left); };</code></pre></div></div>
+<h2>中文</h2><h3>题目概述</h3><p>实现一个结构，支持数组单点修改和区间求和的高频查询。</p><h3>核心思路</h3><p>使用树状数组（Fenwick Tree）维护前缀贡献。单点更新和前缀和查询都能在 <code>O(log n)</code> 完成。</p><h3>算法步骤</h3><p>维护原数组 <code>nums</code>。更新时先算差值 <code>delta</code>，再把差值沿树状数组向上累加。区间和通过两个前缀和相减得到。</p><h3>复杂度分析</h3><p>更新 <code>O(log n)</code>，查询 <code>O(log n)</code>，空间 <code>O(n)</code>。</p>
+<h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+<div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class NumArray {
+    private final int[] bit;
+    private final int[] nums;
+    private final int n;
+    public NumArray(int[] nums) {
+        this.n = nums.length;
+        this.nums = nums.clone();
+        this.bit = new int[n + 1];
+        for (int i = 0; i < n; i++) add(i + 1, nums[i]);
+    }
+    private void add(int i, int delta){ for(; i <= n; i += i & -i) bit[i] += delta; }
+    private int prefix(int i){ int s=0; for(; i>0; i -= i & -i) s += bit[i]; return s; }
+    public void update(int index, int val){ int d = val - nums[index]; nums[index] = val; add(index + 1, d); }
+    public int sumRange(int left, int right){ return prefix(right + 1) - prefix(left); }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">type NumArray struct { bit, nums []int; n int }
+func Constructor(nums []int) NumArray {
+    na := NumArray{bit: make([]int, len(nums)+1), nums: append([]int{}, nums...), n: len(nums)}
+    for i,v := range nums { na.add(i+1, v) }
+    return na
+}
+func (na *NumArray) add(i, d int){ for i <= na.n { na.bit[i] += d; i += i & -i } }
+func (na *NumArray) prefix(i int) int { s:=0; for i>0 { s += na.bit[i]; i -= i & -i }; return s }
+func (na *NumArray) Update(index int, val int) { d := val - na.nums[index]; na.nums[index]=val; na.add(index+1,d) }
+func (na *NumArray) SumRange(left int, right int) int { return na.prefix(right+1)-na.prefix(left) }</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class NumArray {
+    vector<int> bit, nums; int n;
+    void add(int i,int d){ for(; i<=n; i+=i&-i) bit[i]+=d; }
+    int prefix(int i){ int s=0; for(; i>0; i-=i&-i) s+=bit[i]; return s; }
+public:
+    NumArray(vector<int>& a): bit(a.size()+1), nums(a), n((int)a.size()) { for(int i=0;i<n;i++) add(i+1,a[i]); }
+    void update(int index, int val){ int d=val-nums[index]; nums[index]=val; add(index+1,d); }
+    int sumRange(int l,int r){ return prefix(r+1)-prefix(l); }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class NumArray:
+    def __init__(self, nums):
+        self.n = len(nums)
+        self.nums = nums[:]
+        self.bit = [0] * (self.n + 1)
+        for i, v in enumerate(nums, 1):
+            self._add(i, v)
+    def _add(self, i, d):
+        while i <= self.n:
+            self.bit[i] += d
+            i += i & -i
+    def _prefix(self, i):
+        s = 0
+        while i > 0:
+            s += self.bit[i]
+            i -= i & -i
+        return s
+    def update(self, index, val):
+        d = val - self.nums[index]
+        self.nums[index] = val
+        self._add(index + 1, d)
+    def sumRange(self, left, right):
+        return self._prefix(right + 1) - self._prefix(left)</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var NumArray = function(nums) {
+  this.n = nums.length; this.nums = nums.slice(); this.bit = new Array(this.n + 1).fill(0);
+  for (let i = 0; i < this.n; i++) this._add(i + 1, nums[i]);
+};
+NumArray.prototype._add = function(i, d){ while (i <= this.n) { this.bit[i] += d; i += i & -i; } };
+NumArray.prototype._prefix = function(i){ let s = 0; while (i > 0) { s += this.bit[i]; i -= i & -i; } return s; };
+NumArray.prototype.update = function(index, val){ const d = val - this.nums[index]; this.nums[index] = val; this._add(index + 1, d); };
+NumArray.prototype.sumRange = function(left, right){ return this._prefix(right + 1) - this._prefix(left); };</code></pre></div></div></article>
+<section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section><footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
