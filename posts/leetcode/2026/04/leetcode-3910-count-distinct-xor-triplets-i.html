@@ -1,0 +1,135 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>LeetCode 3910: Count Distinct XOR Triplets I (Brute Force Enumeration)</title><meta name="description" content="Bilingual tutorial for LeetCode 3910 with full Java/Go/C++/Python/JavaScript code tabs."/><link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/04/leetcode-3910-count-distinct-xor-triplets-i.html" /><link rel="stylesheet" href="../../../../assets/style.css" /><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" /></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav><article class="card article"><h1>LeetCode 3910: Count Distinct XOR Triplets I (Brute Force Enumeration)</h1><div class="meta">2026-04-30 · LeetCode · Bit Manipulation / Enumeration</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 3910</span><span class="tag">Bit Manipulation</span><span class="tag">Enumeration</span><p>Today we solve <strong>LeetCode 3910 - Count Distinct XOR Triplets I</strong>.</p><p><strong>Source:</strong> <a href="https://leetcode.com/problems/count-distinct-xor-triplets-i/" target="_blank" rel="noopener">https://leetcode.com/problems/count-distinct-xor-triplets-i/</a></p><img class="post-image" src="../../../../assets/img/leetcode/2026/04/leetcode-3910-20260430.svg" alt="LeetCode 3910 xor triplets diagram" /><h2>English</h2><p>We enumerate all ordered index triplets with <code>i ≤ j ≤ k</code>, compute <code>nums[i] ^ nums[j] ^ nums[k]</code>, and mark the value as seen. The answer is the number of distinct seen XOR values.</p><p>Because values are bounded in this problem, a boolean array is enough and very fast in practice.</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int countTriplets(int[] nums) {
+        boolean[] seen = new boolean[2048];
+        int n = nums.length;
+        for (int i = 0; i &lt; n; i++) {
+            for (int j = i; j &lt; n; j++) {
+                for (int k = j; k &lt; n; k++) {
+                    seen[nums[i] ^ nums[j] ^ nums[k]] = true;
+                }
+            }
+        }
+        int ans = 0;
+        for (boolean v : seen) if (v) ans++;
+        return ans;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">func countTriplets(nums []int) int {
+    seen := make([]bool, 2048)
+    n := len(nums)
+    for i := 0; i &lt; n; i++ {
+        for j := i; j &lt; n; j++ {
+            for k := j; k &lt; n; k++ {
+                seen[nums[i]^nums[j]^nums[k]] = true
+            }
+        }
+    }
+    ans := 0
+    for _, v := range seen {
+        if v { ans++ }
+    }
+    return ans
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int countTriplets(vector&lt;int&gt;&amp; nums) {
+        vector&lt;bool&gt; seen(2048, false);
+        int n = nums.size();
+        for (int i = 0; i &lt; n; i++) {
+            for (int j = i; j &lt; n; j++) {
+                for (int k = j; k &lt; n; k++) {
+                    seen[nums[i] ^ nums[j] ^ nums[k]] = true;
+                }
+            }
+        }
+        return count(seen.begin(), seen.end(), true);
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def countTriplets(self, nums: List[int]) -&gt; int:
+        seen = [False] * 2048
+        n = len(nums)
+        for i in range(n):
+            for j in range(i, n):
+                for k in range(j, n):
+                    seen[nums[i] ^ nums[j] ^ nums[k]] = True
+        return sum(seen)</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var countTriplets = function(nums) {
+  const seen = new Array(2048).fill(false);
+  const n = nums.length;
+  for (let i = 0; i &lt; n; i++) {
+    for (let j = i; j &lt; n; j++) {
+      for (let k = j; k &lt; n; k++) {
+        seen[nums[i] ^ nums[j] ^ nums[k]] = true;
+      }
+    }
+  }
+  return seen.filter(Boolean).length;
+};</code></pre></div></div><h2>中文</h2><p>我们直接枚举所有满足 <code>i ≤ j ≤ k</code> 的三元组，计算 <code>nums[i] ^ nums[j] ^ nums[k]</code>，并把结果标记到 visited 数组中。最后统计出现过多少个不同的异或值。</p><p>由于题目数值范围较小，使用布尔数组比哈希集合更直接，常数也更小。</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int countTriplets(int[] nums) {
+        boolean[] seen = new boolean[2048];
+        int n = nums.length;
+        for (int i = 0; i &lt; n; i++) {
+            for (int j = i; j &lt; n; j++) {
+                for (int k = j; k &lt; n; k++) {
+                    seen[nums[i] ^ nums[j] ^ nums[k]] = true;
+                }
+            }
+        }
+        int ans = 0;
+        for (boolean v : seen) if (v) ans++;
+        return ans;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">func countTriplets(nums []int) int {
+    seen := make([]bool, 2048)
+    n := len(nums)
+    for i := 0; i &lt; n; i++ {
+        for j := i; j &lt; n; j++ {
+            for k := j; k &lt; n; k++ {
+                seen[nums[i]^nums[j]^nums[k]] = true
+            }
+        }
+    }
+    ans := 0
+    for _, v := range seen {
+        if v { ans++ }
+    }
+    return ans
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int countTriplets(vector&lt;int&gt;&amp; nums) {
+        vector&lt;bool&gt; seen(2048, false);
+        int n = nums.size();
+        for (int i = 0; i &lt; n; i++) {
+            for (int j = i; j &lt; n; j++) {
+                for (int k = j; k &lt; n; k++) {
+                    seen[nums[i] ^ nums[j] ^ nums[k]] = true;
+                }
+            }
+        }
+        return count(seen.begin(), seen.end(), true);
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def countTriplets(self, nums: List[int]) -&gt; int:
+        seen = [False] * 2048
+        n = len(nums)
+        for i in range(n):
+            for j in range(i, n):
+                for k in range(j, n):
+                    seen[nums[i] ^ nums[j] ^ nums[k]] = True
+        return sum(seen)</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var countTriplets = function(nums) {
+  const seen = new Array(2048).fill(false);
+  const n = nums.length;
+  for (let i = 0; i &lt; n; i++) {
+    for (let j = i; j &lt; n; j++) {
+      for (let k = j; k &lt; n; k++) {
+        seen[nums[i] ^ nums[j] ^ nums[k]] = true;
+      }
+    }
+  }
+  return seen.filter(Boolean).length;
+};</code></pre></div></div></article><section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section><footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
