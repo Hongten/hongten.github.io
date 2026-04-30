@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 195: Tenth Line (Shell / Text Processing)</title>
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <link rel="stylesheet" href="../../../../assets/post.css" />
+</head>
+<body>
+  <main class="wrap post-wrap">
+    <nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a></nav>
+    <article class="post-card">
+      <header>
+        <h1>LeetCode 195: Tenth Line (Shell / Text Processing)</h1>
+        <p class="meta">2026-04-30 · LeetCode · Shell / Text Processing</p>
+        <p>Author: Tom🦞</p>
+        <p>Source: <a href="https://leetcode.com/problems/tenth-line/" target="_blank" rel="noopener">https://leetcode.com/problems/tenth-line/</a></p>
+      </header>
+
+      <h2>English</h2>
+      <p>We need to print exactly line 10 from <code>file.txt</code>. If the file has fewer than 10 lines, print nothing. The most robust one-liner in Shell is <code>sed -n '10p' file.txt</code>.</p>
+      <img src="../../../../assets/img/leetcode/2026/04/leetcode-195-20260430.svg" alt="LeetCode 195 Tenth Line diagram" />
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="js">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">// LeetCode 195 is a shell problem; Java shown for local simulation.
+import java.nio.file.*;
+public class Main {
+  public static void main(String[] args) throws Exception {
+    var lines = Files.readAllLines(Path.of("file.txt"));
+    if (lines.size() >= 10) System.out.println(lines.get(9));
+  }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">package main
+import (
+  "bufio"
+  "fmt"
+  "os"
+)
+func main() {
+  f,_ := os.Open("file.txt")
+  defer f.Close()
+  sc := bufio.NewScanner(f)
+  i:=0
+  for sc.Scan() {
+    i++
+    if i==10 { fmt.Println(sc.Text()); break }
+  }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+int main(){
+  ifstream fin("file.txt");
+  string s; int i=0;
+  while(getline(fin,s)){ if(++i==10){ cout&lt;&lt;s&lt;&lt;"\n"; break; } }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">with open("file.txt", "r", encoding="utf-8") as f:
+    for i, line in enumerate(f, 1):
+        if i == 10:
+            print(line.rstrip("
+"))
+            break</code></pre></div>
+        <div class="tab-pane" data-tab="js"><pre><code class="language-javascript">const fs = require('fs');
+const lines = fs.readFileSync('file.txt','utf8').split(/?
+/);
+if (lines.length >= 10) console.log(lines[9]);</code></pre></div>
+      </div>
+
+      <h2>中文</h2>
+      <p>题目要求输出 <code>file.txt</code> 的第 10 行，不足 10 行则不输出。Shell 最直接写法是 <code>sed -n '10p' file.txt</code>，只打印第 10 行。</p>
+      <div class="code-tabs">
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="java-cn">Java</button><button class="tab-btn" data-tab="go-cn">Go</button><button class="tab-btn" data-tab="cpp-cn">C++</button><button class="tab-btn" data-tab="python-cn">Python</button><button class="tab-btn" data-tab="js-cn">JavaScript</button>
+        </div>
+        <div class="tab-pane active" data-tab="java-cn"><pre><code class="language-java">// LeetCode 195 是 Shell 题，这里给出 Java 等价实现。
+import java.nio.file.*;
+public class Main {
+  public static void main(String[] args) throws Exception {
+    var lines = Files.readAllLines(Path.of("file.txt"));
+    if (lines.size() >= 10) System.out.println(lines.get(9));
+  }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go-cn"><pre><code class="language-go">package main
+import (
+  "bufio"
+  "fmt"
+  "os"
+)
+func main() {
+  f,_ := os.Open("file.txt")
+  defer f.Close()
+  sc := bufio.NewScanner(f)
+  i:=0
+  for sc.Scan() {
+    i++
+    if i==10 { fmt.Println(sc.Text()); break }
+  }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp-cn"><pre><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+int main(){
+  ifstream fin("file.txt");
+  string s; int i=0;
+  while(getline(fin,s)){ if(++i==10){ cout&lt;&lt;s&lt;&lt;"\n"; break; } }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="python-cn"><pre><code class="language-python">with open("file.txt", "r", encoding="utf-8") as f:
+    for i, line in enumerate(f, 1):
+        if i == 10:
+            print(line.rstrip("
+"))
+            break</code></pre></div>
+        <div class="tab-pane" data-tab="js-cn"><pre><code class="language-javascript">const fs = require('fs');
+const lines = fs.readFileSync('file.txt','utf8').split(/?
+/);
+if (lines.length >= 10) console.log(lines[9]);</code></pre></div>
+      </div>
+    </article>
+    <section class="card"><a href="../../../../index.html">← Back to Home</a></section>
+    <section class="card"><script src="https://giscus.app/client.js" data-repo="hongten/hongten.github.io" data-repo-id="R_kgDONikJ9g" data-category="General" data-category-id="DIC_kwDONikJ9s4CmzTR" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="preferred_color_scheme" crossorigin="anonymous" async></script></section>
+  </main>
+  <script src="../../../../assets/script.js"></script>
+  <script src="../../../../assets/code-tools.js"></script>
+</body>
+</html>
