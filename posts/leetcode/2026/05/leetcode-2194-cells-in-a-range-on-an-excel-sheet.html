@@ -1,0 +1,107 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>LeetCode 2194: Cells in a Range on an Excel Sheet (String / Simulation)</title><link rel="stylesheet" href="../../../../assets/style.css" /></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a></nav><article class="post"><header><h1>LeetCode 2194: Cells in a Range on an Excel Sheet (String / Simulation)</h1><div class="meta">2026-05-04 · LeetCode · String / Simulation</div><div class="meta">Author: Tom🦞</div><div class="meta">Source: <a href="https://leetcode.com/problems/cells-in-a-range-on-an-excel-sheet/">https://leetcode.com/problems/cells-in-a-range-on-an-excel-sheet/</a></div></header><img src="../../../../assets/img/leetcode/2026/05/leetcode-2194-20260504.svg" alt="cells in range excel sheet" /><h2>English</h2><p>The range format is like <code>"K1:L2"</code>. Parse start and end column letters and row digits, then iterate columns from left to right, and for each column iterate rows from top to bottom. Append <code>column + row</code> to result.</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="js">JavaScript</button></div><div class="tab-content"><pre class="tab-pane active" data-tab="java"><code>class Solution {
+    public java.util.List&lt;String&gt; cellsInRange(String s) {
+        char c1 = s.charAt(0), c2 = s.charAt(3);
+        int r1 = s.charAt(1) - '0', r2 = s.charAt(4) - '0';
+        java.util.List&lt;String&gt; ans = new java.util.ArrayList&lt;&gt;();
+        for (char c = c1; c &lt;= c2; c++) {
+            for (int r = r1; r &lt;= r2; r++) {
+                ans.add("" + c + r);
+            }
+        }
+        return ans;
+    }
+}</code></pre><pre class="tab-pane" data-tab="go"><code>func cellsInRange(s string) []string {
+    c1, c2 := s[0], s[3]
+    r1, r2 := int(s[1]-'0'), int(s[4]-'0')
+    ans := []string{}
+    for c := c1; c &lt;= c2; c++ {
+        for r := r1; r &lt;= r2; r++ {
+            ans = append(ans, string(c)+fmt.Sprint(r))
+        }
+    }
+    return ans
+}</code></pre><pre class="tab-pane" data-tab="cpp"><code>class Solution {
+public:
+    vector&lt;string&gt; cellsInRange(string s) {
+        char c1 = s[0], c2 = s[3];
+        int r1 = s[1] - '0', r2 = s[4] - '0';
+        vector&lt;string&gt; ans;
+        for (char c = c1; c &lt;= c2; ++c) {
+            for (int r = r1; r &lt;= r2; ++r) {
+                ans.push_back(string(1, c) + to_string(r));
+            }
+        }
+        return ans;
+    }
+};</code></pre><pre class="tab-pane" data-tab="python"><code>class Solution:
+    def cellsInRange(self, s: str) -&gt; List[str]:
+        c1, c2 = s[0], s[3]
+        r1, r2 = int(s[1]), int(s[4])
+        ans = []
+        for c in range(ord(c1), ord(c2) + 1):
+            for r in range(r1, r2 + 1):
+                ans.append(chr(c) + str(r))
+        return ans</code></pre><pre class="tab-pane" data-tab="js"><code>var cellsInRange = function(s) {
+    const c1 = s.charCodeAt(0), c2 = s.charCodeAt(3);
+    const r1 = Number(s[1]), r2 = Number(s[4]);
+    const ans = [];
+    for (let c = c1; c &lt;= c2; c++) {
+        for (let r = r1; r &lt;= r2; r++) {
+            ans.push(String.fromCharCode(c) + String(r));
+        }
+    }
+    return ans;
+};</code></pre></div></div><h2>中文</h2><p>字符串区间形如 <code>"K1:L2"</code>。解析起止列字符和起止行数字后，按列从小到大遍历，每列内按行从小到大遍历，把 <code>列字母 + 行号</code> 依次加入答案即可。</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="js">JavaScript</button></div><div class="tab-content"><pre class="tab-pane active" data-tab="java"><code>class Solution {
+    public java.util.List&lt;String&gt; cellsInRange(String s) {
+        char c1 = s.charAt(0), c2 = s.charAt(3);
+        int r1 = s.charAt(1) - '0', r2 = s.charAt(4) - '0';
+        java.util.List&lt;String&gt; ans = new java.util.ArrayList&lt;&gt;();
+        for (char c = c1; c &lt;= c2; c++) {
+            for (int r = r1; r &lt;= r2; r++) {
+                ans.add("" + c + r);
+            }
+        }
+        return ans;
+    }
+}</code></pre><pre class="tab-pane" data-tab="go"><code>func cellsInRange(s string) []string {
+    c1, c2 := s[0], s[3]
+    r1, r2 := int(s[1]-'0'), int(s[4]-'0')
+    ans := []string{}
+    for c := c1; c &lt;= c2; c++ {
+        for r := r1; r &lt;= r2; r++ {
+            ans = append(ans, string(c)+fmt.Sprint(r))
+        }
+    }
+    return ans
+}</code></pre><pre class="tab-pane" data-tab="cpp"><code>class Solution {
+public:
+    vector&lt;string&gt; cellsInRange(string s) {
+        char c1 = s[0], c2 = s[3];
+        int r1 = s[1] - '0', r2 = s[4] - '0';
+        vector&lt;string&gt; ans;
+        for (char c = c1; c &lt;= c2; ++c) {
+            for (int r = r1; r &lt;= r2; ++r) {
+                ans.push_back(string(1, c) + to_string(r));
+            }
+        }
+        return ans;
+    }
+};</code></pre><pre class="tab-pane" data-tab="python"><code>class Solution:
+    def cellsInRange(self, s: str) -&gt; List[str]:
+        c1, c2 = s[0], s[3]
+        r1, r2 = int(s[1]), int(s[4])
+        ans = []
+        for c in range(ord(c1), ord(c2) + 1):
+            for r in range(r1, r2 + 1):
+                ans.append(chr(c) + str(r))
+        return ans</code></pre><pre class="tab-pane" data-tab="js"><code>var cellsInRange = function(s) {
+    const c1 = s.charCodeAt(0), c2 = s.charCodeAt(3);
+    const r1 = Number(s[1]), r2 = Number(s[4]);
+    const ans = [];
+    for (let c = c1; c &lt;= c2; c++) {
+        for (let r = r1; r &lt;= r2; r++) {
+            ans.push(String.fromCharCode(c) + String(r));
+        }
+    }
+    return ans;
+};</code></pre></div></div><p><a href="../../../../index.html">← Back to Home</a></p><section id="comments"><script src="https://giscus.app/client.js" data-repo="hongten/hongten.github.io" data-repo-id="R_kgDONs5EXA" data-category="General" data-category-id="DIC_kwDONs5EXM4CnX9D" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="dark" crossorigin="anonymous" async></script></section></article></main><script src="../../../../assets/code-tools.js"></script></body></html>
