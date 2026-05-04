@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 2865: Beautiful Towers I (Monotonic Stack + DP-like Accumulation)</title>
+  <meta name="description" content="Bilingual tutorial for LeetCode 2865 using monotonic stacks to compute max mountain sum in O(n)."/>
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/05/leetcode-2865-beautiful-towers-i.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a></nav>
+    <article class="card article">
+      <h1>LeetCode 2865: Beautiful Towers I (Monotonic Stack + DP-like Accumulation)</h1>
+      <div class="meta">2026-05-04 · LeetCode · Greedy / Monotonic Stack</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/beautiful-towers-i/">https://leetcode.com/problems/beautiful-towers-i/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/05/leetcode-2865-20260504.svg" alt="LeetCode 2865 mountain profile and peak expansion" />
+
+      <h2>English</h2>
+      <p>Pick each index as peak. Heights must be non-increasing away from peak, and never exceed maxHeights[i]. We compute best sum ending at i from the left and from the right using a monotonic increasing stack, then combine both sides.</p>
+      <div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div>
+      <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public long maximumSumOfHeights(java.util.List&lt;Integer&gt; maxHeights) {
+        int n = maxHeights.size();
+        long[] left = new long[n], right = new long[n];
+        java.util.ArrayDeque&lt;Integer&gt; st = new java.util.ArrayDeque&lt;&gt;();
+        for (int i = 0; i &lt; n; i++) {
+            while (!st.isEmpty() &amp;&amp; maxHeights.get(st.peek()) &gt; maxHeights.get(i)) st.pop();
+            if (st.isEmpty()) left[i] = 1L * maxHeights.get(i) * (i + 1);
+            else { int j = st.peek(); left[i] = left[j] + 1L * maxHeights.get(i) * (i - j); }
+            st.push(i);
+        }
+        st.clear();
+        for (int i = n - 1; i &gt;= 0; i--) {
+            while (!st.isEmpty() &amp;&amp; maxHeights.get(st.peek()) &gt; maxHeights.get(i)) st.pop();
+            if (st.isEmpty()) right[i] = 1L * maxHeights.get(i) * (n - i);
+            else { int j = st.peek(); right[i] = right[j] + 1L * maxHeights.get(i) * (j - i); }
+            st.push(i);
+        }
+        long ans = 0;
+        for (int i = 0; i &lt; n; i++) ans = Math.max(ans, left[i] + right[i] - maxHeights.get(i));
+        return ans;
+    }
+}</code></pre></div>
+      <div class="tab-pane" data-tab="go"><pre><code class="language-go">func maximumSumOfHeights(maxHeights []int) int64 {
+    n := len(maxHeights)
+    left, right := make([]int64, n), make([]int64, n)
+    st := []int{}
+    for i := 0; i &lt; n; i++ {
+        for len(st) &gt; 0 &amp;&amp; maxHeights[st[len(st)-1]] &gt; maxHeights[i] { st = st[:len(st)-1] }
+        if len(st) == 0 { left[i] = int64(maxHeights[i]) * int64(i+1) } else { j := st[len(st)-1]; left[i] = left[j] + int64(maxHeights[i])*int64(i-j) }
+        st = append(st, i)
+    }
+    st = st[:0]
+    for i := n - 1; i &gt;= 0; i-- {
+        for len(st) &gt; 0 &amp;&amp; maxHeights[st[len(st)-1]] &gt; maxHeights[i] { st = st[:len(st)-1] }
+        if len(st) == 0 { right[i] = int64(maxHeights[i]) * int64(n-i) } else { j := st[len(st)-1]; right[i] = right[j] + int64(maxHeights[i])*int64(j-i) }
+        st = append(st, i)
+    }
+    var ans int64
+    for i := 0; i &lt; n; i++ { v := left[i] + right[i] - int64(maxHeights[i]); if v &gt; ans { ans = v } }
+    return ans
+}</code></pre></div>
+      <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    long long maximumSumOfHeights(vector&lt;int&gt;&amp; h) {
+        int n = h.size();
+        vector&lt;long long&gt; left(n), right(n);
+        vector&lt;int&gt; st;
+        for (int i = 0; i &lt; n; i++) {
+            while (!st.empty() &amp;&amp; h[st.back()] &gt; h[i]) st.pop_back();
+            if (st.empty()) left[i] = 1LL * h[i] * (i + 1);
+            else { int j = st.back(); left[i] = left[j] + 1LL * h[i] * (i - j); }
+            st.push_back(i);
+        }
+        st.clear();
+        for (int i = n - 1; i &gt;= 0; i--) {
+            while (!st.empty() &amp;&amp; h[st.back()] &gt; h[i]) st.pop_back();
+            if (st.empty()) right[i] = 1LL * h[i] * (n - i);
+            else { int j = st.back(); right[i] = right[j] + 1LL * h[i] * (j - i); }
+            st.push_back(i);
+        }
+        long long ans = 0;
+        for (int i = 0; i &lt; n; i++) ans = max(ans, left[i] + right[i] - h[i]);
+        return ans;
+    }
+};</code></pre></div>
+      <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def maximumSumOfHeights(self, maxHeights: list[int]) -&gt; int:
+        n = len(maxHeights)
+        left = [0] * n
+        right = [0] * n
+        st = []
+        for i, x in enumerate(maxHeights):
+            while st and maxHeights[st[-1]] &gt; x:
+                st.pop()
+            if not st:
+                left[i] = x * (i + 1)
+            else:
+                j = st[-1]
+                left[i] = left[j] + x * (i - j)
+            st.append(i)
+        st.clear()
+        for i in range(n - 1, -1, -1):
+            x = maxHeights[i]
+            while st and maxHeights[st[-1]] &gt; x:
+                st.pop()
+            if not st:
+                right[i] = x * (n - i)
+            else:
+                j = st[-1]
+                right[i] = right[j] + x * (j - i)
+            st.append(i)
+        return max(left[i] + right[i] - maxHeights[i] for i in range(n))</code></pre></div>
+      <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var maximumSumOfHeights = function(maxHeights) {
+  const n = maxHeights.length;
+  const left = Array(n).fill(0n), right = Array(n).fill(0n);
+  const st = [];
+  for (let i = 0; i &lt; n; i++) {
+    while (st.length &amp;&amp; maxHeights[st[st.length - 1]] &gt; maxHeights[i]) st.pop();
+    if (!st.length) left[i] = BigInt(maxHeights[i]) * BigInt(i + 1);
+    else { const j = st[st.length - 1]; left[i] = left[j] + BigInt(maxHeights[i]) * BigInt(i - j); }
+    st.push(i);
+  }
+  st.length = 0;
+  for (let i = n - 1; i &gt;= 0; i--) {
+    while (st.length &amp;&amp; maxHeights[st[st.length - 1]] &gt; maxHeights[i]) st.pop();
+    if (!st.length) right[i] = BigInt(maxHeights[i]) * BigInt(n - i);
+    else { const j = st[st.length - 1]; right[i] = right[j] + BigInt(maxHeights[i]) * BigInt(j - i); }
+    st.push(i);
+  }
+  let ans = 0n;
+  for (let i = 0; i &lt; n; i++) {
+    const v = left[i] + right[i] - BigInt(maxHeights[i]);
+    if (v &gt; ans) ans = v;
+  }
+  return Number(ans);
+};</code></pre></div></div>
+
+      <h2>中文</h2>
+      <p>把每个位置当山峰。峰值两侧高度必须分别单调不增，且不超过 maxHeights。用单调递增栈分别计算“左侧以 i 结尾的最优和”和“右侧以 i 开始的最优和”，最后合并并减掉重复计算的峰值。</p>
+      <div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div>
+      <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public long maximumSumOfHeights(java.util.List&lt;Integer&gt; maxHeights) {
+        int n = maxHeights.size();
+        long[] left = new long[n], right = new long[n];
+        java.util.ArrayDeque&lt;Integer&gt; st = new java.util.ArrayDeque&lt;&gt;();
+        for (int i = 0; i &lt; n; i++) {
+            while (!st.isEmpty() &amp;&amp; maxHeights.get(st.peek()) &gt; maxHeights.get(i)) st.pop();
+            if (st.isEmpty()) left[i] = 1L * maxHeights.get(i) * (i + 1);
+            else { int j = st.peek(); left[i] = left[j] + 1L * maxHeights.get(i) * (i - j); }
+            st.push(i);
+        }
+        st.clear();
+        for (int i = n - 1; i &gt;= 0; i--) {
+            while (!st.isEmpty() &amp;&amp; maxHeights.get(st.peek()) &gt; maxHeights.get(i)) st.pop();
+            if (st.isEmpty()) right[i] = 1L * maxHeights.get(i) * (n - i);
+            else { int j = st.peek(); right[i] = right[j] + 1L * maxHeights.get(i) * (j - i); }
+            st.push(i);
+        }
+        long ans = 0;
+        for (int i = 0; i &lt; n; i++) ans = Math.max(ans, left[i] + right[i] - maxHeights.get(i));
+        return ans;
+    }
+}</code></pre></div>
+      <div class="tab-pane" data-tab="go"><pre><code class="language-go">func maximumSumOfHeights(maxHeights []int) int64 {
+    n := len(maxHeights)
+    left, right := make([]int64, n), make([]int64, n)
+    st := []int{}
+    for i := 0; i &lt; n; i++ {
+        for len(st) &gt; 0 &amp;&amp; maxHeights[st[len(st)-1]] &gt; maxHeights[i] { st = st[:len(st)-1] }
+        if len(st) == 0 { left[i] = int64(maxHeights[i]) * int64(i+1) } else { j := st[len(st)-1]; left[i] = left[j] + int64(maxHeights[i])*int64(i-j) }
+        st = append(st, i)
+    }
+    st = st[:0]
+    for i := n - 1; i &gt;= 0; i-- {
+        for len(st) &gt; 0 &amp;&amp; maxHeights[st[len(st)-1]] &gt; maxHeights[i] { st = st[:len(st)-1] }
+        if len(st) == 0 { right[i] = int64(maxHeights[i]) * int64(n-i) } else { j := st[len(st)-1]; right[i] = right[j] + int64(maxHeights[i])*int64(j-i) }
+        st = append(st, i)
+    }
+    var ans int64
+    for i := 0; i &lt; n; i++ { v := left[i] + right[i] - int64(maxHeights[i]); if v &gt; ans { ans = v } }
+    return ans
+}</code></pre></div>
+      <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    long long maximumSumOfHeights(vector&lt;int&gt;&amp; h) {
+        int n = h.size();
+        vector&lt;long long&gt; left(n), right(n);
+        vector&lt;int&gt; st;
+        for (int i = 0; i &lt; n; i++) {
+            while (!st.empty() &amp;&amp; h[st.back()] &gt; h[i]) st.pop_back();
+            if (st.empty()) left[i] = 1LL * h[i] * (i + 1);
+            else { int j = st.back(); left[i] = left[j] + 1LL * h[i] * (i - j); }
+            st.push_back(i);
+        }
+        st.clear();
+        for (int i = n - 1; i &gt;= 0; i--) {
+            while (!st.empty() &amp;&amp; h[st.back()] &gt; h[i]) st.pop_back();
+            if (st.empty()) right[i] = 1LL * h[i] * (n - i);
+            else { int j = st.back(); right[i] = right[j] + 1LL * h[i] * (j - i); }
+            st.push_back(i);
+        }
+        long long ans = 0;
+        for (int i = 0; i &lt; n; i++) ans = max(ans, left[i] + right[i] - h[i]);
+        return ans;
+    }
+};</code></pre></div>
+      <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def maximumSumOfHeights(self, maxHeights: list[int]) -&gt; int:
+        n = len(maxHeights)
+        left = [0] * n
+        right = [0] * n
+        st = []
+        for i, x in enumerate(maxHeights):
+            while st and maxHeights[st[-1]] &gt; x:
+                st.pop()
+            if not st:
+                left[i] = x * (i + 1)
+            else:
+                j = st[-1]
+                left[i] = left[j] + x * (i - j)
+            st.append(i)
+        st.clear()
+        for i in range(n - 1, -1, -1):
+            x = maxHeights[i]
+            while st and maxHeights[st[-1]] &gt; x:
+                st.pop()
+            if not st:
+                right[i] = x * (n - i)
+            else:
+                j = st[-1]
+                right[i] = right[j] + x * (j - i)
+            st.append(i)
+        return max(left[i] + right[i] - maxHeights[i] for i in range(n))</code></pre></div>
+      <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var maximumSumOfHeights = function(maxHeights) {
+  const n = maxHeights.length;
+  const left = Array(n).fill(0n), right = Array(n).fill(0n);
+  const st = [];
+  for (let i = 0; i &lt; n; i++) {
+    while (st.length &amp;&amp; maxHeights[st[st.length - 1]] &gt; maxHeights[i]) st.pop();
+    if (!st.length) left[i] = BigInt(maxHeights[i]) * BigInt(i + 1);
+    else { const j = st[st.length - 1]; left[i] = left[j] + BigInt(maxHeights[i]) * BigInt(i - j); }
+    st.push(i);
+  }
+  st.length = 0;
+  for (let i = n - 1; i &gt;= 0; i--) {
+    while (st.length &amp;&amp; maxHeights[st[st.length - 1]] &gt; maxHeights[i]) st.pop();
+    if (!st.length) right[i] = BigInt(maxHeights[i]) * BigInt(n - i);
+    else { const j = st[st.length - 1]; right[i] = right[j] + BigInt(maxHeights[i]) * BigInt(j - i); }
+    st.push(i);
+  }
+  let ans = 0n;
+  for (let i = 0; i &lt; n; i++) {
+    const v = left[i] + right[i] - BigInt(maxHeights[i]);
+    if (v &gt; ans) ans = v;
+  }
+  return Number(ans);
+};</code></pre></div></div>
+    </article>
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+</body>
+</html>
