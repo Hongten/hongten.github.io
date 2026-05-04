@@ -1,0 +1,167 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LeetCode 1726: Tuple with Same Product (Hash Counting)</title><meta name="description" content="Bilingual tutorial for LeetCode 1726 with hash counting and full code tabs."/>
+<link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/05/leetcode-1726-tuple-with-same-product.html" /><link rel="stylesheet" href="../../../../assets/style.css" /><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" /></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav><article class="card article">
+<h1>LeetCode 1726: Tuple with Same Product (Hash Counting)</h1><div class="meta">2026-05-04 · LeetCode · Hash Table / Combinatorics</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 1726</span><span class="tag">Hash Table</span><span class="tag">Combinatorics</span>
+<p>We count every pair product, then for each product frequency <code>c</code>, add <code>c*(c-1)*4</code>.</p><p><strong>Source:</strong> <a href="https://leetcode.com/problems/tuple-with-same-product/" target="_blank" rel="noopener">https://leetcode.com/problems/tuple-with-same-product/</a></p>
+<img class="post-image" src="../../../../assets/img/leetcode/2026/05/leetcode-1726-20260504.svg" alt="LeetCode 1726 pair-product counting diagram" />
+<h2>English</h2><p>For each pair <code>(i, j)</code>, compute <code>nums[i]*nums[j]</code> and store frequency in a hash map. If a product appears <code>c</code> times, we can choose two distinct pairs in <code>C(c,2)</code> ways, and each choice contributes 8 ordered tuples, so contribution is <code>C(c,2)*8 = c*(c-1)*4</code>. Time complexity is <code>O(n^2)</code>.</p>
+<div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div>
+<div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int tupleSameProduct(int[] nums) {
+        Map&lt;Integer, Integer&gt; cnt = new HashMap&lt;&gt;();
+        int n = nums.length;
+        for (int i = 0; i &lt; n; i++) {
+            for (int j = i + 1; j &lt; n; j++) {
+                int p = nums[i] * nums[j];
+                cnt.put(p, cnt.getOrDefault(p, 0) + 1);
+            }
+        }
+        int ans = 0;
+        for (int c : cnt.values()) {
+            if (c &gt;= 2) ans += c * (c - 1) * 4;
+        }
+        return ans;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">func tupleSameProduct(nums []int) int {
+    cnt := map[int]int{}
+    n := len(nums)
+    for i := 0; i &lt; n; i++ {
+        for j := i + 1; j &lt; n; j++ {
+            p := nums[i] * nums[j]
+            cnt[p]++
+        }
+    }
+    ans := 0
+    for _, c := range cnt {
+        if c &gt;= 2 {
+            ans += c * (c - 1) * 4
+        }
+    }
+    return ans
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int tupleSameProduct(vector&lt;int&gt;&amp; nums) {
+        unordered_map&lt;int,int&gt; cnt;
+        int n = nums.size();
+        for (int i = 0; i &lt; n; ++i) {
+            for (int j = i + 1; j &lt; n; ++j) {
+                cnt[nums[i] * nums[j]]++;
+            }
+        }
+        int ans = 0;
+        for (auto &amp;kv : cnt) {
+            int c = kv.second;
+            if (c &gt;= 2) ans += c * (c - 1) * 4;
+        }
+        return ans;
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">from collections import Counter
+from typing import List
+
+class Solution:
+    def tupleSameProduct(self, nums: List[int]) -&gt; int:
+        cnt = Counter()
+        n = len(nums)
+        for i in range(n):
+            for j in range(i + 1, n):
+                cnt[nums[i] * nums[j]] += 1
+        ans = 0
+        for c in cnt.values():
+            if c &gt;= 2:
+                ans += c * (c - 1) * 4
+        return ans</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var tupleSameProduct = function(nums) {
+    const cnt = new Map();
+    const n = nums.length;
+    for (let i = 0; i &lt; n; i++) {
+        for (let j = i + 1; j &lt; n; j++) {
+            const p = nums[i] * nums[j];
+            cnt.set(p, (cnt.get(p) || 0) + 1);
+        }
+    }
+    let ans = 0;
+    for (const c of cnt.values()) {
+        if (c &gt;= 2) ans += c * (c - 1) * 4;
+    }
+    return ans;
+};</code></pre></div></div>
+<h2>中文</h2><p>遍历所有数对并统计乘积频次。若某个乘积出现 <code>c</code> 次，可以选出两对不同数对的方式数是 <code>C(c,2)</code>，每种对应 8 个有序四元组，因此贡献为 <code>c*(c-1)*4</code>。总复杂度 <code>O(n^2)</code>。</p>
+<div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div>
+<div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int tupleSameProduct(int[] nums) {
+        Map&lt;Integer, Integer&gt; cnt = new HashMap&lt;&gt;();
+        int n = nums.length;
+        for (int i = 0; i &lt; n; i++) {
+            for (int j = i + 1; j &lt; n; j++) {
+                int p = nums[i] * nums[j];
+                cnt.put(p, cnt.getOrDefault(p, 0) + 1);
+            }
+        }
+        int ans = 0;
+        for (int c : cnt.values()) {
+            if (c &gt;= 2) ans += c * (c - 1) * 4;
+        }
+        return ans;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">func tupleSameProduct(nums []int) int {
+    cnt := map[int]int{}
+    n := len(nums)
+    for i := 0; i &lt; n; i++ {
+        for j := i + 1; j &lt; n; j++ {
+            p := nums[i] * nums[j]
+            cnt[p]++
+        }
+    }
+    ans := 0
+    for _, c := range cnt {
+        if c &gt;= 2 {
+            ans += c * (c - 1) * 4
+        }
+    }
+    return ans
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int tupleSameProduct(vector&lt;int&gt;&amp; nums) {
+        unordered_map&lt;int,int&gt; cnt;
+        int n = nums.size();
+        for (int i = 0; i &lt; n; ++i) {
+            for (int j = i + 1; j &lt; n; ++j) {
+                cnt[nums[i] * nums[j]]++;
+            }
+        }
+        int ans = 0;
+        for (auto &amp;kv : cnt) {
+            int c = kv.second;
+            if (c &gt;= 2) ans += c * (c - 1) * 4;
+        }
+        return ans;
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">from collections import Counter
+from typing import List
+
+class Solution:
+    def tupleSameProduct(self, nums: List[int]) -&gt; int:
+        cnt = Counter()
+        n = len(nums)
+        for i in range(n):
+            for j in range(i + 1, n):
+                cnt[nums[i] * nums[j]] += 1
+        ans = 0
+        for c in cnt.values():
+            if c &gt;= 2:
+                ans += c * (c - 1) * 4
+        return ans</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var tupleSameProduct = function(nums) {
+    const cnt = new Map();
+    const n = nums.length;
+    for (let i = 0; i &lt; n; i++) {
+        for (let j = i + 1; j &lt; n; j++) {
+            const p = nums[i] * nums[j];
+            cnt.set(p, (cnt.get(p) || 0) + 1);
+        }
+    }
+    let ans = 0;
+    for (const c of cnt.values()) {
+        if (c &gt;= 2) ans += c * (c - 1) * 4;
+    }
+    return ans;
+};</code></pre></div></div>
+</article><section class="card comments"><h2>Comments</h2></section><footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
