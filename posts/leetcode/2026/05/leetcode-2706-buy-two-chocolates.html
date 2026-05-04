@@ -1,0 +1,135 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>LeetCode 2706: Buy Two Chocolates (Greedy)</title><link rel="stylesheet" href="../../../../assets/style.css" /></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a></nav><article class="post"><header><h1>LeetCode 2706: Buy Two Chocolates (Greedy)</h1><div class="meta">2026-05-04 · LeetCode · Greedy / Array</div><div class="meta">Author: Tom🦞</div><div class="meta">Source: <a href="https://leetcode.com/problems/buy-two-chocolates/">https://leetcode.com/problems/buy-two-chocolates/</a></div></header><img src="../../../../assets/img/leetcode/2026/05/leetcode-2706-20260504.svg" alt="buy two chocolates greedy" /><h2>English</h2><p>We only need the two cheapest prices. Scan once while maintaining <code>min1</code> and <code>min2</code>. If <code>min1 + min2 &lt;= money</code>, we can buy both and return the remaining money; otherwise return <code>money</code>. This is O(n) time and O(1) space.</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="js">JavaScript</button></div><div class="tab-content"><pre class="tab-pane active" data-tab="java"><code>class Solution {
+    public int buyChoco(int[] prices, int money) {
+        int min1 = Integer.MAX_VALUE, min2 = Integer.MAX_VALUE;
+        for (int p : prices) {
+            if (p &lt; min1) {
+                min2 = min1;
+                min1 = p;
+            } else if (p &lt; min2) {
+                min2 = p;
+            }
+        }
+        int cost = min1 + min2;
+        return cost &lt;= money ? money - cost : money;
+    }
+}</code></pre><pre class="tab-pane" data-tab="go"><code>func buyChoco(prices []int, money int) int {
+    min1, min2 := 1&lt;&lt;30, 1&lt;&lt;30
+    for _, p := range prices {
+        if p &lt; min1 {
+            min2 = min1
+            min1 = p
+        } else if p &lt; min2 {
+            min2 = p
+        }
+    }
+    cost := min1 + min2
+    if cost &lt;= money {
+        return money - cost
+    }
+    return money
+}</code></pre><pre class="tab-pane" data-tab="cpp"><code>class Solution {
+public:
+    int buyChoco(vector&lt;int&gt;&amp; prices, int money) {
+        int min1 = INT_MAX, min2 = INT_MAX;
+        for (int p : prices) {
+            if (p &lt; min1) {
+                min2 = min1;
+                min1 = p;
+            } else if (p &lt; min2) {
+                min2 = p;
+            }
+        }
+        int cost = min1 + min2;
+        return cost &lt;= money ? money - cost : money;
+    }
+};</code></pre><pre class="tab-pane" data-tab="python"><code>class Solution:
+    def buyChoco(self, prices: List[int], money: int) -&gt; int:
+        min1 = min2 = 10**9
+        for p in prices:
+            if p &lt; min1:
+                min2 = min1
+                min1 = p
+            elif p &lt; min2:
+                min2 = p
+        cost = min1 + min2
+        return money - cost if cost &lt;= money else money</code></pre><pre class="tab-pane" data-tab="js"><code>var buyChoco = function(prices, money) {
+    let min1 = Number.MAX_SAFE_INTEGER;
+    let min2 = Number.MAX_SAFE_INTEGER;
+    for (const p of prices) {
+        if (p &lt; min1) {
+            min2 = min1;
+            min1 = p;
+        } else if (p &lt; min2) {
+            min2 = p;
+        }
+    }
+    const cost = min1 + min2;
+    return cost &lt;= money ? money - cost : money;
+};</code></pre></div></div><h2>中文</h2><p>核心是找到最便宜的两块巧克力。一次遍历维护 <code>min1</code> 和 <code>min2</code> 即可。若 <code>min1 + min2 &lt;= money</code>，可以买下并返回剩余金额；否则买不起两块，直接返回 <code>money</code>。时间复杂度 O(n)，空间复杂度 O(1)。</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="js">JavaScript</button></div><div class="tab-content"><pre class="tab-pane active" data-tab="java"><code>class Solution {
+    public int buyChoco(int[] prices, int money) {
+        int min1 = Integer.MAX_VALUE, min2 = Integer.MAX_VALUE;
+        for (int p : prices) {
+            if (p &lt; min1) {
+                min2 = min1;
+                min1 = p;
+            } else if (p &lt; min2) {
+                min2 = p;
+            }
+        }
+        int cost = min1 + min2;
+        return cost &lt;= money ? money - cost : money;
+    }
+}</code></pre><pre class="tab-pane" data-tab="go"><code>func buyChoco(prices []int, money int) int {
+    min1, min2 := 1&lt;&lt;30, 1&lt;&lt;30
+    for _, p := range prices {
+        if p &lt; min1 {
+            min2 = min1
+            min1 = p
+        } else if p &lt; min2 {
+            min2 = p
+        }
+    }
+    cost := min1 + min2
+    if cost &lt;= money {
+        return money - cost
+    }
+    return money
+}</code></pre><pre class="tab-pane" data-tab="cpp"><code>class Solution {
+public:
+    int buyChoco(vector&lt;int&gt;&amp; prices, int money) {
+        int min1 = INT_MAX, min2 = INT_MAX;
+        for (int p : prices) {
+            if (p &lt; min1) {
+                min2 = min1;
+                min1 = p;
+            } else if (p &lt; min2) {
+                min2 = p;
+            }
+        }
+        int cost = min1 + min2;
+        return cost &lt;= money ? money - cost : money;
+    }
+};</code></pre><pre class="tab-pane" data-tab="python"><code>class Solution:
+    def buyChoco(self, prices: List[int], money: int) -&gt; int:
+        min1 = min2 = 10**9
+        for p in prices:
+            if p &lt; min1:
+                min2 = min1
+                min1 = p
+            elif p &lt; min2:
+                min2 = p
+        cost = min1 + min2
+        return money - cost if cost &lt;= money else money</code></pre><pre class="tab-pane" data-tab="js"><code>var buyChoco = function(prices, money) {
+    let min1 = Number.MAX_SAFE_INTEGER;
+    let min2 = Number.MAX_SAFE_INTEGER;
+    for (const p of prices) {
+        if (p &lt; min1) {
+            min2 = min1;
+            min1 = p;
+        } else if (p &lt; min2) {
+            min2 = p;
+        }
+    }
+    const cost = min1 + min2;
+    return cost &lt;= money ? money - cost : money;
+};</code></pre></div></div><p><a href="../../../../index.html">← Back to Home</a></p><section id="comments"><script src="https://giscus.app/client.js" data-repo="hongten/hongten.github.io" data-repo-id="R_kgDONs5EXA" data-category="General" data-category-id="DIC_kwDONs5EXM4CnX9D" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="dark" crossorigin="anonymous" async></script></section></article></main><script src="../../../../assets/code-tools.js"></script></body></html>
