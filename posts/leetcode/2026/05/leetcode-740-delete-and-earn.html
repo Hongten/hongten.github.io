@@ -1,0 +1,137 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>LeetCode 740: Delete and Earn (Dynamic Programming)</title><link rel="stylesheet" href="../../../../assets/style.css" /></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a></nav><article class="post"><header><h1>LeetCode 740: Delete and Earn (Dynamic Programming)</h1><div class="meta">2026-05-04 · LeetCode · Dynamic Programming</div><div class="meta">Author: Tom🦞</div><div class="meta">Source: <a href="https://leetcode.com/problems/delete-and-earn/">https://leetcode.com/problems/delete-and-earn/</a></div></header><img src="../../../../assets/img/leetcode/2026/05/leetcode-740-20260504.svg" alt="delete and earn dp" /><h2>English</h2><p>Convert the problem into House Robber. If we pick value <code>x</code>, we cannot pick <code>x-1</code> or <code>x+1</code>. First accumulate points <code>sum[x] += x</code>. Then run DP on value axis: <code>dp[i] = max(dp[i-1], dp[i-2] + sum[i])</code>. This handles all duplicates naturally and gives the optimal answer.</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="js">JavaScript</button></div><div class="tab-content"><pre class="tab-pane active" data-tab="java"><code>class Solution {
+    public int deleteAndEarn(int[] nums) {
+        int mx = 0;
+        for (int x : nums) mx = Math.max(mx, x);
+        int[] sum = new int[mx + 1];
+        for (int x : nums) sum[x] += x;
+
+        int prev2 = 0, prev1 = 0;
+        for (int i = 0; i &lt;= mx; i++) {
+            int cur = Math.max(prev1, prev2 + sum[i]);
+            prev2 = prev1;
+            prev1 = cur;
+        }
+        return prev1;
+    }
+}</code></pre><pre class="tab-pane" data-tab="go"><code>func deleteAndEarn(nums []int) int {
+    mx := 0
+    for _, x := range nums {
+        if x &gt; mx { mx = x }
+    }
+    sum := make([]int, mx+1)
+    for _, x := range nums { sum[x] += x }
+
+    prev2, prev1 := 0, 0
+    for i := 0; i &lt;= mx; i++ {
+        cur := prev1
+        if prev2+sum[i] &gt; cur { cur = prev2 + sum[i] }
+        prev2, prev1 = prev1, cur
+    }
+    return prev1
+}</code></pre><pre class="tab-pane" data-tab="cpp"><code>class Solution {
+public:
+    int deleteAndEarn(vector&lt;int&gt;&amp; nums) {
+        int mx = *max_element(nums.begin(), nums.end());
+        vector&lt;int&gt; sum(mx + 1, 0);
+        for (int x : nums) sum[x] += x;
+
+        int prev2 = 0, prev1 = 0;
+        for (int i = 0; i &lt;= mx; ++i) {
+            int cur = max(prev1, prev2 + sum[i]);
+            prev2 = prev1;
+            prev1 = cur;
+        }
+        return prev1;
+    }
+};</code></pre><pre class="tab-pane" data-tab="python"><code>class Solution:
+    def deleteAndEarn(self, nums: List[int]) -&gt; int:
+        mx = max(nums)
+        s = [0] * (mx + 1)
+        for x in nums:
+            s[x] += x
+
+        prev2 = prev1 = 0
+        for i in range(mx + 1):
+            prev2, prev1 = prev1, max(prev1, prev2 + s[i])
+        return prev1</code></pre><pre class="tab-pane" data-tab="js"><code>var deleteAndEarn = function(nums) {
+    let mx = 0;
+    for (const x of nums) mx = Math.max(mx, x);
+    const sum = new Array(mx + 1).fill(0);
+    for (const x of nums) sum[x] += x;
+
+    let prev2 = 0, prev1 = 0;
+    for (let i = 0; i &lt;= mx; i++) {
+        const cur = Math.max(prev1, prev2 + sum[i]);
+        prev2 = prev1;
+        prev1 = cur;
+    }
+    return prev1;
+};</code></pre></div></div><h2>中文</h2><p>把题目转成“打家劫舍”。选择数值 <code>x</code> 后，<code>x-1</code> 和 <code>x+1</code> 都不能再选。先统计每个值的总收益 <code>sum[x] += x</code>，再在值域上做 DP：<code>dp[i] = max(dp[i-1], dp[i-2] + sum[i])</code>。这样可以自然处理重复元素，并保证全局最优。</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="js">JavaScript</button></div><div class="tab-content"><pre class="tab-pane active" data-tab="java"><code>class Solution {
+    public int deleteAndEarn(int[] nums) {
+        int mx = 0;
+        for (int x : nums) mx = Math.max(mx, x);
+        int[] sum = new int[mx + 1];
+        for (int x : nums) sum[x] += x;
+
+        int prev2 = 0, prev1 = 0;
+        for (int i = 0; i &lt;= mx; i++) {
+            int cur = Math.max(prev1, prev2 + sum[i]);
+            prev2 = prev1;
+            prev1 = cur;
+        }
+        return prev1;
+    }
+}</code></pre><pre class="tab-pane" data-tab="go"><code>func deleteAndEarn(nums []int) int {
+    mx := 0
+    for _, x := range nums {
+        if x &gt; mx { mx = x }
+    }
+    sum := make([]int, mx+1)
+    for _, x := range nums { sum[x] += x }
+
+    prev2, prev1 := 0, 0
+    for i := 0; i &lt;= mx; i++ {
+        cur := prev1
+        if prev2+sum[i] &gt; cur { cur = prev2 + sum[i] }
+        prev2, prev1 = prev1, cur
+    }
+    return prev1
+}</code></pre><pre class="tab-pane" data-tab="cpp"><code>class Solution {
+public:
+    int deleteAndEarn(vector&lt;int&gt;&amp; nums) {
+        int mx = *max_element(nums.begin(), nums.end());
+        vector&lt;int&gt; sum(mx + 1, 0);
+        for (int x : nums) sum[x] += x;
+
+        int prev2 = 0, prev1 = 0;
+        for (int i = 0; i &lt;= mx; ++i) {
+            int cur = max(prev1, prev2 + sum[i]);
+            prev2 = prev1;
+            prev1 = cur;
+        }
+        return prev1;
+    }
+};</code></pre><pre class="tab-pane" data-tab="python"><code>class Solution:
+    def deleteAndEarn(self, nums: List[int]) -&gt; int:
+        mx = max(nums)
+        s = [0] * (mx + 1)
+        for x in nums:
+            s[x] += x
+
+        prev2 = prev1 = 0
+        for i in range(mx + 1):
+            prev2, prev1 = prev1, max(prev1, prev2 + s[i])
+        return prev1</code></pre><pre class="tab-pane" data-tab="js"><code>var deleteAndEarn = function(nums) {
+    let mx = 0;
+    for (const x of nums) mx = Math.max(mx, x);
+    const sum = new Array(mx + 1).fill(0);
+    for (const x of nums) sum[x] += x;
+
+    let prev2 = 0, prev1 = 0;
+    for (let i = 0; i &lt;= mx; i++) {
+        const cur = Math.max(prev1, prev2 + sum[i]);
+        prev2 = prev1;
+        prev1 = cur;
+    }
+    return prev1;
+};</code></pre></div></div><p><a href="../../../../index.html">← Back to Home</a></p><section id="comments"><script src="https://giscus.app/client.js" data-repo="hongten/hongten.github.io" data-repo-id="R_kgDONs5EXA" data-category="General" data-category-id="DIC_kwDONs5EXM4CnX9D" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="dark" crossorigin="anonymous" async></script></section></article></main><script src="../../../../assets/code-tools.js"></script></body></html>
