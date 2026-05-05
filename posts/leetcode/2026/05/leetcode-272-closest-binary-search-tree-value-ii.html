@@ -1,0 +1,171 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>LeetCode 272: Closest Binary Search Tree Value II (Inorder + Sliding Window)</title><meta name="description" content="Bilingual walkthrough for LeetCode 272 using inorder traversal and a fixed-size sliding window."/><link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/05/leetcode-272-closest-binary-search-tree-value-ii.html" /><link rel="stylesheet" href="../../../../assets/style.css" /><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" /></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav><article class="card article"><h1>LeetCode 272: Closest Binary Search Tree Value II (Inorder + Sliding Window)</h1><div class="meta">2026-05-05 · LeetCode · Tree / BST / Two Pointers</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 272</span><span class="tag">BST</span><span class="tag">Inorder</span><p><strong>Source:</strong> <a href="https://leetcode.com/problems/closest-binary-search-tree-value-ii/" target="_blank" rel="noopener">https://leetcode.com/problems/closest-binary-search-tree-value-ii/</a></p><p>Inorder gives sorted values, then we keep the best k values near target by dropping farther elements.</p><img class="post-image" src="../../../../assets/img/leetcode/2026/05/leetcode-272-20260505.svg" alt="LeetCode 272 sliding window on sorted inorder values" /><h2>English</h2><p>Because BST inorder traversal is sorted, we can scan the list once and maintain a deque of size at most <code>k</code>. For each value <code>x</code>, if we still need numbers, push it. Otherwise compare distances: if <code>|x - target|</code> is smaller than the leftmost distance, pop left and push <code>x</code>. If not, later values will only be farther, so we can stop early.</p><h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public List&lt;Integer&gt; closestKValues(TreeNode root, double target, int k) {
+        List&lt;Integer&gt; vals = new ArrayList&lt;&gt;();
+        inorder(root, vals);
+        Deque&lt;Integer&gt; dq = new ArrayDeque&lt;&gt;();
+        for (int x : vals) {
+            if (dq.size() &lt; k) dq.addLast(x);
+            else if (Math.abs(x - target) &lt; Math.abs(dq.peekFirst() - target)) {
+                dq.pollFirst();
+                dq.addLast(x);
+            } else break;
+        }
+        return new ArrayList&lt;&gt;(dq);
+    }
+    private void inorder(TreeNode n, List&lt;Integer&gt; vals) {
+        if (n == null) return;
+        inorder(n.left, vals); vals.add(n.val); inorder(n.right, vals);
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">func closestKValues(root *TreeNode, target float64, k int) []int {
+    vals := []int{}
+    var inorder func(*TreeNode)
+    inorder = func(n *TreeNode) {
+        if n == nil { return }
+        inorder(n.Left); vals = append(vals, n.Val); inorder(n.Right)
+    }
+    inorder(root)
+    dq := []int{}
+    for _, x := range vals {
+        if len(dq) &lt; k {
+            dq = append(dq, x)
+        } else if math.Abs(float64(x)-target) &lt; math.Abs(float64(dq[0])-target) {
+            dq = dq[1:]
+            dq = append(dq, x)
+        } else { break }
+    }
+    return dq
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    void inorder(TreeNode* n, vector&lt;int&gt;&amp; a) {
+        if (!n) return;
+        inorder(n-&gt;left, a); a.push_back(n-&gt;val); inorder(n-&gt;right, a);
+    }
+    vector&lt;int&gt; closestKValues(TreeNode* root, double target, int k) {
+        vector&lt;int&gt; a; inorder(root, a);
+        deque&lt;int&gt; dq;
+        for (int x : a) {
+            if ((int)dq.size() &lt; k) dq.push_back(x);
+            else if (abs(x - target) &lt; abs(dq.front() - target)) {
+                dq.pop_front(); dq.push_back(x);
+            } else break;
+        }
+        return vector&lt;int&gt;(dq.begin(), dq.end());
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def closestKValues(self, root: Optional[TreeNode], target: float, k: int) -&gt; List[int]:
+        vals = []
+        def inorder(n):
+            if not n: return
+            inorder(n.left); vals.append(n.val); inorder(n.right)
+        inorder(root)
+
+        dq = collections.deque()
+        for x in vals:
+            if len(dq) &lt; k:
+                dq.append(x)
+            elif abs(x - target) &lt; abs(dq[0] - target):
+                dq.popleft(); dq.append(x)
+            else:
+                break
+        return list(dq)</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var closestKValues = function(root, target, k) {
+  const vals = [];
+  const inorder = (n) =&gt; {
+    if (!n) return;
+    inorder(n.left); vals.push(n.val); inorder(n.right);
+  };
+  inorder(root);
+
+  const dq = [];
+  for (const x of vals) {
+    if (dq.length &lt; k) dq.push(x);
+    else if (Math.abs(x - target) &lt; Math.abs(dq[0] - target)) {
+      dq.shift(); dq.push(x);
+    } else break;
+  }
+  return dq;
+};</code></pre></div></div><h2>中文</h2><p>BST 的中序遍历结果是有序数组。我们顺序扫描这些值，维护一个长度不超过 <code>k</code> 的队列。若队列未满直接加入；若已满就比较当前值与目标的距离，若当前更近则弹出队首（当前最差）并加入新值，否则可以提前结束，因为后续值只会更远。</p><h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public List&lt;Integer&gt; closestKValues(TreeNode root, double target, int k) {
+        List&lt;Integer&gt; vals = new ArrayList&lt;&gt;();
+        inorder(root, vals);
+        Deque&lt;Integer&gt; dq = new ArrayDeque&lt;&gt;();
+        for (int x : vals) {
+            if (dq.size() &lt; k) dq.addLast(x);
+            else if (Math.abs(x - target) &lt; Math.abs(dq.peekFirst() - target)) {
+                dq.pollFirst();
+                dq.addLast(x);
+            } else break;
+        }
+        return new ArrayList&lt;&gt;(dq);
+    }
+    private void inorder(TreeNode n, List&lt;Integer&gt; vals) {
+        if (n == null) return;
+        inorder(n.left, vals); vals.add(n.val); inorder(n.right, vals);
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">func closestKValues(root *TreeNode, target float64, k int) []int {
+    vals := []int{}
+    var inorder func(*TreeNode)
+    inorder = func(n *TreeNode) {
+        if n == nil { return }
+        inorder(n.Left); vals = append(vals, n.Val); inorder(n.Right)
+    }
+    inorder(root)
+    dq := []int{}
+    for _, x := range vals {
+        if len(dq) &lt; k {
+            dq = append(dq, x)
+        } else if math.Abs(float64(x)-target) &lt; math.Abs(float64(dq[0])-target) {
+            dq = dq[1:]
+            dq = append(dq, x)
+        } else { break }
+    }
+    return dq
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    void inorder(TreeNode* n, vector&lt;int&gt;&amp; a) {
+        if (!n) return;
+        inorder(n-&gt;left, a); a.push_back(n-&gt;val); inorder(n-&gt;right, a);
+    }
+    vector&lt;int&gt; closestKValues(TreeNode* root, double target, int k) {
+        vector&lt;int&gt; a; inorder(root, a);
+        deque&lt;int&gt; dq;
+        for (int x : a) {
+            if ((int)dq.size() &lt; k) dq.push_back(x);
+            else if (abs(x - target) &lt; abs(dq.front() - target)) {
+                dq.pop_front(); dq.push_back(x);
+            } else break;
+        }
+        return vector&lt;int&gt;(dq.begin(), dq.end());
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def closestKValues(self, root: Optional[TreeNode], target: float, k: int) -&gt; List[int]:
+        vals = []
+        def inorder(n):
+            if not n: return
+            inorder(n.left); vals.append(n.val); inorder(n.right)
+        inorder(root)
+
+        dq = collections.deque()
+        for x in vals:
+            if len(dq) &lt; k:
+                dq.append(x)
+            elif abs(x - target) &lt; abs(dq[0] - target):
+                dq.popleft(); dq.append(x)
+            else:
+                break
+        return list(dq)</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var closestKValues = function(root, target, k) {
+  const vals = [];
+  const inorder = (n) =&gt; {
+    if (!n) return;
+    inorder(n.left); vals.push(n.val); inorder(n.right);
+  };
+  inorder(root);
+
+  const dq = [];
+  for (const x of vals) {
+    if (dq.length &lt; k) dq.push(x);
+    else if (Math.abs(x - target) &lt; Math.abs(dq[0] - target)) {
+      dq.shift(); dq.push(x);
+    } else break;
+  }
+  return dq;
+};</code></pre></div></div></article><section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="hongten/hongten.github.io" data-repo-id="R_kgDONs5EXA" data-category="General" data-category-id="DIC_kwDONs5EXM4CnX9D" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="dark" crossorigin="anonymous" async></script></section><footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
