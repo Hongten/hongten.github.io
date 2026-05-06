@@ -1,0 +1,127 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>LeetCode 456: 132 Pattern (Monotonic Stack)</title><meta name="description" content="Bilingual tutorial for LeetCode 456 using reverse scan with monotonic stack and a middle-value tracker."/><link rel="stylesheet" href="../../../../assets/style.css"/><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg"/></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav><article class="card article"><h1>LeetCode 456: 132 Pattern (Monotonic Stack)</h1><div class="meta">2026-05-06 · LeetCode · Stack / Greedy</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 456</span><p><strong>Source:</strong> <a href="https://leetcode.com/problems/132-pattern/" target="_blank" rel="noopener">https://leetcode.com/problems/132-pattern/</a></p><img class="post-image" src="../../../../assets/img/leetcode/2026/05/leetcode-456-20260506.svg" alt="Reverse scan with decreasing stack and middle-value tracker for 132 pattern"/><h2>English</h2><p>Scan from right to left. Maintain a decreasing stack as candidates for "3". Also track <code>mid</code>, the best candidate for "2" popped from stack. If current number is smaller than <code>mid</code>, we found <code>nums[i] &lt; mid &lt; someRight</code>, so a 132 pattern exists.</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean find132pattern(int[] nums) {
+        int mid = Integer.MIN_VALUE;
+        Deque&lt;Integer&gt; st = new ArrayDeque&lt;&gt;();
+        for (int i = nums.length - 1; i &gt;= 0; i--) {
+            if (nums[i] &lt; mid) return true;
+            while (!st.isEmpty() &amp;&amp; nums[i] &gt; st.peek()) {
+                mid = st.pop();
+            }
+            st.push(nums[i]);
+        }
+        return false;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">func find132pattern(nums []int) bool {
+    mid := -(1 &lt;&lt; 60)
+    st := []int{}
+    for i := len(nums) - 1; i &gt;= 0; i-- {
+        if nums[i] &lt; mid {
+            return true
+        }
+        for len(st) &gt; 0 &amp;&amp; nums[i] &gt; st[len(st)-1] {
+            mid = st[len(st)-1]
+            st = st[:len(st)-1]
+        }
+        st = append(st, nums[i])
+    }
+    return false
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool find132pattern(vector&lt;int&gt;&amp; nums) {
+        int mid = INT_MIN;
+        vector&lt;int&gt; st;
+        for (int i = (int)nums.size() - 1; i &gt;= 0; --i) {
+            if (nums[i] &lt; mid) return true;
+            while (!st.empty() &amp;&amp; nums[i] &gt; st.back()) {
+                mid = st.back();
+                st.pop_back();
+            }
+            st.push_back(nums[i]);
+        }
+        return false;
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def find132pattern(self, nums: List[int]) -&gt; bool:
+        mid = float('-inf')
+        st = []
+        for x in reversed(nums):
+            if x &lt; mid:
+                return True
+            while st and x &gt; st[-1]:
+                mid = st.pop()
+            st.append(x)
+        return False</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var find132pattern = function(nums) {
+  let mid = -Infinity;
+  const st = [];
+  for (let i = nums.length - 1; i &gt;= 0; i--) {
+    if (nums[i] &lt; mid) return true;
+    while (st.length &amp;&amp; nums[i] &gt; st[st.length - 1]) {
+      mid = st.pop();
+    }
+    st.push(nums[i]);
+  }
+  return false;
+};</code></pre></div></div><h2>中文</h2><p>从右往左扫描，维护一个单调递减栈作为“3”的候选；同时维护 <code>mid</code> 作为已弹出的“2”候选最大值。若当前值 <code>nums[i] &lt; mid</code>，就找到了 <code>nums[i] &lt; mid &lt; 右侧某个值</code>，存在 132 模式。</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public boolean find132pattern(int[] nums) {
+        int mid = Integer.MIN_VALUE;
+        Deque&lt;Integer&gt; st = new ArrayDeque&lt;&gt;();
+        for (int i = nums.length - 1; i &gt;= 0; i--) {
+            if (nums[i] &lt; mid) return true;
+            while (!st.isEmpty() &amp;&amp; nums[i] &gt; st.peek()) {
+                mid = st.pop();
+            }
+            st.push(nums[i]);
+        }
+        return false;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">func find132pattern(nums []int) bool {
+    mid := -(1 &lt;&lt; 60)
+    st := []int{}
+    for i := len(nums) - 1; i &gt;= 0; i-- {
+        if nums[i] &lt; mid {
+            return true
+        }
+        for len(st) &gt; 0 &amp;&amp; nums[i] &gt; st[len(st)-1] {
+            mid = st[len(st)-1]
+            st = st[:len(st)-1]
+        }
+        st = append(st, nums[i])
+    }
+    return false
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    bool find132pattern(vector&lt;int&gt;&amp; nums) {
+        int mid = INT_MIN;
+        vector&lt;int&gt; st;
+        for (int i = (int)nums.size() - 1; i &gt;= 0; --i) {
+            if (nums[i] &lt; mid) return true;
+            while (!st.empty() &amp;&amp; nums[i] &gt; st.back()) {
+                mid = st.back();
+                st.pop_back();
+            }
+            st.push_back(nums[i]);
+        }
+        return false;
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def find132pattern(self, nums: List[int]) -&gt; bool:
+        mid = float('-inf')
+        st = []
+        for x in reversed(nums):
+            if x &lt; mid:
+                return True
+            while st and x &gt; st[-1]:
+                mid = st.pop()
+            st.append(x)
+        return False</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var find132pattern = function(nums) {
+  let mid = -Infinity;
+  const st = [];
+  for (let i = nums.length - 1; i &gt;= 0; i--) {
+    if (nums[i] &lt; mid) return true;
+    while (st.length &amp;&amp; nums[i] &gt; st[st.length - 1]) {
+      mid = st.pop();
+    }
+    st.push(nums[i]);
+  }
+  return false;
+};</code></pre></div></div></article><section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section><footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
