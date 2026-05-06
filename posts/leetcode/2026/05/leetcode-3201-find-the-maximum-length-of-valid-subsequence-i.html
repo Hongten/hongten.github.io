@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LeetCode 3201: Find the Maximum Length of Valid Subsequence I (Parity DP)</title>
+<meta name="description" content="Bilingual tutorial for LeetCode 3201 using parity-state DP with full multi-language code tabs."/>
+<link rel="stylesheet" href="../../../../assets/style.css" /><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg"/></head>
+<body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav>
+<article class="card article"><h1>LeetCode 3201: Find the Maximum Length of Valid Subsequence I (Parity DP)</h1>
+<div class="meta">2026-05-06 · LeetCode · Dynamic Programming / Parity</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 3201</span>
+<p><strong>Source:</strong> <a href="https://leetcode.com/problems/find-the-maximum-length-of-valid-subsequence-i/" target="_blank" rel="noopener">https://leetcode.com/problems/find-the-maximum-length-of-valid-subsequence-i/</a></p>
+<img class="post-image" src="../../../../assets/img/leetcode/2026/05/leetcode-3201-20260506.svg" alt="LeetCode 3201 parity DP transitions"/>
+<h2>English</h2><p>In a valid subsequence, adjacent sums must have the same parity. Since parity is only 0 or 1, we keep four states: longest subsequence ending with parity <code>p</code> when required adjacent-sum parity is <code>k</code>. For current number parity <code>p</code>, previous parity must be <code>k ^ p</code>. Transition: <code>dp[k][p] = max(dp[k][p], dp[k][k ^ p] + 1)</code>. Also start new subsequence with length 1.</p>
+<div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div>
+<div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int maximumLength(int[] nums) {
+        int[][] dp = new int[2][2];
+        int ans = 1;
+        for (int x : nums) {
+            int p = x & 1;
+            for (int k = 0; k &lt; 2; k++) {
+                int need = k ^ p;
+                dp[k][p] = Math.max(dp[k][p], dp[k][need] + 1);
+                dp[k][p] = Math.max(dp[k][p], 1);
+                ans = Math.max(ans, dp[k][p]);
+            }
+        }
+        return ans;
+    }
+}</code></pre></div>
+<div class="tab-pane" data-tab="go"><pre><code class="language-go">func maximumLength(nums []int) int {
+    dp := [2][2]int{}
+    ans := 1
+    for _, x := range nums {
+        p := x & 1
+        for k := 0; k &lt; 2; k++ {
+            need := k ^ p
+            if dp[k][need]+1 &gt; dp[k][p] {
+                dp[k][p] = dp[k][need] + 1
+            }
+            if dp[k][p] &lt; 1 {
+                dp[k][p] = 1
+            }
+            if dp[k][p] &gt; ans {
+                ans = dp[k][p]
+            }
+        }
+    }
+    return ans
+}</code></pre></div>
+<div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int maximumLength(vector&lt;int&gt;& nums) {
+        int dp[2][2] = {};
+        int ans = 1;
+        for (int x : nums) {
+            int p = x & 1;
+            for (int k = 0; k &lt; 2; ++k) {
+                int need = k ^ p;
+                dp[k][p] = max(dp[k][p], dp[k][need] + 1);
+                dp[k][p] = max(dp[k][p], 1);
+                ans = max(ans, dp[k][p]);
+            }
+        }
+        return ans;
+    }
+};</code></pre></div>
+<div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def maximumLength(self, nums: list[int]) -&gt; int:
+        dp = [[0, 0], [0, 0]]
+        ans = 1
+        for x in nums:
+            p = x & 1
+            for k in range(2):
+                need = k ^ p
+                dp[k][p] = max(dp[k][p], dp[k][need] + 1, 1)
+                ans = max(ans, dp[k][p])
+        return ans</code></pre></div>
+<div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">function maximumLength(nums) {
+  const dp = [[0, 0], [0, 0]];
+  let ans = 1;
+  for (const x of nums) {
+    const p = x & 1;
+    for (let k = 0; k &lt; 2; k++) {
+      const need = k ^ p;
+      dp[k][p] = Math.max(dp[k][p], dp[k][need] + 1, 1);
+      ans = Math.max(ans, dp[k][p]);
+    }
+  }
+  return ans;
+}</code></pre></div></div>
+<h2>中文</h2><p>题目要求子序列里所有相邻元素和的奇偶性一致。奇偶只有 0/1 两种，所以可以维护 4 个状态：在目标奇偶 <code>k</code> 下，以奇偶 <code>p</code> 结尾的最长长度。当前数奇偶为 <code>p</code> 时，前一个元素奇偶必须是 <code>k ^ p</code>，因此有转移 <code>dp[k][p] = max(dp[k][p], dp[k][k ^ p] + 1)</code>，并允许从长度 1 重新开始。</p>
+<div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java-cn">Java</button><button class="tab-btn" data-tab="go-cn">Go</button><button class="tab-btn" data-tab="cpp-cn">C++</button><button class="tab-btn" data-tab="python-cn">Python</button><button class="tab-btn" data-tab="javascript-cn">JavaScript</button></div>
+<div class="tab-pane active" data-tab="java-cn"><pre><code class="language-java">class Solution {
+    public int maximumLength(int[] nums) {
+        int[][] dp = new int[2][2];
+        int ans = 1;
+        for (int x : nums) {
+            int p = x & 1;
+            for (int k = 0; k &lt; 2; k++) {
+                int need = k ^ p;
+                dp[k][p] = Math.max(dp[k][p], dp[k][need] + 1);
+                dp[k][p] = Math.max(dp[k][p], 1);
+                ans = Math.max(ans, dp[k][p]);
+            }
+        }
+        return ans;
+    }
+}</code></pre></div>
+<div class="tab-pane" data-tab="go-cn"><pre><code class="language-go">func maximumLength(nums []int) int {
+    dp := [2][2]int{}
+    ans := 1
+    for _, x := range nums {
+        p := x & 1
+        for k := 0; k &lt; 2; k++ {
+            need := k ^ p
+            if dp[k][need]+1 &gt; dp[k][p] {
+                dp[k][p] = dp[k][need] + 1
+            }
+            if dp[k][p] &lt; 1 {
+                dp[k][p] = 1
+            }
+            if dp[k][p] &gt; ans {
+                ans = dp[k][p]
+            }
+        }
+    }
+    return ans
+}</code></pre></div>
+<div class="tab-pane" data-tab="cpp-cn"><pre><code class="language-cpp">class Solution {
+public:
+    int maximumLength(vector&lt;int&gt;& nums) {
+        int dp[2][2] = {};
+        int ans = 1;
+        for (int x : nums) {
+            int p = x & 1;
+            for (int k = 0; k &lt; 2; ++k) {
+                int need = k ^ p;
+                dp[k][p] = max(dp[k][p], dp[k][need] + 1);
+                dp[k][p] = max(dp[k][p], 1);
+                ans = max(ans, dp[k][p]);
+            }
+        }
+        return ans;
+    }
+};</code></pre></div>
+<div class="tab-pane" data-tab="python-cn"><pre><code class="language-python">class Solution:
+    def maximumLength(self, nums: list[int]) -&gt; int:
+        dp = [[0, 0], [0, 0]]
+        ans = 1
+        for x in nums:
+            p = x & 1
+            for k in range(2):
+                need = k ^ p
+                dp[k][p] = max(dp[k][p], dp[k][need] + 1, 1)
+                ans = max(ans, dp[k][p])
+        return ans</code></pre></div>
+<div class="tab-pane" data-tab="javascript-cn"><pre><code class="language-javascript">function maximumLength(nums) {
+  const dp = [[0, 0], [0, 0]];
+  let ans = 1;
+  for (const x of nums) {
+    const p = x & 1;
+    for (let k = 0; k &lt; 2; k++) {
+      const need = k ^ p;
+      dp[k][p] = Math.max(dp[k][p], dp[k][need] + 1, 1);
+      ans = Math.max(ans, dp[k][p]);
+    }
+  }
+  return ans;
+}</code></pre></div></div></article>
+<section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section>
+<footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
