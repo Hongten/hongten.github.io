@@ -1,0 +1,197 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>LeetCode 3444: Minimum Increments for Target Multiples in an Array (Bitmask DP + LCM)</title><meta name="description" content="Bilingual tutorial for LeetCode 3444 with full code tabs."/><link rel="stylesheet" href="../../../../assets/style.css"/><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg"/></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav><article class="card article"><h1>LeetCode 3444: Minimum Increments for Target Multiples in an Array (Bitmask DP + LCM)</h1><div class="meta">2026-05-06 · LeetCode · Dynamic Programming / Number Theory</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 3444</span><p><strong>Source:</strong> <a href="https://leetcode.com/problems/minimum-increments-for-target-multiples-in-an-array/" target="_blank" rel="noopener">https://leetcode.com/problems/minimum-increments-for-target-multiples-in-an-array/</a></p><img class="post-image" src="../../../../assets/img/leetcode/2026/05/leetcode-3444-20260506.svg" alt="Bitmask DP over target subsets using LCM costs"/><h2>English</h2><p>Let <code>m = target.length</code>. For every non-empty subset of target, precompute its LCM. If we use one number <code>x</code> to satisfy that subset, required increments are <code>(lcm - x % lcm) % lcm</code>. Then run bitmask DP: <code>dp[mask]</code> is minimum cost to cover target indices in <code>mask</code>. For each <code>x</code> in nums, try assigning it to any subset and relax transitions.</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="python">Python</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    private static final long INF = (long) 4e18;
+
+    public int minimumIncrements(int[] nums, int[] target) {
+        int m = target.length;
+        int full = 1 &lt;&lt; m;
+
+        long[] subsetLcm = new long[full];
+        subsetLcm[0] = 1;
+        for (int mask = 1; mask &lt; full; mask++) {
+            long l = 1;
+            boolean overflow = false;
+            for (int i = 0; i &lt; m; i++) {
+                if (((mask &gt;&gt; i) &amp; 1) == 1) {
+                    l = lcmCap(l, target[i], INF);
+                    if (l &gt;= INF) {
+                        overflow = true;
+                        break;
+                    }
+                }
+            }
+            subsetLcm[mask] = overflow ? INF : l;
+        }
+
+        long[] dp = new long[full];
+        java.util.Arrays.fill(dp, INF);
+        dp[0] = 0;
+
+        for (int x : nums) {
+            long[] ndp = dp.clone();
+            for (int mask = 0; mask &lt; full; mask++) {
+                if (dp[mask] &gt;= INF) continue;
+                for (int sub = 1; sub &lt; full; sub++) {
+                    long l = subsetLcm[sub];
+                    if (l &gt;= INF) continue;
+                    long add = (l - (x % l)) % l;
+                    int nmask = mask | sub;
+                    ndp[nmask] = Math.min(ndp[nmask], dp[mask] + add);
+                }
+            }
+            dp = ndp;
+        }
+
+        return (int) dp[full - 1];
+    }
+
+    private long gcd(long a, long b) {
+        while (b != 0) {
+            long t = a % b;
+            a = b;
+            b = t;
+        }
+        return a;
+    }
+
+    private long lcmCap(long a, long b, long cap) {
+        long g = gcd(a, b);
+        long t = a / g;
+        if (t &gt; cap / b) return cap;
+        return t * b;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">from math import gcd
+from typing import List
+
+class Solution:
+    def minimumIncrements(self, nums: List[int], target: List[int]) -&gt; int:
+        m = len(target)
+        full = 1 &lt;&lt; m
+        INF = 10**30
+
+        subset_lcm = [1] * full
+        for mask in range(1, full):
+            l = 1
+            for i in range(m):
+                if (mask &gt;&gt; i) &amp; 1:
+                    l = l // gcd(l, target[i]) * target[i]
+                    if l &gt;= INF:
+                        l = INF
+                        break
+            subset_lcm[mask] = l
+
+        dp = [INF] * full
+        dp[0] = 0
+
+        for x in nums:
+            ndp = dp[:]
+            for mask in range(full):
+                if dp[mask] &gt;= INF:
+                    continue
+                for sub in range(1, full):
+                    l = subset_lcm[sub]
+                    if l &gt;= INF:
+                        continue
+                    add = (l - x % l) % l
+                    nmask = mask | sub
+                    ndp[nmask] = min(ndp[nmask], dp[mask] + add)
+            dp = ndp
+
+        return dp[full - 1]</code></pre></div></div><h2>中文</h2><p>令 <code>m = target.length</code>。先枚举 target 的所有非空子集并预处理其最小公倍数 LCM。若用某个 <code>x</code> 去满足该子集，最少递增次数是 <code>(LCM - x % LCM) % LCM</code>。然后做状态压缩 DP：<code>dp[mask]</code> 表示覆盖了目标下标集合 <code>mask</code> 的最小代价。遍历 nums 中每个数，尝试让它覆盖任意子集并更新答案。</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="python">Python</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    private static final long INF = (long) 4e18;
+
+    public int minimumIncrements(int[] nums, int[] target) {
+        int m = target.length;
+        int full = 1 &lt;&lt; m;
+
+        long[] subsetLcm = new long[full];
+        subsetLcm[0] = 1;
+        for (int mask = 1; mask &lt; full; mask++) {
+            long l = 1;
+            boolean overflow = false;
+            for (int i = 0; i &lt; m; i++) {
+                if (((mask &gt;&gt; i) &amp; 1) == 1) {
+                    l = lcmCap(l, target[i], INF);
+                    if (l &gt;= INF) {
+                        overflow = true;
+                        break;
+                    }
+                }
+            }
+            subsetLcm[mask] = overflow ? INF : l;
+        }
+
+        long[] dp = new long[full];
+        java.util.Arrays.fill(dp, INF);
+        dp[0] = 0;
+
+        for (int x : nums) {
+            long[] ndp = dp.clone();
+            for (int mask = 0; mask &lt; full; mask++) {
+                if (dp[mask] &gt;= INF) continue;
+                for (int sub = 1; sub &lt; full; sub++) {
+                    long l = subsetLcm[sub];
+                    if (l &gt;= INF) continue;
+                    long add = (l - (x % l)) % l;
+                    int nmask = mask | sub;
+                    ndp[nmask] = Math.min(ndp[nmask], dp[mask] + add);
+                }
+            }
+            dp = ndp;
+        }
+
+        return (int) dp[full - 1];
+    }
+
+    private long gcd(long a, long b) {
+        while (b != 0) {
+            long t = a % b;
+            a = b;
+            b = t;
+        }
+        return a;
+    }
+
+    private long lcmCap(long a, long b, long cap) {
+        long g = gcd(a, b);
+        long t = a / g;
+        if (t &gt; cap / b) return cap;
+        return t * b;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">from math import gcd
+from typing import List
+
+class Solution:
+    def minimumIncrements(self, nums: List[int], target: List[int]) -&gt; int:
+        m = len(target)
+        full = 1 &lt;&lt; m
+        INF = 10**30
+
+        subset_lcm = [1] * full
+        for mask in range(1, full):
+            l = 1
+            for i in range(m):
+                if (mask &gt;&gt; i) &amp; 1:
+                    l = l // gcd(l, target[i]) * target[i]
+                    if l &gt;= INF:
+                        l = INF
+                        break
+            subset_lcm[mask] = l
+
+        dp = [INF] * full
+        dp[0] = 0
+
+        for x in nums:
+            ndp = dp[:]
+            for mask in range(full):
+                if dp[mask] &gt;= INF:
+                    continue
+                for sub in range(1, full):
+                    l = subset_lcm[sub]
+                    if l &gt;= INF:
+                        continue
+                    add = (l - x % l) % l
+                    nmask = mask | sub
+                    ndp[nmask] = min(ndp[nmask], dp[mask] + add)
+            dp = ndp
+
+        return dp[full - 1]</code></pre></div></div></article><section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section><footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
