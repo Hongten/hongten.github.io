@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LeetCode 2918: Minimum Equal Sum of Two Arrays After Replacing Zeros (Greedy / Math)</title>
+<meta name="description" content="Bilingual tutorial for LeetCode 2918 using sum balancing with zero counts, with full multi-language code tabs."/>
+<link rel="stylesheet" href="../../../../assets/style.css" /><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg"/></head>
+<body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav>
+<article class="card article"><h1>LeetCode 2918: Minimum Equal Sum of Two Arrays After Replacing Zeros (Greedy / Math)</h1>
+<div class="meta">2026-05-06 · LeetCode · Greedy / Math</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 2918</span>
+<p><strong>Source:</strong> <a href="https://leetcode.com/problems/minimum-equal-sum-of-two-arrays-after-replacing-zeros/" target="_blank" rel="noopener">https://leetcode.com/problems/minimum-equal-sum-of-two-arrays-after-replacing-zeros/</a></p>
+<img class="post-image" src="../../../../assets/img/leetcode/2026/05/leetcode-2918-20260506.svg" alt="LeetCode 2918 sum balancing with zero replacements"/>
+<h2>English</h2><p>Replace each zero with a positive integer. To minimize final equal sum, each zero should contribute at least <code>1</code>. So the minimum possible sums are <code>s1 + z1</code> and <code>s2 + z2</code> where <code>s</code> is the original sum and <code>z</code> is zero count. If one side has no zero and is smaller than the other side's minimum, equalization is impossible. Otherwise, the answer is the larger minimum sum because we can increase zero positions on the other side as needed.</p>
+<div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div>
+<div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public long minSum(int[] nums1, int[] nums2) {
+        long s1 = 0, s2 = 0;
+        int z1 = 0, z2 = 0;
+        for (int x : nums1) {
+            if (x == 0) z1++;
+            s1 += x;
+        }
+        for (int x : nums2) {
+            if (x == 0) z2++;
+            s2 += x;
+        }
+        long m1 = s1 + z1, m2 = s2 + z2;
+        if (z1 == 0 && m1 &lt; m2) return -1;
+        if (z2 == 0 && m2 &lt; m1) return -1;
+        return Math.max(m1, m2);
+    }
+}</code></pre></div>
+<div class="tab-pane" data-tab="go"><pre><code class="language-go">func minSum(nums1 []int, nums2 []int) int64 {
+    var s1, s2 int64
+    z1, z2 := 0, 0
+    for _, x := range nums1 {
+        if x == 0 { z1++ }
+        s1 += int64(x)
+    }
+    for _, x := range nums2 {
+        if x == 0 { z2++ }
+        s2 += int64(x)
+    }
+    m1, m2 := s1+int64(z1), s2+int64(z2)
+    if z1 == 0 && m1 &lt; m2 { return -1 }
+    if z2 == 0 && m2 &lt; m1 { return -1 }
+    if m1 &gt; m2 { return m1 }
+    return m2
+}</code></pre></div>
+<div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    long long minSum(vector&lt;int&gt;& nums1, vector&lt;int&gt;& nums2) {
+        long long s1 = 0, s2 = 0;
+        int z1 = 0, z2 = 0;
+        for (int x : nums1) { if (x == 0) z1++; s1 += x; }
+        for (int x : nums2) { if (x == 0) z2++; s2 += x; }
+        long long m1 = s1 + z1, m2 = s2 + z2;
+        if (z1 == 0 && m1 &lt; m2) return -1;
+        if (z2 == 0 && m2 &lt; m1) return -1;
+        return max(m1, m2);
+    }
+};</code></pre></div>
+<div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def minSum(self, nums1: list[int], nums2: list[int]) -&gt; int:
+        s1 = sum(nums1)
+        s2 = sum(nums2)
+        z1 = nums1.count(0)
+        z2 = nums2.count(0)
+        m1 = s1 + z1
+        m2 = s2 + z2
+        if z1 == 0 and m1 &lt; m2:
+            return -1
+        if z2 == 0 and m2 &lt; m1:
+            return -1
+        return max(m1, m2)</code></pre></div>
+<div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">function minSum(nums1, nums2) {
+  let s1 = 0, s2 = 0, z1 = 0, z2 = 0;
+  for (const x of nums1) { if (x === 0) z1++; s1 += x; }
+  for (const x of nums2) { if (x === 0) z2++; s2 += x; }
+  const m1 = s1 + z1, m2 = s2 + z2;
+  if (z1 === 0 && m1 &lt; m2) return -1;
+  if (z2 === 0 && m2 &lt; m1) return -1;
+  return Math.max(m1, m2);
+}</code></pre></div></div>
+<h2>中文</h2><p>每个 0 必须替换为正整数。为了让总和尽量小，每个 0 至少填 <code>1</code>，因此两边最小可达和分别是 <code>s1 + z1</code> 与 <code>s2 + z2</code>。如果某一边没有 0 且它的最小和比另一边最小和更小，就无法再增大，答案为 <code>-1</code>。其余情况都可以通过给有 0 的一边继续加值来追平，最小可行答案就是两个最小和中的较大者。</p>
+<div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java-cn">Java</button><button class="tab-btn" data-tab="go-cn">Go</button><button class="tab-btn" data-tab="cpp-cn">C++</button><button class="tab-btn" data-tab="python-cn">Python</button><button class="tab-btn" data-tab="javascript-cn">JavaScript</button></div>
+<div class="tab-pane active" data-tab="java-cn"><pre><code class="language-java">class Solution {
+    public long minSum(int[] nums1, int[] nums2) {
+        long s1 = 0, s2 = 0;
+        int z1 = 0, z2 = 0;
+        for (int x : nums1) {
+            if (x == 0) z1++;
+            s1 += x;
+        }
+        for (int x : nums2) {
+            if (x == 0) z2++;
+            s2 += x;
+        }
+        long m1 = s1 + z1, m2 = s2 + z2;
+        if (z1 == 0 && m1 &lt; m2) return -1;
+        if (z2 == 0 && m2 &lt; m1) return -1;
+        return Math.max(m1, m2);
+    }
+}</code></pre></div>
+<div class="tab-pane" data-tab="go-cn"><pre><code class="language-go">func minSum(nums1 []int, nums2 []int) int64 {
+    var s1, s2 int64
+    z1, z2 := 0, 0
+    for _, x := range nums1 {
+        if x == 0 { z1++ }
+        s1 += int64(x)
+    }
+    for _, x := range nums2 {
+        if x == 0 { z2++ }
+        s2 += int64(x)
+    }
+    m1, m2 := s1+int64(z1), s2+int64(z2)
+    if z1 == 0 && m1 &lt; m2 { return -1 }
+    if z2 == 0 && m2 &lt; m1 { return -1 }
+    if m1 &gt; m2 { return m1 }
+    return m2
+}</code></pre></div>
+<div class="tab-pane" data-tab="cpp-cn"><pre><code class="language-cpp">class Solution {
+public:
+    long long minSum(vector&lt;int&gt;& nums1, vector&lt;int&gt;& nums2) {
+        long long s1 = 0, s2 = 0;
+        int z1 = 0, z2 = 0;
+        for (int x : nums1) { if (x == 0) z1++; s1 += x; }
+        for (int x : nums2) { if (x == 0) z2++; s2 += x; }
+        long long m1 = s1 + z1, m2 = s2 + z2;
+        if (z1 == 0 && m1 &lt; m2) return -1;
+        if (z2 == 0 && m2 &lt; m1) return -1;
+        return max(m1, m2);
+    }
+};</code></pre></div>
+<div class="tab-pane" data-tab="python-cn"><pre><code class="language-python">class Solution:
+    def minSum(self, nums1: list[int], nums2: list[int]) -&gt; int:
+        s1 = sum(nums1)
+        s2 = sum(nums2)
+        z1 = nums1.count(0)
+        z2 = nums2.count(0)
+        m1 = s1 + z1
+        m2 = s2 + z2
+        if z1 == 0 and m1 &lt; m2:
+            return -1
+        if z2 == 0 and m2 &lt; m1:
+            return -1
+        return max(m1, m2)</code></pre></div>
+<div class="tab-pane" data-tab="javascript-cn"><pre><code class="language-javascript">function minSum(nums1, nums2) {
+  let s1 = 0, s2 = 0, z1 = 0, z2 = 0;
+  for (const x of nums1) { if (x === 0) z1++; s1 += x; }
+  for (const x of nums2) { if (x === 0) z2++; s2 += x; }
+  const m1 = s1 + z1, m2 = s2 + z2;
+  if (z1 === 0 && m1 &lt; m2) return -1;
+  if (z2 === 0 && m2 &lt; m1) return -1;
+  return Math.max(m1, m2);
+}</code></pre></div></div></article>
+<section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section>
+<footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
