@@ -1,0 +1,273 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>LeetCode 1870: Minimum Speed to Arrive on Time (Binary Search on Answer)</title><meta name="description" content="Bilingual tutorial for LeetCode 1870 with binary search on speed and complete Java/Go/C++/Python/JavaScript code tabs."/><link rel="stylesheet" href="../../../../assets/style.css" /><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" /></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav><article class="card article"><h1>LeetCode 1870: Minimum Speed to Arrive on Time (Binary Search on Answer)</h1><div class="meta">2026-05-07 · LeetCode · Binary Search / Greedy</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 1870</span><span class="tag">Binary Search</span><p><strong>Source:</strong> <a href="https://leetcode.com/problems/minimum-speed-to-arrive-on-time/" target="_blank" rel="noopener">https://leetcode.com/problems/minimum-speed-to-arrive-on-time/</a></p><img class="post-image" src="../../../../assets/img/leetcode/2026/05/leetcode-1870-20260507.svg" alt="Binary search over train speed with ceil wait for each segment except the last" /><h2>English</h2><p>We need the minimum integer speed so the total travel time is at most <code>hour</code>. For each segment except the last, departure must wait for the next integer hour, so time contribution is <code>ceil(dist[i] / speed)</code>. The last segment is exact fractional time. This monotonic condition allows binary search on speed.</p><h3>Algorithm</h3><p>1) If <code>hour &lt;= n-1</code>, impossible, return <code>-1</code>.<br/>2) Binary search speed in <code>[1, 10^7]</code>.<br/>3) Check if a speed is feasible by summing rounded times.</p><h3>Complexity</h3><p>Time: <code>O(n log 10^7)</code>, Space: <code>O(1)</code>.</p><h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int minSpeedOnTime(int[] dist, double hour) {
+        int n = dist.length;
+        if (hour &lt;= n - 1) return -1;
+
+        int left = 1, right = 10_000_000, ans = -1;
+        while (left &lt;= right) {
+            int mid = left + (right - left) / 2;
+            if (canArrive(dist, hour, mid)) {
+                ans = mid;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return ans;
+    }
+
+    private boolean canArrive(int[] dist, double hour, int speed) {
+        double t = 0.0;
+        for (int i = 0; i &lt; dist.length; i++) {
+            double v = (double) dist[i] / speed;
+            if (i != dist.length - 1) t += Math.ceil(v);
+            else t += v;
+            if (t &gt; hour) return false;
+        }
+        return t &lt;= hour;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">import &quot;math&quot;
+
+func minSpeedOnTime(dist []int, hour float64) int {
+    n := len(dist)
+    if hour &lt;= float64(n-1) {
+        return -1
+    }
+
+    ok := func(speed int) bool {
+        t := 0.0
+        for i, d := range dist {
+            v := float64(d) / float64(speed)
+            if i &lt; n-1 {
+                t += math.Ceil(v)
+            } else {
+                t += v
+            }
+            if t &gt; hour {
+                return false
+            }
+        }
+        return t &lt;= hour
+    }
+
+    l, r, ans := 1, 10000000, -1
+    for l &lt;= r {
+        m := (l + r) / 2
+        if ok(m) {
+            ans = m
+            r = m - 1
+        } else {
+            l = m + 1
+        }
+    }
+    return ans
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int minSpeedOnTime(vector&lt;int&gt;&amp; dist, double hour) {
+        int n = dist.size();
+        if (hour &lt;= n - 1) return -1;
+
+        auto ok = [&amp;](int speed) {
+            double t = 0.0;
+            for (int i = 0; i &lt; n; ++i) {
+                double v = 1.0 * dist[i] / speed;
+                if (i &lt; n - 1) t += ceil(v);
+                else t += v;
+                if (t &gt; hour) return false;
+            }
+            return t &lt;= hour;
+        };
+
+        int l = 1, r = 10000000, ans = -1;
+        while (l &lt;= r) {
+            int m = l + (r - l) / 2;
+            if (ok(m)) ans = m, r = m - 1;
+            else l = m + 1;
+        }
+        return ans;
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def minSpeedOnTime(self, dist: list[int], hour: float) -&gt; int:
+        n = len(dist)
+        if hour &lt;= n - 1:
+            return -1
+
+        def ok(speed: int) -&gt; bool:
+            t = 0.0
+            for i, d in enumerate(dist):
+                v = d / speed
+                t += (int(v) if v == int(v) else int(v) + 1) if i &lt; n - 1 else v
+                if t &gt; hour:
+                    return False
+            return t &lt;= hour
+
+        l, r, ans = 1, 10_000_000, -1
+        while l &lt;= r:
+            m = (l + r) // 2
+            if ok(m):
+                ans = m
+                r = m - 1
+            else:
+                l = m + 1
+        return ans</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var minSpeedOnTime = function(dist, hour) {
+  const n = dist.length;
+  if (hour &lt;= n - 1) return -1;
+
+  const ok = (speed) =&gt; {
+    let t = 0;
+    for (let i = 0; i &lt; n; i++) {
+      const v = dist[i] / speed;
+      t += (i &lt; n - 1) ? Math.ceil(v) : v;
+      if (t &gt; hour) return false;
+    }
+    return t &lt;= hour;
+  };
+
+  let l = 1, r = 10000000, ans = -1;
+  while (l &lt;= r) {
+    const m = Math.floor((l + r) / 2);
+    if (ok(m)) {
+      ans = m;
+      r = m - 1;
+    } else {
+      l = m + 1;
+    }
+  }
+  return ans;
+};</code></pre></div></div><h2>中文</h2><p>题目要求找到最小整数速度，使总耗时不超过 <code>hour</code>。除最后一段外，每段到站后只能在整数时刻发车，所以每段耗时是 <code>ceil(dist[i] / speed)</code>；最后一段按真实小数时间计算。随着速度增大，总时间单调不增，因此可用二分答案。</p><h3>算法步骤</h3><p>1）若 <code>hour &lt;= n-1</code>，必然无法到达，返回 <code>-1</code>。<br/>2）在 <code>[1, 10^7]</code> 范围二分速度。<br/>3）逐段累加耗时判断是否可行。</p><h3>复杂度分析</h3><p>时间复杂度：<code>O(n log 10^7)</code>，空间复杂度：<code>O(1)</code>。</p><h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int minSpeedOnTime(int[] dist, double hour) {
+        int n = dist.length;
+        if (hour &lt;= n - 1) return -1;
+
+        int left = 1, right = 10_000_000, ans = -1;
+        while (left &lt;= right) {
+            int mid = left + (right - left) / 2;
+            if (canArrive(dist, hour, mid)) {
+                ans = mid;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return ans;
+    }
+
+    private boolean canArrive(int[] dist, double hour, int speed) {
+        double t = 0.0;
+        for (int i = 0; i &lt; dist.length; i++) {
+            double v = (double) dist[i] / speed;
+            if (i != dist.length - 1) t += Math.ceil(v);
+            else t += v;
+            if (t &gt; hour) return false;
+        }
+        return t &lt;= hour;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">import &quot;math&quot;
+
+func minSpeedOnTime(dist []int, hour float64) int {
+    n := len(dist)
+    if hour &lt;= float64(n-1) {
+        return -1
+    }
+
+    ok := func(speed int) bool {
+        t := 0.0
+        for i, d := range dist {
+            v := float64(d) / float64(speed)
+            if i &lt; n-1 {
+                t += math.Ceil(v)
+            } else {
+                t += v
+            }
+            if t &gt; hour {
+                return false
+            }
+        }
+        return t &lt;= hour
+    }
+
+    l, r, ans := 1, 10000000, -1
+    for l &lt;= r {
+        m := (l + r) / 2
+        if ok(m) {
+            ans = m
+            r = m - 1
+        } else {
+            l = m + 1
+        }
+    }
+    return ans
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int minSpeedOnTime(vector&lt;int&gt;&amp; dist, double hour) {
+        int n = dist.size();
+        if (hour &lt;= n - 1) return -1;
+
+        auto ok = [&amp;](int speed) {
+            double t = 0.0;
+            for (int i = 0; i &lt; n; ++i) {
+                double v = 1.0 * dist[i] / speed;
+                if (i &lt; n - 1) t += ceil(v);
+                else t += v;
+                if (t &gt; hour) return false;
+            }
+            return t &lt;= hour;
+        };
+
+        int l = 1, r = 10000000, ans = -1;
+        while (l &lt;= r) {
+            int m = l + (r - l) / 2;
+            if (ok(m)) ans = m, r = m - 1;
+            else l = m + 1;
+        }
+        return ans;
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def minSpeedOnTime(self, dist: list[int], hour: float) -&gt; int:
+        n = len(dist)
+        if hour &lt;= n - 1:
+            return -1
+
+        def ok(speed: int) -&gt; bool:
+            t = 0.0
+            for i, d in enumerate(dist):
+                v = d / speed
+                t += (int(v) if v == int(v) else int(v) + 1) if i &lt; n - 1 else v
+                if t &gt; hour:
+                    return False
+            return t &lt;= hour
+
+        l, r, ans = 1, 10_000_000, -1
+        while l &lt;= r:
+            m = (l + r) // 2
+            if ok(m):
+                ans = m
+                r = m - 1
+            else:
+                l = m + 1
+        return ans</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var minSpeedOnTime = function(dist, hour) {
+  const n = dist.length;
+  if (hour &lt;= n - 1) return -1;
+
+  const ok = (speed) =&gt; {
+    let t = 0;
+    for (let i = 0; i &lt; n; i++) {
+      const v = dist[i] / speed;
+      t += (i &lt; n - 1) ? Math.ceil(v) : v;
+      if (t &gt; hour) return false;
+    }
+    return t &lt;= hour;
+  };
+
+  let l = 1, r = 10000000, ans = -1;
+  while (l &lt;= r) {
+    const m = Math.floor((l + r) / 2);
+    if (ok(m)) {
+      ans = m;
+      r = m - 1;
+    } else {
+      l = m + 1;
+    }
+  }
+  return ans;
+};</code></pre></div></div></article><section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section><footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
