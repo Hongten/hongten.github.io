@@ -1,0 +1,47 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>LeetCode 2816: Double a Number Represented as a Linked List (Carry from Right to Left)</title><meta name="description" content="Bilingual tutorial for LeetCode 2816 using reverse-list carry simulation with full multi-language code tabs."/><link rel="stylesheet" href="../../../../assets/style.css"/><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg"/></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav><article class="card article"><h1>LeetCode 2816: Double a Number Represented as a Linked List (Carry from Right to Left)</h1><div class="meta">2026-05-07 · LeetCode · Linked List / Math</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 2816</span><p><strong>Source:</strong> <a href="https://leetcode.com/problems/double-a-number-represented-as-a-linked-list/" target="_blank" rel="noopener">https://leetcode.com/problems/double-a-number-represented-as-a-linked-list/</a></p><img class="post-image" src="../../../../assets/img/leetcode/2026/05/leetcode-2816-20260507.svg" alt="Reverse linked list, double with carry, then reverse back"/><h2>English</h2><p>Because carry flows from the least-significant digit, we reverse the linked list first, then process each node as <code>value = node.val * 2 + carry</code>. Write back <code>value % 10</code>, update <code>carry = value / 10</code>, and move forward. At the end, append one node if carry remains, then reverse again to restore original order.</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution { public ListNode doubleIt(ListNode head) { head = reverse(head); ListNode cur = head, prev = null; int carry = 0; while (cur != null) { int v = cur.val * 2 + carry; cur.val = v % 10; carry = v / 10; prev = cur; cur = cur.next; } if (carry > 0) prev.next = new ListNode(carry); return reverse(head); } private ListNode reverse(ListNode head) { ListNode prev = null, cur = head; while (cur != null) { ListNode nxt = cur.next; cur.next = prev; prev = cur; cur = nxt; } return prev; } }</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">func doubleIt(head *ListNode) *ListNode { head = reverse(head); cur := head; var prev *ListNode; carry := 0; for cur != nil { v := cur.Val*2 + carry; cur.Val = v % 10; carry = v / 10; prev = cur; cur = cur.Next } if carry > 0 { prev.Next = &ListNode{Val: carry} } return reverse(head) } func reverse(head *ListNode) *ListNode { var prev *ListNode; cur := head; for cur != nil { nxt := cur.Next; cur.Next = prev; prev = cur; cur = nxt } return prev }</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution { public: ListNode* reverse(ListNode* head) { ListNode* prev = nullptr; ListNode* cur = head; while (cur) { ListNode* nxt = cur->next; cur->next = prev; prev = cur; cur = nxt; } return prev; } ListNode* doubleIt(ListNode* head) { head = reverse(head); ListNode* cur = head; ListNode* prev = nullptr; int carry = 0; while (cur) { int v = cur->val * 2 + carry; cur->val = v % 10; carry = v / 10; prev = cur; cur = cur->next; } if (carry > 0) prev->next = new ListNode(carry); return reverse(head); } };</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def doubleIt(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        def reverse(node):
+            prev = None
+            cur = node
+            while cur:
+                nxt = cur.next
+                cur.next = prev
+                prev = cur
+                cur = nxt
+            return prev
+        head = reverse(head)
+        cur = head
+        prev = None
+        carry = 0
+        while cur:
+            v = cur.val * 2 + carry
+            cur.val = v % 10
+            carry = v // 10
+            prev = cur
+            cur = cur.next
+        if carry:
+            prev.next = ListNode(carry)
+        return reverse(head)</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var doubleIt = function(head) { const reverse = (node) => { let prev = null, cur = node; while (cur) { const nxt = cur.next; cur.next = prev; prev = cur; cur = nxt; } return prev; }; head = reverse(head); let cur = head, prev = null, carry = 0; while (cur) { const v = cur.val * 2 + carry; cur.val = v % 10; carry = Math.floor(v / 10); prev = cur; cur = cur.next; } if (carry > 0) prev.next = new ListNode(carry); return reverse(head); };</code></pre></div></div><h2>中文</h2><p>这题关键是进位方向在低位到高位，但链表是高位在前。做法是先反转链表，再逐个节点执行 <code>v = node.val * 2 + carry</code>，当前位写回 <code>v % 10</code>，进位更新为 <code>v // 10</code>。遍历结束后如果还有进位，就补一个新节点，最后再反转回原顺序。</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution { public ListNode doubleIt(ListNode head) { head = reverse(head); ListNode cur = head, prev = null; int carry = 0; while (cur != null) { int v = cur.val * 2 + carry; cur.val = v % 10; carry = v / 10; prev = cur; cur = cur.next; } if (carry > 0) prev.next = new ListNode(carry); return reverse(head); } private ListNode reverse(ListNode head) { ListNode prev = null, cur = head; while (cur != null) { ListNode nxt = cur.next; cur.next = prev; prev = cur; cur = nxt; } return prev; } }</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">func doubleIt(head *ListNode) *ListNode { head = reverse(head); cur := head; var prev *ListNode; carry := 0; for cur != nil { v := cur.Val*2 + carry; cur.Val = v % 10; carry = v / 10; prev = cur; cur = cur.Next } if carry > 0 { prev.Next = &ListNode{Val: carry} } return reverse(head) } func reverse(head *ListNode) *ListNode { var prev *ListNode; cur := head; for cur != nil { nxt := cur.Next; cur.Next = prev; prev = cur; cur = nxt } return prev }</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution { public: ListNode* reverse(ListNode* head) { ListNode* prev = nullptr; ListNode* cur = head; while (cur) { ListNode* nxt = cur->next; cur->next = prev; prev = cur; cur = nxt; } return prev; } ListNode* doubleIt(ListNode* head) { head = reverse(head); ListNode* cur = head; ListNode* prev = nullptr; int carry = 0; while (cur) { int v = cur->val * 2 + carry; cur->val = v % 10; carry = v / 10; prev = cur; cur = cur->next; } if (carry > 0) prev->next = new ListNode(carry); return reverse(head); } };</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def doubleIt(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        def reverse(node):
+            prev = None
+            cur = node
+            while cur:
+                nxt = cur.next
+                cur.next = prev
+                prev = cur
+                cur = nxt
+            return prev
+        head = reverse(head)
+        cur = head
+        prev = None
+        carry = 0
+        while cur:
+            v = cur.val * 2 + carry
+            cur.val = v % 10
+            carry = v // 10
+            prev = cur
+            cur = cur.next
+        if carry:
+            prev.next = ListNode(carry)
+        return reverse(head)</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var doubleIt = function(head) { const reverse = (node) => { let prev = null, cur = node; while (cur) { const nxt = cur.next; cur.next = prev; prev = cur; cur = nxt; } return prev; }; head = reverse(head); let cur = head, prev = null, carry = 0; while (cur) { const v = cur.val * 2 + carry; cur.val = v % 10; carry = Math.floor(v / 10); prev = cur; cur = cur.next; } if (carry > 0) prev.next = new ListNode(carry); return reverse(head); };</code></pre></div></div></article><section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section><footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
