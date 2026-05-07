@@ -1,0 +1,133 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>LeetCode 3000: Maximum Area of Longest Diagonal Rectangle (Math / Simulation)</title><meta name="description" content="Bilingual tutorial for LeetCode 3000 with diagonal-square comparison and full multi-language code tabs."/><link rel="stylesheet" href="../../../../assets/style.css"/><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg"/></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav><article class="card article"><h1>LeetCode 3000: Maximum Area of Longest Diagonal Rectangle (Math / Simulation)</h1><div class="meta">2026-05-07 · LeetCode · Math / Simulation</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 3000</span><p><strong>Source:</strong> <a href="https://leetcode.com/problems/maximum-area-of-longest-diagonal-rectangle/" target="_blank" rel="noopener">https://leetcode.com/problems/maximum-area-of-longest-diagonal-rectangle/</a></p><img class="post-image" src="../../../../assets/img/leetcode/2026/05/leetcode-3000-20260507.svg" alt="Compare squared diagonals and keep max area on tie"/><h2>English</h2><p>For each rectangle <code>[l, w]</code>, compare squared diagonal <code>l² + w²</code> to avoid floating point. Keep the rectangle with largest diagonal. If diagonals tie, choose larger area <code>l*w</code>.</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int areaOfMaxDiagonal(int[][] dimensions) {
+        long bestDiag2 = -1;
+        int bestArea = 0;
+        for (int[] d : dimensions) {
+            int l = d[0], w = d[1];
+            long diag2 = 1L * l * l + 1L * w * w;
+            int area = l * w;
+            if (diag2 > bestDiag2 || (diag2 == bestDiag2 && area > bestArea)) {
+                bestDiag2 = diag2;
+                bestArea = area;
+            }
+        }
+        return bestArea;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">func areaOfMaxDiagonal(dimensions [][]int) int {
+    bestDiag2 := int64(-1)
+    bestArea := 0
+    for _, d := range dimensions {
+        l, w := d[0], d[1]
+        diag2 := int64(l*l + w*w)
+        area := l * w
+        if diag2 > bestDiag2 || (diag2 == bestDiag2 && area > bestArea) {
+            bestDiag2 = diag2
+            bestArea = area
+        }
+    }
+    return bestArea
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int areaOfMaxDiagonal(vector<vector<int>>& dimensions) {
+        long long bestDiag2 = -1;
+        int bestArea = 0;
+        for (auto& d : dimensions) {
+            int l = d[0], w = d[1];
+            long long diag2 = 1LL * l * l + 1LL * w * w;
+            int area = l * w;
+            if (diag2 > bestDiag2 || (diag2 == bestDiag2 && area > bestArea)) {
+                bestDiag2 = diag2;
+                bestArea = area;
+            }
+        }
+        return bestArea;
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def areaOfMaxDiagonal(self, dimensions: List[List[int]]) -> int:
+        best_diag2 = -1
+        best_area = 0
+        for l, w in dimensions:
+            diag2 = l * l + w * w
+            area = l * w
+            if diag2 > best_diag2 or (diag2 == best_diag2 and area > best_area):
+                best_diag2 = diag2
+                best_area = area
+        return best_area</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var areaOfMaxDiagonal = function(dimensions) {
+  let bestDiag2 = -1;
+  let bestArea = 0;
+  for (const [l, w] of dimensions) {
+    const diag2 = l * l + w * w;
+    const area = l * w;
+    if (diag2 > bestDiag2 || (diag2 === bestDiag2 && area > bestArea)) {
+      bestDiag2 = diag2;
+      bestArea = area;
+    }
+  }
+  return bestArea;
+};</code></pre></div></div><h2>中文</h2><p>对每个矩形 <code>[l, w]</code>，用对角线平方 <code>l² + w²</code> 比较，避免浮点误差。优先选对角线更长的；若对角线相同，选面积 <code>l*w</code> 更大的。</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int areaOfMaxDiagonal(int[][] dimensions) {
+        long bestDiag2 = -1;
+        int bestArea = 0;
+        for (int[] d : dimensions) {
+            int l = d[0], w = d[1];
+            long diag2 = 1L * l * l + 1L * w * w;
+            int area = l * w;
+            if (diag2 > bestDiag2 || (diag2 == bestDiag2 && area > bestArea)) {
+                bestDiag2 = diag2;
+                bestArea = area;
+            }
+        }
+        return bestArea;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">func areaOfMaxDiagonal(dimensions [][]int) int {
+    bestDiag2 := int64(-1)
+    bestArea := 0
+    for _, d := range dimensions {
+        l, w := d[0], d[1]
+        diag2 := int64(l*l + w*w)
+        area := l * w
+        if diag2 > bestDiag2 || (diag2 == bestDiag2 && area > bestArea) {
+            bestDiag2 = diag2
+            bestArea = area
+        }
+    }
+    return bestArea
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int areaOfMaxDiagonal(vector<vector<int>>& dimensions) {
+        long long bestDiag2 = -1;
+        int bestArea = 0;
+        for (auto& d : dimensions) {
+            int l = d[0], w = d[1];
+            long long diag2 = 1LL * l * l + 1LL * w * w;
+            int area = l * w;
+            if (diag2 > bestDiag2 || (diag2 == bestDiag2 && area > bestArea)) {
+                bestDiag2 = diag2;
+                bestArea = area;
+            }
+        }
+        return bestArea;
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def areaOfMaxDiagonal(self, dimensions: List[List[int]]) -> int:
+        best_diag2 = -1
+        best_area = 0
+        for l, w in dimensions:
+            diag2 = l * l + w * w
+            area = l * w
+            if diag2 > best_diag2 or (diag2 == best_diag2 and area > best_area):
+                best_diag2 = diag2
+                best_area = area
+        return best_area</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var areaOfMaxDiagonal = function(dimensions) {
+  let bestDiag2 = -1;
+  let bestArea = 0;
+  for (const [l, w] of dimensions) {
+    const diag2 = l * l + w * w;
+    const area = l * w;
+    if (diag2 > bestDiag2 || (diag2 === bestDiag2 && area > bestArea)) {
+      bestDiag2 = diag2;
+      bestArea = area;
+    }
+  }
+  return bestArea;
+};</code></pre></div></div></article><section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section><footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
