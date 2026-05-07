@@ -1,0 +1,165 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>LeetCode 3402: Minimum Operations to Make Columns Strictly Increasing (Greedy / Matrix)</title><meta name="description" content="Bilingual tutorial for LeetCode 3402 with greedy top-down column fixing and full multi-language code tabs."/><link rel="stylesheet" href="../../../../assets/style.css"/><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg"/></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav><article class="card article"><h1>LeetCode 3402: Minimum Operations to Make Columns Strictly Increasing (Greedy / Matrix)</h1><div class="meta">2026-05-07 · LeetCode · Greedy / Matrix</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 3402</span><p><strong>Source:</strong> <a href="https://leetcode.com/problems/minimum-operations-to-make-columns-strictly-increasing/" target="_blank" rel="noopener">https://leetcode.com/problems/minimum-operations-to-make-columns-strictly-increasing/</a></p><img class="post-image" src="../../../../assets/img/leetcode/2026/05/leetcode-3402-20260507.svg" alt="Fix each column from top to bottom so every cell is at least previous+1"/><h2>English</h2><p>Each operation increases one cell by 1. For every column, scan from top to bottom. If <code>grid[r][c]</code> is not larger than the previous value, raise it to <code>prev + 1</code>. This greedy choice is optimal because any smaller value is invalid, and any larger value only adds unnecessary operations.</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int minimumOperations(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        long ops = 0;
+        for (int c = 0; c < n; c++) {
+            int prev = grid[0][c];
+            for (int r = 1; r < m; r++) {
+                int need = prev + 1;
+                if (grid[r][c] < need) {
+                    ops += (need - grid[r][c]);
+                    prev = need;
+                } else {
+                    prev = grid[r][c];
+                }
+            }
+        }
+        return (int) ops;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">func minimumOperations(grid [][]int) int {
+    m, n := len(grid), len(grid[0])
+    ops := 0
+    for c := 0; c < n; c++ {
+        prev := grid[0][c]
+        for r := 1; r < m; r++ {
+            need := prev + 1
+            if grid[r][c] < need {
+                ops += need - grid[r][c]
+                prev = need
+            } else {
+                prev = grid[r][c]
+            }
+        }
+    }
+    return ops
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int minimumOperations(vector<vector<int>>& grid) {
+        int m = grid.size(), n = grid[0].size();
+        long long ops = 0;
+        for (int c = 0; c < n; c++) {
+            int prev = grid[0][c];
+            for (int r = 1; r < m; r++) {
+                int need = prev + 1;
+                if (grid[r][c] < need) {
+                    ops += need - grid[r][c];
+                    prev = need;
+                } else {
+                    prev = grid[r][c];
+                }
+            }
+        }
+        return (int)ops;
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def minimumOperations(self, grid: List[List[int]]) -> int:
+        m, n = len(grid), len(grid[0])
+        ops = 0
+        for c in range(n):
+            prev = grid[0][c]
+            for r in range(1, m):
+                need = prev + 1
+                if grid[r][c] < need:
+                    ops += need - grid[r][c]
+                    prev = need
+                else:
+                    prev = grid[r][c]
+        return ops</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var minimumOperations = function(grid) {
+  const m = grid.length, n = grid[0].length;
+  let ops = 0;
+  for (let c = 0; c < n; c++) {
+    let prev = grid[0][c];
+    for (let r = 1; r < m; r++) {
+      const need = prev + 1;
+      if (grid[r][c] < need) {
+        ops += need - grid[r][c];
+        prev = need;
+      } else {
+        prev = grid[r][c];
+      }
+    }
+  }
+  return ops;
+};</code></pre></div></div><h2>中文</h2><p>每次操作只能把某个单元格加 1。对每一列从上到下扫描，若 <code>grid[r][c]</code> 不大于上一个值，就把它补到 <code>prev + 1</code>。这个贪心是最优的，因为更小不合法，更大只会徒增操作次数。</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int minimumOperations(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        long ops = 0;
+        for (int c = 0; c < n; c++) {
+            int prev = grid[0][c];
+            for (int r = 1; r < m; r++) {
+                int need = prev + 1;
+                if (grid[r][c] < need) {
+                    ops += (need - grid[r][c]);
+                    prev = need;
+                } else {
+                    prev = grid[r][c];
+                }
+            }
+        }
+        return (int) ops;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">func minimumOperations(grid [][]int) int {
+    m, n := len(grid), len(grid[0])
+    ops := 0
+    for c := 0; c < n; c++ {
+        prev := grid[0][c]
+        for r := 1; r < m; r++ {
+            need := prev + 1
+            if grid[r][c] < need {
+                ops += need - grid[r][c]
+                prev = need
+            } else {
+                prev = grid[r][c]
+            }
+        }
+    }
+    return ops
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int minimumOperations(vector<vector<int>>& grid) {
+        int m = grid.size(), n = grid[0].size();
+        long long ops = 0;
+        for (int c = 0; c < n; c++) {
+            int prev = grid[0][c];
+            for (int r = 1; r < m; r++) {
+                int need = prev + 1;
+                if (grid[r][c] < need) {
+                    ops += need - grid[r][c];
+                    prev = need;
+                } else {
+                    prev = grid[r][c];
+                }
+            }
+        }
+        return (int)ops;
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def minimumOperations(self, grid: List[List[int]]) -> int:
+        m, n = len(grid), len(grid[0])
+        ops = 0
+        for c in range(n):
+            prev = grid[0][c]
+            for r in range(1, m):
+                need = prev + 1
+                if grid[r][c] < need:
+                    ops += need - grid[r][c]
+                    prev = need
+                else:
+                    prev = grid[r][c]
+        return ops</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var minimumOperations = function(grid) {
+  const m = grid.length, n = grid[0].length;
+  let ops = 0;
+  for (let c = 0; c < n; c++) {
+    let prev = grid[0][c];
+    for (let r = 1; r < m; r++) {
+      const need = prev + 1;
+      if (grid[r][c] < need) {
+        ops += need - grid[r][c];
+        prev = need;
+      } else {
+        prev = grid[r][c];
+      }
+    }
+  }
+  return ops;
+};</code></pre></div></div></article><section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section><footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
