@@ -1,0 +1,133 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>LeetCode 3306: Count of Substrings Containing Every Vowel and K Consonants II (Sliding Window)</title><meta name="description" content="Bilingual tutorial for LeetCode 3306 with exact-k via atLeast difference and full code tabs."/><meta property="og:type" content="article" /><meta property="og:title" content="LeetCode 3306: Count of Substrings Containing Every Vowel and K Consonants II (Sliding Window)" /><meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/05/leetcode-3306-count-of-substrings-containing-every-vowel-and-k-consonants-ii.html" /><link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/05/leetcode-3306-count-of-substrings-containing-every-vowel-and-k-consonants-ii.html" /><link rel="stylesheet" href="../../../../assets/style.css" /><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" /></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav><article class="card article"><h1>LeetCode 3306: Count of Substrings Containing Every Vowel and K Consonants II (Sliding Window)</h1><div class="meta">2026-05-07 · LeetCode · Sliding Window / Two Pointers</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 3306</span><p><strong>Source:</strong> <a href="https://leetcode.com/problems/count-of-substrings-containing-every-vowel-and-k-consonants-ii/" target="_blank" rel="noopener">https://leetcode.com/problems/count-of-substrings-containing-every-vowel-and-k-consonants-ii/</a></p><img class="post-image" src="../../../../assets/img/leetcode/2026/05/leetcode-3306-20260507.svg" alt="LeetCode 3306 sliding window diagram" />
+<h2>English</h2><p>We need substrings that contain all five vowels and exactly <code>k</code> consonants.</p><p>Use: <code>exact(k) = atLeast(k) - atLeast(k+1)</code>. In <code>atLeast(x)</code>, maintain a window with vowel frequency, distinct-vowel count, and consonant count. Once valid, every extension to the right is also valid, so add <code>n-right</code>.</p><h3>Code (Java / Python)</h3><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="python">Python</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public long countOfSubstrings(String word, int k) {
+        return atLeast(word, k) - atLeast(word, k + 1);
+    }
+
+    private long atLeast(String s, int k) {
+        int n = s.length();
+        int[] cnt = new int[5];
+        int kinds = 0, consonants = 0, left = 0;
+        long ans = 0;
+
+        for (int right = 0; right < n; right++) {
+            int id = vid(s.charAt(right));
+            if (id >= 0) {
+                if (cnt[id]++ == 0) kinds++;
+            } else consonants++;
+
+            while (kinds == 5 && consonants >= k) {
+                ans += (n - right);
+                int lid = vid(s.charAt(left++));
+                if (lid >= 0) {
+                    if (--cnt[lid] == 0) kinds--;
+                } else consonants--;
+            }
+        }
+        return ans;
+    }
+
+    private int vid(char c) {
+        return switch (c) {
+            case 'a' -> 0; case 'e' -> 1; case 'i' -> 2; case 'o' -> 3; case 'u' -> 4;
+            default -> -1;
+        };
+    }
+}</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def countOfSubstrings(self, word: str, k: int) -> int:
+        return self._at_least(word, k) - self._at_least(word, k + 1)
+
+    def _at_least(self, s: str, k: int) -> int:
+        n = len(s)
+        cnt = [0] * 5
+        kinds = consonants = left = 0
+        ans = 0
+
+        def vid(c: str) -> int:
+            return {'a':0,'e':1,'i':2,'o':3,'u':4}.get(c, -1)
+
+        for right, ch in enumerate(s):
+            id_ = vid(ch)
+            if id_ >= 0:
+                if cnt[id_] == 0:
+                    kinds += 1
+                cnt[id_] += 1
+            else:
+                consonants += 1
+
+            while kinds == 5 and consonants >= k:
+                ans += n - right
+                lid = vid(s[left]); left += 1
+                if lid >= 0:
+                    cnt[lid] -= 1
+                    if cnt[lid] == 0:
+                        kinds -= 1
+                else:
+                    consonants -= 1
+        return ans</code></pre></div></div>
+<h2>中文</h2><p>要求统计同时满足「包含 5 个元音」且「恰好 <code>k</code> 个辅音」的子串数量。</p><p>用差分思想：<code>exact(k)=atLeast(k)-atLeast(k+1)</code>。在 <code>atLeast(x)</code> 中用滑动窗口维护元音出现次数、元音种类数、辅音数；窗口有效时，右端继续扩展都有效，因此一次累加 <code>n-right</code>。</p><h3>代码（Java / Python）</h3><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="python">Python</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public long countOfSubstrings(String word, int k) {
+        return atLeast(word, k) - atLeast(word, k + 1);
+    }
+
+    private long atLeast(String s, int k) {
+        int n = s.length();
+        int[] cnt = new int[5];
+        int kinds = 0, consonants = 0, left = 0;
+        long ans = 0;
+
+        for (int right = 0; right < n; right++) {
+            int id = vid(s.charAt(right));
+            if (id >= 0) {
+                if (cnt[id]++ == 0) kinds++;
+            } else consonants++;
+
+            while (kinds == 5 && consonants >= k) {
+                ans += (n - right);
+                int lid = vid(s.charAt(left++));
+                if (lid >= 0) {
+                    if (--cnt[lid] == 0) kinds--;
+                } else consonants--;
+            }
+        }
+        return ans;
+    }
+
+    private int vid(char c) {
+        return switch (c) {
+            case 'a' -> 0; case 'e' -> 1; case 'i' -> 2; case 'o' -> 3; case 'u' -> 4;
+            default -> -1;
+        };
+    }
+}</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def countOfSubstrings(self, word: str, k: int) -> int:
+        return self._at_least(word, k) - self._at_least(word, k + 1)
+
+    def _at_least(self, s: str, k: int) -> int:
+        n = len(s)
+        cnt = [0] * 5
+        kinds = consonants = left = 0
+        ans = 0
+
+        def vid(c: str) -> int:
+            return {'a':0,'e':1,'i':2,'o':3,'u':4}.get(c, -1)
+
+        for right, ch in enumerate(s):
+            id_ = vid(ch)
+            if id_ >= 0:
+                if cnt[id_] == 0:
+                    kinds += 1
+                cnt[id_] += 1
+            else:
+                consonants += 1
+
+            while kinds == 5 and consonants >= k:
+                ans += n - right
+                lid = vid(s[left]); left += 1
+                if lid >= 0:
+                    cnt[lid] -= 1
+                    if cnt[lid] == 0:
+                        kinds -= 1
+                else:
+                    consonants -= 1
+        return ans</code></pre></div></div></article><section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section><footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
