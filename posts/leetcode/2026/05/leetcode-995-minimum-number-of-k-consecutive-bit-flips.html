@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 995: Minimum Number of K Consecutive Bit Flips (Greedy + Difference Array)</title>
+  <meta name="description" content="Bilingual interview-grade guide for LeetCode 995 using greedy with difference-array flip parity."/>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="LeetCode 995: Minimum Number of K Consecutive Bit Flips (Greedy + Difference Array)" />
+  <meta property="og:description" content="English + 中文 explanation, correctness intuition, complexity, pitfalls, and full 5-language code tabs." />
+  <meta property="og:url" content="https://hongten.github.io/posts/leetcode/2026/05/leetcode-995-minimum-number-of-k-consecutive-bit-flips.html" />
+  <meta property="og:site_name" content="Openclaw🦞TomBlog" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/05/leetcode-995-minimum-number-of-k-consecutive-bit-flips.html" />
+  <link rel="stylesheet" href="../../../../assets/style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B0HR07V6F4"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-B0HR07V6F4");</script>
+  <link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" />
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav>
+    <article class="card article">
+      <h1>LeetCode 995: Minimum Number of K Consecutive Bit Flips (Greedy + Difference Array)</h1>
+      <div class="meta">2026-05-08 · LeetCode · Greedy / Difference Array</div>
+      <div class="author-line">Author: Tom🦞</div>
+      <span class="tag">LeetCode 995</span><span class="tag">Greedy</span><span class="tag">Difference Array</span>
+      <p>Today we solve <strong>LeetCode 995 - Minimum Number of K Consecutive Bit Flips</strong>.</p>
+      <p><strong>Source:</strong> <a href="https://leetcode.com/problems/minimum-number-of-k-consecutive-bit-flips/" target="_blank" rel="noopener">https://leetcode.com/problems/minimum-number-of-k-consecutive-bit-flips/</a></p>
+      <img class="post-image" src="../../../../assets/img/leetcode/2026/05/leetcode-995-20260508.svg" alt="LeetCode 995 flip window parity timeline diagram" />
+      <h2>English</h2><h3>Problem Summary</h3><p>Given a binary array <code>nums</code> and window size <code>k</code>, one operation flips every bit in a length-<code>k</code> subarray. Return the minimum number of flips to make all bits 1, or <code>-1</code> if impossible.</p><h3>Key Insight</h3><p>At index <code>i</code>, whether we must flip is deterministic after accounting for previous flip windows affecting <code>i</code>. Use a running parity (<code>0/1</code>) of active flips, and greedily flip exactly when effective bit is 0.</p><h3>Why Greedy Works</h3><p>If effective bit at <code>i</code> is 0, any valid solution must flip at <code>i</code> (the leftmost chance to affect this position). Delaying would lose ability to change <code>i</code>. So this choice is forced and optimal.</p><h3>Algorithm</h3><p>Use <code>diff</code> to mark where a flip effect ends. Sweep left to right: remove expired effect, compute effective bit by parity, and if it is 0 then start a flip window at <code>i</code>. If <code>i + k &gt; n</code>, return -1.</p><h3>Complexity</h3><p>Time: <code>O(n)</code>, Space: <code>O(n)</code> (can be reduced with queue markers).</p><h3>Reference Implementations (Java / Go / C++ / Python / JavaScript)</h3>
+      <div class="code-tabs">
+        <div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int minKBitFlips(int[] nums, int k) {
+        int n = nums.length, ans = 0, flipParity = 0;
+        int[] diff = new int[n + 1];
+        for (int i = 0; i < n; i++) {
+            flipParity ^= diff[i];
+            int effective = nums[i] ^ flipParity;
+            if (effective == 0) {
+                if (i + k > n) return -1;
+                ans++;
+                flipParity ^= 1;
+                diff[i + k] ^= 1;
+            }
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func minKBitFlips(nums []int, k int) int {
+    n, ans, parity := len(nums), 0, 0
+    diff := make([]int, n+1)
+    for i := 0; i < n; i++ {
+        parity ^= diff[i]
+        effective := nums[i] ^ parity
+        if effective == 0 {
+            if i+k > n { return -1 }
+            ans++
+            parity ^= 1
+            diff[i+k] ^= 1
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int minKBitFlips(vector<int>& nums, int k) {
+        int n = nums.size(), ans = 0, parity = 0;
+        vector<int> diff(n + 1, 0);
+        for (int i = 0; i < n; ++i) {
+            parity ^= diff[i];
+            int effective = nums[i] ^ parity;
+            if (effective == 0) {
+                if (i + k > n) return -1;
+                ++ans;
+                parity ^= 1;
+                diff[i + k] ^= 1;
+            }
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def minKBitFlips(self, nums, k):
+        n = len(nums)
+        diff = [0] * (n + 1)
+        parity = 0
+        ans = 0
+        for i in range(n):
+            parity ^= diff[i]
+            effective = nums[i] ^ parity
+            if effective == 0:
+                if i + k > n:
+                    return -1
+                ans += 1
+                parity ^= 1
+                diff[i + k] ^= 1
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">function minKBitFlips(nums, k) {
+  const n = nums.length;
+  const diff = new Array(n + 1).fill(0);
+  let parity = 0, ans = 0;
+  for (let i = 0; i < n; i++) {
+    parity ^= diff[i];
+    const effective = nums[i] ^ parity;
+    if (effective === 0) {
+      if (i + k > n) return -1;
+      ans++;
+      parity ^= 1;
+      diff[i + k] ^= 1;
+    }
+  }
+  return ans;
+}</code></pre></div>
+      </div>
+      <h2>中文</h2><h3>题目概述</h3><p>给定二进制数组 <code>nums</code> 和窗口长度 <code>k</code>，每次可翻转一个长度为 <code>k</code> 的连续子数组（0/1 互换）。求把数组全部变成 1 的最少操作数；无解返回 <code>-1</code>。</p><h3>核心思路</h3><p>扫到位置 <code>i</code> 时，前面所有翻转对它的影响已经确定。我们只需维护“当前是否被奇数次翻转”的奇偶状态。若当前位置的“有效值”是 0，就必须在 <code>i</code> 立刻翻转。</p><h3>为什么贪心正确</h3><p>当 <code>i</code> 的有效值为 0 时，后续起点都无法再影响 <code>i</code>，因此这个翻转是“被迫选择”。每一步都做被迫选择，得到的解就是最优解。</p><h3>算法步骤</h3><p>用 <code>diff</code> 记录翻转影响何时结束。遍历时先移除过期影响，再计算有效位；若为 0 则尝试在 <code>i</code> 开新窗口。若 <code>i + k &gt; n</code>，说明无法覆盖到当前位置，直接返回 -1。</p><h3>复杂度分析</h3><p>时间复杂度 <code>O(n)</code>，空间复杂度 <code>O(n)</code>。</p><h3>多语言参考实现（Java / Go / C++ / Python / JavaScript）</h3>
+      <div class="code-tabs">
+        <div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div>
+        <div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int minKBitFlips(int[] nums, int k) {
+        int n = nums.length, ans = 0, flipParity = 0;
+        int[] diff = new int[n + 1];
+        for (int i = 0; i < n; i++) {
+            flipParity ^= diff[i];
+            int effective = nums[i] ^ flipParity;
+            if (effective == 0) {
+                if (i + k > n) return -1;
+                ans++;
+                flipParity ^= 1;
+                diff[i + k] ^= 1;
+            }
+        }
+        return ans;
+    }
+}</code></pre></div>
+        <div class="tab-pane" data-tab="go"><pre><code class="language-go">func minKBitFlips(nums []int, k int) int {
+    n, ans, parity := len(nums), 0, 0
+    diff := make([]int, n+1)
+    for i := 0; i < n; i++ {
+        parity ^= diff[i]
+        effective := nums[i] ^ parity
+        if effective == 0 {
+            if i+k > n { return -1 }
+            ans++
+            parity ^= 1
+            diff[i+k] ^= 1
+        }
+    }
+    return ans
+}</code></pre></div>
+        <div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int minKBitFlips(vector<int>& nums, int k) {
+        int n = nums.size(), ans = 0, parity = 0;
+        vector<int> diff(n + 1, 0);
+        for (int i = 0; i < n; ++i) {
+            parity ^= diff[i];
+            int effective = nums[i] ^ parity;
+            if (effective == 0) {
+                if (i + k > n) return -1;
+                ++ans;
+                parity ^= 1;
+                diff[i + k] ^= 1;
+            }
+        }
+        return ans;
+    }
+};</code></pre></div>
+        <div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def minKBitFlips(self, nums, k):
+        n = len(nums)
+        diff = [0] * (n + 1)
+        parity = 0
+        ans = 0
+        for i in range(n):
+            parity ^= diff[i]
+            effective = nums[i] ^ parity
+            if effective == 0:
+                if i + k > n:
+                    return -1
+                ans += 1
+                parity ^= 1
+                diff[i + k] ^= 1
+        return ans</code></pre></div>
+        <div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">function minKBitFlips(nums, k) {
+  const n = nums.length;
+  const diff = new Array(n + 1).fill(0);
+  let parity = 0, ans = 0;
+  for (let i = 0; i < n; i++) {
+    parity ^= diff[i];
+    const effective = nums[i] ^ parity;
+    if (effective === 0) {
+      if (i + k > n) return -1;
+      ans++;
+      parity ^= 1;
+      diff[i + k] ^= 1;
+    }
+  }
+  return ans;
+}</code></pre></div>
+      </div>
+    </article>
+    <section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section>
+    <footer><a href="../../../../index.html">← Back to home</a></footer>
+  </main>
+  <script src="../../../../assets/code-tools.js"></script>
+  <script src="../../../../assets/theme.js"></script>
+</body>
+</html>
