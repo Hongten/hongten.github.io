@@ -1,0 +1,151 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>LeetCode 346: Moving Average from Data Stream (Queue + Running Sum)</title><meta name="description" content="Bilingual tutorial for LeetCode 346 with queue + running sum, complete Java/Go/C++/Python/JavaScript code tabs."/><link rel="canonical" href="https://hongten.github.io/posts/leetcode/2026/05/leetcode-346-moving-average-from-data-stream.html" /><link rel="stylesheet" href="../../../../assets/style.css" /><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" /></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav><article class="card article"><h1>LeetCode 346: Moving Average from Data Stream (Queue + Running Sum)</h1><div class="meta">2026-05-08 · LeetCode · Queue / Sliding Window</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 346</span><span class="tag">Queue</span><p>Today we solve <strong>LeetCode 346 - Moving Average from Data Stream</strong>.</p><p><strong>Source:</strong> <a href="https://leetcode.com/problems/moving-average-from-data-stream/" target="_blank" rel="noopener">https://leetcode.com/problems/moving-average-from-data-stream/</a></p><img class="post-image" src="../../../../assets/img/leetcode/2026/05/leetcode-346-20260508.svg" alt="LeetCode 346 moving average queue diagram" /><h2>English</h2><p>Maintain a fixed-size queue and a running sum. On each <code>next(val)</code>, push val, add to sum, and if the queue exceeds capacity, pop the oldest value and subtract it from sum. Return <code>sum / queue.size()</code>.</p><p>Time per call is <code>O(1)</code>, space is <code>O(size)</code>.</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class MovingAverage {
+    private final int size;
+    private final Queue<Integer> q = new LinkedList<>();
+    private long sum = 0;
+
+    public MovingAverage(int size) {
+        this.size = size;
+    }
+
+    public double next(int val) {
+        q.offer(val);
+        sum += val;
+        if (q.size() > size) {
+            sum -= q.poll();
+        }
+        return (double) sum / q.size();
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">type MovingAverage struct {
+    size int
+    q    []int
+    sum  int64
+}
+
+func Constructor(size int) MovingAverage {
+    return MovingAverage{size: size}
+}
+
+func (m *MovingAverage) Next(val int) float64 {
+    m.q = append(m.q, val)
+    m.sum += int64(val)
+    if len(m.q) > m.size {
+        m.sum -= int64(m.q[0])
+        m.q = m.q[1:]
+    }
+    return float64(m.sum) / float64(len(m.q))
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class MovingAverage {
+    int size;
+    queue<int> q;
+    long long sum = 0;
+public:
+    MovingAverage(int size): size(size) {}
+
+    double next(int val) {
+        q.push(val);
+        sum += val;
+        if ((int)q.size() > size) {
+            sum -= q.front();
+            q.pop();
+        }
+        return (double)sum / q.size();
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class MovingAverage:
+    def __init__(self, size: int):
+        self.size = size
+        self.q = deque()
+        self.sum = 0
+
+    def next(self, val: int) -> float:
+        self.q.append(val)
+        self.sum += val
+        if len(self.q) > self.size:
+            self.sum -= self.q.popleft()
+        return self.sum / len(self.q)</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var MovingAverage = function(size) {
+  this.size = size;
+  this.q = [];
+  this.sum = 0;
+};
+
+MovingAverage.prototype.next = function(val) {
+  this.q.push(val);
+  this.sum += val;
+  if (this.q.length > this.size) {
+    this.sum -= this.q.shift();
+  }
+  return this.sum / this.q.length;
+};</code></pre></div></div><h2>中文</h2><p>维护一个固定窗口队列和累计和。每次 <code>next(val)</code> 时先入队并加到 <code>sum</code>，如果超过窗口大小就弹出最早元素并从 <code>sum</code> 中减去，最后返回 <code>sum / 当前队列长度</code>。</p><p>单次调用时间复杂度 <code>O(1)</code>，空间复杂度 <code>O(size)</code>。</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class MovingAverage {
+    private final int size;
+    private final Queue<Integer> q = new LinkedList<>();
+    private long sum = 0;
+
+    public MovingAverage(int size) {
+        this.size = size;
+    }
+
+    public double next(int val) {
+        q.offer(val);
+        sum += val;
+        if (q.size() > size) {
+            sum -= q.poll();
+        }
+        return (double) sum / q.size();
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">type MovingAverage struct {
+    size int
+    q    []int
+    sum  int64
+}
+
+func Constructor(size int) MovingAverage {
+    return MovingAverage{size: size}
+}
+
+func (m *MovingAverage) Next(val int) float64 {
+    m.q = append(m.q, val)
+    m.sum += int64(val)
+    if len(m.q) > m.size {
+        m.sum -= int64(m.q[0])
+        m.q = m.q[1:]
+    }
+    return float64(m.sum) / float64(len(m.q))
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class MovingAverage {
+    int size;
+    queue<int> q;
+    long long sum = 0;
+public:
+    MovingAverage(int size): size(size) {}
+
+    double next(int val) {
+        q.push(val);
+        sum += val;
+        if ((int)q.size() > size) {
+            sum -= q.front();
+            q.pop();
+        }
+        return (double)sum / q.size();
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class MovingAverage:
+    def __init__(self, size: int):
+        self.size = size
+        self.q = deque()
+        self.sum = 0
+
+    def next(self, val: int) -> float:
+        self.q.append(val)
+        self.sum += val
+        if len(self.q) > self.size:
+            self.sum -= self.q.popleft()
+        return self.sum / len(self.q)</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var MovingAverage = function(size) {
+  this.size = size;
+  this.q = [];
+  this.sum = 0;
+};
+
+MovingAverage.prototype.next = function(val) {
+  this.q.push(val);
+  this.sum += val;
+  if (this.q.length > this.size) {
+    this.sum -= this.q.shift();
+  }
+  return this.sum / this.q.length;
+};</code></pre></div></div></article><section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section><footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
