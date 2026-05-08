@@ -1,0 +1,111 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>LeetCode 357: Count Numbers with Unique Digits (Permutation Counting)</title><meta name="description" content="Bilingual tutorial for LeetCode 357 using permutation counting with full multi-language code tabs."/><link rel="stylesheet" href="../../../../assets/style.css" /><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" /></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav><article class="card article"><h1>LeetCode 357: Count Numbers with Unique Digits (Permutation Counting)</h1><div class="meta">2026-05-08 · LeetCode · Math / Combinatorics</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 357</span><p><strong>Source:</strong> <a href="https://leetcode.com/problems/count-numbers-with-unique-digits/" target="_blank" rel="noopener">https://leetcode.com/problems/count-numbers-with-unique-digits/</a></p><img class="post-image" src="../../../../assets/img/leetcode/2026/05/leetcode-357-20260508.svg" alt="Count unique-digit numbers by choosing digits without repetition"/><h2>English</h2><p>For each length <code>k</code> (1 to <code>n</code>), count how many <code>k</code>-digit numbers have all distinct digits, then sum them with <code>0</code>. The first digit has 9 choices (1-9), the next has 9 choices (including 0 except used one), then 8, 7, and so on. Also, values stop changing after <code>n=10</code> because there are only 10 digits.</p><p>So we accumulate: <code>1</code> (for zero), <code>9</code>, <code>9*9</code>, <code>9*9*8</code> ... up to length <code>min(n,10)</code>.</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int countNumbersWithUniqueDigits(int n) {
+        if (n == 0) return 1;
+        n = Math.min(n, 10);
+        int ans = 10, unique = 9, available = 9;
+        for (int len = 2; len &lt;= n; len++) {
+            unique *= available;
+            ans += unique;
+            available--;
+        }
+        return ans;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">func countNumbersWithUniqueDigits(n int) int {
+    if n == 0 { return 1 }
+    if n &gt; 10 { n = 10 }
+    ans, unique, available := 10, 9, 9
+    for l := 2; l &lt;= n; l++ {
+        unique *= available
+        ans += unique
+        available--
+    }
+    return ans
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    int countNumbersWithUniqueDigits(int n) {
+        if (n == 0) return 1;
+        n = min(n, 10);
+        int ans = 10, unique = 9, available = 9;
+        for (int len = 2; len &lt;= n; ++len) {
+            unique *= available;
+            ans += unique;
+            --available;
+        }
+        return ans;
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def countNumbersWithUniqueDigits(self, n: int) -&gt; int:
+        if n == 0:
+            return 1
+        n = min(n, 10)
+        ans, unique, available = 10, 9, 9
+        for _ in range(2, n + 1):
+            unique *= available
+            ans += unique
+            available -= 1
+        return ans</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">var countNumbersWithUniqueDigits = function(n) {
+  if (n === 0) return 1;
+  n = Math.min(n, 10);
+  let ans = 10, unique = 9, available = 9;
+  for (let len = 2; len &lt;= n; len++) {
+    unique *= available;
+    ans += unique;
+    available--;
+  }
+  return ans;
+};</code></pre></div></div><h2>中文</h2><p>按位数统计。长度为 <code>k</code> 的“各位互不相同”数字个数可用排列方式计算，然后把各长度结果加总，再加上数字 <code>0</code>。</p><p>当 <code>k=1</code> 时有 10 个（0-9）。长度大于 1 时，首位有 9 种（1-9），第二位有 9 种，后面依次 8、7……。另外，<code>n&gt;10</code> 时答案不再增长，因为十个数字最多只能全用一次。</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java-cn">Java</button><button class="tab-btn" data-tab="go-cn">Go</button><button class="tab-btn" data-tab="cpp-cn">C++</button><button class="tab-btn" data-tab="python-cn">Python</button><button class="tab-btn" data-tab="javascript-cn">JavaScript</button></div><div class="tab-pane active" data-tab="java-cn"><pre><code class="language-java">class Solution {
+    public int countNumbersWithUniqueDigits(int n) {
+        if (n == 0) return 1;
+        n = Math.min(n, 10);
+        int ans = 10, unique = 9, available = 9;
+        for (int len = 2; len &lt;= n; len++) {
+            unique *= available;
+            ans += unique;
+            available--;
+        }
+        return ans;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go-cn"><pre><code class="language-go">func countNumbersWithUniqueDigits(n int) int {
+    if n == 0 { return 1 }
+    if n &gt; 10 { n = 10 }
+    ans, unique, available := 10, 9, 9
+    for l := 2; l &lt;= n; l++ {
+        unique *= available
+        ans += unique
+        available--
+    }
+    return ans
+}</code></pre></div><div class="tab-pane" data-tab="cpp-cn"><pre><code class="language-cpp">class Solution {
+public:
+    int countNumbersWithUniqueDigits(int n) {
+        if (n == 0) return 1;
+        n = min(n, 10);
+        int ans = 10, unique = 9, available = 9;
+        for (int len = 2; len &lt;= n; ++len) {
+            unique *= available;
+            ans += unique;
+            --available;
+        }
+        return ans;
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python-cn"><pre><code class="language-python">class Solution:
+    def countNumbersWithUniqueDigits(self, n: int) -&gt; int:
+        if n == 0:
+            return 1
+        n = min(n, 10)
+        ans, unique, available = 10, 9, 9
+        for _ in range(2, n + 1):
+            unique *= available
+            ans += unique
+            available -= 1
+        return ans</code></pre></div><div class="tab-pane" data-tab="javascript-cn"><pre><code class="language-javascript">var countNumbersWithUniqueDigits = function(n) {
+  if (n === 0) return 1;
+  n = Math.min(n, 10);
+  let ans = 10, unique = 9, available = 9;
+  for (let len = 2; len &lt;= n; len++) {
+    unique *= available;
+    ans += unique;
+    available--;
+  }
+  return ans;
+};</code></pre></div></div></article><section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section><footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
