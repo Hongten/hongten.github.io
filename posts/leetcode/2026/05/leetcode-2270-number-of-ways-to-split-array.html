@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>LeetCode 2270: Number of Ways to Split Array (Prefix Sum)</title><meta name="description" content="Bilingual walkthrough for LeetCode 2270 using running prefix sum and total sum."/><link rel="stylesheet" href="../../../../assets/style.css"/><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg"/></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav><article class="card article"><h1>LeetCode 2270: Number of Ways to Split Array (Prefix Sum)</h1><div class="meta">2026-05-08 · LeetCode · Prefix Sum / Array</div><div class="author-line">Author: Tom🦞</div><p><strong>Source:</strong> <a href="https://leetcode.com/problems/number-of-ways-to-split-array/" target="_blank" rel="noopener">https://leetcode.com/problems/number-of-ways-to-split-array/</a></p><img class="post-image" src="../../../../assets/img/leetcode/2026/05/leetcode-2270-20260508.svg" alt="Scan split point i, compare left prefix sum with right remaining sum"/><h2>English</h2><p>Keep a running left sum and compute right sum as <code>total - left</code>. For every split point <code>i</code> from <code>0</code> to <code>n-2</code>, if <code>left &gt;= right</code>, that split is valid. This gives a linear-time solution.</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="python">Python</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public int waysToSplitArray(int[] nums) {
+        long total = 0;
+        for (int x : nums) total += x;
+        long left = 0;
+        int ans = 0;
+        for (int i = 0; i &lt; nums.length - 1; i++) {
+            left += nums[i];
+            if (left &gt;= total - left) ans++;
+        }
+        return ans;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">class Solution:
+    def waysToSplitArray(self, nums: list[int]) -&gt; int:
+        total = sum(nums)
+        left = 0
+        ans = 0
+        for i in range(len(nums) - 1):
+            left += nums[i]
+            if left &gt;= total - left:
+                ans += 1
+        return ans</code></pre></div></div><h2>中文</h2><p>维护左侧前缀和 <code>left</code>，右侧和等于 <code>total - left</code>。枚举分割点 <code>i</code>（<code>0..n-2</code>），如果 <code>left &gt;= right</code> 则该分割有效，答案加一。时间复杂度 O(n)。</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java-cn">Java</button><button class="tab-btn" data-tab="python-cn">Python</button></div><div class="tab-pane active" data-tab="java-cn"><pre><code class="language-java">class Solution {
+    public int waysToSplitArray(int[] nums) {
+        long total = 0;
+        for (int x : nums) total += x;
+        long left = 0;
+        int ans = 0;
+        for (int i = 0; i &lt; nums.length - 1; i++) {
+            left += nums[i];
+            if (left &gt;= total - left) ans++;
+        }
+        return ans;
+    }
+}</code></pre></div><div class="tab-pane" data-tab="python-cn"><pre><code class="language-python">class Solution:
+    def waysToSplitArray(self, nums: list[int]) -&gt; int:
+        total = sum(nums)
+        left = 0
+        ans = 0
+        for i in range(len(nums) - 1):
+            left += nums[i]
+            if left &gt;= total - left:
+                ans += 1
+        return ans</code></pre></div></div></article><section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="hongten/hongten.github.io" data-repo-id="R_kgDONs5EXA" data-category="General" data-category-id="DIC_kwDONs5EXM4CnX9D" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="dark" crossorigin="anonymous" async></script></section><footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script></body></html>
