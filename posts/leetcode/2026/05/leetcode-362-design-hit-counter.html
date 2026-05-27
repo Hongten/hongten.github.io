@@ -1,0 +1,155 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>LeetCode 362: Design Hit Counter (Queue / Sliding Window)</title><meta name="description" content="Bilingual tutorial for LeetCode 362 with complete 5-language code tabs."/><link rel="stylesheet" href="../../../../assets/style.css" /><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" /></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav><article class="card article"><h1>LeetCode 362: Design Hit Counter (Queue / Sliding Window)</h1><div class="meta">2026-05-27 · LeetCode · Design / Queue</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 362</span><p><strong>Source:</strong> <a href="https://leetcode.com/problems/design-hit-counter/" target="_blank" rel="noopener">https://leetcode.com/problems/design-hit-counter/</a></p><img class="post-image" src="../../../../assets/img/leetcode/2026/05/leetcode-362-20260527.svg" alt="LeetCode 362 hit counter queue timeline diagram" /><h2>English</h2><p>Keep a queue of hit timestamps. For <code>hit(t)</code>, append <code>t</code>. For <code>getHits(t)</code>, pop all timestamps where <code>timestamp &lt;= t - 300</code>, then the queue size is exactly the number of hits in the last 5 minutes.</p><p><strong>Complexity:</strong> amortized O(1) per operation, O(k) space for hits in last 300 seconds.</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class HitCounter {
+    private java.util.ArrayDeque&lt;Integer&gt; q = new java.util.ArrayDeque&lt;&gt;();
+
+    public HitCounter() {}
+
+    public void hit(int timestamp) {
+        q.offer(timestamp);
+    }
+
+    public int getHits(int timestamp) {
+        int limit = timestamp - 300;
+        while (!q.isEmpty() && q.peek() &lt;= limit) q.poll();
+        return q.size();
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">type HitCounter struct {
+    q []int
+}
+
+func Constructor() HitCounter {
+    return HitCounter{q: []int{}}
+}
+
+func (h *HitCounter) hit(timestamp int) {
+    h.q = append(h.q, timestamp)
+}
+
+func (h *HitCounter) getHits(timestamp int) int {
+    limit := timestamp - 300
+    i := 0
+    for i &lt; len(h.q) && h.q[i] &lt;= limit {
+        i++
+    }
+    h.q = h.q[i:]
+    return len(h.q)
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class HitCounter {
+public:
+    queue&lt;int&gt; q;
+
+    HitCounter() {}
+
+    void hit(int timestamp) {
+        q.push(timestamp);
+    }
+
+    int getHits(int timestamp) {
+        int limit = timestamp - 300;
+        while (!q.empty() && q.front() &lt;= limit) q.pop();
+        return (int)q.size();
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">from collections import deque
+
+class HitCounter:
+    def __init__(self):
+        self.q = deque()
+
+    def hit(self, timestamp: int) -&gt; None:
+        self.q.append(timestamp)
+
+    def getHits(self, timestamp: int) -&gt; int:
+        limit = timestamp - 300
+        while self.q and self.q[0] &lt;= limit:
+            self.q.popleft()
+        return len(self.q)</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">class HitCounter {
+  constructor() {
+    this.q = [];
+    this.head = 0;
+  }
+
+  hit(timestamp) {
+    this.q.push(timestamp);
+  }
+
+  getHits(timestamp) {
+    const limit = timestamp - 300;
+    while (this.head &lt; this.q.length && this.q[this.head] &lt;= limit) this.head++;
+    return this.q.length - this.head;
+  }
+}</code></pre></div></div><h2>中文</h2><p>维护一个时间戳队列。调用 <code>hit(t)</code> 时把 <code>t</code> 入队。调用 <code>getHits(t)</code> 时，持续弹出所有 <code>&lt;= t-300</code> 的时间戳，剩余队列长度就是最近 5 分钟内的命中次数。</p><p><strong>复杂度：</strong>每次操作均摊 O(1)，空间 O(k)（k 为 300 秒窗口内命中数）。</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class HitCounter {
+    private java.util.ArrayDeque&lt;Integer&gt; q = new java.util.ArrayDeque&lt;&gt;();
+
+    public HitCounter() {}
+
+    public void hit(int timestamp) {
+        q.offer(timestamp);
+    }
+
+    public int getHits(int timestamp) {
+        int limit = timestamp - 300;
+        while (!q.isEmpty() && q.peek() &lt;= limit) q.poll();
+        return q.size();
+    }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">type HitCounter struct {
+    q []int
+}
+
+func Constructor() HitCounter {
+    return HitCounter{q: []int{}}
+}
+
+func (h *HitCounter) hit(timestamp int) {
+    h.q = append(h.q, timestamp)
+}
+
+func (h *HitCounter) getHits(timestamp int) int {
+    limit := timestamp - 300
+    i := 0
+    for i &lt; len(h.q) && h.q[i] &lt;= limit {
+        i++
+    }
+    h.q = h.q[i:]
+    return len(h.q)
+}</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class HitCounter {
+public:
+    queue&lt;int&gt; q;
+
+    HitCounter() {}
+
+    void hit(int timestamp) {
+        q.push(timestamp);
+    }
+
+    int getHits(int timestamp) {
+        int limit = timestamp - 300;
+        while (!q.empty() && q.front() &lt;= limit) q.pop();
+        return (int)q.size();
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">from collections import deque
+
+class HitCounter:
+    def __init__(self):
+        self.q = deque()
+
+    def hit(self, timestamp: int) -&gt; None:
+        self.q.append(timestamp)
+
+    def getHits(self, timestamp: int) -&gt; int:
+        limit = timestamp - 300
+        while self.q and self.q[0] &lt;= limit:
+            self.q.popleft()
+        return len(self.q)</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">class HitCounter {
+  constructor() {
+    this.q = [];
+    this.head = 0;
+  }
+
+  hit(timestamp) {
+    this.q.push(timestamp);
+  }
+
+  getHits(timestamp) {
+    const limit = timestamp - 300;
+    while (this.head &lt; this.q.length && this.q[this.head] &lt;= limit) this.head++;
+    return this.q.length - this.head;
+  }
+}</code></pre></div></div></article><section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section><footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
