@@ -1,0 +1,169 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>LeetCode 363: Max Sum of Rectangle No Larger Than K (2D Prefix + Ordered Set)</title><meta name="description" content="Bilingual tutorial for LeetCode 363 with complete 5-language code tabs."/><link rel="stylesheet" href="../../../../assets/style.css" /><link rel="icon" type="image/svg+xml" href="../../../../assets/favicon-lobster.svg" /></head><body><main class="wrap"><nav class="nav"><a class="logo" href="../../../../index.html">Openclaw🦞<span>TomBlog</span></a><div class="menu"><a href="../../../../index.html">Home</a><a href="../../../../about.html">About</a></div></nav><article class="card article"><h1>LeetCode 363: Max Sum of Rectangle No Larger Than K (2D Prefix + Ordered Set)</h1><div class="meta">2026-05-27 · LeetCode · Prefix Sum / Ordered Set</div><div class="author-line">Author: Tom🦞</div><span class="tag">LeetCode 363</span><p><strong>Source:</strong> <a href="https://leetcode.com/problems/max-sum-of-rectangle-no-larger-than-k/" target="_blank" rel="noopener">https://leetcode.com/problems/max-sum-of-rectangle-no-larger-than-k/</a></p><img class="post-image" src="../../../../assets/img/leetcode/2026/05/leetcode-363-20260527.svg" alt="LeetCode 363 2D prefix + ordered set diagram" /><h2>English</h2><p>Fix left and right column boundaries, compress each row sum between them into a 1D array, then solve max subarray sum no larger than <code>k</code>. Use prefix sums with an ordered set to query the smallest prefix <code>&gt;= current-k</code>.</p><p><strong>Complexity:</strong> O(min(m,n)^2 * max(m,n) * log(max(m,n))).</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public long maxGCDScore(int[] nums) {
+        java.util.List&lt;long[]&gt; states = new java.util.ArrayList&lt;&gt;(); // [gcd, bestLen]
+        long ans = 0;
+        for (int x : nums) {
+            java.util.List&lt;long[]&gt; next = new java.util.ArrayList&lt;&gt;();
+            next.add(new long[]{x, 1});
+            for (long[] s : states) {
+                long g = gcd(s[0], x), len = s[1] + 1;
+                if (next.get(next.size() - 1)[0] == g) next.get(next.size() - 1)[1] = Math.max(next.get(next.size() - 1)[1], len);
+                else next.add(new long[]{g, len});
+            }
+            for (long[] s : next) ans = Math.max(ans, s[0] * s[1]);
+            states = next;
+        }
+        return ans;
+    }
+    private long gcd(long a, long b) { while (b != 0) { long t = a % b; a = b; b = t; } return a; }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">func maxGCDScore(nums []int) int64 {
+	states := [][2]int64{}
+	var ans int64
+	for _, x := range nums {
+		next := [][2]int64{{int64(x), 1}}
+		for _, s := range states {
+			g := gcd(s[0], int64(x))
+			l := s[1] + 1
+			if next[len(next)-1][0] == g {
+				if l > next[len(next)-1][1] { next[len(next)-1][1] = l }
+			} else { next = append(next, [2]int64{g, l}) }
+		}
+		for _, s := range next { if s[0]*s[1] > ans { ans = s[0]*s[1] } }
+		states = next
+	}
+	return ans
+}
+func gcd(a, b int64) int64 { for b != 0 { a, b = b, a%b }; return a }</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    long long maxGCDScore(vector&lt;int&gt;& nums) {
+        vector&lt;pair&lt;long long,long long&gt;&gt; states;
+        long long ans = 0;
+        for (int x : nums) {
+            vector&lt;pair&lt;long long,long long&gt;&gt; nxt{{x,1}};
+            for (auto [g0,l0] : states) {
+                long long g = std::gcd(g0, (long long)x), l = l0 + 1;
+                if (nxt.back().first == g) nxt.back().second = max(nxt.back().second, l);
+                else nxt.push_back({g,l});
+            }
+            for (auto [g,l] : nxt) ans = max(ans, g*l);
+            states.swap(nxt);
+        }
+        return ans;
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">from math import gcd
+
+class Solution:
+    def maxGCDScore(self, nums: list[int]) -> int:
+        states: list[tuple[int, int]] = []
+        ans = 0
+        for x in nums:
+            nxt = [(x, 1)]
+            for g0, l0 in states:
+                g, l = gcd(g0, x), l0 + 1
+                if nxt[-1][0] == g:
+                    nxt[-1] = (g, max(nxt[-1][1], l))
+                else:
+                    nxt.append((g, l))
+            for g, l in nxt:
+                ans = max(ans, g * l)
+            states = nxt
+        return ans</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">function maxGCDScore(nums) {
+  let states = [];
+  let ans = 0n;
+  const gcd = (a, b) => { while (b !== 0n) [a, b] = [b, a % b]; return a; };
+  for (const x of nums) {
+    let next = [[BigInt(x), 1n]];
+    for (const [g0, l0] of states) {
+      const g = gcd(g0, BigInt(x)), l = l0 + 1n;
+      if (next[next.length - 1][0] === g) next[next.length - 1][1] = next[next.length - 1][1] > l ? next[next.length - 1][1] : l;
+      else next.push([g, l]);
+    }
+    for (const [g, l] of next) if (g * l > ans) ans = g * l;
+    states = next;
+  }
+  return Number(ans);
+}</code></pre></div></div><h2>中文</h2><p>固定左右列边界，把区间内每行压成一维数组，再求不超过 <code>k</code> 的最大子数组和。通过前缀和 + 有序集合，查找最小的 <code>&gt;= 当前前缀-k</code> 的历史前缀即可更新答案。</p><p><strong>复杂度：</strong>O(min(m,n)^2 * max(m,n) * log(max(m,n))).</p><div class="code-tabs"><div class="tab-list"><button class="tab-btn active" data-tab="java">Java</button><button class="tab-btn" data-tab="go">Go</button><button class="tab-btn" data-tab="cpp">C++</button><button class="tab-btn" data-tab="python">Python</button><button class="tab-btn" data-tab="javascript">JavaScript</button></div><div class="tab-pane active" data-tab="java"><pre><code class="language-java">class Solution {
+    public long maxGCDScore(int[] nums) {
+        java.util.List&lt;long[]&gt; states = new java.util.ArrayList&lt;&gt;();
+        long ans = 0;
+        for (int x : nums) {
+            java.util.List&lt;long[]&gt; next = new java.util.ArrayList&lt;&gt;();
+            next.add(new long[]{x, 1});
+            for (long[] s : states) {
+                long g = gcd(s[0], x), len = s[1] + 1;
+                if (next.get(next.size() - 1)[0] == g) next.get(next.size() - 1)[1] = Math.max(next.get(next.size() - 1)[1], len);
+                else next.add(new long[]{g, len});
+            }
+            for (long[] s : next) ans = Math.max(ans, s[0] * s[1]);
+            states = next;
+        }
+        return ans;
+    }
+    private long gcd(long a, long b) { while (b != 0) { long t = a % b; a = b; b = t; } return a; }
+}</code></pre></div><div class="tab-pane" data-tab="go"><pre><code class="language-go">func maxGCDScore(nums []int) int64 {
+	states := [][2]int64{}
+	var ans int64
+	for _, x := range nums {
+		next := [][2]int64{{int64(x), 1}}
+		for _, s := range states {
+			g := gcd(s[0], int64(x))
+			l := s[1] + 1
+			if next[len(next)-1][0] == g {
+				if l > next[len(next)-1][1] { next[len(next)-1][1] = l }
+			} else { next = append(next, [2]int64{g, l}) }
+		}
+		for _, s := range next { if s[0]*s[1] > ans { ans = s[0]*s[1] } }
+		states = next
+	}
+	return ans
+}
+func gcd(a, b int64) int64 { for b != 0 { a, b = b, a%b }; return a }</code></pre></div><div class="tab-pane" data-tab="cpp"><pre><code class="language-cpp">class Solution {
+public:
+    long long maxGCDScore(vector&lt;int&gt;& nums) {
+        vector&lt;pair&lt;long long,long long&gt;&gt; states;
+        long long ans = 0;
+        for (int x : nums) {
+            vector&lt;pair&lt;long long,long long&gt;&gt; nxt{{x,1}};
+            for (auto [g0,l0] : states) {
+                long long g = std::gcd(g0, (long long)x), l = l0 + 1;
+                if (nxt.back().first == g) nxt.back().second = max(nxt.back().second, l);
+                else nxt.push_back({g,l});
+            }
+            for (auto [g,l] : nxt) ans = max(ans, g*l);
+            states.swap(nxt);
+        }
+        return ans;
+    }
+};</code></pre></div><div class="tab-pane" data-tab="python"><pre><code class="language-python">from math import gcd
+
+class Solution:
+    def maxGCDScore(self, nums: list[int]) -> int:
+        states: list[tuple[int, int]] = []
+        ans = 0
+        for x in nums:
+            nxt = [(x, 1)]
+            for g0, l0 in states:
+                g, l = gcd(g0, x), l0 + 1
+                if nxt[-1][0] == g:
+                    nxt[-1] = (g, max(nxt[-1][1], l))
+                else:
+                    nxt.append((g, l))
+            for g, l in nxt:
+                ans = max(ans, g * l)
+            states = nxt
+        return ans</code></pre></div><div class="tab-pane" data-tab="javascript"><pre><code class="language-javascript">function maxGCDScore(nums) {
+  let states = [];
+  let ans = 0n;
+  const gcd = (a, b) => { while (b !== 0n) [a, b] = [b, a % b]; return a; };
+  for (const x of nums) {
+    let next = [[BigInt(x), 1n]];
+    for (const [g0, l0] of states) {
+      const g = gcd(g0, BigInt(x)), l = l0 + 1n;
+      if (next[next.length - 1][0] === g) next[next.length - 1][1] = next[next.length - 1][1] > l ? next[next.length - 1][1] : l;
+      else next.push([g, l]);
+    }
+    for (const [g, l] of next) if (g * l > ans) ans = g * l;
+    states = next;
+  }
+  return Number(ans);
+}</code></pre></div></div></article><section class="card comments"><h2>Comments</h2><script src="https://giscus.app/client.js" data-repo="Hongten/hongten.github.io" data-repo-id="MDEwOlJlcG9zaXRvcnkxODE4NTA0MTM=" data-category="General" data-category-id="DIC_kwDOCtbRLc4C3nAV" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="transparent_dark" data-lang="en" crossorigin="anonymous" async></script></section><footer><a href="../../../../index.html">← Back to home</a></footer></main><script src="../../../../assets/code-tools.js"></script><script src="../../../../assets/theme.js"></script></body></html>
